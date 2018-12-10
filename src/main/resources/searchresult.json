@@ -1,0 +1,90 @@
+[
+  {
+    "place_id": "121465240",
+    "licence": "Data © OpenStreetMap contributors, ODbL 1.0. https:\/\/osm.org\/copyright",
+    "osm_type": "way",
+    "osm_id": "197528638",
+    "boundingbox": [
+      "47.4519905",
+      "47.4523668",
+      "-0.5565342",
+      "-0.5561208"
+    ],
+    "lat": "47.4519905",
+    "lon": "-0.5565342",
+    "display_name": "Bamako, Angers, Maine-et-Loire, Pays de la Loire, France métropolitaine, 49101, France",
+    "place_rank": "26",
+    "category": "highway",
+    "type": "platform",
+    "importance": 1.1300000000000001,
+    "address": {
+      "address26": "Bamako",
+      "city": "Angers",
+      "county": "Angers",
+      "state": "Pays de la Loire",
+      "country": "France",
+      "postcode": "49101",
+      "country_code": "fr"
+    },
+    "geojson": {
+      "type": "LineString",
+      "coordinates": [
+        [
+          -0.5565342,
+          47.4519905
+        ],
+        [
+          -0.5561208,
+          47.4523668
+        ]
+      ]
+    },
+    "extratags": {
+      "wheelchair": "yes"
+    },
+    "namedetails": {
+      "name": "Bamako"
+    }
+  },
+  {
+    "place_id": "26259312",
+    "licence": "Data © OpenStreetMap contributors, ODbL 1.0. https:\/\/osm.org\/copyright",
+    "osm_type": "node",
+    "osm_id": "2526443121",
+    "boundingbox": [
+      "47.4521296",
+      "47.4522296",
+      "-0.5564019",
+      "-0.5563019"
+    ],
+    "lat": "47.4521796",
+    "lon": "-0.5563519",
+    "display_name": "Bamako, Angers, Maine-et-Loire, Pays de la Loire, France métropolitaine, 49101, France",
+    "place_rank": "30",
+    "category": "railway",
+    "type": "tram_stop",
+    "importance": 1.031,
+    "icon": "https:\/\/nominatim.openstreetmap.org\/images\/mapicons\/transport_tram_stop.p.20.png",
+    "address": {
+      "tram_stop": "Bamako",
+      "address26": "Bamako",
+      "city": "Angers",
+      "county": "Angers",
+      "state": "Pays de la Loire",
+      "country": "France",
+      "postcode": "49101",
+      "country_code": "fr"
+    },
+    "geojson": {
+      "type": "Point",
+      "coordinates": [
+        -0.5563519,
+        47.4521796
+      ]
+    },
+    "extratags": {},
+    "namedetails": {
+      "name": "Bamako"
+    }
+  }
+]

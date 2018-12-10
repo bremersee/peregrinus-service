@@ -1,0 +1,72 @@
+<?xml version="1.0"?>
+<gpx xmlns="http://www.topografix.com/GPX/1/1" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:wptx1="http://www.garmin.com/xmlschemas/WaypointExtension/v1" xmlns:gpxtrx="http://www.garmin.com/xmlschemas/GpxExtensions/v3" xmlns:gpxtpx="http://www.garmin.com/xmlschemas/TrackPointExtension/v1" xmlns:gpxx="http://www.garmin.com/xmlschemas/GpxExtensions/v3" xmlns:trp="http://www.garmin.com/xmlschemas/TripExtensions/v1" xmlns:adv="http://www.garmin.com/xmlschemas/AdventuresExtensions/v1" xmlns:prs="http://www.garmin.com/xmlschemas/PressureExtension/v1" xmlns:tmd="http://www.garmin.com/xmlschemas/TripMetaDataExtensions/v1" xmlns:vptm="http://www.garmin.com/xmlschemas/ViaPointTransportationModeExtensions/v1" xmlns:ctx="http://www.garmin.com/xmlschemas/CreationTimeExtension/v1" xmlns:gpxacc="http://www.garmin.com/xmlschemas/AccelerationExtension/v1" xmlns:gpxpx="http://www.garmin.com/xmlschemas/PowerExtension/v1" xmlns:vidx1="http://www.garmin.com/xmlschemas/VideoExtension/v1" creator="Garmin Desktop App" version="1.1" xsi:schemaLocation="http://www.topografix.com/GPX/1/1 http://www.topografix.com/GPX/1/1/gpx.xsd http://www.garmin.com/xmlschemas/WaypointExtension/v1 http://www8.garmin.com/xmlschemas/WaypointExtensionv1.xsd http://www.garmin.com/xmlschemas/TrackPointExtension/v1 http://www.garmin.com/xmlschemas/TrackPointExtensionv1.xsd http://www.garmin.com/xmlschemas/GpxExtensions/v3 http://www8.garmin.com/xmlschemas/GpxExtensionsv3.xsd http://www.garmin.com/xmlschemas/ActivityExtension/v1 http://www8.garmin.com/xmlschemas/ActivityExtensionv1.xsd http://www.garmin.com/xmlschemas/AdventuresExtensions/v1 http://www8.garmin.com/xmlschemas/AdventuresExtensionv1.xsd http://www.garmin.com/xmlschemas/PressureExtension/v1 http://www.garmin.com/xmlschemas/PressureExtensionv1.xsd http://www.garmin.com/xmlschemas/TripExtensions/v1 http://www.garmin.com/xmlschemas/TripExtensionsv1.xsd http://www.garmin.com/xmlschemas/TripMetaDataExtensions/v1 http://www.garmin.com/xmlschemas/TripMetaDataExtensionsv1.xsd http://www.garmin.com/xmlschemas/ViaPointTransportationModeExtensions/v1 http://www.garmin.com/xmlschemas/ViaPointTransportationModeExtensionsv1.xsd http://www.garmin.com/xmlschemas/CreationTimeExtension/v1 http://www.garmin.com/xmlschemas/CreationTimeExtensionsv1.xsd http://www.garmin.com/xmlschemas/AccelerationExtension/v1 http://www.garmin.com/xmlschemas/AccelerationExtensionv1.xsd http://www.garmin.com/xmlschemas/PowerExtension/v1 http://www.garmin.com/xmlschemas/PowerExtensionv1.xsd http://www.garmin.com/xmlschemas/VideoExtension/v1 http://www.garmin.com/xmlschemas/VideoExtensionv1.xsd">
+
+  <metadata>
+    <link href="http://www.garmin.com">
+      <text>Garmin International</text>
+    </link>
+    <time>2018-11-20T14:45:30Z</time>
+    <bounds maxlat="49.632925987243652" maxlon="10.943713188171387" minlat="49.632925987243652" minlon="10.943713188171387"/>
+  </metadata>
+
+  <wpt lat="49.632925987243652" lon="10.943713188171387">
+    <ele>20</ele>
+    <time>2018-11-20T14:13:12Z</time>
+    <name>Volksschule Dechsendorf</name>
+    <cmt>Volksschule Dechsendorf
+Campingstrasse 32
+Erlangen - Dechsendorf, Erlangen, 91056, DEU
+</cmt>
+    <desc>Volksschule Dechsendorf
+Campingstrasse 32
+Erlangen - Dechsendorf, Erlangen, 91056, DEU
+</desc>
+    <link href="http://bremersee.org"/>
+    <link href="http://base.bremersee.org"/>
+    <link href="/Users/cbr/Pictures/Passbild_Stockholm.jpg"/>
+    <sym>School</sym>
+    <type>user</type>
+    <extensions>
+      <gpxx:WaypointExtension>
+        <gpxx:Proximity>1200</gpxx:Proximity>
+        <gpxx:DisplayMode>SymbolAndName</gpxx:DisplayMode>
+        <gpxx:Categories>
+          <gpxx:Category>Eine Kategorie</gpxx:Category>
+          <gpxx:Category>Zweite Kategorie</gpxx:Category>
+        </gpxx:Categories>
+        <gpxx:Address>
+          <gpxx:StreetAddress>Campingstrasse 32</gpxx:StreetAddress>
+          <gpxx:City>Erlangen - Dechsendorf</gpxx:City>
+          <gpxx:State>Erlangen</gpxx:State>
+          <gpxx:Country>DEU</gpxx:Country>
+          <gpxx:PostalCode>91056</gpxx:PostalCode>
+        </gpxx:Address>
+        <gpxx:PhoneNumber/>
+        <gpxx:PhoneNumber>0151 580 562 84</gpxx:PhoneNumber>
+        <gpxx:PhoneNumber>05171 29 22 23</gpxx:PhoneNumber>
+      </gpxx:WaypointExtension>
+      <wptx1:WaypointExtension>
+        <wptx1:Proximity>1200</wptx1:Proximity>
+        <wptx1:DisplayMode>SymbolAndName</wptx1:DisplayMode>
+        <wptx1:Categories>
+          <wptx1:Category>Eine Kategorie</wptx1:Category>
+          <wptx1:Category>Zweite Kategorie</wptx1:Category>
+        </wptx1:Categories>
+        <wptx1:Address>
+          <wptx1:StreetAddress>Campingstrasse 32</wptx1:StreetAddress>
+          <wptx1:City>Erlangen - Dechsendorf</wptx1:City>
+          <wptx1:State>Erlangen</wptx1:State>
+          <wptx1:Country>DEU</wptx1:Country>
+          <wptx1:PostalCode>91056</wptx1:PostalCode>
+        </wptx1:Address>
+        <wptx1:PhoneNumber/>
+        <wptx1:PhoneNumber>0151 580 562 84</wptx1:PhoneNumber>
+        <wptx1:PhoneNumber>05171 29 22 23</wptx1:PhoneNumber>
+      </wptx1:WaypointExtension>
+      <ctx:CreationTimeExtension>
+        <ctx:CreationTime>2018-11-20T14:13:12Z</ctx:CreationTime>
+      </ctx:CreationTimeExtension>
+    </extensions>
+  </wpt>
+
+</gpx>

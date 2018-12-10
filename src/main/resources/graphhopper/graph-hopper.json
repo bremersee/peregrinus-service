@@ -1,0 +1,268 @@
+[ {
+  "distance" : 137.653,
+  "heading" : 263.42,
+  "sign" : 0,
+  "interval" : [ 0, 5 ],
+  "text" : "Dem Straßenverlauf von Hauptstraße folgen",
+  "time" : 19550,
+  "street_name" : "Hauptstraße"
+}, {
+  "distance" : 704.476,
+  "sign" : -2,
+  "interval" : [ 5, 20 ],
+  "text" : "Links abbiegen auf Hauptstraße, K 3",
+  "time" : 44143,
+  "street_name" : "Hauptstraße, K 3"
+}, {
+  "distance" : 182.41,
+  "sign" : -2,
+  "interval" : [ 20, 23 ],
+  "text" : "Links abbiegen auf Kirchvordener Straße, L 412",
+  "time" : 14590,
+  "street_name" : "Kirchvordener Straße, L 412"
+}, {
+  "distance" : 2861.817,
+  "sign" : 7,
+  "interval" : [ 23, 57 ],
+  "text" : "Rechts halten auf Pelikanstraße, L 412",
+  "time" : 193660,
+  "street_name" : "Pelikanstraße, L 412"
+}, {
+  "distance" : 1015.351,
+  "sign" : -2,
+  "interval" : [ 57, 72 ],
+  "text" : "Links abbiegen",
+  "time" : 48681,
+  "street_name" : ""
+}, {
+  "distance" : 946.946,
+  "sign" : 0,
+  "interval" : [ 72, 82 ],
+  "text" : "Dem Straßenverlauf von B 444 folgen",
+  "time" : 39713,
+  "street_name" : "B 444"
+}, {
+  "distance" : 1065.837,
+  "sign" : -2,
+  "interval" : [ 82, 97 ],
+  "text" : "Links abbiegen auf B444",
+  "time" : 48388,
+  "street_name" : "B444"
+}, {
+  "distance" : 267.945,
+  "sign" : 7,
+  "interval" : [ 97, 99 ],
+  "text" : "Rechts halten auf B 444",
+  "time" : 16076,
+  "street_name" : "B 444"
+}, {
+  "distance" : 9136.976,
+  "sign" : 2,
+  "interval" : [ 99, 208 ],
+  "text" : "Rechts abbiegen auf B 444",
+  "time" : 537006,
+  "street_name" : "B 444"
+}, {
+  "distance" : 36.934,
+  "sign" : -7,
+  "interval" : [ 208, 210 ],
+  "text" : "Links halten auf Ludwig-Jahn-Straße, B 444",
+  "time" : 2044,
+  "street_name" : "Ludwig-Jahn-Straße, B 444"
+}, {
+  "distance" : 639.322,
+  "sign" : -2,
+  "interval" : [ 210, 216 ],
+  "text" : "Links abbiegen auf Bierstraße, B 1",
+  "time" : 51141,
+  "street_name" : "Bierstraße, B 1"
+}, {
+  "distance" : 3922.14,
+  "sign" : 2,
+  "interval" : [ 216, 243 ],
+  "text" : "Rechts abbiegen auf Zum Marktplatz, L 472",
+  "time" : 214819,
+  "street_name" : "Zum Marktplatz, L 472"
+}, {
+  "exit_number" : 1,
+  "distance" : 1604.517,
+  "sign" : 6,
+  "exited" : true,
+  "turn_angle" : -1.64,
+  "interval" : [ 243, 257 ],
+  "text" : "Im Kreisverkehr Ausfahrt 1 auf Salzgitterstraße, L 472 nehmen",
+  "time" : 81203,
+  "street_name" : "Salzgitterstraße, L 472"
+}, {
+  "exit_number" : 2,
+  "distance" : 5662.54,
+  "sign" : 6,
+  "exited" : true,
+  "turn_angle" : -3.17,
+  "interval" : [ 257, 305 ],
+  "text" : "Im Kreisverkehr Ausfahrt 2 auf Lafferder Straße, L 472 nehmen",
+  "time" : 329684,
+  "street_name" : "Lafferder Straße, L 472"
+}, {
+  "distance" : 1551.43,
+  "sign" : -3,
+  "interval" : [ 305, 317 ],
+  "text" : "Scharf links abbiegen auf Ludwig-Erhard-Straße, K 39",
+  "time" : 72067,
+  "street_name" : "Ludwig-Erhard-Straße, K 39"
+}, {
+  "distance" : 3352.587,
+  "sign" : -2,
+  "interval" : [ 317, 358 ],
+  "text" : "Links abbiegen",
+  "time" : 114426,
+  "street_name" : ""
+}, {
+  "distance" : 289.346,
+  "sign" : 7,
+  "interval" : [ 358, 372 ],
+  "text" : "Rechts halten",
+  "time" : 18939,
+  "street_name" : ""
+}, {
+  "distance" : 29.473,
+  "sign" : -7,
+  "interval" : [ 372, 373 ],
+  "text" : "Links halten",
+  "time" : 1515,
+  "street_name" : ""
+}, {
+  "distance" : 286.3,
+  "sign" : -2,
+  "interval" : [ 373, 374 ],
+  "text" : "Links abbiegen auf Industriestraße Mitte, K 30",
+  "time" : 18737,
+  "street_name" : "Industriestraße Mitte, K 30"
+}, {
+  "distance" : 392.575,
+  "sign" : 0,
+  "interval" : [ 374, 378 ],
+  "text" : "Dem Straßenverlauf von Industriestraße Mitte, K 30 folgen",
+  "time" : 16963,
+  "street_name" : "Industriestraße Mitte, K 30"
+}, {
+  "distance" : 9980.588,
+  "sign" : 7,
+  "interval" : [ 378, 442 ],
+  "text" : "Rechts halten",
+  "time" : 497058,
+  "street_name" : ""
+}, {
+  "distance" : 986.041,
+  "sign" : 0,
+  "interval" : [ 442, 446 ],
+  "text" : "Dem Straßenverlauf von Nord-Süd-Straße, L 472 folgen",
+  "time" : 54609,
+  "street_name" : "Nord-Süd-Straße, L 472"
+}, {
+  "distance" : 190.13,
+  "sign" : 7,
+  "interval" : [ 446, 450 ],
+  "text" : "Rechts halten auf Nord-Süd-Straße",
+  "time" : 11407,
+  "street_name" : "Nord-Süd-Straße"
+}, {
+  "distance" : 1613.497,
+  "sign" : 7,
+  "interval" : [ 450, 461 ],
+  "text" : "Rechts halten auf Nord-Süd-Straße",
+  "time" : 107790,
+  "street_name" : "Nord-Süd-Straße"
+}, {
+  "distance" : 952.836,
+  "sign" : -7,
+  "interval" : [ 461, 491 ],
+  "text" : "Links halten auf B 248",
+  "time" : 56904,
+  "street_name" : "B 248"
+}, {
+  "distance" : 1889.777,
+  "sign" : 0,
+  "interval" : [ 491, 499 ],
+  "text" : "Dem Straßenverlauf von B 6, B 248 folgen",
+  "time" : 73899,
+  "street_name" : "B 6, B 248"
+}, {
+  "distance" : 12874.848,
+  "sign" : -7,
+  "interval" : [ 499, 599 ],
+  "text" : "Links halten auf B 6",
+  "time" : 596035,
+  "street_name" : "B 6"
+}, {
+  "distance" : 373.194,
+  "sign" : 7,
+  "interval" : [ 599, 608 ],
+  "text" : "Rechts halten",
+  "time" : 20033,
+  "street_name" : ""
+}, {
+  "distance" : 550.484,
+  "sign" : 2,
+  "interval" : [ 608, 615 ],
+  "text" : "Rechts abbiegen auf Hildesheimer Straße",
+  "time" : 44037,
+  "street_name" : "Hildesheimer Straße"
+}, {
+  "distance" : 306.561,
+  "sign" : 2,
+  "interval" : [ 615, 622 ],
+  "text" : "Rechts abbiegen auf Von-Garßen-Straße, K 32",
+  "time" : 24521,
+  "street_name" : "Von-Garßen-Straße, K 32"
+}, {
+  "distance" : 861.055,
+  "sign" : -2,
+  "interval" : [ 622, 646 ],
+  "text" : "Links abbiegen auf Astfelder Straße, B 82",
+  "time" : 97074,
+  "street_name" : "Astfelder Straße, B 82"
+}, {
+  "distance" : 163.711,
+  "sign" : -2,
+  "interval" : [ 646, 652 ],
+  "text" : "Links abbiegen auf Marktstraße",
+  "time" : 29466,
+  "street_name" : "Marktstraße"
+}, {
+  "distance" : 16.014,
+  "sign" : -2,
+  "interval" : [ 652, 654 ],
+  "text" : "Links abbiegen auf Marstallstraße",
+  "time" : 2882,
+  "street_name" : "Marstallstraße"
+}, {
+  "distance" : 35.152,
+  "sign" : 2,
+  "interval" : [ 654, 657 ],
+  "text" : "Rechts abbiegen",
+  "time" : 6326,
+  "street_name" : ""
+}, {
+  "distance" : 2.687,
+  "sign" : 2,
+  "interval" : [ 657, 658 ],
+  "text" : "Rechts abbiegen auf Brauhof Plaza",
+  "time" : 483,
+  "street_name" : "Brauhof Plaza"
+}, {
+  "distance" : 24.494,
+  "sign" : 2,
+  "interval" : [ 658, 660 ],
+  "text" : "Rechts abbiegen auf Brauhof Plaza",
+  "time" : 4408,
+  "street_name" : "Brauhof Plaza"
+}, {
+  "distance" : 0.0,
+  "sign" : 4,
+  "last_heading" : 58.1781345175838,
+  "interval" : [ 660, 660 ],
+  "text" : "Ziel erreicht",
+  "time" : 0,
+  "street_name" : ""
+} ]
