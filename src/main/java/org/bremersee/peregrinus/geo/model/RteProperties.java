@@ -33,6 +33,8 @@ public class RteProperties extends AbstractGeoJsonFeatureProperties {
 
   private AbstractRteCalculationProperties defaultCalculationProperties;
 
+  private DisplayColor displayColor;
+
   private List<RteSegment> rteSegments;
 
 }

@@ -93,4 +93,9 @@ public class TomTomRteCalculationProperties extends AbstractRteCalculationProper
     return "TomTom";
   }
 
+  @Override
+  public boolean isCalculationSupported() {
+    return true;
+  }
+
 }

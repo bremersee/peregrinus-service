@@ -16,22 +16,18 @@
 
 package org.bremersee.peregrinus.geo.model;
 
-import java.util.Date;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
-import org.springframework.data.annotation.TypeAlias;
-
 /**
  * @author Christian Bremer
  */
-@Getter
-@Setter
-@ToString
-@TypeAlias("AbstractRteCalculationProperties")
-public abstract class AbstractRteCalculationProperties {
+public class GarminImportRteCalculationProperties extends AbstractRteCalculationProperties {
 
-  public abstract String getProvider();
+  @Override
+  public String getProvider() {
+    return "GarminImport";
+  }
 
-  public abstract boolean isCalculationSupported();
+  @Override
+  public boolean isCalculationSupported() {
+    return false;
+  }
 }
