@@ -72,7 +72,10 @@ public enum DisplayColor {
     this.garminOrder = garminOrder;
   }
 
-  public static DisplayColor findByGarminDisplayColor(DisplayColorT garmin) {
+  public static DisplayColor findByGarminDisplayColor(
+      final DisplayColorT garmin,
+      final DisplayColor defaultDisplayColor) {
+
     if (garmin != null) {
       for (DisplayColor displayColor : DisplayColor.values()) {
         if (displayColor.garminOrder == 0 && displayColor.garmin == garmin) {
@@ -80,7 +83,7 @@ public enum DisplayColor {
         }
       }
     }
-    return MAGENTA;
+    return defaultDisplayColor != null ? defaultDisplayColor : MAGENTA;
   }
 
 }

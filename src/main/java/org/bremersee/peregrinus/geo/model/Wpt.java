@@ -31,16 +31,6 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @ToString
 @Document(collection = "feature")
 @TypeAlias("Wpt")
-public class Wpt extends AbstractGeoJsonFeature<Point, AbstractGeoJsonFeatureProperties> {
-
-  public Wpt() {
-    setProperties(new WptProperties());
-  }
-
-  public Wpt(String owner) {
-    this();
-    getProperties().getAccessControl().setOwner(owner);
-    getProperties().getAccessControl().getRead().getUsers().add(owner);
-  }
+public class Wpt extends AbstractGeoJsonFeature<Point, WptProperties> {
 
 }

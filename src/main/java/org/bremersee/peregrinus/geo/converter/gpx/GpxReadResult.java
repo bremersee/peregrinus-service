@@ -28,7 +28,7 @@ import org.bremersee.peregrinus.geo.model.AbstractGeoJsonFeature;
 @Getter
 @Setter
 @ToString
-public class GpxConverterResult {
+public class GpxReadResult {
 
   List<AbstractGeoJsonFeature> features;
 

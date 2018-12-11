@@ -16,13 +16,11 @@
 
 package org.bremersee.peregrinus.geo.model;
 
-import java.util.List;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 import org.locationtech.jts.geom.MultiLineString;
 import org.springframework.data.annotation.TypeAlias;
-import org.springframework.data.mongodb.core.geo.GeoJsonMultiLineString;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 /**
@@ -33,6 +31,6 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @ToString
 @Document(collection = "feature")
 @TypeAlias("Rte")
-public class Rte extends AbstractGeoJsonFeature<MultiLineString, RteProperties> { // GeoJsonGeometryCollection (mit Punkten)
+public class Rte extends AbstractGeoJsonFeature<MultiLineString, RteProperties> {
 
 }

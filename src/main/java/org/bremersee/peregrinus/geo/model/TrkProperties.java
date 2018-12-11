@@ -37,4 +37,7 @@ public class TrkProperties extends AbstractGeoJsonFeatureProperties {
 
   private List<List<Date>> timeLines;
 
+
+  private DisplayColor displayColor; // individual settings?
+
 }

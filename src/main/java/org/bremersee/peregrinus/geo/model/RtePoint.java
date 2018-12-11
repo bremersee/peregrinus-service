@@ -19,6 +19,7 @@ package org.bremersee.peregrinus.geo.model;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
+import org.locationtech.jts.geom.Point;
 import org.springframework.data.annotation.Transient;
 
 /**
@@ -32,7 +33,7 @@ public class RtePoint {
   @Transient
   private final String type = "Feature"; // TODO anders machen
 
-  private org.locationtech.jts.geom.Point geometry;
+  private Point geometry;
 
   private RtePointProperties properties;
 

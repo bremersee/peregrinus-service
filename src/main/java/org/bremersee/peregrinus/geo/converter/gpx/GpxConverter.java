@@ -23,6 +23,6 @@ import org.bremersee.gpx.model.Gpx;
  */
 public interface GpxConverter {
 
-  GpxConverterResult parseGpx(Gpx gpx);
+  GpxReadResult readGpx(Gpx gpx);
 
 }
