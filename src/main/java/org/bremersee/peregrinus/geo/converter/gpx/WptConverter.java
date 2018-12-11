@@ -77,17 +77,19 @@ class WptConverter extends AbstractGpxConverter {
     wpt.getProperties().setPhoneNumbers(
         wptExt.map(ext -> readGarminPhoneNumbers(ext.getPhoneNumbers())).orElse(null));
 
+    final XMLGregorianCalendar cal = GpxJaxbContextHelper
+        .findFirstExtension(
+            CreationTimeExtension.class,
+            true,
+            wptType.getExtensions(),
+            getUnmarshaller())
+        .map(CreationTimeExtension::getCreationTime)
+        .orElse(wptType.getTime());
+    final Date time = cal != null ? cal.toGregorianCalendar().getTime() : null;
+    wpt.getProperties().setTime(time);
+
     if (GarminType.PHOTO.equals(wptType.getType())) {
-      GpxJaxbContextHelper.findFirstExtension(
-          CreationTimeExtension.class,
-          true,
-          wptType.getExtensions(),
-          getUnmarshaller()).ifPresent(ext -> {
-        final XMLGregorianCalendar cal = ext.getCreationTime();
-        final Date time = cal != null ? cal.toGregorianCalendar().getTime() : null;
-        wpt.getProperties().setStartTime(time);
-        wpt.getProperties().setStopTime(time);
-      });
+      // TODO wanted images
     }
 
     return wpt;

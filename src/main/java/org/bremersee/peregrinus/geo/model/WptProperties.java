@@ -17,6 +17,7 @@
 package org.bremersee.peregrinus.geo.model;
 
 import java.math.BigDecimal;
+import java.util.Date;
 import java.util.List;
 import lombok.Getter;
 import lombok.Setter;
@@ -34,7 +35,9 @@ import org.springframework.data.annotation.TypeAlias;
 @TypeAlias("WptProperties")
 public class WptProperties extends AbstractGeoJsonFeatureProperties {
 
-  private String internalType; // photo, video or not
+  private String internalType; // photo, video or not // TODO
+
+  private Date time; // TODO
 
   /**
    * Elevation in meters
