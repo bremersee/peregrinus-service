@@ -14,22 +14,15 @@
  * limitations under the License.
  */
 
-package org.bremersee.peregrinus.geo.converter.gpx;
+package org.bremersee.peregrinus.geo.mapper.gpx;
 
-import java.util.List;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
-import org.bremersee.peregrinus.geo.model.AbstractGeoJsonFeature;
+import org.bremersee.gpx.model.Gpx;
 
 /**
  * @author Christian Bremer
  */
-@Getter
-@Setter
-@ToString
-public class GpxReadResult {
+public interface GpxConverter {
 
-  List<AbstractGeoJsonFeature> features;
+  GpxReadResult readGpx(Gpx gpx);
 
 }

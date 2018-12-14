@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.bremersee.peregrinus.geo.converter.gpx;
+package org.bremersee.peregrinus.geo.mapper.gpx;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -63,7 +63,10 @@ class RteConverter extends AbstractGpxConverter {
     if (rteTypes != null) {
       for (final RteType rteType : rteTypes) {
         if (rteType != null) {
-          rteList.add(readRte(rteType));
+          final Rte rte = readRte(rteType);
+          if (rte != null) {
+            rteList.add(rte);
+          }
         }
       }
     }

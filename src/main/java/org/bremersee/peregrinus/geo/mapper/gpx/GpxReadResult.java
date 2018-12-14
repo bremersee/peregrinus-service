@@ -14,18 +14,22 @@
  * limitations under the License.
  */
 
-package org.bremersee.peregrinus.geo.converter.gpx;
+package org.bremersee.peregrinus.geo.mapper.gpx;
+
+import java.util.List;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
+import org.bremersee.peregrinus.geo.model.AbstractGeoJsonFeature;
 
 /**
  * @author Christian Bremer
  */
-public abstract class GarminType {
+@Getter
+@Setter
+@ToString
+public class GpxReadResult {
 
-  public static final String PHOTO = "photo";
-
-  public static final String USER = "user";
-
-  private GarminType() {
-  }
+  List<AbstractGeoJsonFeature> features;
 
 }

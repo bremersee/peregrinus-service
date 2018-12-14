@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.bremersee.peregrinus.geo.converter.gpx;
+package org.bremersee.peregrinus.geo.mapper.gpx;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;

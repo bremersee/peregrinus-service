@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.bremersee.peregrinus.geo.converter.tomtom;
+package org.bremersee.peregrinus.geo.mapper.tomtom;
 
 /**
  * @author Christian Bremer

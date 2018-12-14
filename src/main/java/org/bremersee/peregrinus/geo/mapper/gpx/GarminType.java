@@ -14,15 +14,18 @@
  * limitations under the License.
  */
 
-package org.bremersee.peregrinus.geo.converter.gpx;
-
-import org.bremersee.gpx.model.Gpx;
+package org.bremersee.peregrinus.geo.mapper.gpx;
 
 /**
  * @author Christian Bremer
  */
-public interface GpxConverter {
+public abstract class GarminType {
 
-  GpxReadResult readGpx(Gpx gpx);
+  public static final String PHOTO = "photo";
+
+  public static final String USER = "user";
+
+  private GarminType() {
+  }
 
 }
