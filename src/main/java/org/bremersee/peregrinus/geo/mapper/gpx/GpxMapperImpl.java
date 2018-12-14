@@ -28,21 +28,20 @@ import org.springframework.stereotype.Component;
  * @author Christian Bremer
  */
 @Component
-@SuppressWarnings("WeakerAccess")
-public class GpxConverterImpl extends AbstractGpxConverter implements GpxConverter {
+public class GpxMapperImpl extends AbstractGpxMapper implements GpxMapper {
 
-  private final WptConverter wptConverter;
+  private final WptMapper wptMapper;
 
-  private final TrkConverter trkConverter;
+  private final TrkMapper trkMapper;
 
-  private final RteConverter rteConverter;
+  private final RteMapper rteMapper;
 
   @Autowired
-  public GpxConverterImpl(final JaxbContextBuilder jaxbContextBuilder) {
+  public GpxMapperImpl(final JaxbContextBuilder jaxbContextBuilder) {
     super(jaxbContextBuilder);
-    wptConverter = new WptConverter(jaxbContextBuilder);
-    trkConverter = new TrkConverter(jaxbContextBuilder);
-    rteConverter = new RteConverter(jaxbContextBuilder);
+    wptMapper = new WptMapper(jaxbContextBuilder);
+    trkMapper = new TrkMapper(jaxbContextBuilder);
+    rteMapper = new RteMapper(jaxbContextBuilder);
   }
 
   @Override
@@ -63,9 +62,9 @@ public class GpxConverterImpl extends AbstractGpxConverter implements GpxConvert
     */
 
     final List<AbstractGeoJsonFeature> features = new ArrayList<>();
-    features.addAll(wptConverter.readWptTypes(gpx.getWpts()));
-    features.addAll(trkConverter.readTrkTypes(gpx.getTrks()));
-    features.addAll(rteConverter.readRtes(gpx.getRtes()));
+    features.addAll(wptMapper.readWptTypes(gpx.getWpts()));
+    features.addAll(trkMapper.readTrkTypes(gpx.getTrks()));
+    features.addAll(rteMapper.readRtes(gpx.getRtes()));
 
     final GpxReadResult result = new GpxReadResult();
     result.setFeatures(features);

@@ -21,7 +21,7 @@ import org.bremersee.gpx.model.Gpx;
 /**
  * @author Christian Bremer
  */
-public interface GpxConverter {
+public interface GpxMapper {
 
   GpxReadResult readGpx(Gpx gpx);
 

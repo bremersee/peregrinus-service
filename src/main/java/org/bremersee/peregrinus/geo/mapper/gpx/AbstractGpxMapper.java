@@ -36,11 +36,11 @@ import org.springframework.util.StringUtils;
 /**
  * @author Christian Bremer
  */
-abstract class AbstractGpxConverter {
+abstract class AbstractGpxMapper {
 
   private final JaxbContextBuilder jaxbContextBuilder;
 
-  public AbstractGpxConverter(JaxbContextBuilder jaxbContextBuilder) {
+  public AbstractGpxMapper(JaxbContextBuilder jaxbContextBuilder) {
     this.jaxbContextBuilder = jaxbContextBuilder;
   }
 

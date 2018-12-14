@@ -33,9 +33,9 @@ import org.bremersee.xml.JaxbContextBuilder;
 /**
  * @author Christian Bremer
  */
-class WptConverter extends AbstractGpxConverter {
+class WptMapper extends AbstractGpxMapper {
 
-  WptConverter(JaxbContextBuilder jaxbContextBuilder) {
+  WptMapper(JaxbContextBuilder jaxbContextBuilder) {
     super(jaxbContextBuilder);
   }
 
