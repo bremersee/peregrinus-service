@@ -65,7 +65,7 @@ public class GpxConverterImpl extends AbstractGpxConverter implements GpxConvert
     final List<AbstractGeoJsonFeature> features = new ArrayList<>();
     features.addAll(wptConverter.readWptTypes(gpx.getWpts()));
     features.addAll(trkConverter.readTrkTypes(gpx.getTrks()));
-    features.addAll(rteConverter.parseRtes(gpx.getRtes()));
+    features.addAll(rteConverter.readRtes(gpx.getRtes()));
 
     final GpxReadResult result = new GpxReadResult();
     result.setFeatures(features);

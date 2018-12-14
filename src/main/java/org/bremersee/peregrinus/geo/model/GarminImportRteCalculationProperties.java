@@ -16,10 +16,35 @@
 
 package org.bremersee.peregrinus.geo.model;
 
+import java.util.Date;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
+import org.bremersee.garmin.trip.v1.model.ext.NamedRoadT;
+
 /**
  * @author Christian Bremer
  */
+@Getter
+@Setter
+@ToString(callSuper = true)
+@EqualsAndHashCode(callSuper = true)
 public class GarminImportRteCalculationProperties extends AbstractRteCalculationProperties {
+
+  private String transportationMode;
+
+  private Date departureTime;
+
+  private Long stopDurationMillis;
+
+  private Date arrivalTime;
+
+  private String calculationMode;
+
+  private String elevationMode;
+
+  private NamedRoadT namedRoad;
 
   @Override
   public String getProvider() {

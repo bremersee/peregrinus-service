@@ -30,6 +30,6 @@ public class RteSegment {
 
   private RtePoint point;
 
-  private RteSegmentProperties properties; // can be null = end point
+  private RteSegmentProperties properties;
 
 }

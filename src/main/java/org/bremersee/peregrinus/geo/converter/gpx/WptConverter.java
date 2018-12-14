@@ -52,7 +52,7 @@ class WptConverter extends AbstractGpxConverter {
     return wptList;
   }
 
-  private Wpt readWptType(final WptType wptType) {
+  Wpt readWptType(final WptType wptType) {
 
     final Wpt wpt = new Wpt();
     wpt.setProperties(readCommonData(

@@ -17,6 +17,7 @@
 package org.bremersee.peregrinus.geo.model;
 
 import java.util.Date;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -28,6 +29,7 @@ import org.springframework.data.annotation.TypeAlias;
 @Getter
 @Setter
 @ToString
+@EqualsAndHashCode
 @TypeAlias("AbstractRteCalculationProperties")
 public abstract class AbstractRteCalculationProperties {
 
