@@ -28,11 +28,11 @@ import org.springframework.data.mongodb.core.mapping.Document;
  * @author Christian Bremer
  */
 @Document(collection = "directory")
-@TypeAlias("leaf")
+@TypeAlias("GeoTreeLeaf")
 @Getter
 @Setter
 @ToString(callSuper = true)
-public class TreeLeaf extends AbstractTreeNode {
+public class GeoTreeLeaf extends AbstractTreeLeaf {
 
   @DBRef
   private AbstractGeoJsonFeature feature;

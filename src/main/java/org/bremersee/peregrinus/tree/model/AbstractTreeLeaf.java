@@ -1,5 +1,5 @@
 /*
- * Copyright 2017 the original author or authors.
+ * Copyright 2018 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,11 +16,9 @@
 
 package org.bremersee.peregrinus.tree.model;
 
-import java.util.List;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
-import org.springframework.data.annotation.Transient;
 import org.springframework.data.annotation.TypeAlias;
 import org.springframework.data.mongodb.core.mapping.Document;
 
@@ -28,23 +26,10 @@ import org.springframework.data.mongodb.core.mapping.Document;
  * @author Christian Bremer
  */
 @Document(collection = "directory")
-@TypeAlias("TreeBranch")
+@TypeAlias("AbstractTreeLeaf")
 @Getter
 @Setter
 @ToString(callSuper = true)
-public class TreeBranch extends AbstractTreeNode {
-
-  @Transient
-  private String displayName;
-
-  @Transient
-  private TreeBranchSettings settings;
-
-  @Transient
-  private List<AbstractTreeNode> children;
-
-  int orderValue() {
-    return 0;
-  }
+public abstract class AbstractTreeLeaf extends AbstractTreeNode {
 
 }

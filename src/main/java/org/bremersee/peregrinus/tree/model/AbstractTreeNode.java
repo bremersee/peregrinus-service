@@ -25,6 +25,7 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.annotation.TypeAlias;
 import org.springframework.data.annotation.Version;
 import org.springframework.data.mongodb.core.index.CompoundIndex;
 import org.springframework.data.mongodb.core.index.CompoundIndexes;
@@ -44,6 +45,7 @@ import org.springframework.util.StringUtils;
 @Setter
 @ToString
 @Document(collection = "directory")
+@TypeAlias("AbstractTreeNode")
 @CompoundIndexes({
     @CompoundIndex(name = "uk_name_parent", def = "{'name': 1, 'parentId': 1 }", unique = true)
 })
@@ -92,10 +94,10 @@ public abstract class AbstractTreeNode implements Comparable<AbstractTreeNode> {
       return c;
     }
 
-    if (this instanceof TreeLeaf
-        && ((TreeLeaf) this).getFeature() != null
-        && (o instanceof TreeLeaf)) {
-      return ((TreeLeaf) this).getFeature().compareTo(((TreeLeaf) o).getFeature());
+    if (this instanceof GeoTreeLeaf
+        && ((GeoTreeLeaf) this).getFeature() != null
+        && (o instanceof GeoTreeLeaf)) {
+      return ((GeoTreeLeaf) this).getFeature().compareTo(((GeoTreeLeaf) o).getFeature());
     }
 
     final String n1 = StringUtils.hasText(getName()) ? getName() : "";

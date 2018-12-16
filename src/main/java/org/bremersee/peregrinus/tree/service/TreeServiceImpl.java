@@ -23,10 +23,10 @@ import org.bremersee.peregrinus.geo.repository.GeoJsonFeatureSettingsRepository;
 import org.bremersee.peregrinus.tree.model.AbstractTreeNode;
 import org.bremersee.peregrinus.tree.model.TreeBranch;
 import org.bremersee.peregrinus.tree.model.TreeBranchSettings;
-import org.bremersee.peregrinus.tree.model.TreeLeaf;
+import org.bremersee.peregrinus.tree.model.GeoTreeLeaf;
 import org.bremersee.peregrinus.tree.repository.TreeBranchRepository;
 import org.bremersee.peregrinus.tree.repository.TreeBranchSettingsRepository;
-import org.bremersee.peregrinus.tree.repository.TreeLeafRepository;
+import org.bremersee.peregrinus.tree.repository.GeoTreeLeafRepository;
 import org.bremersee.peregrinus.tree.repository.TreeNodeRepository;
 import reactor.core.publisher.Mono;
 
@@ -39,7 +39,7 @@ public class TreeServiceImpl implements TreeService {
 
   private TreeBranchRepository branchRepository;
 
-  private TreeLeafRepository leafRepository;
+  //private GeoTreeLeafRepository geoTreeLeafRepository;
 
   private TreeBranchSettingsRepository branchSettingsRepository;
 
@@ -98,18 +98,16 @@ public class TreeServiceImpl implements TreeService {
   }
 
   private Mono<TreeBranch> addBranchChildren(final TreeBranch parent, final String userId) {
-    if (parent.getSettings() == null || !parent.getSettings().isOpen()) {
-      return Mono.just(parent);
-    }
 
     return nodeRepository
         .findByParentId(parent.getId())
         .flatMap(child -> processChild(child, userId))
-        .collectList() // TODO sort
+        .collectSortedList()
         .map(children -> {
           parent.setChildren(children);
           return parent;
-        });
+        })
+        .switchIfEmpty(Mono.just(parent));
   }
 
   private Mono<AbstractTreeNode> processChild(
@@ -119,13 +117,13 @@ public class TreeServiceImpl implements TreeService {
     if (child instanceof TreeBranch) {
       return loadBranch((TreeBranch) child, userId).cast(AbstractTreeNode.class);
     }
-    if (child instanceof TreeLeaf) {
+    if (child instanceof GeoTreeLeaf) {
       return featureSettingsRepository
-          .findByFeatureIdAndUserId(((TreeLeaf) child).getFeature().getId(), userId)
-          .switchIfEmpty(createFeatureSettings(((TreeLeaf) child).getFeature(), userId))
+          .findByFeatureIdAndUserId(((GeoTreeLeaf) child).getFeature().getId(), userId)
+          .switchIfEmpty(createFeatureSettings(((GeoTreeLeaf) child).getFeature(), userId))
           .map(featureSettings -> {
             //noinspection unchecked
-            ((TreeLeaf) child).getFeature().getProperties().setSettings(featureSettings);
+            ((GeoTreeLeaf) child).getFeature().getProperties().setSettings(featureSettings);
             return child;
           });
     }
