@@ -73,7 +73,7 @@ public class TomTomRteCalculationProperties extends AbstractRteCalculationProper
    * vignettes are to be avoided. Toll roads with vignettes in countries not in the list are
    * unaffected. It is an error to specify both avoidVignette and allowVignette.
    */
-  private List<Locale> avoidVignette; // TODO mongo & json mapper
+  private List<Locale> avoidVignette;
 
   /**
    * List of 3-character ISO 3166-1 alpha-3 country codes of countries in which toll roads with
@@ -82,7 +82,7 @@ public class TomTomRteCalculationProperties extends AbstractRteCalculationProper
    * is the same as avoiding all toll roads with vignettes. It is an error to specify both
    * avoidVignette and allowVignette.
    */
-  private List<Locale> allowVignette; // TODO mongo & json mapper
+  private List<Locale> allowVignette;
 
   private Date departAt;
 

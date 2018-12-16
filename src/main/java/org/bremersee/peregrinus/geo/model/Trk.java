@@ -33,4 +33,8 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @TypeAlias("Trk")
 public class Trk extends AbstractGeoJsonFeature<MultiLineString, TrkProperties> {
 
+  int orderValue() {
+    return 100;
+  }
+
 }

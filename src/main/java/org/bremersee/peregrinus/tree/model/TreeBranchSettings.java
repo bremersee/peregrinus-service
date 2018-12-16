@@ -14,50 +14,41 @@
  * limitations under the License.
  */
 
-package org.bremersee.peregrinus.geo.model;
+package org.bremersee.peregrinus.tree.model;
 
-import java.math.BigDecimal;
-import java.util.Date;
-import java.util.List;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
-import org.bremersee.common.model.Address;
-import org.bremersee.common.model.PhoneNumber;
+import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.TypeAlias;
+import org.springframework.data.annotation.Version;
+import org.springframework.data.mongodb.core.index.CompoundIndex;
+import org.springframework.data.mongodb.core.index.CompoundIndexes;
+import org.springframework.data.mongodb.core.mapping.Document;
 
 /**
  * @author Christian Bremer
  */
+@Document(collection = "directory-settings")
+@TypeAlias("branch-settings")
+@CompoundIndexes({
+    @CompoundIndex(name = "uk_user_node", def = "{'userId': 1, 'nodeId': 1 }", unique = true)
+})
 @Getter
 @Setter
 @ToString
-@TypeAlias("WptProperties")
-public class WptProperties extends AbstractGeoJsonFeatureProperties<WptSettings> {
+public class TreeBranchSettings {
 
-  private String internalType; // photo, video or not // TODO
+  @Id
+  private String id;
 
-  private Date time; // TODO
+  @Version
+  private Long version;
 
-  /**
-   * Elevation in meters
-   */
-  private BigDecimal ele;
+  private String userId;
 
-  /**
-   * Address
-   */
-  private Address address; // index?
+  private String nodeId;
 
-  /**
-   * Phone numbers
-   */
-  private List<PhoneNumber> phoneNumbers;
-
-  @Override
-  WptSettings doCreateDefaultSettings() {
-
-    return new WptSettings();
-  }
+  private boolean open = true;
 
 }

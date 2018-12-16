@@ -17,7 +17,9 @@
 package org.bremersee.peregrinus.geo.model;
 
 import com.fasterxml.jackson.annotation.JsonSubTypes;
+import com.fasterxml.jackson.annotation.JsonSubTypes.Type;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
+import com.fasterxml.jackson.annotation.JsonTypeInfo.As;
 import com.fasterxml.jackson.annotation.JsonTypeName;
 import lombok.Getter;
 import lombok.Setter;
@@ -25,6 +27,9 @@ import lombok.ToString;
 import org.locationtech.jts.geom.Geometry;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.TypeAlias;
+import org.springframework.data.annotation.Version;
+import org.springframework.data.mongodb.core.index.CompoundIndex;
+import org.springframework.data.mongodb.core.index.CompoundIndexes;
 import org.springframework.data.mongodb.core.index.GeoSpatialIndexType;
 import org.springframework.data.mongodb.core.index.GeoSpatialIndexed;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -35,44 +40,27 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @Getter
 @Setter
 @ToString
-@Document(collection = "feature")
-@TypeAlias("AbstractGeoJsonFeature")
+@Document(collection = "feature-settings")
+@TypeAlias("AbstractGeoJsonFeatureSettings")
+@CompoundIndexes({
+    @CompoundIndex(name = "uk_user_feature", def = "{'userId': 1, 'featureId': 1 }", unique = true)
+})
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, property = "type", visible = true)
 @JsonSubTypes({
+    @Type(value = RteSettings.class, name = "rte-settings")
 })
-@JsonTypeName("Feature")
-public abstract class AbstractGeoJsonFeature<G extends Geometry, P extends AbstractGeoJsonFeatureProperties>
-    implements Comparable<AbstractGeoJsonFeature> {
+public abstract class AbstractGeoJsonFeatureSettings {
 
   @Id
   private String id;
 
-  @GeoSpatialIndexed(type = GeoSpatialIndexType.GEO_2DSPHERE)
-  private G geometry;
+  @Version
+  private Long version;
 
-  private double[] bbox;
+  private String userId;
 
-  private P properties;
+  private String featureId;
 
-  abstract int orderValue();
-
-  @SuppressWarnings("Duplicates")
-  @Override
-  public int compareTo(final AbstractGeoJsonFeature o) {
-    if (this == o) {
-      return 0;
-    }
-    if (o == null) {
-      return -1;
-    }
-    int c = orderValue() - o.orderValue();
-    if (c != 0) {
-      return c;
-    }
-    if (getProperties() != null) {
-      return getProperties().compareTo(o.getProperties());
-    }
-    return 0;
-  }
+  private boolean displayedOnMap;
 
 }

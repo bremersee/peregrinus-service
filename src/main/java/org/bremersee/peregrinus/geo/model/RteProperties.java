@@ -20,6 +20,7 @@ import java.util.List;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
+import org.bremersee.geojson.GeoJsonFeatureCollection;
 import org.springframework.data.annotation.TypeAlias;
 
 /**
@@ -29,13 +30,16 @@ import org.springframework.data.annotation.TypeAlias;
 @Setter
 @ToString
 @TypeAlias("RteProperties")
-public class RteProperties extends AbstractGeoJsonFeatureProperties {
-
-  private AbstractRteCalculationProperties defaultCalculationProperties;
+public class RteProperties extends AbstractGeoJsonFeatureProperties<RteSettings> {
 
   private List<RteSegment> rteSegments;
 
+  @Override
+  RteSettings doCreateDefaultSettings() {
 
-  private DisplayColor displayColor; // individual settings?
+    final RteSettings settings = new RteSettings();
+    settings.setDisplayColor(DisplayColor.MAGENTA);
+    return settings;
+  }
 
 }

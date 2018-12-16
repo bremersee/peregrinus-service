@@ -14,27 +14,17 @@
  * limitations under the License.
  */
 
-package org.bremersee.peregrinus.geo.model;
+package org.bremersee.peregrinus.geo.mapper.tomtom;
 
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
-import org.locationtech.jts.geom.MultiLineString;
-import org.springframework.data.annotation.TypeAlias;
-import org.springframework.data.mongodb.core.mapping.Document;
+import org.bremersee.peregrinus.geo.model.Rte;
+import org.bremersee.peregrinus.geo.model.TomTomRteCalculationProperties;
+import org.bremersee.tomtom.model.Route;
 
 /**
  * @author Christian Bremer
  */
-@Getter
-@Setter
-@ToString
-@Document(collection = "feature")
-@TypeAlias("Rte")
-public class Rte extends AbstractGeoJsonFeature<MultiLineString, RteProperties> {
+public interface TomTomMapper {
 
-  int orderValue() {
-    return 50;
-  }
+  Rte readRoute(Route route, TomTomRteCalculationProperties calculationProperties);
 
 }

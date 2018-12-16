@@ -16,6 +16,7 @@
 
 package org.bremersee.peregrinus.geo.model;
 
+import java.util.Date;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -29,5 +30,21 @@ import lombok.ToString;
 public class RteSegmentProperties {
 
   private AbstractRteCalculationProperties calculationProperties;
+
+  private String name;
+
+  private Date time; // arrival and departure
+
+  private Integer lengthInMeters;
+
+  private Integer travelTimeInSeconds;
+
+  private Integer trafficDelayInSeconds;
+
+  private Integer noTrafficTravelTimeInSeconds;
+
+  private Integer historicTrafficTravelTimeInSeconds;
+
+  private Integer liveTrafficIncidentsTravelTimeInSeconds;
 
 }

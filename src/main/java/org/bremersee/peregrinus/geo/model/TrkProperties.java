@@ -31,13 +31,18 @@ import org.springframework.data.annotation.TypeAlias;
 @Setter
 @ToString
 @TypeAlias("TrkProperties")
-public class TrkProperties extends AbstractGeoJsonFeatureProperties {
+public class TrkProperties extends AbstractGeoJsonFeatureProperties<TrkSettings> {
 
   private List<List<BigDecimal>> eleLines;
 
   private List<List<Date>> timeLines;
 
+  @Override
+  TrkSettings doCreateDefaultSettings() {
 
-  private DisplayColor displayColor; // individual settings?
+    final TrkSettings settings = new TrkSettings();
+    settings.setDisplayColor(DisplayColor.DARK_GRAY);
+    return settings;
+  }
 
 }

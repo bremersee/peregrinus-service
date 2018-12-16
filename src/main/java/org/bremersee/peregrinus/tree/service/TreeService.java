@@ -14,27 +14,11 @@
  * limitations under the License.
  */
 
-package org.bremersee.peregrinus.geo.model;
-
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
-import org.locationtech.jts.geom.Point;
-import org.springframework.data.annotation.Transient;
+package org.bremersee.peregrinus.tree.service;
 
 /**
  * @author Christian Bremer
  */
-@Getter
-@Setter
-@ToString
-public class RtePoint {
-
-  @Transient
-  private final String type = "Feature"; // TODO anders machen
-
-  private Point geometry;
-
-  private RtePointProperties properties;
+public interface TreeService {
 
 }

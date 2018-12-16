@@ -1,5 +1,5 @@
 /*
- * Copyright 2017 the original author or authors.
+ * Copyright 2018 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,26 +14,17 @@
  * limitations under the License.
  */
 
-package org.bremersee.peregrinus.tree.repository;
+package org.bremersee.peregrinus.geo.repository;
 
-import java.util.List;
-import org.bremersee.peregrinus.tree.model.TreeBranch;
+import org.bremersee.peregrinus.geo.model.AbstractGeoJsonFeatureSettings;
 import org.springframework.data.mongodb.repository.ReactiveMongoRepository;
-import org.springframework.stereotype.Repository;
-import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 /**
  * @author Christian Bremer
  */
-@Repository
-public interface TreeBranchRepository extends ReactiveMongoRepository<TreeBranch, String> {
+public interface GeoJsonFeatureSettingsRepository
+    extends ReactiveMongoRepository<AbstractGeoJsonFeatureSettings, String> {
 
-  Mono<TreeBranch> findByNameAndParentIdIsNull(String name);
-
-  Mono<TreeBranch> findByNameAndParentId(String name, String parentId);
-
-  Flux<TreeBranch> findByNameContainsAndParentIdIsNull(
-      List<String> names);
-
+  Mono<AbstractGeoJsonFeatureSettings> findByFeatureIdAndUserId(String featureId, String userId);
 }

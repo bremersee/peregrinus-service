@@ -16,9 +16,16 @@
 
 package org.bremersee.peregrinus.tree.model;
 
+import com.fasterxml.jackson.annotation.JsonAutoDetect;
+import com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
+import java.util.List;
+import java.util.Map;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
+import org.springframework.data.annotation.Transient;
 import org.springframework.data.annotation.TypeAlias;
 import org.springframework.data.mongodb.core.mapping.Document;
 
@@ -31,5 +38,18 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @Setter
 @ToString(callSuper = true)
 public class TreeBranch extends AbstractTreeNode {
+
+  @Transient
+  private String displayName;
+
+  @Transient
+  private TreeBranchSettings settings;
+
+  @Transient
+  private List<AbstractTreeNode> children;
+
+  int orderValue() {
+    return 0;
+  }
 
 }

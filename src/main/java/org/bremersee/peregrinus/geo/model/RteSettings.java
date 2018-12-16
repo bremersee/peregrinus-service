@@ -16,48 +16,22 @@
 
 package org.bremersee.peregrinus.geo.model;
 
-import java.math.BigDecimal;
-import java.util.Date;
-import java.util.List;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
-import org.bremersee.common.model.Address;
-import org.bremersee.common.model.PhoneNumber;
 import org.springframework.data.annotation.TypeAlias;
+import org.springframework.data.mongodb.core.mapping.Document;
 
 /**
  * @author Christian Bremer
  */
 @Getter
 @Setter
-@ToString
-@TypeAlias("WptProperties")
-public class WptProperties extends AbstractGeoJsonFeatureProperties<WptSettings> {
+@ToString(callSuper = true)
+@Document(collection = "feature-settings")
+@TypeAlias("RteSettings")
+public class RteSettings extends AbstractGeoJsonFeatureSettings {
 
-  private String internalType; // photo, video or not // TODO
-
-  private Date time; // TODO
-
-  /**
-   * Elevation in meters
-   */
-  private BigDecimal ele;
-
-  /**
-   * Address
-   */
-  private Address address; // index?
-
-  /**
-   * Phone numbers
-   */
-  private List<PhoneNumber> phoneNumbers;
-
-  @Override
-  WptSettings doCreateDefaultSettings() {
-
-    return new WptSettings();
-  }
+  private DisplayColor displayColor = DisplayColor.MAGENTA;
 
 }

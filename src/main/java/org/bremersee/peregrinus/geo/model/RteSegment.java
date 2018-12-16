@@ -16,20 +16,50 @@
 
 package org.bremersee.peregrinus.geo.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
+import org.locationtech.jts.geom.Point;
+import org.springframework.data.annotation.Transient;
+import org.springframework.data.mongodb.core.mapping.Field;
 
 /**
  * @author Christian Bremer
  */
-@Getter
-@Setter
 @ToString
 public class RteSegment {
 
-  private RtePoint point;
+  @Field("geometry")
+  @JsonIgnore
+  private Point point;
 
+  @Getter
+  @Setter
   private RteSegmentProperties properties;
 
+  @Transient
+  @JsonProperty(value = "type", required = true)
+  @SuppressWarnings("unused")
+  private String getType() {
+    return "Feature";
+  }
+
+  @Transient
+  @JsonProperty(value = "type", required = true)
+  @SuppressWarnings("unused")
+  private void setType(String type) {
+    // ignored
+  }
+
+  @JsonProperty("geometry")
+  public Point getPoint() {
+    return point;
+  }
+
+  @JsonProperty("geometry")
+  public void setPoint(Point point) {
+    this.point = point;
+  }
 }

@@ -19,7 +19,9 @@ package org.bremersee.peregrinus.tree.model;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
+import org.bremersee.peregrinus.geo.model.AbstractGeoJsonFeature;
 import org.springframework.data.annotation.TypeAlias;
+import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 /**
@@ -32,7 +34,11 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @ToString(callSuper = true)
 public class TreeLeaf extends AbstractTreeNode {
 
-  //@DBRef
-  //private AbstractContent content;
+  @DBRef
+  private AbstractGeoJsonFeature feature;
+
+  int orderValue() {
+    return 50;
+  }
 
 }

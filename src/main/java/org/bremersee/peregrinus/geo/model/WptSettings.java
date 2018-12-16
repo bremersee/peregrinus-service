@@ -16,13 +16,20 @@
 
 package org.bremersee.peregrinus.geo.model;
 
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
+import org.springframework.data.annotation.TypeAlias;
+import org.springframework.data.mongodb.core.mapping.Document;
+
 /**
  * @author Christian Bremer
  */
-public class Source {
-
-  private String format; // something like gpx, kml -> enum with supported formats
-
-  // ref to minio
+@Getter
+@Setter
+@ToString(callSuper = true)
+@Document(collection = "feature-settings")
+@TypeAlias("WptSettings")
+public class WptSettings extends AbstractGeoJsonFeatureSettings {
 
 }

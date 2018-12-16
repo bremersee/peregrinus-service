@@ -16,21 +16,22 @@
 
 package org.bremersee.peregrinus.geo.model;
 
-import java.util.Date;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
+import org.springframework.data.annotation.TypeAlias;
+import org.springframework.data.mongodb.core.mapping.Document;
 
 /**
  * @author Christian Bremer
  */
 @Getter
 @Setter
-@ToString
-public class RtePointProperties {
+@ToString(callSuper = true)
+@Document(collection = "feature-settings")
+@TypeAlias("TrkSettings")
+public class TrkSettings extends AbstractGeoJsonFeatureSettings {
 
-  private String name;
-
-  private Date time; // arrival and departure
+  private DisplayColor displayColor = DisplayColor.DARK_GRAY;
 
 }

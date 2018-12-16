@@ -16,6 +16,10 @@
 
 package org.bremersee.peregrinus.tree.model;
 
+import com.fasterxml.jackson.annotation.JsonAutoDetect;
+import com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import java.util.Date;
 import lombok.Getter;
 import lombok.Setter;
@@ -25,20 +29,25 @@ import org.springframework.data.annotation.Version;
 import org.springframework.data.mongodb.core.index.CompoundIndex;
 import org.springframework.data.mongodb.core.index.CompoundIndexes;
 import org.springframework.data.mongodb.core.index.Indexed;
-import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.util.StringUtils;
 
 /**
  * @author Christian Bremer
  */
+@JsonAutoDetect(
+    fieldVisibility = Visibility.ANY,
+    getterVisibility = Visibility.NONE,
+    setterVisibility = Visibility.NONE)
+@JsonInclude(Include.NON_EMPTY)
 @Getter
 @Setter
-@ToString(exclude = {"parent"})
+@ToString
 @Document(collection = "directory")
 @CompoundIndexes({
-    @CompoundIndex(name = "uk_name_parent", def = "{'name': 1, 'parent': 1 }", unique = true)
+    @CompoundIndex(name = "uk_name_parent", def = "{'name': 1, 'parentId': 1 }", unique = true)
 })
-public abstract class AbstractTreeNode {
+public abstract class AbstractTreeNode implements Comparable<AbstractTreeNode> {
 
   @Id
   private String id;
@@ -47,26 +56,50 @@ public abstract class AbstractTreeNode {
   private Long version;
 
   //@CreatedDate
-  @Indexed(sparse = true)
+  @Indexed
   private Date created = new Date();
 
   //@CreatedBy
-  @Indexed(sparse = true)
+  @Indexed
   private String createdBy;
 
   //@LastModifiedDate
-  @Indexed(sparse = true)
+  @Indexed
   private Date modified = new Date();
 
   //@LastModifiedBy
-  @Indexed(sparse = true)
+  @Indexed
   private String modifiedBy;
 
   private String name;
 
-  @DBRef(lazy = true)
-  private TreeBranch parent;
+  @Indexed
+  private String parentId;
 
-  //private String parentId;
+  abstract int orderValue();
 
+  @SuppressWarnings("Duplicates")
+  @Override
+  public int compareTo(final AbstractTreeNode o) {
+    if (this == o) {
+      return 0;
+    }
+    if (o == null) {
+      return -1;
+    }
+    int c = orderValue() - o.orderValue();
+    if (c != 0) {
+      return c;
+    }
+
+    if (this instanceof TreeLeaf
+        && ((TreeLeaf) this).getFeature() != null
+        && (o instanceof TreeLeaf)) {
+      return ((TreeLeaf) this).getFeature().compareTo(((TreeLeaf) o).getFeature());
+    }
+
+    final String n1 = StringUtils.hasText(getName()) ? getName() : "";
+    final String n2 = StringUtils.hasText(o.getName()) ? o.getName() : "";
+    return n1.compareToIgnoreCase(n2);
+  }
 }

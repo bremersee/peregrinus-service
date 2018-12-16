@@ -33,4 +33,8 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @TypeAlias("Wpt")
 public class Wpt extends AbstractGeoJsonFeature<Point, WptProperties> {
 
+  int orderValue() {
+    return 0;
+  }
+
 }

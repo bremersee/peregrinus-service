@@ -32,6 +32,7 @@ import org.bremersee.gpx.model.WptType;
 import org.bremersee.peregrinus.geo.model.DisplayColor;
 import org.bremersee.peregrinus.geo.model.Trk;
 import org.bremersee.peregrinus.geo.model.TrkProperties;
+import org.bremersee.peregrinus.geo.model.TrkSettings;
 import org.bremersee.xml.JaxbContextBuilder;
 import org.locationtech.jts.geom.Coordinate;
 import org.locationtech.jts.geom.LineString;
@@ -66,6 +67,7 @@ class TrkMapper extends AbstractGpxMapper {
         trkType.getDesc(),
         trkType.getCmt(),
         trkType.getLinks()));
+    trk.getProperties().setSettings(new TrkSettings());
 
     final Optional<TrackExtension> trkExt = GpxJaxbContextHelper.findFirstExtension(
         TrackExtension.class,
@@ -74,9 +76,12 @@ class TrkMapper extends AbstractGpxMapper {
         getUnmarshaller());
 
     final DisplayColorT displayColor = trkExt.map(TrackExtension::getDisplayColor).orElse(null);
-    trk.getProperties().setDisplayColor(DisplayColor.findByGarminDisplayColor(
-        displayColor,
-        DisplayColor.DARK_GRAY));
+    trk
+        .getProperties()
+        .getSettings()
+        .setDisplayColor(DisplayColor.findByGarminDisplayColor(
+            displayColor,
+            DisplayColor.DARK_GRAY));
 
     parseTrkSegments(trkType.getTrksegs(), trk);
 

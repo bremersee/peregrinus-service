@@ -19,11 +19,14 @@ package org.bremersee.peregrinus.tree.repository;
 import org.bremersee.peregrinus.tree.model.AbstractTreeNode;
 import org.springframework.data.mongodb.repository.ReactiveMongoRepository;
 import org.springframework.stereotype.Repository;
+import reactor.core.publisher.Flux;
 
 /**
  * @author Christian Bremer
  */
 @Repository
 public interface TreeNodeRepository extends ReactiveMongoRepository<AbstractTreeNode, String> {
+
+  Flux<AbstractTreeNode> findByParentId(String parentId);
 
 }

@@ -23,6 +23,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import reactor.core.publisher.Mono;
 
 /**
  * @author Christian Bremer
@@ -33,10 +34,11 @@ public class GpxController {
 
   @PostMapping(
       consumes = MediaType.APPLICATION_XML_VALUE)
-  public void importGpx(
+  public Mono<Void> importGpx(
       @RequestBody Gpx gpx,
       @RequestParam(value = "branchId", required = false) String branchId) {
 
+    return Mono.empty();
   }
 
 }

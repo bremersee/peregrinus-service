@@ -27,8 +27,10 @@ import lombok.Setter;
 import lombok.ToString;
 import org.bremersee.common.model.Link;
 import org.bremersee.peregrinus.security.access.EmbeddedAccessControl;
+import org.springframework.data.annotation.Transient;
 import org.springframework.data.annotation.TypeAlias;
 import org.springframework.data.mongodb.core.index.Indexed;
+import org.springframework.util.StringUtils;
 
 /**
  * @author Christian Bremer
@@ -43,7 +45,8 @@ import org.springframework.data.mongodb.core.index.Indexed;
     @Type(value = TrkProperties.class, name = "TRK"),
     @Type(value = WptProperties.class, name = "WPT")
 })
-public abstract class AbstractGeoJsonFeatureProperties {
+public abstract class AbstractGeoJsonFeatureProperties<S extends AbstractGeoJsonFeatureSettings>
+    implements Comparable<AbstractGeoJsonFeatureProperties> {
 
   private EmbeddedAccessControl accessControl = new EmbeddedAccessControl();
 
@@ -74,5 +77,41 @@ public abstract class AbstractGeoJsonFeatureProperties {
    */
   @Indexed
   private Date stopTime;
+
+  @Transient
+  private S settings;
+
+  public S createDefaultSettings(
+      final String featureId,
+      final String userId,
+      final boolean displayOnMap) {
+
+    final S settings = doCreateDefaultSettings();
+    settings.setDisplayedOnMap(displayOnMap);
+    settings.setFeatureId(featureId);
+    settings.setUserId(userId);
+    return settings;
+  }
+
+  abstract S doCreateDefaultSettings();
+
+  public int compareTo(final AbstractGeoJsonFeatureProperties o) {
+    if (this == o) {
+      return 0;
+    }
+    if (o == null) {
+      return -1;
+    }
+    final String name1 = StringUtils.hasText(getName()) ? getName() : "";
+    final String name2 = StringUtils.hasText(o.getName()) ? o.getName() : "";
+    final int c = name1.compareTo(name2);
+    if (c != 0) {
+      return c;
+    }
+    if (getModified() != null && o.getModified() != null) {
+      return getModified().compareTo(o.getModified());
+    }
+    return 0;
+  }
 
 }
