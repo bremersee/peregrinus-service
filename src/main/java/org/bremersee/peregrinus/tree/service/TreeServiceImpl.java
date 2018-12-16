@@ -26,7 +26,6 @@ import org.bremersee.peregrinus.tree.model.TreeBranchSettings;
 import org.bremersee.peregrinus.tree.model.GeoTreeLeaf;
 import org.bremersee.peregrinus.tree.repository.TreeBranchRepository;
 import org.bremersee.peregrinus.tree.repository.TreeBranchSettingsRepository;
-import org.bremersee.peregrinus.tree.repository.GeoTreeLeafRepository;
 import org.bremersee.peregrinus.tree.repository.TreeNodeRepository;
 import reactor.core.publisher.Mono;
 
@@ -51,14 +50,25 @@ public class TreeServiceImpl implements TreeService {
 
     return branchRepository
         .findByNameAndParentIdIsNull(branchName)
-        .switchIfEmpty(createBranch(userId, branchName, null))
+        .switchIfEmpty(createNewBranch(userId, null, branchName))
         .flatMap(treeBranch -> loadBranch(treeBranch, userId));
   }
 
-  private Mono<TreeBranch> createBranch(
+  /*
+  public Mono<TreeBranch> createBranch(
       final String userId,
-      final String name,
-      final String parentId) {
+      final String parentId,
+      final String name) {
+
+    // TODO has access, name + parent exists
+    return null;
+  }
+  */
+
+  private Mono<TreeBranch> createNewBranch(
+      final String userId,
+      final String parentId,
+      final String name) {
 
     final Date currentDate = new Date();
     final TreeBranch branch = new TreeBranch();
