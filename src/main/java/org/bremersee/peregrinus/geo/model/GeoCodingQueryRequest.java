@@ -14,16 +14,37 @@
  * limitations under the License.
  */
 
-package org.bremersee.peregrinus.tree.service;
+package org.bremersee.peregrinus.geo.model;
 
-import org.bremersee.peregrinus.tree.model.TreeBranch;
-import reactor.core.publisher.Mono;
+import java.util.List;
+import java.util.Locale;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
+import org.locationtech.jts.geom.Polygon;
 
 /**
  * @author Christian Bremer
  */
-public interface TreeService {
+@Getter
+@Setter
+@ToString(callSuper = true)
+public class GeoCodingQueryRequest extends AbstractGeoCodingRequest {
 
-  Mono<TreeBranch> loadPrivateTree(String userId);
+  private String query;
+
+  private Integer limit = 10;
+
+  /**
+   * Preferred language.
+   */
+  private Locale language;
+
+  /**
+   * Limit search results to a specific country (or a list of countries).
+   */
+  private List<Locale> countries;
+
+  private Polygon boundingBox;
 
 }

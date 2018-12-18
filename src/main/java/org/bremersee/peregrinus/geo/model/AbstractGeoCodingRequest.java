@@ -14,19 +14,20 @@
  * limitations under the License.
  */
 
-package org.bremersee.peregrinus.geo.routing;
+package org.bremersee.peregrinus.geo.model;
 
-import java.util.List;
-import org.bremersee.peregrinus.geo.model.AbstractRteCalculationProperties;
-import org.bremersee.peregrinus.geo.model.Rte;
-import org.springframework.data.mongodb.core.geo.GeoJsonPoint;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
 
 /**
  * @author Christian Bremer
  */
-public interface RteCalculator {
+@Getter
+@Setter
+@ToString
+public abstract class AbstractGeoCodingRequest implements GeoProviderAware {
 
-  // TODO                 something like locationAware, latLngAware
-  Rte calculateRoute(List<GeoJsonPoint> locations, AbstractRteCalculationProperties properties);
+  private GeoProvider geoProvider;
 
 }

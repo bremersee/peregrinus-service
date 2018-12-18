@@ -85,9 +85,15 @@
     </dependency>
     <dependency>
       <groupId>org.bremersee</groupId>
+      <artifactId>nominatim-client</artifactId>
+      <version>1.0.0-SNAPSHOT</version>
+    </dependency>
+    <dependency>
+      <groupId>org.bremersee</groupId>
       <artifactId>tomtom-client</artifactId>
       <version>1.0.0-SNAPSHOT</version>
     </dependency>
+
     <dependency>
       <groupId>org.modelmapper</groupId>
       <artifactId>modelmapper</artifactId>

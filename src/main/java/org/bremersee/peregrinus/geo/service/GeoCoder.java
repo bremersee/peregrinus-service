@@ -14,11 +14,17 @@
  * limitations under the License.
  */
 
-package org.bremersee.peregrinus.geo.mapper.tomtom;
+package org.bremersee.peregrinus.geo.service;
+
+import org.bremersee.peregrinus.geo.model.GeoCodingQueryRequest;
+import org.bremersee.peregrinus.geo.model.GeoCodingResult;
+import reactor.core.publisher.Flux;
 
 /**
  * @author Christian Bremer
  */
-public class Placeholder {
+public interface GeoCoder {
+
+  Flux<GeoCodingResult> geocode(GeoCodingQueryRequest request);
 
 }

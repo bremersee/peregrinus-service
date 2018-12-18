@@ -14,11 +14,25 @@
  * limitations under the License.
  */
 
-package org.bremersee.peregrinus.geocoding;
+package org.bremersee.peregrinus.geo.mapper.nominatim;
+
+import javax.validation.constraints.NotNull;
+import org.bremersee.nominatim.model.SearchRequest;
+import org.bremersee.nominatim.model.SearchResult;
+import org.bremersee.peregrinus.geo.model.GeoCodingQueryRequest;
+import org.bremersee.peregrinus.geo.model.GeoCodingResult;
+import org.springframework.validation.annotation.Validated;
 
 /**
  * @author Christian Bremer
  */
-public class Placeholder {
+@Validated
+public interface NominatimMapper {
+
+  @NotNull
+  SearchRequest mapToSearchRequest(@NotNull GeoCodingQueryRequest source);
+
+  @NotNull
+  GeoCodingResult mapToGeoCodingResult(@NotNull SearchResult source);
 
 }

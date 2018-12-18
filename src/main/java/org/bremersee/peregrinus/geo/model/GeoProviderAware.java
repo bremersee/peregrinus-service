@@ -14,16 +14,13 @@
  * limitations under the License.
  */
 
-package org.bremersee.peregrinus.tree.service;
-
-import org.bremersee.peregrinus.tree.model.TreeBranch;
-import reactor.core.publisher.Mono;
+package org.bremersee.peregrinus.geo.model;
 
 /**
  * @author Christian Bremer
  */
-public interface TreeService {
+public interface GeoProviderAware {
 
-  Mono<TreeBranch> loadPrivateTree(String userId);
+  GeoProvider getGeoProvider();
 
 }

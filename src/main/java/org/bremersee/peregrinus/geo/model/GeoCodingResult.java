@@ -14,16 +14,30 @@
  * limitations under the License.
  */
 
-package org.bremersee.peregrinus.tree.service;
+package org.bremersee.peregrinus.geo.model;
 
-import org.bremersee.peregrinus.tree.model.TreeBranch;
-import reactor.core.publisher.Mono;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
+import org.bremersee.common.model.Address;
+import org.locationtech.jts.geom.Geometry;
+import org.locationtech.jts.geom.Point;
+import org.locationtech.jts.geom.Polygon;
 
 /**
  * @author Christian Bremer
  */
-public interface TreeService {
+@Getter
+@Setter
+@ToString
+public class GeoCodingResult {
 
-  Mono<TreeBranch> loadPrivateTree(String userId);
+  private Address address;
+
+  private Point position;
+
+  private Geometry shape;
+
+  private Polygon boundingBox;
 
 }

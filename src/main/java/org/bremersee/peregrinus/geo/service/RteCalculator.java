@@ -14,16 +14,18 @@
  * limitations under the License.
  */
 
-package org.bremersee.peregrinus.tree.service;
+package org.bremersee.peregrinus.geo.service;
 
-import org.bremersee.peregrinus.tree.model.TreeBranch;
-import reactor.core.publisher.Mono;
+import java.util.List;
+import org.bremersee.peregrinus.geo.model.AbstractRteCalculationProperties;
+import org.bremersee.peregrinus.geo.model.Rte;
+import org.springframework.data.mongodb.core.geo.GeoJsonPoint;
 
 /**
  * @author Christian Bremer
  */
-public interface TreeService {
+public interface RteCalculator {
 
-  Mono<TreeBranch> loadPrivateTree(String userId);
+  Rte calculateRoute(List<GeoJsonPoint> locations, AbstractRteCalculationProperties properties);
 
 }

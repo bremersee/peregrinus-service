@@ -19,6 +19,7 @@ package org.bremersee.peregrinus.security.access;
 import java.util.LinkedHashSet;
 import java.util.Set;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 import org.bremersee.security.access.AuthorizationSet;
@@ -31,8 +32,18 @@ import org.springframework.data.mongodb.core.index.Indexed;
 @Getter
 @Setter
 @ToString
+@NoArgsConstructor
 @TypeAlias("EmbeddedAuthorizationSet")
 public class EmbeddedAuthorizationSet implements AuthorizationSet {
+
+  public EmbeddedAuthorizationSet(final AuthorizationSet authorizationSet) {
+    if (authorizationSet != null) {
+      guest = authorizationSet.isGuest();
+      users.addAll(authorizationSet.getUsers());
+      roles.addAll(authorizationSet.getRoles());
+      groups.addAll(authorizationSet.getGroups());
+    }
+  }
 
   @Indexed
   private boolean guest;

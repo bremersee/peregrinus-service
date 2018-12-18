@@ -24,6 +24,8 @@ import java.util.Date;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
+import org.bremersee.peregrinus.security.access.EmbeddedAccessControl;
+import org.bremersee.peregrinus.security.access.EmbeddedAuthorizationSet;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.TypeAlias;
 import org.springframework.data.annotation.Version;
@@ -77,6 +79,8 @@ public abstract class AbstractTreeNode implements Comparable<AbstractTreeNode> {
 
   @Indexed
   private String parentId;
+
+  private EmbeddedAccessControl accessControl = new EmbeddedAccessControl();
 
   abstract int orderValue();
 

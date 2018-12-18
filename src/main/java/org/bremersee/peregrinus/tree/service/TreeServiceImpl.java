@@ -20,13 +20,15 @@ import java.util.Date;
 import org.bremersee.peregrinus.geo.model.AbstractGeoJsonFeature;
 import org.bremersee.peregrinus.geo.model.AbstractGeoJsonFeatureSettings;
 import org.bremersee.peregrinus.geo.repository.GeoJsonFeatureSettingsRepository;
+import org.bremersee.peregrinus.security.access.EmbeddedAccessControl;
 import org.bremersee.peregrinus.tree.model.AbstractTreeNode;
+import org.bremersee.peregrinus.tree.model.GeoTreeLeaf;
 import org.bremersee.peregrinus.tree.model.TreeBranch;
 import org.bremersee.peregrinus.tree.model.TreeBranchSettings;
-import org.bremersee.peregrinus.tree.model.GeoTreeLeaf;
 import org.bremersee.peregrinus.tree.repository.TreeBranchRepository;
 import org.bremersee.peregrinus.tree.repository.TreeBranchSettingsRepository;
 import org.bremersee.peregrinus.tree.repository.TreeNodeRepository;
+import org.bremersee.security.access.PermissionConstants;
 import reactor.core.publisher.Mono;
 
 /**
@@ -44,6 +46,7 @@ public class TreeServiceImpl implements TreeService {
 
   private GeoJsonFeatureSettingsRepository featureSettingsRepository;
 
+  @Override
   public Mono<TreeBranch> loadPrivateTree(final String userId) {
 
     final String branchName = "u-" + userId;
@@ -78,7 +81,20 @@ public class TreeServiceImpl implements TreeService {
     branch.setModifiedBy(userId);
     branch.setName(name);
     branch.setParentId(parentId);
-    return branchRepository.save(branch);
+    if (parentId != null) {
+      return branchRepository.findById(parentId)
+          .map(AbstractTreeNode::getAccessControl)
+          .switchIfEmpty(Mono.just(new EmbeddedAccessControl().owner(userId).ensureAdminAccess()))
+          .flatMap(embeddedAccessControl -> {
+            branch.setAccessControl(
+                new EmbeddedAccessControl(embeddedAccessControl)
+                    .addUser(userId, PermissionConstants.ALL));
+            return branchRepository.save(branch);
+          });
+    } else {
+      branch.setAccessControl(new EmbeddedAccessControl().owner(userId).ensureAdminAccess());
+      return branchRepository.save(branch);
+    }
   }
 
   private Mono<TreeBranch> loadBranch(final TreeBranch branch, final String userId) {
