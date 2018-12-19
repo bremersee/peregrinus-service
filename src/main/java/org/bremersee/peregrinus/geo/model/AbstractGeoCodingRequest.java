@@ -28,6 +28,6 @@ import lombok.ToString;
 @ToString
 public abstract class AbstractGeoCodingRequest implements GeoProviderAware {
 
-  private GeoProvider geoProvider;
+  private GeoProvider geoProvider = GeoProvider.NOMINATIM;
 
 }

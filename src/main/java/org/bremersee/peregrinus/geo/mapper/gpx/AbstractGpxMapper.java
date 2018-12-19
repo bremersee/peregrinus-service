@@ -24,7 +24,6 @@ import java.util.function.Supplier;
 import javax.xml.bind.Unmarshaller;
 import org.bremersee.common.model.Address;
 import org.bremersee.common.model.Link;
-import org.bremersee.common.model.LongAndShort;
 import org.bremersee.common.model.PhoneNumber;
 import org.bremersee.garmin.gpx.v3.model.ext.AddressT;
 import org.bremersee.garmin.gpx.v3.model.ext.PhoneNumberT;
@@ -85,16 +84,10 @@ abstract class AbstractGpxMapper {
       return null;
     }
     final Address address = new Address();
-    if (StringUtils.hasText(addressType.getCity())) {
-      address.setLocality(new LongAndShort().longName(addressType.getCity()));
-    }
-    if (StringUtils.hasText(addressType.getCountry())) {
-      address.setCountry(new LongAndShort().longName(addressType.getCountry()));
-    }
+    address.setCity(addressType.getCity());
+    address.setCountry(addressType.getCountry());
     address.setPostalCode(addressType.getPostalCode());
-    if (StringUtils.hasText(addressType.getState())) {
-      address.setLocality(new LongAndShort().longName(addressType.getState()));
-    }
+    address.setState(addressType.getState());
     if (addressType.getStreetAddresses() != null && !addressType.getStreetAddresses().isEmpty()) {
       StringBuilder sb = new StringBuilder();
       for (final String line : addressType.getStreetAddresses()) {
@@ -103,7 +96,7 @@ abstract class AbstractGpxMapper {
         }
         sb.append(line);
       }
-      address.setRoute(sb.toString());
+      address.setStreet(sb.toString());
     }
     return address;
   }

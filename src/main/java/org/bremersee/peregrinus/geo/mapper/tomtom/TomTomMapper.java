@@ -16,15 +16,28 @@
 
 package org.bremersee.peregrinus.geo.mapper.tomtom;
 
+import javax.validation.constraints.NotNull;
+import org.bremersee.peregrinus.geo.model.GeoCodingQueryRequest;
+import org.bremersee.peregrinus.geo.model.GeoCodingResult;
 import org.bremersee.peregrinus.geo.model.Rte;
 import org.bremersee.peregrinus.geo.model.TomTomRteCalculationProperties;
+import org.bremersee.tomtom.model.GeocodeRequest;
+import org.bremersee.tomtom.model.GeocodeResponse;
 import org.bremersee.tomtom.model.Route;
+import org.springframework.validation.annotation.Validated;
 
 /**
  * @author Christian Bremer
  */
+@Validated
 public interface TomTomMapper {
 
-  Rte readRoute(Route route, TomTomRteCalculationProperties calculationProperties);
+  @NotNull
+  GeocodeRequest mapToGeocodeRequest(@NotNull GeoCodingQueryRequest source);
+
+  @NotNull
+  Iterable<GeoCodingResult> mapToGeoCodingResults(@NotNull GeocodeResponse source);
+
+  Rte mapToRte(Route route, TomTomRteCalculationProperties calculationProperties);
 
 }

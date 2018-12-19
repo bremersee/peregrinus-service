@@ -18,20 +18,34 @@ package org.bremersee.peregrinus.geo.mapper.tomtom;
 
 import java.sql.Date;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
+import org.bremersee.common.model.Address;
 import org.bremersee.geojson.utils.GeometryUtils;
-import org.bremersee.peregrinus.geo.model.DisplayColor;
+import org.bremersee.peregrinus.geo.model.GeoCodingQueryRequest;
+import org.bremersee.peregrinus.geo.model.GeoCodingResult;
 import org.bremersee.peregrinus.geo.model.Rte;
 import org.bremersee.peregrinus.geo.model.RteProperties;
 import org.bremersee.peregrinus.geo.model.RteSegment;
 import org.bremersee.peregrinus.geo.model.RteSegmentProperties;
 import org.bremersee.peregrinus.geo.model.TomTomRteCalculationProperties;
+import org.bremersee.tomtom.model.BoundingBox;
+import org.bremersee.tomtom.model.GeocodeRequest;
+import org.bremersee.tomtom.model.GeocodeResponse;
+import org.bremersee.tomtom.model.GeocodeResult;
+import org.bremersee.tomtom.model.Language;
+import org.bremersee.tomtom.model.LatLon;
+import org.bremersee.tomtom.model.LatLonAware;
 import org.bremersee.tomtom.model.LatitudeLongitude;
 import org.bremersee.tomtom.model.Route;
 import org.bremersee.tomtom.model.RouteLeg;
 import org.bremersee.tomtom.model.RouteSummary;
 import org.locationtech.jts.geom.Coordinate;
 import org.locationtech.jts.geom.LineString;
+import org.locationtech.jts.geom.Point;
+import org.locationtech.jts.geom.Polygon;
 
 /**
  * @author Christian Bremer
@@ -39,7 +53,112 @@ import org.locationtech.jts.geom.LineString;
 public class TomTomMapperImpl implements TomTomMapper {
 
   @Override
-  public Rte readRoute(
+  public GeocodeRequest mapToGeocodeRequest(final GeoCodingQueryRequest source) {
+    return GeocodeRequest
+        .builder()
+        .boundingBox(mapToBoundingBox(source))
+        .countrySet(source.getCountries())
+        .language(Language.fromLocale(source.getLanguage()))
+        .limit(source.getLimit())
+        .query(source.getQuery())
+        .build();
+  }
+
+  @Override
+  public Iterable<GeoCodingResult> mapToGeoCodingResults(final GeocodeResponse source) {
+    if (!source.hasResults()) {
+      return Collections.emptyList();
+    }
+    return source.getResults()
+        .stream()
+        .map(this::mapToGeoCodingResult)
+        .collect(Collectors.toList());
+  }
+
+  private GeoCodingResult mapToGeoCodingResult(final GeocodeResult source) {
+    final GeoCodingResult destination = new GeoCodingResult();
+    destination.setAddress(mapToAddress(source));
+    destination.setBoundingBox(mapToBoundingBox(source));
+    destination.setPosition(mapToPosition(source));
+    return destination;
+  }
+
+  private Point mapToPosition(final GeocodeResult source) {
+    if (source.getPosition() == null || !source.getPosition().hasValues()) {
+      return null;
+    }
+    return GeometryUtils.createPointWGS84(
+        source.getPosition().getLatitude(),
+        source.getPosition().getLongitude());
+  }
+
+  private Polygon mapToBoundingBox(final GeocodeResult source) {
+    if (!source.getBoundingBox().hasValues()) {
+      return null;
+    }
+    final BoundingBox boundingBox = source.getBoundingBox();
+    final LatLon btmRightPoint = boundingBox.getBtmRightPoint();
+    final LatLon topLeftPoint = boundingBox.getTopLeftPoint();
+    final Coordinate btmRight = GeometryUtils.createCoordinateWGS84(
+        btmRightPoint.getLatitude(),
+        btmRightPoint.getLongitude());
+    final Coordinate topLeft = GeometryUtils.createCoordinateWGS84(
+        topLeftPoint.getLatitude(),
+        topLeftPoint.getLongitude());
+    return GeometryUtils.getBoundingBoxAsPolygon2D(
+        GeometryUtils.createLineString(Arrays.asList(btmRight, topLeft)));
+  }
+
+  @SuppressWarnings("Duplicates")
+  private Address mapToAddress(final GeocodeResult source) {
+
+    if (source.getAddress() == null) {
+      return null;
+    }
+
+    final Address destination = new Address();
+    destination.setStreet(source.getAddress().getStreetName());
+    destination.setStreetNumber(source.getAddress().getStreetNumber());
+    destination.setPostalCode(source.getAddress().getPostalCode());
+    destination.setCity(source.getAddress().getMunicipality());
+    destination.setSuburb(source.getAddress().getMunicipalitySubdivision());
+    destination.setStreetNumber(source.getAddress().getCountrySubdivision());
+    destination.setCountry(source.getAddress().getCountry());
+    destination.setCountryCode(source.getAddress().getCountryCode());
+    destination.setFormattedAddress(source.getAddress().getFreeformAddress());
+    return destination;
+  }
+
+  private BoundingBox mapToBoundingBox(final GeoCodingQueryRequest source) {
+    if (source.getBoundingBox() == null) {
+      return null;
+    }
+    final double[] bbox = GeometryUtils.getBoundingBox(source.getBoundingBox());
+    if (bbox == null) {
+      return null;
+    }
+    final Coordinate btmRight = GeometryUtils.getSouthEast(bbox);
+    final LatLon btmRightPoint = new LatLon(
+        LatLonAware
+            .builder()
+            .longitude(btmRight.getX())
+            .latitude(btmRight.getY())
+            .build());
+    final Coordinate topLeft = GeometryUtils.getNorthWest(bbox);
+    final LatLon topLeftPoint = new LatLon(
+        LatLonAware
+            .builder()
+            .longitude(topLeft.getX())
+            .latitude(topLeft.getY())
+            .build());
+    final BoundingBox boundingBox = new BoundingBox();
+    boundingBox.setBtmRightPoint(btmRightPoint);
+    boundingBox.setTopLeftPoint(topLeftPoint);
+    return boundingBox;
+  }
+
+  @Override
+  public Rte mapToRte(
       final Route route,
       final TomTomRteCalculationProperties calculationProperties) { // TODO we need more info
 

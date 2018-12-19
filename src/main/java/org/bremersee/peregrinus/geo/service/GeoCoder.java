@@ -16,15 +16,18 @@
 
 package org.bremersee.peregrinus.geo.service;
 
+import javax.validation.constraints.NotNull;
 import org.bremersee.peregrinus.geo.model.GeoCodingQueryRequest;
 import org.bremersee.peregrinus.geo.model.GeoCodingResult;
+import org.springframework.validation.annotation.Validated;
 import reactor.core.publisher.Flux;
 
 /**
  * @author Christian Bremer
  */
+@Validated
 public interface GeoCoder {
 
-  Flux<GeoCodingResult> geocode(GeoCodingQueryRequest request);
+  Flux<GeoCodingResult> geocode(@NotNull GeoCodingQueryRequest request);
 
 }

@@ -19,6 +19,8 @@ package org.bremersee.peregrinus.geo.service;
 import org.bremersee.nominatim.client.ReactiveNominatimClient;
 import org.bremersee.peregrinus.geo.mapper.nominatim.NominatimMapper;
 import org.bremersee.peregrinus.geo.mapper.nominatim.NominatimMapperImpl;
+import org.bremersee.peregrinus.geo.mapper.tomtom.TomTomMapper;
+import org.bremersee.peregrinus.geo.mapper.tomtom.TomTomMapperImpl;
 import org.bremersee.peregrinus.geo.model.GeoCodingQueryRequest;
 import org.bremersee.peregrinus.geo.model.GeoCodingResult;
 import org.bremersee.peregrinus.geo.model.GeoProvider;
@@ -31,6 +33,8 @@ import reactor.core.publisher.Flux;
 public class GeoCoderImpl implements GeoCoder {
 
   private NominatimMapper nominatimMapper = new NominatimMapperImpl();
+
+  private TomTomMapper tomTomMapper = new TomTomMapperImpl();
 
   private ReactiveNominatimClient nominatimClient;
 
@@ -46,12 +50,15 @@ public class GeoCoderImpl implements GeoCoder {
     switch (geoProvider) {
 
       case TOMTOM:
-        return null;
+        return tomTomClient.geocode(tomTomMapper.mapToGeocodeRequest(request))
+            .flatMapIterable(tomTomMapper::mapToGeoCodingResults)
+            .filter(geoCodingResult -> geoCodingResult.getPosition() != null);
 
       default:
         return nominatimClient
             .geocode(nominatimMapper.mapToSearchRequest(request))
-            .map(nominatimMapper::mapToGeoCodingResult);
+            .map(nominatimMapper::mapToGeoCodingResult)
+            .filter(geoCodingResult -> geoCodingResult.getPosition() != null);
     }
   }
 }

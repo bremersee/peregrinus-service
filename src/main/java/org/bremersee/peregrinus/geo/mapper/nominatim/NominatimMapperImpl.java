@@ -17,14 +17,12 @@
 package org.bremersee.peregrinus.geo.mapper.nominatim;
 
 import org.bremersee.common.model.Address;
-import org.bremersee.common.model.LongAndShort;
 import org.bremersee.geojson.utils.GeometryUtils;
 import org.bremersee.nominatim.model.SearchRequest;
 import org.bremersee.nominatim.model.SearchResult;
 import org.bremersee.peregrinus.geo.model.GeoCodingQueryRequest;
 import org.bremersee.peregrinus.geo.model.GeoCodingResult;
 import org.locationtech.jts.geom.Polygon;
-import org.springframework.util.StringUtils;
 
 /**
  * @author Christian Bremer
@@ -44,21 +42,22 @@ public class NominatimMapperImpl implements NominatimMapper {
         .build();
   }
 
-  private String mapToLanguage(GeoCodingQueryRequest source) {
+  private String mapToLanguage(final GeoCodingQueryRequest source) {
     if (source.getLanguage() != null && source.getLanguage().getLanguage() != null) {
       return source.getLanguage().getLanguage();
     }
     return "en";
   }
 
-  private double[] mapToViewBox(GeoCodingQueryRequest source) {
+  private double[] mapToViewBox(final GeoCodingQueryRequest source) {
     if (source.getBoundingBox() != null) {
       return GeometryUtils.getBoundingBox(source.getBoundingBox());
     }
     return null;
   }
 
-  public GeoCodingResult mapToGeoCodingResult(SearchResult source) {
+  @Override
+  public GeoCodingResult mapToGeoCodingResult(final SearchResult source) {
     GeoCodingResult destination = new GeoCodingResult();
     if (source != null) {
       destination.setAddress(mapToCommonAddress(source));
@@ -73,37 +72,25 @@ public class NominatimMapperImpl implements NominatimMapper {
     return destination;
   }
 
-  private Address mapToCommonAddress(SearchResult source) {
-    final Address destination = new Address();
+  @SuppressWarnings("Duplicates")
+  private Address mapToCommonAddress(final SearchResult source) {
     if (source.getAddress() == null) {
-      return destination;
+      return null;
     }
-    if (StringUtils.hasText(source.getAddress().getCity())) {
-      destination.setLocality(new LongAndShort().longName(source.getAddress().getCity()));
-    }
-    if (StringUtils.hasText(source.getAddress().getCountry())
-        || StringUtils.hasText(source.getAddress().getCountryCode())) {
-      destination.setCountry(new LongAndShort()
-          .longName(source.getAddress().getCountry())
-          .shortName(source.getAddress().getCountryCode()));
-    }
-    if (StringUtils.hasText(source.getAddress().getHouseNumber())) {
-      destination.setStreetNumber(source.getAddress().getHouseNumber());
-    }
-    if (StringUtils.hasText(source.getAddress().getPostcode())) {
-      destination.setPostalCode(source.getAddress().getPostcode());
-    }
-    if (StringUtils.hasText(source.getAddress().getRoad())) {
-      destination.setRoute(source.getAddress().getRoad());
-    }
-    if (StringUtils.hasText(source.getAddress().getState())) {
-      destination.setAdministrativeAreaLevel1(
-          new LongAndShort().shortName(source.getAddress().getState()));
-    }
+    final Address destination = new Address();
+    destination.setStreet(source.getAddress().getRoad());
+    destination.setStreetNumber(source.getAddress().getHouseNumber());
+    destination.setPostalCode(source.getAddress().getPostcode());
+    destination.setCity(source.getAddress().findCity());
+    destination.setSuburb(source.getAddress().getSuburb());
+    destination.setStreetNumber(source.getAddress().getState());
+    destination.setCountry(source.getAddress().getCountry());
+    destination.setCountryCode(source.getAddress().getCountryCode());
+    destination.setFormattedAddress(source.getAddress().getFormattedAddress());
     return destination;
   }
 
-  private Polygon mapToBoundingBox(SearchResult source) {
+  private Polygon mapToBoundingBox(final SearchResult source) {
     if (source.getBoundingBox() == null) {
       return null;
     }

@@ -33,7 +33,7 @@ public class GeoCodingQueryRequest extends AbstractGeoCodingRequest {
 
   private String query;
 
-  private Integer limit = 10;
+  private Integer limit = 6;
 
   /**
    * Preferred language.
