@@ -25,8 +25,8 @@ import reactor.core.publisher.Flux;
  * @author Christian Bremer
  */
 @Repository
-public interface TreeNodeRepository extends ReactiveMongoRepository<AbstractTreeNode, String> {
+public interface TreeNodeRepository
+    extends ReactiveMongoRepository<AbstractTreeNode, String>, TreeNodeRepositoryCustom {
 
   Flux<AbstractTreeNode> findByParentId(String parentId);
-
 }

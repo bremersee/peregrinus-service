@@ -1,5 +1,5 @@
 /*
- * Copyright 2017 the original author or authors.
+ * Copyright 2018 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,20 +14,26 @@
  * limitations under the License.
  */
 
-package org.bremersee.peregrinus.tree.repository;
+package org.bremersee.peregrinus.config;
 
-import org.bremersee.peregrinus.tree.model.BranchSettings;
-import org.springframework.data.mongodb.repository.ReactiveMongoRepository;
-import org.springframework.stereotype.Repository;
-import reactor.core.publisher.Mono;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
+import org.springframework.boot.context.properties.ConfigurationProperties;
 
 /**
  * @author Christian Bremer
  */
-@Repository
-public interface TreeBranchSettingsRepository
-    extends ReactiveMongoRepository<BranchSettings, String> {
+@ConfigurationProperties(prefix = "bremersee.peregrinus")
+@Getter
+@Setter
+@ToString
+public class PeregrinusProperties {
 
-  Mono<BranchSettings> findByNodeIdAndUserId(String nodeId, String userId);
+  private String groupmanBaseUri;
+
+  private String tomTomKey;
+
+  private String googleKey;
 
 }

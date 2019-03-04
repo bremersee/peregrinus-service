@@ -16,8 +16,8 @@
 
 package org.bremersee.peregrinus.geo.mapper.gpx;
 
+import java.time.Instant;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import javax.xml.datatype.XMLGregorianCalendar;
@@ -85,7 +85,7 @@ class WptMapper extends AbstractGpxMapper {
             getUnmarshaller())
         .map(CreationTimeExtension::getCreationTime)
         .orElse(wptType.getTime());
-    final Date time = cal != null ? cal.toGregorianCalendar().getTime() : null;
+    final Instant time = cal != null ? cal.toGregorianCalendar().getTime().toInstant() : null;
     wpt.getProperties().setTime(time);
 
     if (GarminType.PHOTO.equals(wptType.getType())) {

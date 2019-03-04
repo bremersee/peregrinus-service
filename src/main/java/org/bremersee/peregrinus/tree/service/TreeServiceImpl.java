@@ -16,118 +16,316 @@
 
 package org.bremersee.peregrinus.tree.service;
 
-import java.util.Date;
+import java.util.Collection;
+import java.util.Set;
+import java.util.stream.Collectors;
+import org.bremersee.exception.ServiceException;
+import org.bremersee.groupman.api.GroupControllerApi;
 import org.bremersee.peregrinus.geo.model.AbstractGeoJsonFeature;
 import org.bremersee.peregrinus.geo.model.AbstractGeoJsonFeatureSettings;
 import org.bremersee.peregrinus.geo.repository.GeoJsonFeatureSettingsRepository;
-import org.bremersee.peregrinus.security.access.EmbeddedAccessControl;
+import org.bremersee.peregrinus.security.access.AccessControl;
+import org.bremersee.peregrinus.security.access.PermissionConstants;
 import org.bremersee.peregrinus.tree.model.AbstractTreeNode;
-import org.bremersee.peregrinus.tree.model.GeoTreeLeaf;
-import org.bremersee.peregrinus.tree.model.TreeBranch;
-import org.bremersee.peregrinus.tree.model.TreeBranchSettings;
+import org.bremersee.peregrinus.tree.model.GeoLeaf;
+import org.bremersee.peregrinus.tree.model.Branch;
+import org.bremersee.peregrinus.tree.model.BranchSettings;
 import org.bremersee.peregrinus.tree.repository.TreeBranchRepository;
 import org.bremersee.peregrinus.tree.repository.TreeBranchSettingsRepository;
 import org.bremersee.peregrinus.tree.repository.TreeNodeRepository;
-import org.bremersee.security.access.PermissionConstants;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.stereotype.Component;
+import org.springframework.util.StringUtils;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 /**
  * @author Christian Bremer
  */
+@Component
 public class TreeServiceImpl implements TreeService {
 
+  @Autowired
   private TreeNodeRepository nodeRepository;
 
+  @Autowired
   private TreeBranchRepository branchRepository;
 
   //private GeoTreeLeafRepository geoTreeLeafRepository;
 
+  @Autowired
   private TreeBranchSettingsRepository branchSettingsRepository;
 
+  @Autowired
   private GeoJsonFeatureSettingsRepository featureSettingsRepository;
 
+  @Autowired
+  private GroupControllerApi groupService;
+
   @Override
-  public Mono<TreeBranch> loadPrivateTree(final String userId) {
+  public Mono<Branch> createBranch(
+      final String name,
+      final String parentId,
+      final AccessControl accessControl,
+      final Authentication authentication) {
 
-    final String branchName = "u-" + userId;
+    final String userId = authentication.getName();
+    final Set<String> roles = authentication.getAuthorities()
+        .stream()
+        .map(GrantedAuthority::getAuthority)
+        .collect(Collectors.toSet());
 
-    return branchRepository
-        .findByNameAndParentIdIsNull(branchName)
-        .switchIfEmpty(createNewBranch(userId, null, branchName))
-        .flatMap(treeBranch -> loadBranch(treeBranch, userId));
+    if (StringUtils.hasText(parentId)) {
+      return groupService.getMembershipIds()
+          .flatMap(groups -> createChildBranch(
+              name, parentId, userId, accessControl, roles, groups));
+    }
+    final AccessControl newAccessControl = new AccessControl(accessControl)
+        .owner(userId)
+        .addUser(userId, PermissionConstants.ALL);
+    return branchRepository.save(new Branch(name, null, newAccessControl));
   }
 
-  /*
-  public Mono<TreeBranch> createBranch(
-      final String userId,
+  private Mono<Branch> createChildBranch(
+      final String name,
       final String parentId,
-      final String name) {
+      final String userId,
+      final AccessControl accessControl,
+      final Collection<String> roles,
+      final Collection<String> groups) {
 
-    // TODO has access, name + parent exists
-    return null;
+    return branchRepository.findById(parentId, PermissionConstants.WRITE, userId, roles, groups)
+        .switchIfEmpty(Mono.error(ServiceException.forbidden("TreeBranch", parentId)))
+        .map(AbstractTreeNode::getAccessControl)
+        .flatMap(existAccessControl -> {
+          final AccessControl newAccessControl;
+          if (accessControl == null
+              || !existAccessControl.hasPermission(
+              PermissionConstants.ADMINISTRATION, userId, roles, groups)) {
+            newAccessControl = existAccessControl;
+          } else {
+            newAccessControl = new AccessControl(accessControl)
+                .owner(userId)
+                .addUser(userId, PermissionConstants.ALL);
+          }
+          return branchRepository.save(new Branch(name, parentId, newAccessControl));
+        });
   }
-  */
 
-  private Mono<TreeBranch> createNewBranch(
+  @Override
+  public Mono<Void> renameNode(
+      final String nodeId,
+      final String name,
+      final Authentication authentication) {
+
+    final String userId = authentication.getName();
+    final Set<String> roles = authentication.getAuthorities()
+        .stream()
+        .map(GrantedAuthority::getAuthority)
+        .collect(Collectors.toSet());
+    return groupService.getMembershipIds()
+        .flatMap(groups -> renameNode(nodeId, name, userId, roles, groups));
+  }
+
+  private Mono<Void> renameNode(
+      final String nodeId,
+      final String name,
       final String userId,
-      final String parentId,
-      final String name) {
+      final Collection<String> roles,
+      final Collection<String> groups) {
 
-    final Date currentDate = new Date();
-    final TreeBranch branch = new TreeBranch();
-    branch.setCreated(currentDate);
-    branch.setCreatedBy(userId);
-    branch.setModified(currentDate);
-    branch.setModifiedBy(userId);
-    branch.setName(name);
-    branch.setParentId(parentId);
-    if (parentId != null) {
-      return branchRepository.findById(parentId)
-          .map(AbstractTreeNode::getAccessControl)
-          .switchIfEmpty(Mono.just(new EmbeddedAccessControl().owner(userId).ensureAdminAccess()))
-          .flatMap(embeddedAccessControl -> {
-            branch.setAccessControl(
-                new EmbeddedAccessControl(embeddedAccessControl)
-                    .addUser(userId, PermissionConstants.ALL));
-            return branchRepository.save(branch);
-          });
+    return nodeRepository.findById(nodeId, PermissionConstants.WRITE, userId, roles, groups)
+        .switchIfEmpty(Mono.error(ServiceException.forbidden("TreeNode", nodeId)))
+        .flatMap(node -> {
+          if (node instanceof Branch) {
+            Branch branch = (Branch) node;
+            branch.setName(name);
+            return branchRepository.save(branch).flatMap(b -> Mono.empty());
+          }
+          // TODO leaf
+          return Mono.empty();
+        });
+  }
+
+  @Override
+  public Mono<Void> updateAccessControl(
+      final String nodeId,
+      final boolean recursive,
+      final AccessControl accessControl,
+      final Authentication authentication) {
+
+    final String userId = authentication.getName();
+    final Set<String> roles = authentication.getAuthorities()
+        .stream()
+        .map(GrantedAuthority::getAuthority)
+        .collect(Collectors.toSet());
+    return groupService.getMembershipIds()
+        .flatMap(groups -> updateAccessControl(
+            nodeId, recursive, accessControl, userId, roles, groups));
+  }
+
+  private Mono<Void> updateAccessControl(
+      final String nodeId,
+      final boolean recursive,
+      final AccessControl accessControl,
+      final String userId,
+      final Collection<String> roles,
+      final Collection<String> groups) {
+
+    final AccessControl newAccessControl = new AccessControl(accessControl)
+        .owner(userId)
+        .addUser(userId, PermissionConstants.ALL);
+
+    return nodeRepository
+        .findById(nodeId, PermissionConstants.ADMINISTRATION, userId, roles, groups)
+        .switchIfEmpty(Mono.error(ServiceException.forbidden("TreeNode", nodeId)))
+        .flatMap(node -> {
+          return Mono.empty();
+        });
+  }
+
+  @Override
+  public Mono<Void> deleteNode(
+      final String nodeId,
+      final Authentication authentication) {
+
+    final String userId = authentication.getName();
+    final Set<String> roles = authentication.getAuthorities()
+        .stream()
+        .map(GrantedAuthority::getAuthority)
+        .collect(Collectors.toSet());
+    return groupService.getMembershipIds()
+        .flatMap(groups -> deleteNode(nodeId, userId, roles, groups));
+  }
+
+  private Mono<Void> deleteNode(
+      final String nodeId,
+      final String userId,
+      final Collection<String> roles,
+      final Collection<String> groups) {
+
+    return nodeRepository.findById(nodeId, PermissionConstants.DELETE, userId, roles, groups)
+        .switchIfEmpty(Mono.error(ServiceException.forbidden("TreeNode", nodeId)))
+        .flatMap(this::delete);
+  }
+
+  private Mono<Void> delete(final AbstractTreeNode node) {
+    if (node instanceof Branch) {
+      return nodeRepository.findByParentId(node.getId())
+          .flatMap(this::delete)
+          .count()
+          .flatMap(size -> nodeRepository.delete(node));
     } else {
-      branch.setAccessControl(new EmbeddedAccessControl().owner(userId).ensureAdminAccess());
-      return branchRepository.save(branch);
+      // TODO delete leaf content
+      return nodeRepository.delete(node);
     }
   }
 
-  private Mono<TreeBranch> loadBranch(final TreeBranch branch, final String userId) {
-    return addBranchSettings(branch, userId)
-        .flatMap(parent -> addBranchChildren(parent, userId));
+  @Override
+  public Flux<Branch> loadBranches(
+      final boolean openAll,
+      final boolean includePublic,
+      final Authentication authentication) {
+
+    final OpenBranchCommand openBranchCommand = openAll
+        ? OpenBranchCommand.ALL
+        : OpenBranchCommand.RETAIN;
+    final String userId = authentication.getName();
+    final Set<String> roles = authentication.getAuthorities()
+        .stream()
+        .map(GrantedAuthority::getAuthority)
+        .collect(Collectors.toSet());
+    return groupService.getMembershipIds()
+        .flatMapMany(groups -> branchRepository
+            .findByParentId(null, PermissionConstants.READ, includePublic, userId, roles, groups)
+            .flatMap(branch -> loadBranch(branch, openBranchCommand, userId, roles, groups)));
   }
 
-  private Mono<TreeBranch> addBranchSettings(final TreeBranch branch, final String userId) {
+  @Override
+  public Mono<Branch> openBranch(
+      final String branchId,
+      final boolean openAll,
+      final Authentication authentication) {
+    final String userId = authentication.getName();
+    final Set<String> roles = authentication.getAuthorities()
+        .stream()
+        .map(GrantedAuthority::getAuthority)
+        .collect(Collectors.toSet());
+
+    final OpenBranchCommand openBranchCommand = openAll
+        ? OpenBranchCommand.ALL
+        : OpenBranchCommand.CURRENT;
+    return groupService.getMembershipIds()
+        .flatMap(groups -> branchRepository.findById(
+            branchId, PermissionConstants.READ, userId, roles, groups))
+        .switchIfEmpty(Mono.error(ServiceException.forbidden("TreeBranch", branchId)))
+        .flatMap(
+            treeBranch -> groupService.getMembershipIds()
+                .flatMap(
+                    groups -> loadBranch(treeBranch, openBranchCommand, userId, roles, groups)));
+  }
+
+  @Override
+  public Mono<Void> closeBranch(final String branchId, final Authentication authentication) {
+    final String userId = authentication.getName();
+    return branchSettingsRepository
+        .findByNodeIdAndUserId(branchId, userId)
+        .map(branch -> {
+          branch.setOpen(false);
+          return branchSettingsRepository.save(branch);
+        })
+        .flatMap(branch -> Mono.empty());
+  }
+
+  private Mono<Branch> loadBranch(
+      final Branch branch,
+      final OpenBranchCommand openBranchCommand,
+      final String userId,
+      final Collection<String> roles,
+      final Collection<String> groups) {
+
+    return prepareBranch(branch, openBranchCommand, userId)
+        .flatMap(preparedBranch -> addChildren(
+            preparedBranch, openBranchCommand.getCommandForChildren(), userId, roles, groups));
+  }
+
+  private Mono<Branch> prepareBranch(
+      final Branch branch,
+      final OpenBranchCommand openBranchCommand,
+      final String userId) {
     return branchSettingsRepository
         .findByNodeIdAndUserId(branch.getId(), userId)
         .switchIfEmpty(createBranchSettings(branch.getId(), userId))
+        .flatMap(branchSettings -> {
+          if (openBranchCommand.isBranchToBeOpen() && !branchSettings.isOpen()) {
+            branchSettings.setOpen(true);
+            if (OpenBranchCommand.CURRENT.equals(openBranchCommand)) {
+              return branchSettingsRepository.save(branchSettings);
+            }
+          }
+          return Mono.just(branchSettings);
+        })
         .map(branchSettings -> {
           branch.setSettings(branchSettings);
           return branch;
         });
   }
 
-  private Mono<TreeBranchSettings> createBranchSettings(
-      final String branchId,
-      final String userId) {
+  private Mono<Branch> addChildren(
+      final Branch parent,
+      final OpenBranchCommand openBranchCommand,
+      final String userId,
+      final Collection<String> roles,
+      final Collection<String> groups) {
 
-    final TreeBranchSettings branchSettings = new TreeBranchSettings();
-    branchSettings.setNodeId(branchId);
-    branchSettings.setOpen(true);
-    branchSettings.setUserId(userId);
-    return branchSettingsRepository.save(branchSettings);
-  }
-
-  private Mono<TreeBranch> addBranchChildren(final TreeBranch parent, final String userId) {
-
+    if (!parent.getSettings().isOpen()) {
+      return Mono.just(parent);
+    }
     return nodeRepository
-        .findByParentId(parent.getId())
-        .flatMap(child -> processChild(child, userId))
+        .findByParentId(parent.getId(), userId, roles, groups)
+        .flatMap(child -> processChild(child, openBranchCommand, userId, roles, groups))
         .collectSortedList()
         .map(children -> {
           parent.setChildren(children);
@@ -138,22 +336,33 @@ public class TreeServiceImpl implements TreeService {
 
   private Mono<AbstractTreeNode> processChild(
       final AbstractTreeNode child,
-      final String userId) {
+      final OpenBranchCommand openBranchCommand,
+      final String userId,
+      final Collection<String> roles,
+      final Collection<String> groups) {
 
-    if (child instanceof TreeBranch) {
-      return loadBranch((TreeBranch) child, userId).cast(AbstractTreeNode.class);
+    if (child instanceof Branch) {
+      return loadBranch((Branch) child, openBranchCommand, userId, roles, groups)
+          .cast(AbstractTreeNode.class);
     }
-    if (child instanceof GeoTreeLeaf) {
+    // TODO generisch
+    if (child instanceof GeoLeaf) {
       return featureSettingsRepository
-          .findByFeatureIdAndUserId(((GeoTreeLeaf) child).getFeature().getId(), userId)
-          .switchIfEmpty(createFeatureSettings(((GeoTreeLeaf) child).getFeature(), userId))
+          .findByFeatureIdAndUserId(((GeoLeaf) child).getFeature().getId(), userId)
+          .switchIfEmpty(createFeatureSettings(((GeoLeaf) child).getFeature(), userId))
           .map(featureSettings -> {
             //noinspection unchecked
-            ((GeoTreeLeaf) child).getFeature().getProperties().setSettings(featureSettings);
+            ((GeoLeaf) child).getFeature().getProperties().setSettings(featureSettings);
             return child;
           });
     }
     return Mono.just(child);
+  }
+
+  private Mono<BranchSettings> createBranchSettings(
+      final String branchId,
+      final String userId) {
+    return branchSettingsRepository.save(new BranchSettings(branchId, userId));
   }
 
   private Mono<AbstractGeoJsonFeatureSettings> createFeatureSettings(

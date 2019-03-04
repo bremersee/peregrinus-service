@@ -14,22 +14,28 @@
  * limitations under the License.
  */
 
-package org.bremersee.peregrinus.geo.mapper.gpx;
+package org.bremersee.peregrinus.tree.model;
 
-import java.util.List;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
-import org.bremersee.peregrinus.geo.model.AbstractGeoJsonFeature;
+import org.springframework.data.annotation.TypeAlias;
+import org.springframework.data.mongodb.core.mapping.Document;
 
 /**
  * @author Christian Bremer
  */
+@Document(collection = "directory-settings")
+@TypeAlias("GeoLeafSettings")
 @Getter
 @Setter
 @ToString
-public class GpxReadResult {
+@NoArgsConstructor
+public abstract class GeoLeafSettings extends AbstractLeafSettings {
 
-  List<AbstractGeoJsonFeature> features;
+  public GeoLeafSettings(String nodeId, String userId) {
+    super(nodeId, userId);
+  }
 
 }

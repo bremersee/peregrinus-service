@@ -20,37 +20,46 @@ import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
-import java.util.Date;
+import com.fasterxml.jackson.annotation.JsonSubTypes;
+import com.fasterxml.jackson.annotation.JsonSubTypes.Type;
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
+import java.time.Clock;
+import java.time.Instant;
+import java.time.ZoneId;
+import javax.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
-import org.bremersee.peregrinus.security.access.EmbeddedAccessControl;
-import org.bremersee.peregrinus.security.access.EmbeddedAuthorizationSet;
+import org.bremersee.peregrinus.geo.model.RteSettings;
+import org.bremersee.peregrinus.security.access.AccessControl;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.TypeAlias;
 import org.springframework.data.annotation.Version;
-import org.springframework.data.mongodb.core.index.CompoundIndex;
-import org.springframework.data.mongodb.core.index.CompoundIndexes;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.lang.Nullable;
+import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
+import org.springframework.validation.annotation.Validated;
 
 /**
  * @author Christian Bremer
  */
+@Document(collection = "directory")
+@TypeAlias("AbstractTreeNode")
 @JsonAutoDetect(
     fieldVisibility = Visibility.ANY,
     getterVisibility = Visibility.NONE,
     setterVisibility = Visibility.NONE)
 @JsonInclude(Include.NON_EMPTY)
+@JsonTypeInfo(use = JsonTypeInfo.Id.NAME, property = "type", visible = true)
+@JsonSubTypes({
+    @Type(value = RteSettings.class, name = "rte-settings")
+})
 @Getter
 @Setter
 @ToString
-@Document(collection = "directory")
-@TypeAlias("AbstractTreeNode")
-@CompoundIndexes({
-    @CompoundIndex(name = "uk_name_parent", def = "{'name': 1, 'parentId': 1 }", unique = true)
-})
+@Validated
 public abstract class AbstractTreeNode implements Comparable<AbstractTreeNode> {
 
   @Id
@@ -59,30 +68,54 @@ public abstract class AbstractTreeNode implements Comparable<AbstractTreeNode> {
   @Version
   private Long version;
 
-  //@CreatedDate
   @Indexed
-  private Date created = new Date();
+  private Instant created;
 
-  //@CreatedBy
   @Indexed
   private String createdBy;
 
-  //@LastModifiedDate
   @Indexed
-  private Date modified = new Date();
+  private Instant modified;
 
-  //@LastModifiedBy
   @Indexed
   private String modifiedBy;
-
-  private String name;
 
   @Indexed
   private String parentId;
 
-  private EmbeddedAccessControl accessControl = new EmbeddedAccessControl();
+  //@NotNull(message = "Access control must not be null.")
+  private AccessControl accessControl = new AccessControl();
+
+  public AbstractTreeNode() {
+    final Instant now = Instant.now(Clock.system(ZoneId.of("UTC")));
+    this.created = now;
+    this.modified = now;
+  }
+
+  public AbstractTreeNode(
+      @Nullable String parentId,
+      @NotNull String owner) {
+    this();
+    this.accessControl.setOwner(owner);
+    this.createdBy = owner;
+    this.modifiedBy = owner;
+    this.parentId = parentId;
+  }
+
+  public AbstractTreeNode(
+      @Nullable String parentId,
+      @NotNull AccessControl accessControl) {
+    this();
+    Assert.hasText(accessControl.getOwner(), "Owner must be present.");
+    this.accessControl = accessControl;
+    this.createdBy = accessControl.getOwner();
+    this.modifiedBy = accessControl.getOwner();
+    this.parentId = parentId;
+  }
 
   abstract int orderValue();
+
+  public abstract String getName();
 
   @SuppressWarnings("Duplicates")
   @Override
@@ -98,14 +131,15 @@ public abstract class AbstractTreeNode implements Comparable<AbstractTreeNode> {
       return c;
     }
 
-    if (this instanceof GeoTreeLeaf
-        && ((GeoTreeLeaf) this).getFeature() != null
-        && (o instanceof GeoTreeLeaf)) {
-      return ((GeoTreeLeaf) this).getFeature().compareTo(((GeoTreeLeaf) o).getFeature());
+    if (this instanceof GeoLeaf
+        && ((GeoLeaf) this).getFeature() != null
+        && (o instanceof GeoLeaf)) {
+      return ((GeoLeaf) this).getFeature().compareTo(((GeoLeaf) o).getFeature());
     }
 
     final String n1 = StringUtils.hasText(getName()) ? getName() : "";
     final String n2 = StringUtils.hasText(o.getName()) ? o.getName() : "";
     return n1.compareToIgnoreCase(n2);
   }
+
 }

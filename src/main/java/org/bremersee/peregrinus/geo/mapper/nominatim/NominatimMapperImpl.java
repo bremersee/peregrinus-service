@@ -49,7 +49,7 @@ public class NominatimMapperImpl implements NominatimMapper {
     return "en";
   }
 
-  private double[] mapToViewBox(final GeoCodingQueryRequest source) {
+  private double[] mapToViewBox(final GeoCodingQueryRequest source) { // TODO lat lon
     if (source.getBoundingBox() != null) {
       return GeometryUtils.getBoundingBox(source.getBoundingBox());
     }

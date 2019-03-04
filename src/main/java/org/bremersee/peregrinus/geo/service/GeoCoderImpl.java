@@ -17,6 +17,8 @@
 package org.bremersee.peregrinus.geo.service;
 
 import org.bremersee.nominatim.client.ReactiveNominatimClient;
+import org.bremersee.peregrinus.geo.mapper.google.GoogleMapper;
+import org.bremersee.peregrinus.geo.mapper.google.GoogleMapperImpl;
 import org.bremersee.peregrinus.geo.mapper.nominatim.NominatimMapper;
 import org.bremersee.peregrinus.geo.mapper.nominatim.NominatimMapperImpl;
 import org.bremersee.peregrinus.geo.mapper.tomtom.TomTomMapper;
@@ -25,20 +27,36 @@ import org.bremersee.peregrinus.geo.model.GeoCodingQueryRequest;
 import org.bremersee.peregrinus.geo.model.GeoCodingResult;
 import org.bremersee.peregrinus.geo.model.GeoProvider;
 import org.bremersee.tomtom.client.ReactiveGeocodingClient;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import reactor.core.publisher.Flux;
 
 /**
  * @author Christian Bremer
  */
+@Component
 public class GeoCoderImpl implements GeoCoder {
 
   private NominatimMapper nominatimMapper = new NominatimMapperImpl();
 
   private TomTomMapper tomTomMapper = new TomTomMapperImpl();
 
-  private ReactiveNominatimClient nominatimClient;
+  private GoogleMapper googleMapper = new GoogleMapperImpl();
 
-  private ReactiveGeocodingClient tomTomClient;
+  private ReactiveNominatimClient nominatimService;
+
+  private ReactiveGeocodingClient tomTomGeocodingService;
+
+  private org.bremersee.google.maps.client.ReactiveGeocodingClient googleGeocodingService;
+
+  @Autowired
+  public GeoCoderImpl(ReactiveNominatimClient nominatimService,
+      ReactiveGeocodingClient tomTomGeocodingService,
+      org.bremersee.google.maps.client.ReactiveGeocodingClient googleGeocodingService) {
+    this.nominatimService = nominatimService;
+    this.tomTomGeocodingService = tomTomGeocodingService;
+    this.googleGeocodingService = googleGeocodingService;
+  }
 
   @Override
   public Flux<GeoCodingResult> geocode(final GeoCodingQueryRequest request) {
@@ -49,13 +67,18 @@ public class GeoCoderImpl implements GeoCoder {
 
     switch (geoProvider) {
 
+      case GOOGLE:
+        return googleGeocodingService.geocode(googleMapper.mapToGeocodeRequest(request))
+            .map(googleMapper::mapToGeoCodingResult)
+            .filter(geoCodingResult -> geoCodingResult.getPosition() != null);
+
       case TOMTOM:
-        return tomTomClient.geocode(tomTomMapper.mapToGeocodeRequest(request))
+        return tomTomGeocodingService.geocode(tomTomMapper.mapToGeocodeRequest(request))
             .flatMapIterable(tomTomMapper::mapToGeoCodingResults)
             .filter(geoCodingResult -> geoCodingResult.getPosition() != null);
 
       default:
-        return nominatimClient
+        return nominatimService
             .geocode(nominatimMapper.mapToSearchRequest(request))
             .map(nominatimMapper::mapToGeoCodingResult)
             .filter(geoCodingResult -> geoCodingResult.getPosition() != null);

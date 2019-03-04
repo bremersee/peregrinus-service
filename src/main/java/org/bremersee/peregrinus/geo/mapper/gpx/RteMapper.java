@@ -193,7 +193,7 @@ class RteMapper extends AbstractGpxMapper {
       calculationProperties.setCalculationMode(viaPoint.getCalculationMode());
       calculationProperties.setDepartureTime(
           viaPoint.getDepartureTime() != null
-              ? viaPoint.getDepartureTime().toGregorianCalendar().getTime()
+              ? viaPoint.getDepartureTime().toGregorianCalendar().getTime().toInstant()
               : null);
       calculationProperties.setElevationMode(viaPoint.getElevationMode());
       calculationProperties.setNamedRoad(viaPoint.getNamedRoad());

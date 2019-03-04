@@ -18,8 +18,8 @@ package org.bremersee.peregrinus.config;
 
 import lombok.extern.slf4j.Slf4j;
 import org.bremersee.xml.JaxbContextBuilder;
-import org.bremersee.xml.ReactiveJaxbDecoder;
-import org.bremersee.xml.ReactiveJaxbEncoder;
+import org.bremersee.http.codec.xml.ReactiveJaxbDecoder;
+import org.bremersee.http.codec.xml.ReactiveJaxbEncoder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.codec.DecoderHttpMessageReader;

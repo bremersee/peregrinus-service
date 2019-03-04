@@ -16,7 +16,7 @@
 
 package org.bremersee.peregrinus.tree.repository;
 
-import org.bremersee.peregrinus.tree.model.GeoTreeLeaf;
+import org.bremersee.peregrinus.tree.model.GeoLeaf;
 import org.springframework.data.mongodb.repository.ReactiveMongoRepository;
 import org.springframework.stereotype.Repository;
 
@@ -24,6 +24,6 @@ import org.springframework.stereotype.Repository;
  * @author Christian Bremer
  */
 @Repository
-public interface GeoTreeLeafRepository extends ReactiveMongoRepository<GeoTreeLeaf, String> {
+public interface GeoTreeLeafRepository extends ReactiveMongoRepository<GeoLeaf, String> {
 
 }

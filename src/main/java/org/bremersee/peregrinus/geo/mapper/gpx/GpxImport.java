@@ -1,5 +1,5 @@
 /*
- * Copyright 2017 the original author or authors.
+ * Copyright 2018 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,20 +14,22 @@
  * limitations under the License.
  */
 
-package org.bremersee.peregrinus.tree.repository;
+package org.bremersee.peregrinus.geo.mapper.gpx;
 
-import org.bremersee.peregrinus.tree.model.BranchSettings;
-import org.springframework.data.mongodb.repository.ReactiveMongoRepository;
-import org.springframework.stereotype.Repository;
-import reactor.core.publisher.Mono;
+import java.util.List;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
+import org.bremersee.peregrinus.geo.model.AbstractGeoJsonFeature;
 
 /**
  * @author Christian Bremer
  */
-@Repository
-public interface TreeBranchSettingsRepository
-    extends ReactiveMongoRepository<BranchSettings, String> {
+@Getter
+@Setter
+@ToString
+public class GpxImport {
 
-  Mono<BranchSettings> findByNodeIdAndUserId(String nodeId, String userId);
+  List<AbstractGeoJsonFeature> features;
 
 }

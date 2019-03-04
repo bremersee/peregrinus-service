@@ -1,5 +1,5 @@
 /*
- * Copyright 2017 the original author or authors.
+ * Copyright 2018 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,31 +14,37 @@
  * limitations under the License.
  */
 
-package org.bremersee.peregrinus.tree.model;
+package org.bremersee.peregrinus.security.access;
 
+import java.util.LinkedHashSet;
+import java.util.Set;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
-import org.bremersee.peregrinus.geo.model.AbstractGeoJsonFeature;
 import org.springframework.data.annotation.TypeAlias;
-import org.springframework.data.mongodb.core.mapping.DBRef;
-import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.mongodb.core.index.Indexed;
 
 /**
  * @author Christian Bremer
  */
-@Document(collection = "directory")
-@TypeAlias("GeoTreeLeaf")
 @Getter
 @Setter
-@ToString(callSuper = true)
-public class GeoTreeLeaf extends AbstractTreeLeaf {
+@ToString
+@NoArgsConstructor
+@TypeAlias("AuthorizationSet")
+public class AuthorizationSet {
 
-  @DBRef
-  private AbstractGeoJsonFeature feature;
+  @Indexed
+  private boolean guest;
 
-  int orderValue() {
-    return 50;
-  }
+  @Indexed
+  private Set<String> users = new LinkedHashSet<>();
+
+  @Indexed
+  private Set<String> roles = new LinkedHashSet<>();
+
+  @Indexed
+  private Set<String> groups = new LinkedHashSet<>();
 
 }

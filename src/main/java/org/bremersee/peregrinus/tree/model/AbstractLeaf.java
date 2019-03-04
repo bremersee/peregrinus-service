@@ -1,5 +1,5 @@
 /*
- * Copyright 2017 the original author or authors.
+ * Copyright 2018 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,35 +16,41 @@
 
 package org.bremersee.peregrinus.tree.model;
 
-import java.util.List;
+import javax.validation.constraints.NotNull;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
+import org.bremersee.peregrinus.security.access.AccessControl;
 import org.springframework.data.annotation.Transient;
 import org.springframework.data.annotation.TypeAlias;
 import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.lang.Nullable;
 
 /**
  * @author Christian Bremer
  */
 @Document(collection = "directory")
-@TypeAlias("TreeBranch")
+@TypeAlias("AbstractLeaf")
+@ToString(callSuper = true)
 @Getter
 @Setter
-@ToString(callSuper = true)
-public class TreeBranch extends AbstractTreeNode {
+@NoArgsConstructor
+public abstract class AbstractLeaf extends AbstractTreeNode {
 
   @Transient
-  private String displayName;
+  private String name;
 
-  @Transient
-  private TreeBranchSettings settings;
+  public AbstractLeaf(
+      @Nullable String parentId,
+      @NotNull String owner) {
+    super(parentId, owner);
+  }
 
-  @Transient
-  private List<AbstractTreeNode> children;
-
-  int orderValue() {
-    return 0;
+  public AbstractLeaf(
+      @Nullable String parentId,
+      @NotNull AccessControl accessControl) {
+    super(parentId, accessControl);
   }
 
 }

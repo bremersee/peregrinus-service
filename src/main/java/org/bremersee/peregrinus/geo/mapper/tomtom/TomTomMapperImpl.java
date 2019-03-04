@@ -16,7 +16,6 @@
 
 package org.bremersee.peregrinus.geo.mapper.tomtom;
 
-import java.sql.Date;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -130,10 +129,7 @@ public class TomTomMapperImpl implements TomTomMapper {
   }
 
   private BoundingBox mapToBoundingBox(final GeoCodingQueryRequest source) {
-    if (source.getBoundingBox() == null) {
-      return null;
-    }
-    final double[] bbox = GeometryUtils.getBoundingBox(source.getBoundingBox());
+    final double[] bbox = source.toBoundingBox();
     if (bbox == null) {
       return null;
     }
@@ -196,7 +192,7 @@ public class TomTomMapperImpl implements TomTomMapper {
       if (routeLeg.getSummary() != null) {
         final RouteSummary summary = routeLeg.getSummary();
         if (summary.getDepartureTime() != null) {
-          rteSegmentProperties.setTime(Date.from(summary.getDepartureTime().toInstant()));
+          rteSegmentProperties.setTime(summary.getDepartureTime().toInstant());
           rteSegmentProperties.setHistoricTrafficTravelTimeInSeconds(
               summary.getHistoricTrafficTravelTimeInSeconds());
           rteSegmentProperties.setLengthInMeters(summary.getLengthInMeters());
@@ -238,7 +234,7 @@ public class TomTomMapperImpl implements TomTomMapper {
     if (lastRouteLeg.getSummary() != null) {
       final RouteSummary lastSummary = lastRouteLeg.getSummary();
       if (lastSummary.getArrivalTime() != null) {
-        lastRteSegmentProperties.setTime(Date.from(lastSummary.getArrivalTime().toInstant()));
+        lastRteSegmentProperties.setTime(lastSummary.getArrivalTime().toInstant());
       }
     }
 

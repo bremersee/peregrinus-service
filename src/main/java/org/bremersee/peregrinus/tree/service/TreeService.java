@@ -16,14 +16,55 @@
 
 package org.bremersee.peregrinus.tree.service;
 
-import org.bremersee.peregrinus.tree.model.TreeBranch;
+import javax.validation.constraints.NotNull;
+import org.bremersee.peregrinus.security.access.AccessControl;
+import org.bremersee.peregrinus.tree.model.Branch;
+import org.hibernate.validator.constraints.Length;
+import org.springframework.lang.Nullable;
+import org.springframework.security.core.Authentication;
+import org.springframework.validation.annotation.Validated;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 /**
  * @author Christian Bremer
  */
+@Validated
 public interface TreeService {
 
-  Mono<TreeBranch> loadPrivateTree(String userId);
+  Mono<Branch> createBranch(
+      @NotNull @Length(min = 1) String name,
+      @Nullable String parentId,
+      @Nullable AccessControl accessControl,
+      @NotNull Authentication authentication);
+
+  Flux<Branch> loadBranches(
+      boolean openAll,
+      boolean includePublic,
+      @NotNull Authentication authentication);
+
+  Mono<Void> renameNode(
+      @NotNull String nodeId,
+      @NotNull @Length(min = 1) String name,
+      @NotNull Authentication authentication);
+
+  Mono<Void> updateAccessControl(
+      @NotNull String nodeId,
+      boolean recursive,
+      @NotNull AccessControl accessControl,
+      @NotNull Authentication authentication);
+
+  Mono<Void> deleteNode(
+      @NotNull String nodeId,
+      @NotNull Authentication authentication);
+
+  Mono<Branch> openBranch(
+      @NotNull String branchId,
+      boolean openAll,
+      @NotNull Authentication authentication);
+
+  Mono<Void> closeBranch(
+      @NotNull String branchId,
+      @NotNull Authentication authentication);
 
 }

@@ -25,6 +25,8 @@ public enum GeoProvider {
 
   GARMIN_IMPORT(false, false, false),
 
+  GOOGLE(false, true, false),
+
   NOMINATIM(false, true, true),
 
   TOMTOM(true, true, true);

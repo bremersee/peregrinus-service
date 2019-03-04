@@ -17,38 +17,32 @@
 package org.bremersee.peregrinus.tree.model;
 
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
-import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.TypeAlias;
-import org.springframework.data.annotation.Version;
-import org.springframework.data.mongodb.core.index.CompoundIndex;
-import org.springframework.data.mongodb.core.index.CompoundIndexes;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 /**
  * @author Christian Bremer
  */
 @Document(collection = "directory-settings")
-@TypeAlias("branch-settings")
-@CompoundIndexes({
-    @CompoundIndex(name = "uk_user_node", def = "{'userId': 1, 'nodeId': 1 }", unique = true)
-})
+@TypeAlias("BranchSettings")
 @Getter
 @Setter
 @ToString
-public class TreeBranchSettings {
-
-  @Id
-  private String id;
-
-  @Version
-  private Long version;
-
-  private String userId;
-
-  private String nodeId;
+@NoArgsConstructor
+public class BranchSettings extends AbstractNodeSettings {
 
   private boolean open = true;
+
+  public BranchSettings(String nodeId, String userId) {
+    this(nodeId, userId, true);
+  }
+
+  public BranchSettings(String nodeId, String userId, boolean open) {
+    super(nodeId, userId);
+    this.open = open;
+  }
 
 }

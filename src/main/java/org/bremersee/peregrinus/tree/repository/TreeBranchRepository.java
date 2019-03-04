@@ -16,24 +16,15 @@
 
 package org.bremersee.peregrinus.tree.repository;
 
-import java.util.List;
-import org.bremersee.peregrinus.tree.model.TreeBranch;
+import org.bremersee.peregrinus.tree.model.Branch;
 import org.springframework.data.mongodb.repository.ReactiveMongoRepository;
 import org.springframework.stereotype.Repository;
-import reactor.core.publisher.Flux;
-import reactor.core.publisher.Mono;
 
 /**
  * @author Christian Bremer
  */
 @Repository
-public interface TreeBranchRepository extends ReactiveMongoRepository<TreeBranch, String> {
-
-  Mono<TreeBranch> findByNameAndParentIdIsNull(String name);
-
-  Mono<TreeBranch> findByNameAndParentId(String name, String parentId);
-
-  Flux<TreeBranch> findByNameContainsAndParentIdIsNull(
-      List<String> names);
+public interface TreeBranchRepository
+    extends ReactiveMongoRepository<Branch, String>, TreeBranchRepositoryCustom {
 
 }

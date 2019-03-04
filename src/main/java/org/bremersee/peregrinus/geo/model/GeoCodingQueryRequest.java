@@ -21,6 +21,7 @@ import java.util.Locale;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
+import org.bremersee.geojson.utils.GeometryUtils;
 import org.locationtech.jts.geom.Polygon;
 
 /**
@@ -46,5 +47,9 @@ public class GeoCodingQueryRequest extends AbstractGeoCodingRequest {
   private List<Locale> countries;
 
   private Polygon boundingBox;
+
+  public double[] toBoundingBox() {
+    return GeometryUtils.getBoundingBox(boundingBox);
+  }
 
 }

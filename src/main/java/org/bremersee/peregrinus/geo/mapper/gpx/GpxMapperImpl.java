@@ -45,7 +45,7 @@ public class GpxMapperImpl extends AbstractGpxMapper implements GpxMapper {
   }
 
   @Override
-  public GpxReadResult readGpx(final Gpx gpx) {
+  public GpxImport mapToGpxImport(final Gpx gpx) {
 
     /*
     MetadataType metadata = gpx.getMetadata();
@@ -66,7 +66,7 @@ public class GpxMapperImpl extends AbstractGpxMapper implements GpxMapper {
     features.addAll(trkMapper.readTrkTypes(gpx.getTrks()));
     features.addAll(rteMapper.readRtes(gpx.getRtes()));
 
-    final GpxReadResult result = new GpxReadResult();
+    final GpxImport result = new GpxImport();
     result.setFeatures(features);
     return result;
   }

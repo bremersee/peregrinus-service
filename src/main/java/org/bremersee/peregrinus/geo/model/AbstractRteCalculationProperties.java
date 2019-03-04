@@ -33,7 +33,7 @@ import org.springframework.data.annotation.TypeAlias;
 @TypeAlias("AbstractRteCalculationProperties")
 public abstract class AbstractRteCalculationProperties {
 
-  public abstract String getProvider();
+  public abstract String getProvider(); // TODO provider enum
 
-  public abstract boolean isCalculationSupported();
+  public abstract boolean isCalculationSupported(); // TODO provider enum
 }

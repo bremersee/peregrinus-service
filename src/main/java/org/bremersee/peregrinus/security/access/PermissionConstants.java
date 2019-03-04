@@ -14,11 +14,32 @@
  * limitations under the License.
  */
 
-package org.bremersee.peregrinus.security;
+package org.bremersee.peregrinus.security.access;
 
 /**
  * @author Christian Bremer
  */
-public class Placeholder {
+public abstract class PermissionConstants {
+
+  public static final String ADMINISTRATION = "administration";
+
+  public static final String CREATE = "create";
+
+  public static final String DELETE = "delete";
+
+  public static final String READ = "read";
+
+  public static final String WRITE = "write";
+
+  public static final String[] ALL = new String[]{
+      ADMINISTRATION,
+      CREATE,
+      DELETE,
+      READ,
+      WRITE
+  };
+
+  private PermissionConstants() {
+  }
 
 }

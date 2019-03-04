@@ -16,63 +16,24 @@
 
 package org.bremersee.peregrinus.config;
 
-import com.mongodb.MongoClient;
-import com.mongodb.MongoClientOptions;
 import java.util.ArrayList;
 import java.util.List;
 import org.bremersee.geojson.spring.data.mongodb.convert.GeoJsonConverters;
 import org.bremersee.peregrinus.geo.repository.converter.LocaleToStringConverter;
 import org.bremersee.peregrinus.geo.repository.converter.StringToLocaleConverter;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.data.mongo.MongoReactiveDataAutoConfiguration;
-import org.springframework.boot.autoconfigure.mongo.MongoProperties;
-import org.springframework.boot.autoconfigure.mongo.MongoReactiveAutoConfiguration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
 import org.springframework.data.convert.CustomConversions;
-import org.springframework.data.mongodb.config.AbstractMongoConfiguration;
 import org.springframework.data.mongodb.core.convert.MongoCustomConversions;
-import org.springframework.util.StringUtils;
+import org.springframework.data.mongodb.repository.config.EnableReactiveMongoRepositories;
 
 /**
  * @author Christian Bremer
  */
 @Configuration
-public class PersistenceConfiguration { //} extends AbstractMongoConfiguration { // reactive component?
-
-  @Autowired
-  private MongoProperties mongoProperties;
-
-  MongoReactiveAutoConfiguration c;
-
-  MongoReactiveDataAutoConfiguration m;
-
-  /*
-  @Autowired
-  private MongoClientFactory mongoClientFactory;
-
-  @Autowired
-  private MongoClientFactoryBean mongoClientFactoryBean;
-  */
-
-  //@Autowired
-  private MongoClient mongoClient;
-
-  /*
-  @Override
-  public MongoClient mongoClient() {
-    if (StringUtils.hasText(mongoProperties.getUri())) {
-      return new MongoClient(mongoProperties.getUri(), MongoClientOptions.builder().build());
-    }
-    return new MongoClient(mongoProperties.getHost(), mongoProperties.getPort());
-  }
-
-  @Override
-  protected String getDatabaseName() {
-    return mongoProperties.getDatabase();
-  }
-  */
+@EnableReactiveMongoRepositories
+public class PersistenceConfiguration {
 
   @Primary
   @Bean

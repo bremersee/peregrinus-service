@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.bremersee.peregrinus.geo.model;
+package org.bremersee.peregrinus.tree.model;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility;
@@ -24,6 +24,7 @@ import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonSubTypes.Type;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 import org.springframework.data.annotation.Id;
@@ -37,10 +38,10 @@ import org.springframework.data.mongodb.core.mapping.Document;
 /**
  * @author Christian Bremer
  */
-@Document(collection = "feature-settings")
-@TypeAlias("AbstractGeoJsonFeatureSettings")
+@Document(collection = "directory-settings")
+@TypeAlias("AbstractNodeSettings")
 @CompoundIndexes({
-    @CompoundIndex(name = "uk_feature_user", def = "{'featureId': 1, 'userId': 1}", unique = true)
+    @CompoundIndex(name = "uk_node_user", def = "{'nodeId': 1, 'userId': 1 }", unique = true)
 })
 @JsonAutoDetect(
     fieldVisibility = Visibility.ANY,
@@ -49,12 +50,14 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @JsonInclude(Include.NON_EMPTY)
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, property = "type", visible = true)
 @JsonSubTypes({
-    @Type(value = RteSettings.class, name = "rte-settings")
+    @Type(value = BranchSettings.class, name = "branch-settings"),
+    @Type(value = AbstractLeafSettings.class, name = "leaf-settings")
 })
 @Getter
 @Setter
 @ToString
-public abstract class AbstractGeoJsonFeatureSettings {
+@NoArgsConstructor
+public class AbstractNodeSettings {
 
   @Id
   private String id;
@@ -63,11 +66,16 @@ public abstract class AbstractGeoJsonFeatureSettings {
   private Long version;
 
   @Indexed
-  private String featureId;
+  private String nodeId;
 
   @Indexed
   private String userId;
 
-  private boolean displayedOnMap; // belongs to tree?
+  // TODO state: new, normal, deleted (, deletion_accepted = remove)
+
+  public AbstractNodeSettings(String nodeId, String userId) {
+    this.nodeId = nodeId;
+    this.userId = userId;
+  }
 
 }

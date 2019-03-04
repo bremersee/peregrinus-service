@@ -16,8 +16,10 @@
 
 package org.bremersee.peregrinus.geo.mapper.gpx;
 
+import java.time.Clock;
+import java.time.Instant;
+import java.time.ZoneId;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Supplier;
@@ -55,7 +57,7 @@ abstract class AbstractGpxMapper {
       final List<? extends LinkType> links) {
 
     final T geoJsonProperties = geoJsonPropertiesSupplier.get();
-    geoJsonProperties.setCreated(new Date());
+    geoJsonProperties.setCreated(Instant.now(Clock.system(ZoneId.of("UTC"))));
     geoJsonProperties.setModified(geoJsonProperties.getCreated());
 
     geoJsonProperties.setName(name);

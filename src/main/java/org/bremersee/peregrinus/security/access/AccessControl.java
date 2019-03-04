@@ -16,14 +16,12 @@
 
 package org.bremersee.peregrinus.security.access;
 
+import java.util.Collection;
 import java.util.Optional;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
-import org.bremersee.security.access.AccessControl;
-import org.bremersee.security.access.AuthorizationSet;
-import org.bremersee.security.access.PermissionConstants;
 import org.bremersee.security.core.AuthorityConstants;
 import org.springframework.data.annotation.TypeAlias;
 import org.springframework.data.mongodb.core.index.Indexed;
@@ -36,23 +34,23 @@ import org.springframework.util.StringUtils;
 @Setter
 @ToString
 @NoArgsConstructor
-@TypeAlias("EmbeddedAccessControl")
-public class EmbeddedAccessControl implements AccessControl {
+@TypeAlias("AccessControl")
+public class AccessControl {
 
   @Indexed
   private String owner;
 
-  private EmbeddedAuthorizationSet administration = new EmbeddedAuthorizationSet();
+  private AuthorizationSet administration = new AuthorizationSet();
 
-  private EmbeddedAuthorizationSet create = new EmbeddedAuthorizationSet();
+  private AuthorizationSet create = new AuthorizationSet();
 
-  private EmbeddedAuthorizationSet delete = new EmbeddedAuthorizationSet();
+  private AuthorizationSet delete = new AuthorizationSet();
 
-  private EmbeddedAuthorizationSet read = new EmbeddedAuthorizationSet();
+  private AuthorizationSet read = new AuthorizationSet();
 
-  private EmbeddedAuthorizationSet write = new EmbeddedAuthorizationSet();
+  private AuthorizationSet write = new AuthorizationSet();
 
-  public EmbeddedAccessControl(final AccessControl accessControl) {
+  public AccessControl(final AccessControl accessControl) {
     if (accessControl != null) {
       owner = accessControl.getOwner();
       for (final String permission : PermissionConstants.ALL) {
@@ -67,7 +65,6 @@ public class EmbeddedAccessControl implements AccessControl {
     }
   }
 
-  @Override
   public Optional<AuthorizationSet> findAuthorizationSet(Object permission) {
     final String permissionStr = String.valueOf(permission);
     switch (permissionStr) {
@@ -86,24 +83,24 @@ public class EmbeddedAccessControl implements AccessControl {
     }
   }
 
-  public EmbeddedAccessControl ensureAdminAccess() {
+  public AccessControl ensureAdminAccess() {
     addRole(AuthorityConstants.ADMIN_ROLE_NAME, PermissionConstants.ALL);
     return this;
   }
 
-  public EmbeddedAccessControl ensureAdminAccess(final String adminRole) {
+  public AccessControl ensureAdminAccess(final String adminRole) {
     addRole(adminRole, PermissionConstants.ALL);
     return this;
   }
 
-  public EmbeddedAccessControl owner(String owner) {
+  public AccessControl owner(String owner) {
     if (StringUtils.hasText(owner)) {
       this.owner = owner;
     }
     return addUser(owner, PermissionConstants.ALL);
   }
 
-  public EmbeddedAccessControl addUser(String user, String... permissionConstants) {
+  public AccessControl addUser(String user, String... permissionConstants) {
     if (StringUtils.hasText(user) && permissionConstants != null) {
       for (final String permission : permissionConstants) {
         findAuthorizationSet(permission)
@@ -113,7 +110,7 @@ public class EmbeddedAccessControl implements AccessControl {
     return this;
   }
 
-  public EmbeddedAccessControl addRole(String role, String... permissionConstants) {
+  public AccessControl addRole(String role, String... permissionConstants) {
     if (StringUtils.hasText(role) && permissionConstants != null) {
       for (final String permission : permissionConstants) {
         findAuthorizationSet(permission)
@@ -123,7 +120,7 @@ public class EmbeddedAccessControl implements AccessControl {
     return this;
   }
 
-  public EmbeddedAccessControl addGroup(String group, String... permissionConstants) {
+  public AccessControl addGroup(String group, String... permissionConstants) {
     if (StringUtils.hasText(group) && permissionConstants != null) {
       for (final String permission : permissionConstants) {
         findAuthorizationSet(permission)
@@ -133,7 +130,7 @@ public class EmbeddedAccessControl implements AccessControl {
     return this;
   }
 
-  public EmbeddedAccessControl removeUser(String user, String... permissionConstants) {
+  public AccessControl removeUser(String user, String... permissionConstants) {
     if (StringUtils.hasText(user) && permissionConstants != null) {
       for (final String permission : permissionConstants) {
         findAuthorizationSet(permission)
@@ -143,7 +140,7 @@ public class EmbeddedAccessControl implements AccessControl {
     return this;
   }
 
-  public EmbeddedAccessControl removeRole(String role, String... permissionConstants) {
+  public AccessControl removeRole(String role, String... permissionConstants) {
     if (StringUtils.hasText(role) && permissionConstants != null) {
       for (final String permission : permissionConstants) {
         findAuthorizationSet(permission)
@@ -153,7 +150,7 @@ public class EmbeddedAccessControl implements AccessControl {
     return this;
   }
 
-  public EmbeddedAccessControl removeGroup(String group, String... permissionConstants) {
+  public AccessControl removeGroup(String group, String... permissionConstants) {
     if (StringUtils.hasText(group) && permissionConstants != null) {
       for (final String permission : permissionConstants) {
         findAuthorizationSet(permission)
@@ -161,6 +158,31 @@ public class EmbeddedAccessControl implements AccessControl {
       }
     }
     return this;
+  }
+
+  public boolean hasPermission(
+      Object permission,
+      String user,
+      Collection<String> roles,
+      Collection<String> groups) {
+
+    if (permission == null) {
+      return false;
+    }
+    if (user != null && user.equals(getOwner())) {
+      return true;
+    }
+    final AuthorizationSet set = findAuthorizationSet(permission).orElse(new AuthorizationSet());
+    if (set.isGuest()) {
+      return true;
+    }
+    if (set.getUsers().contains(user)) {
+      return true;
+    }
+    if (roles != null && roles.stream().anyMatch(role -> set.getRoles().contains(role))) {
+      return true;
+    }
+    return groups != null && groups.stream().anyMatch(group -> set.getGroups().contains(group));
   }
 
 }

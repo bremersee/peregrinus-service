@@ -20,13 +20,16 @@ import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonSubTypes.Type;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.fasterxml.jackson.annotation.JsonTypeInfo.Id;
+import java.time.Clock;
+import java.time.Instant;
+import java.time.ZoneId;
 import java.util.Date;
 import java.util.List;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 import org.bremersee.common.model.Link;
-import org.bremersee.peregrinus.security.access.EmbeddedAccessControl;
+import org.bremersee.peregrinus.security.access.AccessControl;
 import org.springframework.data.annotation.Transient;
 import org.springframework.data.annotation.TypeAlias;
 import org.springframework.data.mongodb.core.index.Indexed;
@@ -48,12 +51,12 @@ import org.springframework.util.StringUtils;
 public abstract class AbstractGeoJsonFeatureProperties<S extends AbstractGeoJsonFeatureSettings>
     implements Comparable<AbstractGeoJsonFeatureProperties> {
 
-  private EmbeddedAccessControl accessControl = new EmbeddedAccessControl();
+  private AccessControl accessControl = new AccessControl();
 
-  private Date created = new Date();
+  private Instant created = Instant.now(Clock.system(ZoneId.of("UTC")));
 
   @Indexed
-  private Date modified = new Date();
+  private Instant modified = Instant.now(Clock.system(ZoneId.of("UTC")));
 
   @Indexed
   private String name;

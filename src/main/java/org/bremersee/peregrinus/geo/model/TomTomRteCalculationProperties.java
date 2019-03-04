@@ -16,6 +16,7 @@
 
 package org.bremersee.peregrinus.geo.model;
 
+import java.time.Instant;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
@@ -84,9 +85,9 @@ public class TomTomRteCalculationProperties extends AbstractRteCalculationProper
    */
   private List<Locale> allowVignette;
 
-  private Date departAt;
+  private Instant departAt;
 
-  private Date arriveAt;
+  private Instant arriveAt;
 
   @Override
   public String getProvider() {

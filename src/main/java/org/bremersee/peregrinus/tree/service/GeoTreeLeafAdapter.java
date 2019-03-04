@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 the original author or authors.
+ * Copyright 2019 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,22 +14,24 @@
  * limitations under the License.
  */
 
-package org.bremersee.peregrinus.tree.model;
+package org.bremersee.peregrinus.tree.service;
 
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
-import org.springframework.data.annotation.TypeAlias;
-import org.springframework.data.mongodb.core.mapping.Document;
+import java.util.Collection;
+import org.bremersee.peregrinus.tree.model.AbstractLeaf;
+import org.bremersee.peregrinus.tree.model.AbstractTreeNode;
+import reactor.core.publisher.Mono;
 
 /**
  * @author Christian Bremer
  */
-@Document(collection = "directory")
-@TypeAlias("AbstractTreeLeaf")
-@Getter
-@Setter
-@ToString(callSuper = true)
-public abstract class AbstractTreeLeaf extends AbstractTreeNode {
+public class GeoTreeLeafAdapter implements TreeLeafAdapter {
 
+  public Mono<AbstractTreeNode> loadLeaf(
+      final AbstractLeaf leaf,
+      final String userId,
+      final Collection<String> roles,
+      final Collection<String> groups) {
+
+    return null;
+  }
 }

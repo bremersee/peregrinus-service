@@ -17,6 +17,7 @@
 package org.bremersee.peregrinus.geo.model;
 
 import java.math.BigDecimal;
+import java.time.Instant;
 import java.util.Date;
 import java.util.List;
 import lombok.Getter;
@@ -37,7 +38,7 @@ public class WptProperties extends AbstractGeoJsonFeatureProperties<WptSettings>
 
   private String internalType; // photo, video or not // TODO
 
-  private Date time; // TODO
+  private Instant time; // TODO
 
   /**
    * Elevation in meters
