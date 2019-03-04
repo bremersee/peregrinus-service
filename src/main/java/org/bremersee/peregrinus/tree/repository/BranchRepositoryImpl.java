@@ -25,10 +25,10 @@ import reactor.core.publisher.Mono;
 /**
  * @author Christian Bremer
  */
-public class TreeBranchRepositoryImpl extends AbstractRepositoryImpl
-    implements TreeBranchRepositoryCustom {
+public class BranchRepositoryImpl extends AbstractRepositoryImpl
+    implements BranchRepositoryCustom {
 
-  public TreeBranchRepositoryImpl(
+  public BranchRepositoryImpl(
       ReactiveMongoOperations mongoOperations) {
     super(mongoOperations);
   }

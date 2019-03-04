@@ -26,13 +26,13 @@ import org.bremersee.peregrinus.geo.model.AbstractGeoJsonFeatureSettings;
 import org.bremersee.peregrinus.geo.repository.GeoJsonFeatureSettingsRepository;
 import org.bremersee.peregrinus.security.access.AccessControl;
 import org.bremersee.peregrinus.security.access.PermissionConstants;
-import org.bremersee.peregrinus.tree.model.AbstractTreeNode;
-import org.bremersee.peregrinus.tree.model.GeoLeaf;
+import org.bremersee.peregrinus.tree.model.AbstractNode;
 import org.bremersee.peregrinus.tree.model.Branch;
 import org.bremersee.peregrinus.tree.model.BranchSettings;
-import org.bremersee.peregrinus.tree.repository.TreeBranchRepository;
-import org.bremersee.peregrinus.tree.repository.TreeBranchSettingsRepository;
-import org.bremersee.peregrinus.tree.repository.TreeNodeRepository;
+import org.bremersee.peregrinus.tree.model.GeoLeaf;
+import org.bremersee.peregrinus.tree.repository.BranchRepository;
+import org.bremersee.peregrinus.tree.repository.BranchSettingsRepository;
+import org.bremersee.peregrinus.tree.repository.NodeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
@@ -48,15 +48,15 @@ import reactor.core.publisher.Mono;
 public class TreeServiceImpl implements TreeService {
 
   @Autowired
-  private TreeNodeRepository nodeRepository;
+  private NodeRepository nodeRepository;
 
   @Autowired
-  private TreeBranchRepository branchRepository;
+  private BranchRepository branchRepository;
 
   //private GeoTreeLeafRepository geoTreeLeafRepository;
 
   @Autowired
-  private TreeBranchSettingsRepository branchSettingsRepository;
+  private BranchSettingsRepository branchSettingsRepository;
 
   @Autowired
   private GeoJsonFeatureSettingsRepository featureSettingsRepository;
@@ -98,7 +98,7 @@ public class TreeServiceImpl implements TreeService {
 
     return branchRepository.findById(parentId, PermissionConstants.WRITE, userId, roles, groups)
         .switchIfEmpty(Mono.error(ServiceException.forbidden("TreeBranch", parentId)))
-        .map(AbstractTreeNode::getAccessControl)
+        .map(AbstractNode::getAccessControl)
         .flatMap(existAccessControl -> {
           final AccessControl newAccessControl;
           if (accessControl == null
@@ -211,7 +211,7 @@ public class TreeServiceImpl implements TreeService {
         .flatMap(this::delete);
   }
 
-  private Mono<Void> delete(final AbstractTreeNode node) {
+  private Mono<Void> delete(final AbstractNode node) {
     if (node instanceof Branch) {
       return nodeRepository.findByParentId(node.getId())
           .flatMap(this::delete)
@@ -334,8 +334,8 @@ public class TreeServiceImpl implements TreeService {
         .switchIfEmpty(Mono.just(parent));
   }
 
-  private Mono<AbstractTreeNode> processChild(
-      final AbstractTreeNode child,
+  private Mono<AbstractNode> processChild(
+      final AbstractNode child,
       final OpenBranchCommand openBranchCommand,
       final String userId,
       final Collection<String> roles,
@@ -343,7 +343,7 @@ public class TreeServiceImpl implements TreeService {
 
     if (child instanceof Branch) {
       return loadBranch((Branch) child, openBranchCommand, userId, roles, groups)
-          .cast(AbstractTreeNode.class);
+          .cast(AbstractNode.class);
     }
     // TODO generisch
     if (child instanceof GeoLeaf) {

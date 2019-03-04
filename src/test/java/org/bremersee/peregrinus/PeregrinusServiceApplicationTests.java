@@ -1,9 +1,9 @@
 package org.bremersee.peregrinus;
 
 import lombok.extern.slf4j.Slf4j;
-import org.bremersee.peregrinus.tree.repository.TreeBranchRepository;
-import org.bremersee.peregrinus.tree.repository.GeoTreeLeafRepository;
-import org.bremersee.peregrinus.tree.repository.TreeNodeRepository;
+import org.bremersee.peregrinus.tree.repository.BranchRepository;
+import org.bremersee.peregrinus.tree.repository.LeafRepository;
+import org.bremersee.peregrinus.tree.repository.NodeRepository;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,13 +18,13 @@ import org.springframework.test.context.junit4.SpringRunner;
 public class PeregrinusServiceApplicationTests {
 
 	@Autowired
-	private TreeNodeRepository treeNodeRepository;
+	private NodeRepository treeNodeRepository;
 
 	@Autowired
-	private TreeBranchRepository treeBranchRepository;
+	private BranchRepository treeBranchRepository;
 
 	@Autowired
-	private GeoTreeLeafRepository treeLeafRepository;
+	private LeafRepository treeLeafRepository;
 
 	@Autowired
 	private Jackson2ObjectMapperBuilder objectMapperBuilder; // = new Jackson2ObjectMapperBuilder();

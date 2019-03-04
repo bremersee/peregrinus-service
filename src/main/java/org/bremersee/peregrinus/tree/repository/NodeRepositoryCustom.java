@@ -18,7 +18,7 @@ package org.bremersee.peregrinus.tree.repository;
 
 import java.util.Collection;
 import javax.validation.constraints.NotNull;
-import org.bremersee.peregrinus.tree.model.AbstractTreeNode;
+import org.bremersee.peregrinus.tree.model.AbstractNode;
 import org.springframework.lang.Nullable;
 import org.springframework.validation.annotation.Validated;
 import reactor.core.publisher.Flux;
@@ -28,9 +28,9 @@ import reactor.core.publisher.Mono;
  * @author Christian Bremer
  */
 @Validated
-public interface TreeNodeRepositoryCustom {
+public interface NodeRepositoryCustom {
 
-  Mono<AbstractTreeNode> findById(
+  Mono<AbstractNode> findById(
       @NotNull String nodeId,
       @NotNull String permission,
       @Nullable String userId,
@@ -46,7 +46,7 @@ public interface TreeNodeRepositoryCustom {
    * @param groups   the groups of the user
    * @return the children of the branch
    */
-  Flux<AbstractTreeNode> findByParentId(
+  Flux<AbstractNode> findByParentId(
       @NotNull String parentId,
       @Nullable String userId,
       @Nullable Collection<String> roles,

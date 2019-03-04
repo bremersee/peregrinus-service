@@ -28,7 +28,7 @@ import reactor.core.publisher.Mono;
  * @author Christian Bremer
  */
 @Validated
-public interface TreeBranchRepositoryCustom {
+public interface BranchRepositoryCustom {
 
   Flux<Branch> findByParentId(
       @Nullable String parentId,

@@ -18,7 +18,7 @@ package org.bremersee.peregrinus.tree.service;
 
 import java.util.Collection;
 import org.bremersee.peregrinus.tree.model.AbstractLeaf;
-import org.bremersee.peregrinus.tree.model.AbstractTreeNode;
+import org.bremersee.peregrinus.tree.model.AbstractNode;
 import reactor.core.publisher.Mono;
 
 /**
@@ -26,7 +26,7 @@ import reactor.core.publisher.Mono;
  */
 public class GeoTreeLeafAdapter implements TreeLeafAdapter {
 
-  public Mono<AbstractTreeNode> loadLeaf(
+  public Mono<AbstractNode> loadLeaf(
       final AbstractLeaf leaf,
       final String userId,
       final Collection<String> roles,

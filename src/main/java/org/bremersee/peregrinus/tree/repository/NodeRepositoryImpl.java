@@ -18,7 +18,7 @@ package org.bremersee.peregrinus.tree.repository;
 
 import java.util.Collection;
 import org.bremersee.peregrinus.security.access.PermissionConstants;
-import org.bremersee.peregrinus.tree.model.AbstractTreeNode;
+import org.bremersee.peregrinus.tree.model.AbstractNode;
 import org.springframework.data.mongodb.core.ReactiveMongoOperations;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -26,16 +26,16 @@ import reactor.core.publisher.Mono;
 /**
  * @author Christian Bremer
  */
-public class TreeNodeRepositoryImpl extends AbstractRepositoryImpl
-    implements TreeNodeRepositoryCustom {
+public class NodeRepositoryImpl extends AbstractRepositoryImpl
+    implements NodeRepositoryCustom {
 
-  public TreeNodeRepositoryImpl(
+  public NodeRepositoryImpl(
       ReactiveMongoOperations mongoOperations) {
     super(mongoOperations);
   }
 
   @Override
-  public Mono<AbstractTreeNode> findById(
+  public Mono<AbstractNode> findById(
       String nodeId,
       String permission,
       String userId,
@@ -43,17 +43,17 @@ public class TreeNodeRepositoryImpl extends AbstractRepositoryImpl
       Collection<String> groups) {
 
     return super.findById(
-        AbstractTreeNode.class, nodeId, permission, true, userId, roles, groups);
+        AbstractNode.class, nodeId, permission, true, userId, roles, groups);
   }
 
   @Override
-  public Flux<AbstractTreeNode> findByParentId(
+  public Flux<AbstractNode> findByParentId(
       String parentId,
       String userId,
       Collection<String> roles,
       Collection<String> groups) {
 
     return super.findByParentId(
-        AbstractTreeNode.class, parentId, PermissionConstants.READ, true, userId, roles, groups);
+        AbstractNode.class, parentId, PermissionConstants.READ, true, userId, roles, groups);
   }
 }

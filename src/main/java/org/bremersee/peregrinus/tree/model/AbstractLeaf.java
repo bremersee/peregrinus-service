@@ -36,7 +36,7 @@ import org.springframework.lang.Nullable;
 @Getter
 @Setter
 @NoArgsConstructor
-public abstract class AbstractLeaf extends AbstractTreeNode {
+public abstract class AbstractLeaf extends AbstractNode {
 
   @Transient
   private String name;

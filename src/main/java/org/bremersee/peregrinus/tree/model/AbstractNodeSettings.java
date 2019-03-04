@@ -51,7 +51,8 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, property = "type", visible = true)
 @JsonSubTypes({
     @Type(value = BranchSettings.class, name = "branch-settings"),
-    @Type(value = AbstractLeafSettings.class, name = "leaf-settings")
+    @Type(value = AbstractLeafSettings.class, name = "leaf-settings"),
+    @Type(value = GeoLeafSettings.class, name = "geo-leaf-settings")
 })
 @Getter
 @Setter

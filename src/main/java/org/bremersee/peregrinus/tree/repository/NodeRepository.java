@@ -16,18 +16,17 @@
 
 package org.bremersee.peregrinus.tree.repository;
 
-import org.bremersee.peregrinus.tree.model.BranchSettings;
+import org.bremersee.peregrinus.tree.model.AbstractNode;
 import org.springframework.data.mongodb.repository.ReactiveMongoRepository;
 import org.springframework.stereotype.Repository;
-import reactor.core.publisher.Mono;
+import reactor.core.publisher.Flux;
 
 /**
  * @author Christian Bremer
  */
 @Repository
-public interface TreeBranchSettingsRepository
-    extends ReactiveMongoRepository<BranchSettings, String> {
+public interface NodeRepository
+    extends ReactiveMongoRepository<AbstractNode, String>, NodeRepositoryCustom {
 
-  Mono<BranchSettings> findByNodeIdAndUserId(String nodeId, String userId);
-
+  Flux<AbstractNode> findByParentId(String parentId);
 }

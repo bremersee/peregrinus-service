@@ -24,7 +24,7 @@ import org.springframework.stereotype.Repository;
  * @author Christian Bremer
  */
 @Repository
-public interface TreeBranchRepository
-    extends ReactiveMongoRepository<Branch, String>, TreeBranchRepositoryCustom {
+public interface BranchRepository
+    extends ReactiveMongoRepository<Branch, String>, BranchRepositoryCustom {
 
 }

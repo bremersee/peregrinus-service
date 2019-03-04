@@ -16,14 +16,18 @@
 
 package org.bremersee.peregrinus.tree.repository;
 
-import org.bremersee.peregrinus.tree.model.GeoLeaf;
+import org.bremersee.peregrinus.tree.model.BranchSettings;
 import org.springframework.data.mongodb.repository.ReactiveMongoRepository;
 import org.springframework.stereotype.Repository;
+import reactor.core.publisher.Mono;
 
 /**
  * @author Christian Bremer
  */
 @Repository
-public interface GeoTreeLeafRepository extends ReactiveMongoRepository<GeoLeaf, String> {
+public interface BranchSettingsRepository
+    extends ReactiveMongoRepository<BranchSettings, String> {
+
+  Mono<BranchSettings> findByNodeIdAndUserId(String nodeId, String userId);
 
 }
