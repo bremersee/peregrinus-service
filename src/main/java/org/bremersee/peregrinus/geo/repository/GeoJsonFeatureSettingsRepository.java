@@ -16,7 +16,7 @@
 
 package org.bremersee.peregrinus.geo.repository;
 
-import org.bremersee.peregrinus.geo.model.AbstractGeoJsonFeatureSettings;
+import org.bremersee.peregrinus.geo.model.FeatureSettings;
 import org.springframework.data.mongodb.repository.ReactiveMongoRepository;
 import reactor.core.publisher.Mono;
 
@@ -24,7 +24,7 @@ import reactor.core.publisher.Mono;
  * @author Christian Bremer
  */
 public interface GeoJsonFeatureSettingsRepository
-    extends ReactiveMongoRepository<AbstractGeoJsonFeatureSettings, String> {
+    extends ReactiveMongoRepository<FeatureSettings, String> {
 
-  Mono<AbstractGeoJsonFeatureSettings> findByFeatureIdAndUserId(String featureId, String userId);
+  Mono<FeatureSettings> findByFeatureIdAndUserId(String featureId, String userId);
 }

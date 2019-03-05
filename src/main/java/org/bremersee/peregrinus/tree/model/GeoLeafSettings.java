@@ -32,7 +32,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @Setter
 @ToString
 @NoArgsConstructor
-public class GeoLeafSettings extends AbstractLeafSettings {
+public class GeoLeafSettings extends LeafSettings {
 
   private boolean displayedOnMap;
 

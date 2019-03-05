@@ -16,26 +16,44 @@
 
 package org.bremersee.peregrinus.tree.model;
 
+import javax.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
+import org.bremersee.peregrinus.security.access.AccessControl;
+import org.springframework.data.annotation.Transient;
 import org.springframework.data.annotation.TypeAlias;
 import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.lang.Nullable;
 
 /**
  * @author Christian Bremer
  */
-@Document(collection = "directory-settings")
-@TypeAlias("AbstractLeafSettings")
+@Document(collection = "directory")
+@TypeAlias("Leaf")
+@ToString(callSuper = true)
 @Getter
 @Setter
-@ToString
 @NoArgsConstructor
-public abstract class AbstractLeafSettings extends AbstractNodeSettings {
+public abstract class Leaf extends Node {
 
-  public AbstractLeafSettings(String nodeId, String userId) {
-    super(nodeId, userId);
+  @Transient
+  private String name;
+
+  @Transient
+  private LeafSettings settings;
+
+  public Leaf(
+      @Nullable String parentId,
+      @NotNull String owner) {
+    super(parentId, owner);
+  }
+
+  public Leaf(
+      @Nullable String parentId,
+      @NotNull AccessControl accessControl) {
+    super(parentId, accessControl);
   }
 
 }

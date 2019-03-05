@@ -16,17 +16,17 @@
 
 package org.bremersee.peregrinus.tree.service;
 
-import org.bremersee.peregrinus.geo.model.AbstractGeoJsonFeature;
-import org.bremersee.peregrinus.geo.model.AbstractGeoJsonFeatureSettings;
+import org.bremersee.peregrinus.geo.model.Feature;
+import org.bremersee.peregrinus.geo.model.FeatureSettings;
 import org.bremersee.peregrinus.geo.repository.GeoJsonFeatureRepository;
 import org.bremersee.peregrinus.geo.repository.GeoJsonFeatureSettingsRepository;
 import org.bremersee.peregrinus.security.access.AccessControl;
-import org.bremersee.peregrinus.tree.model.AbstractLeaf;
-import org.bremersee.peregrinus.tree.model.AbstractNode;
 import org.bremersee.peregrinus.tree.model.GeoLeaf;
 import org.bremersee.peregrinus.tree.model.GeoLeafSettings;
-import org.bremersee.peregrinus.tree.repository.LeafRepository;
-import org.bremersee.peregrinus.tree.repository.LeafSettingsRepository;
+import org.bremersee.peregrinus.tree.model.Leaf;
+import org.bremersee.peregrinus.tree.model.LeafSettings;
+import org.bremersee.peregrinus.tree.model.Node;
+import org.bremersee.peregrinus.tree.repository.TreeRepository;
 import org.springframework.stereotype.Component;
 import reactor.core.publisher.Mono;
 
@@ -36,39 +36,35 @@ import reactor.core.publisher.Mono;
 @Component
 public class GeoLeafAdapter implements LeafAdapter {
 
-  private LeafRepository leafRepository;
-
-  private LeafSettingsRepository leafSettingsRepository;
+  private TreeRepository treeRepository;
 
   private GeoJsonFeatureRepository featureRepository;
 
   private GeoJsonFeatureSettingsRepository featureSettingsRepository;
 
-  public GeoLeafAdapter(LeafRepository leafRepository,
-      LeafSettingsRepository leafSettingsRepository,
+  public GeoLeafAdapter(TreeRepository treeRepository,
       GeoJsonFeatureRepository featureRepository,
       GeoJsonFeatureSettingsRepository featureSettingsRepository) {
-    this.leafRepository = leafRepository;
-    this.leafSettingsRepository = leafSettingsRepository;
+    this.treeRepository = treeRepository;
     this.featureRepository = featureRepository;
     this.featureSettingsRepository = featureSettingsRepository;
   }
 
   @Override
-  public boolean supportsLeaf(AbstractLeaf leaf) {
+  public boolean supportsLeaf(Leaf leaf) {
     return leaf instanceof GeoLeaf;
   }
 
   @Override
-  public Mono<AbstractLeaf> setLeafName(final AbstractLeaf leaf) {
+  public Mono<Leaf> setLeafName(final Leaf leaf) {
     final GeoLeaf geoLeaf = (GeoLeaf) leaf;
     geoLeaf.setName(geoLeaf.getFeature().getProperties().getName());
     return Mono.just(leaf);
   }
 
   @Override
-  public Mono<AbstractLeaf> setLeafSettings(final AbstractLeaf leaf, final String userId) {
-    return leafSettingsRepository.findByNodeIdAndUserId(leaf.getId(), userId)
+  public Mono<Leaf> setLeafSettings(final Leaf leaf, final String userId) {
+    return treeRepository.findNodeSettings(LeafSettings.class, leaf.getId(), userId)
         .switchIfEmpty(createLeafSettings(leaf, userId))
         .map(leafSettings -> {
           leaf.setSettings(leafSettings);
@@ -77,8 +73,8 @@ public class GeoLeafAdapter implements LeafAdapter {
   }
 
   @Override
-  public Mono<AbstractLeaf> setLeafContent(
-      final AbstractLeaf leaf,
+  public Mono<Leaf> setLeafContent(
+      final Leaf leaf,
       final String userId) {
     return featureSettingsRepository
         .findByFeatureIdAndUserId(((GeoLeaf) leaf).getFeature().getId(), userId)
@@ -91,7 +87,7 @@ public class GeoLeafAdapter implements LeafAdapter {
   }
 
   @Override
-  public Mono<Void> renameLeaf(final AbstractLeaf leaf, final String name) {
+  public Mono<Void> renameLeaf(final Leaf leaf, final String name) {
     final GeoLeaf geoLeaf = (GeoLeaf) leaf;
     geoLeaf.setName(name);
     geoLeaf.getFeature().getProperties().setName(name);
@@ -100,40 +96,40 @@ public class GeoLeafAdapter implements LeafAdapter {
 
   @Override
   public Mono<AccessControl> updateAccessControl(
-      final AbstractLeaf leaf,
+      final Leaf leaf,
       final AccessControl accessControl) {
     final GeoLeaf geoLeaf = (GeoLeaf) leaf;
-    final AbstractGeoJsonFeature feature = geoLeaf.getFeature();
+    final Feature feature = geoLeaf.getFeature();
     feature.getProperties().setAccessControl(accessControl);
     return featureRepository
         .persist(feature)
         .flatMap(feature0 -> {
           geoLeaf.setFeature(feature);
           geoLeaf.setAccessControl(accessControl);
-          return leafRepository.save(geoLeaf)
-              .map(AbstractNode::getAccessControl);
+          return treeRepository.persist(geoLeaf)
+              .map(Node::getAccessControl);
         });
   }
 
   @Override
-  public Mono<Void> delete(final AbstractLeaf leaf, final String userId) {
-    return leafSettingsRepository
-        .deleteByNodeIdAndUserId(leaf.getId(), userId)
-        .and(leafRepository.delete(leaf));
+  public Mono<Void> delete(final Leaf leaf, final String userId) {
+    return treeRepository
+        .deleteNodeSettings(leaf.getId(), userId)
+        .and(treeRepository.delete(leaf));
   }
 
-  private Mono<AbstractGeoJsonFeatureSettings> createFeatureSettings(
-      final AbstractGeoJsonFeature feature, final String userId) {
+  private Mono<FeatureSettings> createFeatureSettings(
+      final Feature feature, final String userId) {
 
-    final AbstractGeoJsonFeatureSettings featureSettings = feature
+    final FeatureSettings featureSettings = feature
         .getProperties()
         .createDefaultSettings(feature.getId(), userId);
     return featureSettingsRepository.save(featureSettings);
   }
 
-  private Mono<GeoLeafSettings> createLeafSettings(final AbstractLeaf leaf, final String userId) {
+  private Mono<GeoLeafSettings> createLeafSettings(final Leaf leaf, final String userId) {
     final GeoLeafSettings settings = new GeoLeafSettings(leaf.getId(), userId);
     settings.setDisplayedOnMap(true);
-    return leafSettingsRepository.persist(settings);
+    return treeRepository.persist(settings);
   }
 }

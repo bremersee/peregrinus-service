@@ -31,7 +31,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @ToString
 @Document(collection = "feature")
 @TypeAlias("Rte")
-public class Rte extends AbstractGeoJsonFeature<MultiLineString, RteProperties> {
+public class Rte extends Feature<MultiLineString, RteProperties> {
 
   int orderValue() {
     return 50;

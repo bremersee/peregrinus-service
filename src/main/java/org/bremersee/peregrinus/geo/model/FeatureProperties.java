@@ -38,25 +38,25 @@ import org.springframework.util.StringUtils;
 /**
  * @author Christian Bremer
  */
-@ToString
-@Getter
-@Setter
-@TypeAlias("AbstractGeoJsonFeatureProperties")
+@TypeAlias("FeatureProperties")
 @JsonTypeInfo(use = Id.NAME, property = "subType", visible = true)
 @JsonSubTypes({
     @Type(value = RteProperties.class, name = "RTE"),
     @Type(value = TrkProperties.class, name = "TRK"),
     @Type(value = WptProperties.class, name = "WPT")
 })
-public abstract class AbstractGeoJsonFeatureProperties<S extends AbstractGeoJsonFeatureSettings>
-    implements Comparable<AbstractGeoJsonFeatureProperties> {
+@Getter
+@Setter
+@ToString
+public abstract class FeatureProperties<S extends FeatureSettings>
+    implements Comparable<FeatureProperties> {
 
   private AccessControl accessControl = new AccessControl();
 
-  private Instant created = Instant.now(Clock.system(ZoneId.of("UTC")));
+  private Instant created;
 
   @Indexed
-  private Instant modified = Instant.now(Clock.system(ZoneId.of("UTC")));
+  private Instant modified;
 
   @Indexed
   private String name;
@@ -84,6 +84,12 @@ public abstract class AbstractGeoJsonFeatureProperties<S extends AbstractGeoJson
   @Transient
   private S settings;
 
+  public FeatureProperties() {
+    final Instant now = Instant.now(Clock.system(ZoneId.of("UTC")));
+    created = now;
+    modified = now;
+  }
+
   public S createDefaultSettings(
       final String featureId,
       final String userId) {
@@ -96,7 +102,8 @@ public abstract class AbstractGeoJsonFeatureProperties<S extends AbstractGeoJson
 
   abstract S doCreateDefaultSettings();
 
-  public int compareTo(final AbstractGeoJsonFeatureProperties o) {
+  @Override
+  public int compareTo(final FeatureProperties o) {
     if (this == o) {
       return 0;
     }

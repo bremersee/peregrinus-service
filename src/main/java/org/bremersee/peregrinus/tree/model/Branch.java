@@ -37,7 +37,7 @@ import org.springframework.lang.Nullable;
 @Setter
 @ToString(callSuper = true)
 @NoArgsConstructor
-public class Branch extends AbstractNode {
+public class Branch extends Node {
 
   @NotNull(message = "Name must not be null.")
   private String name;
@@ -46,7 +46,7 @@ public class Branch extends AbstractNode {
   private BranchSettings settings;
 
   @Transient
-  private List<AbstractNode> children;
+  private List<Node> children;
 
   public Branch(
       @NotNull String name,

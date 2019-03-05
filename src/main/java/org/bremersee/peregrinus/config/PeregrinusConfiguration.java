@@ -16,10 +16,12 @@
 
 package org.bremersee.peregrinus.config;
 
+import lombok.extern.slf4j.Slf4j;
 import org.bremersee.exception.RestApiExceptionParser;
 import org.bremersee.google.maps.GoogleMapsProperties;
 import org.bremersee.groupman.api.GroupControllerApi;
 import org.bremersee.groupman.client.GroupControllerClient;
+import org.bremersee.groupman.mock.GroupControllerMock;
 import org.bremersee.nominatim.NominatimProperties;
 import org.bremersee.nominatim.client.ReactiveNominatimClient;
 import org.bremersee.nominatim.client.ReactiveNominatimClientImpl;
@@ -34,6 +36,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.util.StringUtils;
 import org.springframework.web.reactive.function.client.WebClient;
 
 /**
@@ -41,6 +44,7 @@ import org.springframework.web.reactive.function.client.WebClient;
  */
 @Configuration
 @EnableConfigurationProperties({PeregrinusProperties.class})
+@Slf4j
 public class PeregrinusConfiguration {
 
   private PeregrinusProperties peregrinusProperties;
@@ -64,14 +68,21 @@ public class PeregrinusConfiguration {
 
   @Bean
   public GroupControllerApi groupService(final RestApiExceptionParser restApiExceptionParser) {
-    final WebClient webClient = WebClient
-        .builder()
-        .baseUrl(peregrinusProperties.getGroupmanBaseUri())
-        .filter(new JwtAuthenticationTokenAppender())
-        .build();
-    return new GroupControllerClient(
-        webClient,
-        new DefaultWebClientErrorDecoder(restApiExceptionParser));
+    if (StringUtils.hasText(peregrinusProperties.getGroupmanBaseUri())) {
+      log.info("msg=[Creating http groupman client.] baseUri=[{}]",
+          peregrinusProperties.getGroupmanBaseUri());
+      final WebClient webClient = WebClient
+          .builder()
+          .baseUrl(peregrinusProperties.getGroupmanBaseUri())
+          .filter(new JwtAuthenticationTokenAppender())
+          .build();
+      return new GroupControllerClient(
+          webClient,
+          new DefaultWebClientErrorDecoder(restApiExceptionParser));
+    } else {
+      log.info("msg=[Creating groupman mock client.]");
+      return new GroupControllerMock();
+    }
   }
 
   @Bean

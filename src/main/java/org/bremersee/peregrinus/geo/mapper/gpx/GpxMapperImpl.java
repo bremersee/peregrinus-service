@@ -19,7 +19,7 @@ package org.bremersee.peregrinus.geo.mapper.gpx;
 import java.util.ArrayList;
 import java.util.List;
 import org.bremersee.gpx.model.Gpx;
-import org.bremersee.peregrinus.geo.model.AbstractGeoJsonFeature;
+import org.bremersee.peregrinus.geo.model.Feature;
 import org.bremersee.xml.JaxbContextBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -61,7 +61,7 @@ public class GpxMapperImpl extends AbstractGpxMapper implements GpxMapper {
     gpx.getVersion(); //version="1.1"
     */
 
-    final List<AbstractGeoJsonFeature> features = new ArrayList<>();
+    final List<Feature> features = new ArrayList<>();
     features.addAll(wptMapper.readWptTypes(gpx.getWpts()));
     features.addAll(trkMapper.readTrkTypes(gpx.getTrks()));
     features.addAll(rteMapper.readRtes(gpx.getRtes()));

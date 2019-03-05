@@ -30,7 +30,7 @@ import org.bremersee.common.model.PhoneNumber;
 import org.bremersee.garmin.gpx.v3.model.ext.AddressT;
 import org.bremersee.garmin.gpx.v3.model.ext.PhoneNumberT;
 import org.bremersee.gpx.model.LinkType;
-import org.bremersee.peregrinus.geo.model.AbstractGeoJsonFeatureProperties;
+import org.bremersee.peregrinus.geo.model.FeatureProperties;
 import org.bremersee.xml.JaxbContextBuilder;
 import org.springframework.util.StringUtils;
 
@@ -49,7 +49,7 @@ abstract class AbstractGpxMapper {
     return jaxbContextBuilder.buildUnmarshaller();
   }
 
-  <T extends AbstractGeoJsonFeatureProperties> T readCommonData(
+  <T extends FeatureProperties> T readCommonData(
       final Supplier<T> geoJsonPropertiesSupplier,
       final String name,
       final String desc,

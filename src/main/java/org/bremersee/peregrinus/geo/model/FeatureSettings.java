@@ -16,63 +16,56 @@
 
 package org.bremersee.peregrinus.geo.model;
 
+import com.fasterxml.jackson.annotation.JsonAutoDetect;
+import com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
+import com.fasterxml.jackson.annotation.JsonSubTypes.Type;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
-import com.fasterxml.jackson.annotation.JsonTypeName;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
-import org.locationtech.jts.geom.Geometry;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.TypeAlias;
-import org.springframework.data.mongodb.core.index.GeoSpatialIndexType;
-import org.springframework.data.mongodb.core.index.GeoSpatialIndexed;
+import org.springframework.data.annotation.Version;
+import org.springframework.data.mongodb.core.index.CompoundIndex;
+import org.springframework.data.mongodb.core.index.CompoundIndexes;
+import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 /**
  * @author Christian Bremer
  */
+@Document(collection = "feature-settings")
+@TypeAlias("FeatureSettings")
+@CompoundIndexes({
+    @CompoundIndex(name = "uk_feature_user", def = "{'featureId': 1, 'userId': 1}", unique = true)
+})
+@JsonAutoDetect(
+    fieldVisibility = Visibility.ANY,
+    getterVisibility = Visibility.NONE,
+    setterVisibility = Visibility.NONE)
+@JsonInclude(Include.NON_EMPTY)
+@JsonTypeInfo(use = JsonTypeInfo.Id.NAME, property = "type", visible = true)
+@JsonSubTypes({
+    @Type(value = RteSettings.class, name = "rte-settings")
+})
 @Getter
 @Setter
 @ToString
-@Document(collection = "feature")
-@TypeAlias("AbstractGeoJsonFeature")
-@JsonTypeInfo(use = JsonTypeInfo.Id.NAME, property = "type", visible = true)
-@JsonSubTypes({
-})
-@JsonTypeName("Feature")
-public abstract class AbstractGeoJsonFeature<G extends Geometry, P extends AbstractGeoJsonFeatureProperties>
-    implements Comparable<AbstractGeoJsonFeature> {
+public abstract class FeatureSettings {
 
   @Id
   private String id;
 
-  @GeoSpatialIndexed(type = GeoSpatialIndexType.GEO_2DSPHERE)
-  private G geometry;
+  @Version
+  private Long version;
 
-  private double[] bbox;
+  @Indexed
+  private String featureId;
 
-  private P properties;
-
-  abstract int orderValue();
-
-  @SuppressWarnings("Duplicates")
-  @Override
-  public int compareTo(final AbstractGeoJsonFeature o) {
-    if (this == o) {
-      return 0;
-    }
-    if (o == null) {
-      return -1;
-    }
-    int c = orderValue() - o.orderValue();
-    if (c != 0) {
-      return c;
-    }
-    if (getProperties() != null) {
-      return getProperties().compareTo(o.getProperties());
-    }
-    return 0;
-  }
+  @Indexed
+  private String userId;
 
 }

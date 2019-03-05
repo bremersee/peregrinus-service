@@ -46,7 +46,7 @@ import org.springframework.validation.annotation.Validated;
  * @author Christian Bremer
  */
 @Document(collection = "directory")
-@TypeAlias("AbstractNode")
+@TypeAlias("Node")
 @JsonAutoDetect(
     fieldVisibility = Visibility.ANY,
     getterVisibility = Visibility.NONE,
@@ -60,7 +60,7 @@ import org.springframework.validation.annotation.Validated;
 @Setter
 @ToString
 @Validated
-public abstract class AbstractNode implements Comparable<AbstractNode> {
+public abstract class Node implements Comparable<Node> {
 
   @Id
   private String id;
@@ -83,16 +83,15 @@ public abstract class AbstractNode implements Comparable<AbstractNode> {
   @Indexed
   private String parentId;
 
-  //@NotNull(message = "Access control must not be null.")
   private AccessControl accessControl = new AccessControl();
 
-  public AbstractNode() {
+  public Node() {
     final Instant now = Instant.now(Clock.system(ZoneId.of("UTC")));
     this.created = now;
     this.modified = now;
   }
 
-  public AbstractNode(
+  public Node(
       @Nullable String parentId,
       @NotNull String owner) {
     this();
@@ -102,7 +101,7 @@ public abstract class AbstractNode implements Comparable<AbstractNode> {
     this.parentId = parentId;
   }
 
-  public AbstractNode(
+  public Node(
       @Nullable String parentId,
       @NotNull AccessControl accessControl) {
     this();
@@ -119,7 +118,7 @@ public abstract class AbstractNode implements Comparable<AbstractNode> {
 
   @SuppressWarnings("Duplicates")
   @Override
-  public int compareTo(final AbstractNode o) {
+  public int compareTo(final Node o) {
     if (this == o) {
       return 0;
     }
@@ -130,15 +129,6 @@ public abstract class AbstractNode implements Comparable<AbstractNode> {
     if (c != 0) {
       return c;
     }
-
-    /*
-    if (this instanceof GeoLeaf
-        && ((GeoLeaf) this).getFeature() != null
-        && (o instanceof GeoLeaf)) {
-      return ((GeoLeaf) this).getFeature().compareTo(((GeoLeaf) o).getFeature());
-    }
-    */
-
     final String n1 = StringUtils.hasText(getName()) ? getName() : "";
     final String n2 = StringUtils.hasText(o.getName()) ? o.getName() : "";
     return n1.compareToIgnoreCase(n2);

@@ -18,7 +18,7 @@ package org.bremersee.peregrinus.tree.service;
 
 import javax.validation.constraints.NotNull;
 import org.bremersee.peregrinus.security.access.AccessControl;
-import org.bremersee.peregrinus.tree.model.AbstractLeaf;
+import org.bremersee.peregrinus.tree.model.Leaf;
 import org.springframework.validation.annotation.Validated;
 import reactor.core.publisher.Mono;
 
@@ -28,19 +28,19 @@ import reactor.core.publisher.Mono;
 @Validated
 public interface LeafAdapter { // N = Node, C = Content?
 
-  boolean supportsLeaf(AbstractLeaf leaf);
+  boolean supportsLeaf(Leaf leaf);
 
-  Mono<AbstractLeaf> setLeafName(@NotNull AbstractLeaf leaf);
+  Mono<Leaf> setLeafName(@NotNull Leaf leaf);
 
-  Mono<AbstractLeaf> setLeafSettings(@NotNull AbstractLeaf leaf, @NotNull String userId);
+  Mono<Leaf> setLeafSettings(@NotNull Leaf leaf, @NotNull String userId);
 
-  Mono<AbstractLeaf> setLeafContent(@NotNull AbstractLeaf leaf, @NotNull String userId);
+  Mono<Leaf> setLeafContent(@NotNull Leaf leaf, @NotNull String userId);
 
-  Mono<Void> renameLeaf(@NotNull AbstractLeaf leaf, @NotNull String name);
+  Mono<Void> renameLeaf(@NotNull Leaf leaf, @NotNull String name);
 
   Mono<AccessControl> updateAccessControl(
-      @NotNull AbstractLeaf leaf,
+      @NotNull Leaf leaf,
       @NotNull AccessControl accessControl);
 
-  Mono<Void> delete(@NotNull AbstractLeaf leaf, @NotNull String userId);
+  Mono<Void> delete(@NotNull Leaf leaf, @NotNull String userId);
 }

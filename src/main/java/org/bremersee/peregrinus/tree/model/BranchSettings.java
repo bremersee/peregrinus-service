@@ -32,7 +32,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @Setter
 @ToString
 @NoArgsConstructor
-public class BranchSettings extends AbstractNodeSettings {
+public class BranchSettings extends NodeSettings {
 
   private boolean open = true;
 

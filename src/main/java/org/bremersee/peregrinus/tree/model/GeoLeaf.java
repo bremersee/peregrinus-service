@@ -19,7 +19,7 @@ package org.bremersee.peregrinus.tree.model;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
-import org.bremersee.peregrinus.geo.model.AbstractGeoJsonFeature;
+import org.bremersee.peregrinus.geo.model.Feature;
 import org.springframework.data.annotation.TypeAlias;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -32,10 +32,10 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @Getter
 @Setter
 @ToString(callSuper = true)
-public class GeoLeaf extends AbstractLeaf {
+public class GeoLeaf extends Leaf {
 
   @DBRef
-  private AbstractGeoJsonFeature feature;
+  private Feature feature;
 
   public GeoLeaf() {
   }

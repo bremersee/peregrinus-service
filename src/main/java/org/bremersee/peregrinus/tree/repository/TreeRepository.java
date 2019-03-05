@@ -17,45 +17,44 @@
 package org.bremersee.peregrinus.tree.repository;
 
 import java.util.Collection;
-import org.bremersee.peregrinus.tree.model.Branch;
-import org.springframework.data.mongodb.core.ReactiveMongoOperations;
+import org.bremersee.peregrinus.tree.model.Node;
+import org.bremersee.peregrinus.tree.model.NodeSettings;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 /**
  * @author Christian Bremer
  */
-public class BranchRepositoryImpl extends AbstractRepositoryImpl
-    implements BranchRepositoryCustom {
+public interface TreeRepository {
 
-  public BranchRepositoryImpl(
-      ReactiveMongoOperations mongoOperations) {
-    super(mongoOperations);
-  }
+  <T> Mono<T> persist(T entity);
 
-  @Override
-  public Mono<Branch> findById(
-      String branchId,
+  Mono<Void> delete(Object entity);
+
+  <T extends Node> Mono<T> findNodeById(
+      Class<T> clazz,
+      String id,
       String permission,
+      boolean includePublic,
       String userId,
       Collection<String> roles,
-      Collection<String> groups) {
+      Collection<String> groups);
 
-    return super.findById(
-        Branch.class, branchId, permission, true, userId, roles, groups);
-  }
+  <T extends Node> Flux<T> findNodesByParentId(
+      Class<T> clazz,
+      String parentId);
 
-  @Override
-  public Flux<Branch> findByParentId(
+  <T extends Node> Flux<T> findNodesByParentId(
+      Class<T> clazz,
       String parentId,
       String permission,
       boolean includePublic,
       String userId,
       Collection<String> roles,
-      Collection<String> groups) {
+      Collection<String> groups);
 
-    return super.findByParentId(
-        Branch.class, parentId, permission, includePublic, userId, roles, groups);
-  }
+  <T extends NodeSettings> Mono<T> findNodeSettings(Class<T> clazz, String nodeId, String userId);
+
+  Mono<Void> deleteNodeSettings(String nodeId, String userId);
 
 }

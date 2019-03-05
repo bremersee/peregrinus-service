@@ -18,12 +18,13 @@ package org.bremersee.peregrinus.tree.repository;
 
 import java.util.Collection;
 import java.util.List;
-import lombok.AccessLevel;
-import lombok.Getter;
 import org.bremersee.peregrinus.security.access.MongoRepositoryUtils;
+import org.bremersee.peregrinus.tree.model.Node;
+import org.bremersee.peregrinus.tree.model.NodeSettings;
 import org.springframework.data.mongodb.core.ReactiveMongoOperations;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
+import org.springframework.stereotype.Repository;
 import org.springframework.util.StringUtils;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -31,21 +32,28 @@ import reactor.core.publisher.Mono;
 /**
  * @author Christian Bremer
  */
-public abstract class AbstractRepositoryImpl {
+@Repository
+public class TreeRepositoryImpl implements TreeRepository {
 
-  @Getter(AccessLevel.PACKAGE)
   private ReactiveMongoOperations mongoOperations;
 
-  public AbstractRepositoryImpl(
+  public TreeRepositoryImpl(
       ReactiveMongoOperations mongoOperations) {
     this.mongoOperations = mongoOperations;
   }
 
+  @Override
   public <T> Mono<T> persist(T entity) {
-    return getMongoOperations().save(entity);
+    return mongoOperations.save(entity);
   }
 
-  <T> Mono<T> findById(
+  @Override
+  public Mono<Void> delete(Object entity) {
+    return mongoOperations.remove(entity).flatMap(deleteResult -> Mono.empty());
+  }
+
+  @Override
+  public <T extends Node> Mono<T> findNodeById(
       Class<T> clazz,
       String id,
       String permission,
@@ -62,7 +70,16 @@ public abstract class AbstractRepositoryImpl {
     return mongoOperations.findOne(Query.query(oneAndTwo), clazz);
   }
 
-  <T> Flux<T> findByParentId(
+  @Override
+  public <T extends Node> Flux<T> findNodesByParentId(
+      Class<T> clazz,
+      String parentId) {
+
+    return mongoOperations.find(Query.query(Criteria.where("parentId").is(parentId)), clazz);
+  }
+
+  @Override
+  public <T extends Node> Flux<T> findNodesByParentId(
       Class<T> clazz,
       String parentId,
       String permission,
@@ -81,6 +98,27 @@ public abstract class AbstractRepositoryImpl {
     final Criteria two = new Criteria().orOperator(criteriaList.toArray(new Criteria[0]));
     final Criteria oneAndTwo = new Criteria().andOperator(one, two);
     return mongoOperations.find(Query.query(oneAndTwo), clazz);
+  }
+
+  private Criteria nodeSettingsCriteria(String nodeId, String userId) {
+    return new Criteria().andOperator(
+        Criteria.where("nodeId").is(nodeId),
+        Criteria.where("userId").is(userId));
+  }
+
+  @Override
+  public <T extends NodeSettings> Mono<T> findNodeSettings(
+      Class<T> clazz,
+      String nodeId,
+      String userId) {
+    return mongoOperations.findOne(Query.query(nodeSettingsCriteria(nodeId, userId)), clazz);
+  }
+
+  @Override
+  public Mono<Void> deleteNodeSettings(String nodeId, String userId) {
+    return mongoOperations
+        .remove(Query.query(nodeSettingsCriteria(nodeId, userId)), NodeSettings.class)
+        .flatMap(deleteResult -> Mono.empty());
   }
 
 }

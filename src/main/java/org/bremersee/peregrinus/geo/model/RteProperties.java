@@ -20,7 +20,6 @@ import java.util.List;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
-import org.bremersee.geojson.GeoJsonFeatureCollection;
 import org.springframework.data.annotation.TypeAlias;
 
 /**
@@ -30,7 +29,7 @@ import org.springframework.data.annotation.TypeAlias;
 @Setter
 @ToString
 @TypeAlias("RteProperties")
-public class RteProperties extends AbstractGeoJsonFeatureProperties<RteSettings> {
+public class RteProperties extends FeatureProperties<RteSettings> {
 
   private List<RteSegment> rteSegments;
 

@@ -24,13 +24,11 @@ import org.bremersee.exception.ServiceException;
 import org.bremersee.groupman.api.GroupControllerApi;
 import org.bremersee.peregrinus.security.access.AccessControl;
 import org.bremersee.peregrinus.security.access.PermissionConstants;
-import org.bremersee.peregrinus.tree.model.AbstractLeaf;
-import org.bremersee.peregrinus.tree.model.AbstractNode;
 import org.bremersee.peregrinus.tree.model.Branch;
 import org.bremersee.peregrinus.tree.model.BranchSettings;
-import org.bremersee.peregrinus.tree.repository.BranchRepository;
-import org.bremersee.peregrinus.tree.repository.BranchSettingsRepository;
-import org.bremersee.peregrinus.tree.repository.NodeRepository;
+import org.bremersee.peregrinus.tree.model.Leaf;
+import org.bremersee.peregrinus.tree.model.Node;
+import org.bremersee.peregrinus.tree.repository.TreeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
@@ -45,11 +43,7 @@ import reactor.core.publisher.Mono;
 @Component
 public class TreeServiceImpl implements TreeService {
 
-  private final NodeRepository nodeRepository;
-
-  private final BranchRepository branchRepository;
-
-  private final BranchSettingsRepository branchSettingsRepository;
+  private final TreeRepository treeRepository;
 
   private final GroupControllerApi groupService;
 
@@ -57,19 +51,15 @@ public class TreeServiceImpl implements TreeService {
 
   @Autowired
   public TreeServiceImpl(
-      NodeRepository nodeRepository,
-      BranchRepository branchRepository,
-      BranchSettingsRepository branchSettingsRepository,
+      TreeRepository treeRepository,
       GroupControllerApi groupService,
       List<LeafAdapter> leafAdapters) {
-    this.nodeRepository = nodeRepository;
-    this.branchRepository = branchRepository;
-    this.branchSettingsRepository = branchSettingsRepository;
+    this.treeRepository = treeRepository;
     this.groupService = groupService;
     this.leafAdapters = leafAdapters;
   }
 
-  private Mono<LeafAdapter> findLeafAdapter(final AbstractLeaf leaf) {
+  private Mono<LeafAdapter> findLeafAdapter(final Leaf leaf) {
     return Mono.justOrEmpty(
         leafAdapters
             .stream()
@@ -92,16 +82,16 @@ public class TreeServiceImpl implements TreeService {
 
     if (StringUtils.hasText(parentId)) {
       return groupService.getMembershipIds()
-          .flatMap(groups -> createChildBranch(
+          .flatMap(groups -> createBranch(
               name, parentId, userId, accessControl, roles, groups));
     }
     final AccessControl newAccessControl = new AccessControl(accessControl)
         .owner(userId)
         .addUser(userId, PermissionConstants.ALL);
-    return branchRepository.save(new Branch(name, null, newAccessControl));
+    return treeRepository.persist(new Branch(name, null, newAccessControl));
   }
 
-  private Mono<Branch> createChildBranch(
+  private Mono<Branch> createBranch(
       final String name,
       final String parentId,
       final String userId,
@@ -109,9 +99,11 @@ public class TreeServiceImpl implements TreeService {
       final Collection<String> roles,
       final Collection<String> groups) {
 
-    return branchRepository.findById(parentId, PermissionConstants.WRITE, userId, roles, groups)
+    return treeRepository
+        .findNodeById(Branch.class, parentId, PermissionConstants.WRITE, true, userId, roles,
+            groups)
         .switchIfEmpty(Mono.error(ServiceException.forbidden("TreeBranch", parentId)))
-        .map(AbstractNode::getAccessControl)
+        .map(Node::getAccessControl)
         .flatMap(existAccessControl -> {
           final AccessControl newAccessControl;
           if (accessControl == null
@@ -123,7 +115,7 @@ public class TreeServiceImpl implements TreeService {
                 .owner(userId)
                 .addUser(userId, PermissionConstants.ALL);
           }
-          return branchRepository.save(new Branch(name, parentId, newAccessControl));
+          return treeRepository.persist(new Branch(name, parentId, newAccessControl));
         });
   }
 
@@ -149,16 +141,17 @@ public class TreeServiceImpl implements TreeService {
       final Collection<String> roles,
       final Collection<String> groups) {
 
-    return nodeRepository.findById(nodeId, PermissionConstants.WRITE, userId, roles, groups)
+    return treeRepository
+        .findNodeById(Node.class, nodeId, PermissionConstants.WRITE, true, userId, roles, groups)
         .switchIfEmpty(Mono.error(ServiceException.forbidden("TreeNode", nodeId)))
         .flatMap(node -> {
           if (node instanceof Branch) {
             final Branch branch = (Branch) node;
             branch.setName(name);
-            return branchRepository.save(branch).flatMap(b -> Mono.empty());
+            return treeRepository.persist(branch).flatMap(b -> Mono.empty());
           }
-          if (node instanceof AbstractLeaf) {
-            final AbstractLeaf leaf = (AbstractLeaf) node;
+          if (node instanceof Leaf) {
+            final Leaf leaf = (Leaf) node;
             return findLeafAdapter(leaf)
                 .flatMap(leafAdapter -> leafAdapter.renameLeaf(leaf, userId));
           }
@@ -195,20 +188,21 @@ public class TreeServiceImpl implements TreeService {
         .owner(userId)
         .addUser(userId, PermissionConstants.ALL);
 
-    return nodeRepository
-        .findById(nodeId, PermissionConstants.ADMINISTRATION, userId, roles, groups)
+    return treeRepository
+        .findNodeById(Node.class, nodeId, PermissionConstants.ADMINISTRATION, true,
+            userId, roles, groups)
         .switchIfEmpty(Mono.error(ServiceException.forbidden("TreeNode", nodeId)))
         .flatMap(node -> updateAccessControl(node, recursive, newAccessControl));
   }
 
   private Mono<AccessControl> updateAccessControl(
-      final AbstractNode node,
+      final Node node,
       final boolean recursive,
       final AccessControl accessControl) {
 
     if (recursive) {
       if (node instanceof Branch) {
-        return nodeRepository.findByParentId(node.getId())
+        return treeRepository.findNodesByParentId(Branch.class, node.getId())
             .flatMap(node0 -> updateAccessControl(node0, true, accessControl))
             .count()
             .flatMap(size -> updateAccessControl(node, false, accessControl));
@@ -218,9 +212,9 @@ public class TreeServiceImpl implements TreeService {
     } else {
       if (node instanceof Branch) {
         node.setAccessControl(accessControl);
-        return nodeRepository.save(node).map(AbstractNode::getAccessControl);
-      } else if (node instanceof AbstractLeaf) {
-        final AbstractLeaf leaf = (AbstractLeaf) node;
+        return treeRepository.persist(node).map(Node::getAccessControl);
+      } else if (node instanceof Leaf) {
+        final Leaf leaf = (Leaf) node;
         return findLeafAdapter(leaf)
             .flatMap(leafAdapter -> leafAdapter.updateAccessControl(leaf, accessControl))
             .switchIfEmpty(Mono.just(accessControl));
@@ -250,22 +244,23 @@ public class TreeServiceImpl implements TreeService {
       final Collection<String> roles,
       final Collection<String> groups) {
 
-    return nodeRepository.findById(nodeId, PermissionConstants.DELETE, userId, roles, groups)
+    return treeRepository
+        .findNodeById(Node.class, nodeId, PermissionConstants.DELETE, true, userId, roles, groups)
         .switchIfEmpty(Mono.error(ServiceException.forbidden("TreeNode", nodeId)))
         .flatMap(node -> deleteNode(node, userId));
   }
 
-  private Mono<Void> deleteNode(final AbstractNode node, final String userId) {
+  private Mono<Void> deleteNode(final Node node, final String userId) {
     if (node instanceof Branch) {
-      return nodeRepository.findByParentId(node.getId())
+      return treeRepository.findNodesByParentId(Node.class, node.getId())
           .flatMap(child -> deleteNode(child, userId))
           .count()
-          .flatMap(size -> branchSettingsRepository
-              .deleteByNodeIdAndUserId(node.getId(), userId)
-              .and(nodeRepository.delete(node)));
-    } else if (node instanceof AbstractLeaf) {
-      final AbstractLeaf leaf = (AbstractLeaf) node;
-      return nodeRepository.delete(node)
+          .flatMap(size -> treeRepository
+              .deleteNodeSettings(node.getId(), userId)
+              .and(treeRepository.delete(node)));
+    } else if (node instanceof Leaf) {
+      final Leaf leaf = (Leaf) node;
+      return treeRepository.delete(node)
           .and(findLeafAdapter(leaf)
               .flatMap(leafAdapter -> leafAdapter.delete(leaf, userId)));
     } else {
@@ -288,8 +283,9 @@ public class TreeServiceImpl implements TreeService {
         .map(GrantedAuthority::getAuthority)
         .collect(Collectors.toSet());
     return groupService.getMembershipIds()
-        .flatMapMany(groups -> branchRepository
-            .findByParentId(null, PermissionConstants.READ, includePublic, userId, roles, groups)
+        .flatMapMany(groups -> treeRepository
+            .findNodesByParentId(Branch.class, null, PermissionConstants.READ, includePublic,
+                userId, roles, groups)
             .flatMap(branch -> loadBranch(branch, openBranchCommand, userId, roles, groups)));
   }
 
@@ -308,8 +304,8 @@ public class TreeServiceImpl implements TreeService {
         ? OpenBranchCommand.ALL
         : OpenBranchCommand.CURRENT;
     return groupService.getMembershipIds()
-        .flatMap(groups -> branchRepository.findById(
-            branchId, PermissionConstants.READ, userId, roles, groups))
+        .flatMap(groups -> treeRepository.findNodeById(Branch.class, branchId,
+            PermissionConstants.READ, true, userId, roles, groups))
         .switchIfEmpty(Mono.error(ServiceException.forbidden("TreeBranch", branchId)))
         .flatMap(
             treeBranch -> groupService.getMembershipIds()
@@ -320,11 +316,11 @@ public class TreeServiceImpl implements TreeService {
   @Override
   public Mono<Void> closeBranch(final String branchId, final Authentication authentication) {
     final String userId = authentication.getName();
-    return branchSettingsRepository
-        .findByNodeIdAndUserId(branchId, userId)
+    return treeRepository
+        .findNodeSettings(BranchSettings.class, branchId, userId)
         .map(branch -> {
           branch.setOpen(false);
-          return branchSettingsRepository.save(branch);
+          return treeRepository.persist(branch);
         })
         .flatMap(branch -> Mono.empty());
   }
@@ -345,14 +341,14 @@ public class TreeServiceImpl implements TreeService {
       final Branch branch,
       final OpenBranchCommand openBranchCommand,
       final String userId) {
-    return branchSettingsRepository
-        .findByNodeIdAndUserId(branch.getId(), userId)
+    return treeRepository
+        .findNodeSettings(BranchSettings.class, branch.getId(), userId)
         .switchIfEmpty(createBranchSettings(branch.getId(), userId))
         .flatMap(branchSettings -> {
           if (openBranchCommand.isBranchToBeOpen() && !branchSettings.isOpen()) {
             branchSettings.setOpen(true);
             if (OpenBranchCommand.CURRENT.equals(openBranchCommand)) {
-              return branchSettingsRepository.save(branchSettings);
+              return treeRepository.persist(branchSettings);
             }
           }
           return Mono.just(branchSettings);
@@ -373,8 +369,9 @@ public class TreeServiceImpl implements TreeService {
     if (!parent.getSettings().isOpen()) {
       return Mono.just(parent);
     }
-    return nodeRepository
-        .findByParentId(parent.getId(), userId, roles, groups)
+    return treeRepository
+        .findNodesByParentId(Node.class, parent.getId(), PermissionConstants.READ, true, userId,
+            roles, groups)
         .flatMap(child -> processChild(child, openBranchCommand, userId, roles, groups))
         .collectList()
         .map(children -> {
@@ -384,8 +381,8 @@ public class TreeServiceImpl implements TreeService {
         .switchIfEmpty(Mono.just(parent));
   }
 
-  private Mono<AbstractNode> processChild(
-      final AbstractNode child,
+  private Mono<Node> processChild(
+      final Node child,
       final OpenBranchCommand openBranchCommand,
       final String userId,
       final Collection<String> roles,
@@ -393,15 +390,15 @@ public class TreeServiceImpl implements TreeService {
 
     if (child instanceof Branch) {
       return loadBranch((Branch) child, openBranchCommand, userId, roles, groups)
-          .cast(AbstractNode.class);
+          .cast(Node.class);
     }
-    if (child instanceof AbstractLeaf) {
-      final AbstractLeaf leaf = (AbstractLeaf) child;
+    if (child instanceof Leaf) {
+      final Leaf leaf = (Leaf) child;
       return findLeafAdapter(leaf)
           .flatMap(leafAdapter -> leafAdapter.setLeafName(leaf)
               .flatMap(leaf0 -> leafAdapter.setLeafSettings(leaf0, userId))
               .flatMap(leaf1 -> leafAdapter.setLeafContent(leaf1, userId)))
-          .cast(AbstractNode.class)
+          .cast(Node.class)
           .switchIfEmpty(Mono.just(child));
     }
     return Mono.just(child);
@@ -410,7 +407,7 @@ public class TreeServiceImpl implements TreeService {
   private Mono<BranchSettings> createBranchSettings(
       final String branchId,
       final String userId) {
-    return branchSettingsRepository.save(new BranchSettings(branchId, userId));
+    return treeRepository.persist(new BranchSettings(branchId, userId));
   }
 
 }

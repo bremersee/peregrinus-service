@@ -20,7 +20,7 @@ import java.util.List;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
-import org.bremersee.peregrinus.geo.model.AbstractGeoJsonFeature;
+import org.bremersee.peregrinus.geo.model.Feature;
 
 /**
  * @author Christian Bremer
@@ -30,6 +30,6 @@ import org.bremersee.peregrinus.geo.model.AbstractGeoJsonFeature;
 @ToString
 public class GpxImport {
 
-  List<AbstractGeoJsonFeature> features;
+  List<Feature> features;
 
 }

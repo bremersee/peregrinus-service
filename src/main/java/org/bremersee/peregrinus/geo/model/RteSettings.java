@@ -30,7 +30,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @ToString(callSuper = true)
 @Document(collection = "feature-settings")
 @TypeAlias("RteSettings")
-public class RteSettings extends AbstractGeoJsonFeatureSettings {
+public class RteSettings extends FeatureSettings {
 
   private DisplayColor displayColor = DisplayColor.MAGENTA;
 

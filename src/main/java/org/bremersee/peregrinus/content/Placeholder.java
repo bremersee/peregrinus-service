@@ -14,18 +14,11 @@
  * limitations under the License.
  */
 
-package org.bremersee.peregrinus.tree.repository;
-
-import org.springframework.data.mongodb.core.ReactiveMongoOperations;
+package org.bremersee.peregrinus.content;
 
 /**
  * @author Christian Bremer
  */
-public class LeafSettingsRepositoryImpl extends AbstractRepositoryImpl
-    implements LeafSettingsRepositoryCustom {
+public class Placeholder {
 
-  public LeafSettingsRepositoryImpl(
-      ReactiveMongoOperations mongoOperations) {
-    super(mongoOperations);
-  }
 }

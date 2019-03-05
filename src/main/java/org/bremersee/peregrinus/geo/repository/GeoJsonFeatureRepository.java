@@ -16,14 +16,14 @@
 
 package org.bremersee.peregrinus.geo.repository;
 
-import org.bremersee.peregrinus.geo.model.AbstractGeoJsonFeature;
+import org.bremersee.peregrinus.geo.model.Feature;
 import org.springframework.data.mongodb.repository.ReactiveMongoRepository;
 
 /**
  * @author Christian Bremer
  */
 public interface GeoJsonFeatureRepository
-    extends ReactiveMongoRepository<AbstractGeoJsonFeature, String>,
+    extends ReactiveMongoRepository<Feature, String>,
     GeoJsonFeatureRepositoryCustom {
 
 }

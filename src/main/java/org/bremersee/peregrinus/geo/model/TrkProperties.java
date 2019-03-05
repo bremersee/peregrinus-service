@@ -31,7 +31,7 @@ import org.springframework.data.annotation.TypeAlias;
 @Setter
 @ToString
 @TypeAlias("TrkProperties")
-public class TrkProperties extends AbstractGeoJsonFeatureProperties<TrkSettings> {
+public class TrkProperties extends FeatureProperties<TrkSettings> {
 
   private List<List<BigDecimal>> eleLines;
 

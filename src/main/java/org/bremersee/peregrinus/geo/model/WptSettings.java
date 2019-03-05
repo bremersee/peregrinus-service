@@ -30,6 +30,6 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @ToString(callSuper = true)
 @Document(collection = "feature-settings")
 @TypeAlias("WptSettings")
-public class WptSettings extends AbstractGeoJsonFeatureSettings {
+public class WptSettings extends FeatureSettings {
 
 }
