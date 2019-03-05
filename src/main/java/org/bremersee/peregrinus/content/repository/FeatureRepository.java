@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 the original author or authors.
+ * Copyright 2019 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,14 +14,25 @@
  * limitations under the License.
  */
 
-package org.bremersee.peregrinus.geo.repository;
+package org.bremersee.peregrinus.content.repository;
 
-import org.bremersee.peregrinus.content.model.Wpt;
-import org.springframework.data.mongodb.repository.ReactiveMongoRepository;
+import org.bremersee.peregrinus.content.model.FeatureSettings;
+import reactor.core.publisher.Mono;
 
 /**
  * @author Christian Bremer
  */
-public interface WptRepository extends ReactiveMongoRepository<Wpt, String> {
+public interface FeatureRepository {
+
+  <T> Mono<T> persist(T entity);
+
+  Mono<Void> delete(Object entity);
+
+  <T extends FeatureSettings> Mono<T> findFeatureSettings(
+      Class<T> clazz,
+      String featureId,
+      String userId);
+
+  Mono<Void> deleteFeatureSettings(String featureId, String userId);
 
 }

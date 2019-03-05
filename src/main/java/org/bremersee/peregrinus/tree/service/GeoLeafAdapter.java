@@ -18,8 +18,7 @@ package org.bremersee.peregrinus.tree.service;
 
 import org.bremersee.peregrinus.content.model.Feature;
 import org.bremersee.peregrinus.content.model.FeatureSettings;
-import org.bremersee.peregrinus.geo.repository.GeoJsonFeatureRepository;
-import org.bremersee.peregrinus.geo.repository.GeoJsonFeatureSettingsRepository;
+import org.bremersee.peregrinus.content.repository.FeatureRepository;
 import org.bremersee.peregrinus.security.access.AccessControl;
 import org.bremersee.peregrinus.tree.model.GeoLeaf;
 import org.bremersee.peregrinus.tree.model.GeoLeafSettings;
@@ -38,16 +37,12 @@ public class GeoLeafAdapter implements LeafAdapter {
 
   private TreeRepository treeRepository;
 
-  private GeoJsonFeatureRepository featureRepository;
-
-  private GeoJsonFeatureSettingsRepository featureSettingsRepository;
+  private FeatureRepository featureRepository;
 
   public GeoLeafAdapter(TreeRepository treeRepository,
-      GeoJsonFeatureRepository featureRepository,
-      GeoJsonFeatureSettingsRepository featureSettingsRepository) {
+      FeatureRepository featureRepository) {
     this.treeRepository = treeRepository;
     this.featureRepository = featureRepository;
-    this.featureSettingsRepository = featureSettingsRepository;
   }
 
   @Override
@@ -76,8 +71,8 @@ public class GeoLeafAdapter implements LeafAdapter {
   public Mono<Leaf> setLeafContent(
       final Leaf leaf,
       final String userId) {
-    return featureSettingsRepository
-        .findByFeatureIdAndUserId(((GeoLeaf) leaf).getFeature().getId(), userId)
+    return featureRepository
+        .findFeatureSettings(FeatureSettings.class, ((GeoLeaf) leaf).getFeature().getId(), userId)
         .switchIfEmpty(createFeatureSettings(((GeoLeaf) leaf).getFeature(), userId))
         .map(featureSettings -> {
           //noinspection unchecked
@@ -113,9 +108,12 @@ public class GeoLeafAdapter implements LeafAdapter {
 
   @Override
   public Mono<Void> delete(final Leaf leaf, final String userId) {
+    final GeoLeaf geoLeaf = (GeoLeaf) leaf;
     return treeRepository
         .deleteNodeSettings(leaf.getId(), userId)
-        .and(treeRepository.delete(leaf));
+        .and(treeRepository.delete(leaf))
+        .and(featureRepository.delete(geoLeaf.getFeature()))
+        .and(featureRepository.deleteFeatureSettings(geoLeaf.getFeature().getId(), userId));
   }
 
   private Mono<FeatureSettings> createFeatureSettings(
@@ -124,7 +122,7 @@ public class GeoLeafAdapter implements LeafAdapter {
     final FeatureSettings featureSettings = feature
         .getProperties()
         .createDefaultSettings(feature.getId(), userId);
-    return featureSettingsRepository.save(featureSettings);
+    return featureRepository.persist(featureSettings);
   }
 
   private Mono<GeoLeafSettings> createLeafSettings(final Leaf leaf, final String userId) {
