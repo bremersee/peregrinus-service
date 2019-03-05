@@ -86,11 +86,9 @@ public abstract class AbstractGeoJsonFeatureProperties<S extends AbstractGeoJson
 
   public S createDefaultSettings(
       final String featureId,
-      final String userId,
-      final boolean displayOnMap) {
+      final String userId) {
 
     final S settings = doCreateDefaultSettings();
-    settings.setDisplayedOnMap(displayOnMap);
     settings.setFeatureId(featureId);
     settings.setUserId(userId);
     return settings;

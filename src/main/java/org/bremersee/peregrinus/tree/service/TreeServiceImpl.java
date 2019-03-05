@@ -17,19 +17,17 @@
 package org.bremersee.peregrinus.tree.service;
 
 import java.util.Collection;
+import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 import org.bremersee.exception.ServiceException;
 import org.bremersee.groupman.api.GroupControllerApi;
-import org.bremersee.peregrinus.geo.model.AbstractGeoJsonFeature;
-import org.bremersee.peregrinus.geo.model.AbstractGeoJsonFeatureSettings;
-import org.bremersee.peregrinus.geo.repository.GeoJsonFeatureSettingsRepository;
 import org.bremersee.peregrinus.security.access.AccessControl;
 import org.bremersee.peregrinus.security.access.PermissionConstants;
+import org.bremersee.peregrinus.tree.model.AbstractLeaf;
 import org.bremersee.peregrinus.tree.model.AbstractNode;
 import org.bremersee.peregrinus.tree.model.Branch;
 import org.bremersee.peregrinus.tree.model.BranchSettings;
-import org.bremersee.peregrinus.tree.model.GeoLeaf;
 import org.bremersee.peregrinus.tree.repository.BranchRepository;
 import org.bremersee.peregrinus.tree.repository.BranchSettingsRepository;
 import org.bremersee.peregrinus.tree.repository.NodeRepository;
@@ -47,22 +45,37 @@ import reactor.core.publisher.Mono;
 @Component
 public class TreeServiceImpl implements TreeService {
 
-  @Autowired
-  private NodeRepository nodeRepository;
+  private final NodeRepository nodeRepository;
+
+  private final BranchRepository branchRepository;
+
+  private final BranchSettingsRepository branchSettingsRepository;
+
+  private final GroupControllerApi groupService;
+
+  private final List<LeafAdapter> leafAdapters;
 
   @Autowired
-  private BranchRepository branchRepository;
+  public TreeServiceImpl(
+      NodeRepository nodeRepository,
+      BranchRepository branchRepository,
+      BranchSettingsRepository branchSettingsRepository,
+      GroupControllerApi groupService,
+      List<LeafAdapter> leafAdapters) {
+    this.nodeRepository = nodeRepository;
+    this.branchRepository = branchRepository;
+    this.branchSettingsRepository = branchSettingsRepository;
+    this.groupService = groupService;
+    this.leafAdapters = leafAdapters;
+  }
 
-  //private GeoTreeLeafRepository geoTreeLeafRepository;
-
-  @Autowired
-  private BranchSettingsRepository branchSettingsRepository;
-
-  @Autowired
-  private GeoJsonFeatureSettingsRepository featureSettingsRepository;
-
-  @Autowired
-  private GroupControllerApi groupService;
+  private Mono<LeafAdapter> findLeafAdapter(final AbstractLeaf leaf) {
+    return Mono.justOrEmpty(
+        leafAdapters
+            .stream()
+            .filter(leafAdapter -> leafAdapter.supportsLeaf(leaf))
+            .findAny());
+  }
 
   @Override
   public Mono<Branch> createBranch(
@@ -140,17 +153,21 @@ public class TreeServiceImpl implements TreeService {
         .switchIfEmpty(Mono.error(ServiceException.forbidden("TreeNode", nodeId)))
         .flatMap(node -> {
           if (node instanceof Branch) {
-            Branch branch = (Branch) node;
+            final Branch branch = (Branch) node;
             branch.setName(name);
             return branchRepository.save(branch).flatMap(b -> Mono.empty());
           }
-          // TODO leaf
+          if (node instanceof AbstractLeaf) {
+            final AbstractLeaf leaf = (AbstractLeaf) node;
+            return findLeafAdapter(leaf)
+                .flatMap(leafAdapter -> leafAdapter.renameLeaf(leaf, userId));
+          }
           return Mono.empty();
         });
   }
 
   @Override
-  public Mono<Void> updateAccessControl(
+  public Mono<AccessControl> updateAccessControl(
       final String nodeId,
       final boolean recursive,
       final AccessControl accessControl,
@@ -166,7 +183,7 @@ public class TreeServiceImpl implements TreeService {
             nodeId, recursive, accessControl, userId, roles, groups));
   }
 
-  private Mono<Void> updateAccessControl(
+  private Mono<AccessControl> updateAccessControl(
       final String nodeId,
       final boolean recursive,
       final AccessControl accessControl,
@@ -181,9 +198,36 @@ public class TreeServiceImpl implements TreeService {
     return nodeRepository
         .findById(nodeId, PermissionConstants.ADMINISTRATION, userId, roles, groups)
         .switchIfEmpty(Mono.error(ServiceException.forbidden("TreeNode", nodeId)))
-        .flatMap(node -> {
-          return Mono.empty();
-        });
+        .flatMap(node -> updateAccessControl(node, recursive, newAccessControl));
+  }
+
+  private Mono<AccessControl> updateAccessControl(
+      final AbstractNode node,
+      final boolean recursive,
+      final AccessControl accessControl) {
+
+    if (recursive) {
+      if (node instanceof Branch) {
+        return nodeRepository.findByParentId(node.getId())
+            .flatMap(node0 -> updateAccessControl(node0, true, accessControl))
+            .count()
+            .flatMap(size -> updateAccessControl(node, false, accessControl));
+      } else {
+        return updateAccessControl(node, false, accessControl);
+      }
+    } else {
+      if (node instanceof Branch) {
+        node.setAccessControl(accessControl);
+        return nodeRepository.save(node).map(AbstractNode::getAccessControl);
+      } else if (node instanceof AbstractLeaf) {
+        final AbstractLeaf leaf = (AbstractLeaf) node;
+        return findLeafAdapter(leaf)
+            .flatMap(leafAdapter -> leafAdapter.updateAccessControl(leaf, accessControl))
+            .switchIfEmpty(Mono.just(accessControl));
+      } else {
+        return Mono.just(accessControl);
+      }
+    }
   }
 
   @Override
@@ -208,18 +252,24 @@ public class TreeServiceImpl implements TreeService {
 
     return nodeRepository.findById(nodeId, PermissionConstants.DELETE, userId, roles, groups)
         .switchIfEmpty(Mono.error(ServiceException.forbidden("TreeNode", nodeId)))
-        .flatMap(this::delete);
+        .flatMap(node -> deleteNode(node, userId));
   }
 
-  private Mono<Void> delete(final AbstractNode node) {
+  private Mono<Void> deleteNode(final AbstractNode node, final String userId) {
     if (node instanceof Branch) {
       return nodeRepository.findByParentId(node.getId())
-          .flatMap(this::delete)
+          .flatMap(child -> deleteNode(child, userId))
           .count()
-          .flatMap(size -> nodeRepository.delete(node));
+          .flatMap(size -> branchSettingsRepository
+              .deleteByNodeIdAndUserId(node.getId(), userId)
+              .and(nodeRepository.delete(node)));
+    } else if (node instanceof AbstractLeaf) {
+      final AbstractLeaf leaf = (AbstractLeaf) node;
+      return nodeRepository.delete(node)
+          .and(findLeafAdapter(leaf)
+              .flatMap(leafAdapter -> leafAdapter.delete(leaf, userId)));
     } else {
-      // TODO delete leaf content
-      return nodeRepository.delete(node);
+      return Mono.empty();
     }
   }
 
@@ -326,7 +376,7 @@ public class TreeServiceImpl implements TreeService {
     return nodeRepository
         .findByParentId(parent.getId(), userId, roles, groups)
         .flatMap(child -> processChild(child, openBranchCommand, userId, roles, groups))
-        .collectSortedList()
+        .collectList()
         .map(children -> {
           parent.setChildren(children);
           return parent;
@@ -345,16 +395,14 @@ public class TreeServiceImpl implements TreeService {
       return loadBranch((Branch) child, openBranchCommand, userId, roles, groups)
           .cast(AbstractNode.class);
     }
-    // TODO generisch
-    if (child instanceof GeoLeaf) {
-      return featureSettingsRepository
-          .findByFeatureIdAndUserId(((GeoLeaf) child).getFeature().getId(), userId)
-          .switchIfEmpty(createFeatureSettings(((GeoLeaf) child).getFeature(), userId))
-          .map(featureSettings -> {
-            //noinspection unchecked
-            ((GeoLeaf) child).getFeature().getProperties().setSettings(featureSettings);
-            return child;
-          });
+    if (child instanceof AbstractLeaf) {
+      final AbstractLeaf leaf = (AbstractLeaf) child;
+      return findLeafAdapter(leaf)
+          .flatMap(leafAdapter -> leafAdapter.setLeafName(leaf)
+              .flatMap(leaf0 -> leafAdapter.setLeafSettings(leaf0, userId))
+              .flatMap(leaf1 -> leafAdapter.setLeafContent(leaf1, userId)))
+          .cast(AbstractNode.class)
+          .switchIfEmpty(Mono.just(child));
     }
     return Mono.just(child);
   }
@@ -363,15 +411,6 @@ public class TreeServiceImpl implements TreeService {
       final String branchId,
       final String userId) {
     return branchSettingsRepository.save(new BranchSettings(branchId, userId));
-  }
-
-  private Mono<AbstractGeoJsonFeatureSettings> createFeatureSettings(
-      final AbstractGeoJsonFeature feature, final String userId) {
-
-    final AbstractGeoJsonFeatureSettings featureSettings = feature
-        .getProperties()
-        .createDefaultSettings(feature.getId(), userId, true);
-    return featureSettingsRepository.save(featureSettings);
   }
 
 }

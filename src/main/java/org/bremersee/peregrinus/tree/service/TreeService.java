@@ -48,7 +48,7 @@ public interface TreeService {
       @NotNull @Length(min = 1) String name,
       @NotNull Authentication authentication);
 
-  Mono<Void> updateAccessControl(
+  Mono<AccessControl> updateAccessControl(
       @NotNull String nodeId,
       boolean recursive,
       @NotNull AccessControl accessControl,

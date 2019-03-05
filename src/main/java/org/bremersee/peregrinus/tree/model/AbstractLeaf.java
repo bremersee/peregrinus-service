@@ -41,6 +41,9 @@ public abstract class AbstractLeaf extends AbstractNode {
   @Transient
   private String name;
 
+  @Transient
+  private AbstractLeafSettings settings;
+
   public AbstractLeaf(
       @Nullable String parentId,
       @NotNull String owner) {

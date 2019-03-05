@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 the original author or authors.
+ * Copyright 2017 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,16 +14,23 @@
  * limitations under the License.
  */
 
-package org.bremersee.peregrinus.geo.repository;
+package org.bremersee.peregrinus.tree.repository;
 
-import org.bremersee.peregrinus.geo.model.AbstractGeoJsonFeature;
+import org.bremersee.peregrinus.tree.model.AbstractLeafSettings;
+import org.bremersee.peregrinus.tree.model.BranchSettings;
 import org.springframework.data.mongodb.repository.ReactiveMongoRepository;
+import org.springframework.stereotype.Repository;
+import reactor.core.publisher.Mono;
 
 /**
  * @author Christian Bremer
  */
-public interface GeoJsonFeatureRepository
-    extends ReactiveMongoRepository<AbstractGeoJsonFeature, String>,
-    GeoJsonFeatureRepositoryCustom {
+@Repository
+public interface LeafSettingsRepository
+    extends ReactiveMongoRepository<AbstractLeafSettings, String>, LeafSettingsRepositoryCustom {
+
+  Mono<AbstractLeafSettings> findByNodeIdAndUserId(String nodeId, String userId);
+
+  Mono<Void> deleteByNodeIdAndUserId(String nodeId, String userId);
 
 }

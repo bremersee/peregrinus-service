@@ -14,16 +14,15 @@
  * limitations under the License.
  */
 
-package org.bremersee.peregrinus.geo.repository;
+package org.bremersee.peregrinus.tree.repository;
 
-import org.bremersee.peregrinus.geo.model.AbstractGeoJsonFeature;
-import org.springframework.data.mongodb.repository.ReactiveMongoRepository;
+import reactor.core.publisher.Mono;
 
 /**
  * @author Christian Bremer
  */
-public interface GeoJsonFeatureRepository
-    extends ReactiveMongoRepository<AbstractGeoJsonFeature, String>,
-    GeoJsonFeatureRepositoryCustom {
+public interface LeafSettingsRepositoryCustom {
+
+  <T> Mono<T> persist(T entity);
 
 }

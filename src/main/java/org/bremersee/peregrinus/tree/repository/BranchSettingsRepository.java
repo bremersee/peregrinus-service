@@ -30,4 +30,5 @@ public interface BranchSettingsRepository
 
   Mono<BranchSettings> findByNodeIdAndUserId(String nodeId, String userId);
 
+  Mono<Void> deleteByNodeIdAndUserId(String nodeId, String userId);
 }

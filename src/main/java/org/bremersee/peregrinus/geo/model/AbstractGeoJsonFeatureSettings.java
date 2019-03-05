@@ -68,6 +68,4 @@ public abstract class AbstractGeoJsonFeatureSettings {
   @Indexed
   private String userId;
 
-  private boolean displayedOnMap; // belongs to tree?
-
 }

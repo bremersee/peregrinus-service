@@ -14,24 +14,18 @@
  * limitations under the License.
  */
 
-package org.bremersee.peregrinus.tree.service;
+package org.bremersee.peregrinus.tree.repository;
 
-import java.util.Collection;
-import org.bremersee.peregrinus.tree.model.AbstractLeaf;
-import org.bremersee.peregrinus.tree.model.AbstractNode;
-import reactor.core.publisher.Mono;
+import org.springframework.data.mongodb.core.ReactiveMongoOperations;
 
 /**
  * @author Christian Bremer
  */
-public class GeoTreeLeafAdapter implements TreeLeafAdapter {
+public class LeafSettingsRepositoryImpl extends AbstractRepositoryImpl
+    implements LeafSettingsRepositoryCustom {
 
-  public Mono<AbstractNode> loadLeaf(
-      final AbstractLeaf leaf,
-      final String userId,
-      final Collection<String> roles,
-      final Collection<String> groups) {
-
-    return null;
+  public LeafSettingsRepositoryImpl(
+      ReactiveMongoOperations mongoOperations) {
+    super(mongoOperations);
   }
 }

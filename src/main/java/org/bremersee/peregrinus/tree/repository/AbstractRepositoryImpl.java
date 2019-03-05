@@ -41,6 +41,10 @@ public abstract class AbstractRepositoryImpl {
     this.mongoOperations = mongoOperations;
   }
 
+  public <T> Mono<T> persist(T entity) {
+    return getMongoOperations().save(entity);
+  }
+
   <T> Mono<T> findById(
       Class<T> clazz,
       String id,

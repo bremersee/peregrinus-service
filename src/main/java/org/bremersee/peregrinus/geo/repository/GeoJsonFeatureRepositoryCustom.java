@@ -14,12 +14,15 @@
  * limitations under the License.
  */
 
-package org.bremersee.peregrinus.tree.service;
+package org.bremersee.peregrinus.geo.repository;
+
+import reactor.core.publisher.Mono;
 
 /**
  * @author Christian Bremer
  */
-public interface TreeLeafAdapter { // N = Node, C = Content?
+public interface GeoJsonFeatureRepositoryCustom {
 
+  <T> Mono<T> persist(T entity);
 
 }

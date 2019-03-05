@@ -78,7 +78,7 @@ public class TreeController {
   }
 
   @PutMapping(path = "/{nodeId}/access-control")
-  public Mono<Void> updateAccessControl(
+  public Mono<AccessControl> updateAccessControl(
       @PathVariable("nodeId") String nodeId,
       @RequestParam(value = "recursive", defaultValue = "false") Boolean recursive,
       @RequestBody AccessControl accessControl,
