@@ -16,7 +16,7 @@
 
 package org.bremersee.peregrinus.geo.repository;
 
-import org.bremersee.peregrinus.geo.model.Feature;
+import org.bremersee.peregrinus.content.model.Feature;
 import org.springframework.data.mongodb.repository.ReactiveMongoRepository;
 
 /**

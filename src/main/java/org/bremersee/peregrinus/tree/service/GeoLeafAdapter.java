@@ -16,8 +16,8 @@
 
 package org.bremersee.peregrinus.tree.service;
 
-import org.bremersee.peregrinus.geo.model.Feature;
-import org.bremersee.peregrinus.geo.model.FeatureSettings;
+import org.bremersee.peregrinus.content.model.Feature;
+import org.bremersee.peregrinus.content.model.FeatureSettings;
 import org.bremersee.peregrinus.geo.repository.GeoJsonFeatureRepository;
 import org.bremersee.peregrinus.geo.repository.GeoJsonFeatureSettingsRepository;
 import org.bremersee.peregrinus.security.access.AccessControl;

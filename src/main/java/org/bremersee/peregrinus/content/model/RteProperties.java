@@ -14,27 +14,31 @@
  * limitations under the License.
  */
 
-package org.bremersee.peregrinus.geo.model;
+package org.bremersee.peregrinus.content.model;
 
+import java.util.List;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
-import org.locationtech.jts.geom.MultiLineString;
 import org.springframework.data.annotation.TypeAlias;
-import org.springframework.data.mongodb.core.mapping.Document;
 
 /**
  * @author Christian Bremer
  */
+@TypeAlias("RteProperties")
 @Getter
 @Setter
 @ToString
-@Document(collection = "feature")
-@TypeAlias("Rte")
-public class Rte extends Feature<MultiLineString, RteProperties> {
+public class RteProperties extends FeatureProperties<RteSettings> {
 
-  int orderValue() {
-    return 50;
+  private List<RteSegment> rteSegments;
+
+  @Override
+  RteSettings doCreateDefaultSettings() {
+
+    final RteSettings settings = new RteSettings();
+    settings.setDisplayColor(DisplayColor.MAGENTA);
+    return settings;
   }
 
 }

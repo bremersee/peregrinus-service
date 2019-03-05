@@ -14,27 +14,35 @@
  * limitations under the License.
  */
 
-package org.bremersee.peregrinus.geo.model;
+package org.bremersee.peregrinus.content.model;
 
+import java.math.BigDecimal;
+import java.util.Date;
+import java.util.List;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
-import org.locationtech.jts.geom.Point;
 import org.springframework.data.annotation.TypeAlias;
-import org.springframework.data.mongodb.core.mapping.Document;
 
 /**
  * @author Christian Bremer
  */
+@TypeAlias("TrkProperties")
 @Getter
 @Setter
 @ToString
-@Document(collection = "feature")
-@TypeAlias("Wpt")
-public class Wpt extends Feature<Point, WptProperties> {
+public class TrkProperties extends FeatureProperties<TrkSettings> {
 
-  int orderValue() {
-    return 0;
+  private List<List<BigDecimal>> eleLines;
+
+  private List<List<Date>> timeLines;
+
+  @Override
+  TrkSettings doCreateDefaultSettings() {
+
+    final TrkSettings settings = new TrkSettings();
+    settings.setDisplayColor(DisplayColor.DARK_GRAY);
+    return settings;
   }
 
 }

@@ -29,10 +29,10 @@ import org.bremersee.gpx.GpxJaxbContextHelper;
 import org.bremersee.gpx.model.TrkType;
 import org.bremersee.gpx.model.TrksegType;
 import org.bremersee.gpx.model.WptType;
-import org.bremersee.peregrinus.geo.model.DisplayColor;
-import org.bremersee.peregrinus.geo.model.Trk;
-import org.bremersee.peregrinus.geo.model.TrkProperties;
-import org.bremersee.peregrinus.geo.model.TrkSettings;
+import org.bremersee.peregrinus.content.model.DisplayColor;
+import org.bremersee.peregrinus.content.model.Trk;
+import org.bremersee.peregrinus.content.model.TrkProperties;
+import org.bremersee.peregrinus.content.model.TrkSettings;
 import org.bremersee.xml.JaxbContextBuilder;
 import org.locationtech.jts.geom.Coordinate;
 import org.locationtech.jts.geom.LineString;
@@ -40,7 +40,7 @@ import org.locationtech.jts.geom.LineString;
 /**
  * @author Christian Bremer
  */
-class TrkMapper extends AbstractGpxMapper {
+class TrkMapper extends AbstractGpxConverter {
 
   TrkMapper(JaxbContextBuilder jaxbContextBuilder) {
     super(jaxbContextBuilder);

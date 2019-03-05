@@ -19,7 +19,7 @@ package org.bremersee.peregrinus.geo.mapper.gpx;
 import java.util.ArrayList;
 import java.util.List;
 import org.bremersee.gpx.model.Gpx;
-import org.bremersee.peregrinus.geo.model.Feature;
+import org.bremersee.peregrinus.content.model.Feature;
 import org.bremersee.xml.JaxbContextBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -28,7 +28,7 @@ import org.springframework.stereotype.Component;
  * @author Christian Bremer
  */
 @Component
-public class GpxMapperImpl extends AbstractGpxMapper implements GpxMapper {
+public class GpxMapperImpl extends AbstractGpxConverter implements GpxMapper {
 
   private final WptMapper wptMapper;
 

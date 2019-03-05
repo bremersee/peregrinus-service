@@ -14,24 +14,28 @@
  * limitations under the License.
  */
 
-package org.bremersee.peregrinus.geo.model;
+package org.bremersee.peregrinus.content.model;
 
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
+import org.locationtech.jts.geom.MultiLineString;
 import org.springframework.data.annotation.TypeAlias;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 /**
  * @author Christian Bremer
  */
+@Document(collection = "feature")
+@TypeAlias("Rte")
 @Getter
 @Setter
-@ToString(callSuper = true)
-@Document(collection = "feature-settings")
-@TypeAlias("TrkSettings")
-public class TrkSettings extends FeatureSettings {
+@ToString
+public class Rte extends Feature<MultiLineString, RteProperties> {
 
-  private DisplayColor displayColor = DisplayColor.DARK_GRAY;
+  @Override
+  int orderValue() {
+    return 50;
+  }
 
 }

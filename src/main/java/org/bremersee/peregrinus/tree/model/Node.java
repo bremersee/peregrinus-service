@@ -30,7 +30,7 @@ import javax.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
-import org.bremersee.peregrinus.geo.model.RteSettings;
+import org.bremersee.peregrinus.content.model.RteSettings;
 import org.bremersee.peregrinus.security.access.AccessControl;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.TypeAlias;

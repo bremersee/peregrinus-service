@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 the original author or authors.
+ * Copyright 2019 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,22 +14,11 @@
  * limitations under the License.
  */
 
-package org.bremersee.peregrinus.geo.model;
-
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
-import org.springframework.data.annotation.TypeAlias;
-import org.springframework.data.mongodb.core.mapping.Document;
+package org.bremersee.peregrinus.converter.gpx;
 
 /**
  * @author Christian Bremer
  */
-@Getter
-@Setter
-@ToString(callSuper = true)
-@Document(collection = "feature-settings")
-@TypeAlias("WptSettings")
-public class WptSettings extends FeatureSettings {
+public class GpxConverterImpl {
 
 }

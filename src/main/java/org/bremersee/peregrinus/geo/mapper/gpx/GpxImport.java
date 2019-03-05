@@ -20,7 +20,7 @@ import java.util.List;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
-import org.bremersee.peregrinus.geo.model.Feature;
+import org.bremersee.peregrinus.content.model.Feature;
 
 /**
  * @author Christian Bremer

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.bremersee.peregrinus.geo.model;
+package org.bremersee.peregrinus.content.model;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility;
@@ -49,7 +49,9 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @JsonInclude(Include.NON_EMPTY)
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, property = "type", visible = true)
 @JsonSubTypes({
-    @Type(value = RteSettings.class, name = "rte-settings")
+    @Type(value = RteSettings.class, name = "RTE"),
+    @Type(value = TrkSettings.class, name = "TRK"),
+    @Type(value = WptSettings.class, name = "WPT")
 })
 @Getter
 @Setter

@@ -30,18 +30,18 @@ import org.bremersee.common.model.PhoneNumber;
 import org.bremersee.garmin.gpx.v3.model.ext.AddressT;
 import org.bremersee.garmin.gpx.v3.model.ext.PhoneNumberT;
 import org.bremersee.gpx.model.LinkType;
-import org.bremersee.peregrinus.geo.model.FeatureProperties;
+import org.bremersee.peregrinus.content.model.FeatureProperties;
 import org.bremersee.xml.JaxbContextBuilder;
 import org.springframework.util.StringUtils;
 
 /**
  * @author Christian Bremer
  */
-abstract class AbstractGpxMapper {
+abstract class AbstractGpxConverter {
 
   private final JaxbContextBuilder jaxbContextBuilder;
 
-  public AbstractGpxMapper(JaxbContextBuilder jaxbContextBuilder) {
+  public AbstractGpxConverter(JaxbContextBuilder jaxbContextBuilder) {
     this.jaxbContextBuilder = jaxbContextBuilder;
   }
 

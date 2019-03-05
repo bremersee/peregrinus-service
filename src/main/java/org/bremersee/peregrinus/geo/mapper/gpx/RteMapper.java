@@ -33,14 +33,14 @@ import org.bremersee.geojson.utils.GeometryUtils;
 import org.bremersee.gpx.GpxJaxbContextHelper;
 import org.bremersee.gpx.model.RteType;
 import org.bremersee.gpx.model.WptType;
-import org.bremersee.peregrinus.geo.model.DisplayColor;
+import org.bremersee.peregrinus.content.model.DisplayColor;
 import org.bremersee.peregrinus.geo.model.GarminImportRteCalculationProperties;
-import org.bremersee.peregrinus.geo.model.Rte;
-import org.bremersee.peregrinus.geo.model.RteProperties;
-import org.bremersee.peregrinus.geo.model.RteSegment;
-import org.bremersee.peregrinus.geo.model.RteSegmentProperties;
-import org.bremersee.peregrinus.geo.model.RteSettings;
-import org.bremersee.peregrinus.geo.model.Wpt;
+import org.bremersee.peregrinus.content.model.Rte;
+import org.bremersee.peregrinus.content.model.RteProperties;
+import org.bremersee.peregrinus.content.model.RteSegment;
+import org.bremersee.peregrinus.content.model.RteSegmentProperties;
+import org.bremersee.peregrinus.content.model.RteSettings;
+import org.bremersee.peregrinus.content.model.Wpt;
 import org.bremersee.xml.JaxbContextBuilder;
 import org.locationtech.jts.geom.Coordinate;
 import org.locationtech.jts.geom.LineString;
@@ -48,7 +48,7 @@ import org.locationtech.jts.geom.LineString;
 /**
  * @author Christian Bremer
  */
-class RteMapper extends AbstractGpxMapper {
+class RteMapper extends AbstractGpxConverter {
 
   private final WptMapper wptMapper;
 

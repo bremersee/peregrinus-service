@@ -26,14 +26,14 @@ import org.bremersee.garmin.gpx.v3.model.ext.WaypointExtension;
 import org.bremersee.geojson.utils.GeometryUtils;
 import org.bremersee.gpx.GpxJaxbContextHelper;
 import org.bremersee.gpx.model.WptType;
-import org.bremersee.peregrinus.geo.model.Wpt;
-import org.bremersee.peregrinus.geo.model.WptProperties;
+import org.bremersee.peregrinus.content.model.Wpt;
+import org.bremersee.peregrinus.content.model.WptProperties;
 import org.bremersee.xml.JaxbContextBuilder;
 
 /**
  * @author Christian Bremer
  */
-class WptMapper extends AbstractGpxMapper {
+class WptMapper extends AbstractGpxConverter {
 
   WptMapper(JaxbContextBuilder jaxbContextBuilder) {
     super(jaxbContextBuilder);

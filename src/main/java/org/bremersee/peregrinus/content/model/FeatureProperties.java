@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.bremersee.peregrinus.geo.model;
+package org.bremersee.peregrinus.content.model;
 
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonSubTypes.Type;
@@ -76,7 +76,7 @@ public abstract class FeatureProperties<S extends FeatureSettings>
   private Date startTime;
 
   /**
-   * Start time of tracks or way points
+   * Stop time of tracks or way points
    */
   @Indexed
   private Date stopTime;

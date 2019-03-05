@@ -14,14 +14,14 @@
  * limitations under the License.
  */
 
-package org.bremersee.peregrinus.geo.model;
+package org.bremersee.peregrinus.content.model;
 
+import java.time.Instant;
+import java.util.Date;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
-import org.locationtech.jts.geom.MultiLineString;
-import org.springframework.data.annotation.TypeAlias;
-import org.springframework.data.mongodb.core.mapping.Document;
+import org.bremersee.peregrinus.geo.model.AbstractRteCalculationProperties;
 
 /**
  * @author Christian Bremer
@@ -29,12 +29,24 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @Getter
 @Setter
 @ToString
-@Document(collection = "feature")
-@TypeAlias("Trk")
-public class Trk extends Feature<MultiLineString, TrkProperties> {
+public class RteSegmentProperties {
 
-  int orderValue() {
-    return 100;
-  }
+  private AbstractRteCalculationProperties calculationProperties;
+
+  private String name;
+
+  private Instant time; // arrival and departure
+
+  private Integer lengthInMeters;
+
+  private Integer travelTimeInSeconds;
+
+  private Integer trafficDelayInSeconds;
+
+  private Integer noTrafficTravelTimeInSeconds;
+
+  private Integer historicTrafficTravelTimeInSeconds;
+
+  private Integer liveTrafficIncidentsTravelTimeInSeconds;
 
 }

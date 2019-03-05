@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 the original author or authors.
+ * Copyright 2019 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,14 +14,11 @@
  * limitations under the License.
  */
 
-package org.bremersee.peregrinus.geo.repository;
-
-import org.bremersee.peregrinus.content.model.Wpt;
-import org.springframework.data.mongodb.repository.ReactiveMongoRepository;
+package org.bremersee.peregrinus.converter;
 
 /**
  * @author Christian Bremer
  */
-public interface WptRepository extends ReactiveMongoRepository<Wpt, String> {
+public class Placeholder {
 
 }

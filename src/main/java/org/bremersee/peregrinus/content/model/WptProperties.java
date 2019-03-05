@@ -1,5 +1,5 @@
 /*
- * Copyright 2017 the original author or authors.
+ * Copyright 2018 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,42 +14,50 @@
  * limitations under the License.
  */
 
-package org.bremersee.peregrinus.tree.model;
+package org.bremersee.peregrinus.content.model;
 
+import java.math.BigDecimal;
+import java.time.Instant;
+import java.util.List;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
-import org.bremersee.peregrinus.content.model.Feature;
+import org.bremersee.common.model.Address;
+import org.bremersee.common.model.PhoneNumber;
 import org.springframework.data.annotation.TypeAlias;
-import org.springframework.data.mongodb.core.mapping.DBRef;
-import org.springframework.data.mongodb.core.mapping.Document;
 
 /**
  * @author Christian Bremer
  */
-@Document(collection = "directory")
-@TypeAlias("GeoLeaf")
+@TypeAlias("WptProperties")
 @Getter
 @Setter
-@ToString(callSuper = true)
-public class GeoLeaf extends Leaf {
+@ToString
+public class WptProperties extends FeatureProperties<WptSettings> {
 
-  @DBRef
-  private Feature feature;
+  private String internalType; // photo, video or not // TODO
 
-  public GeoLeaf() {
-  }
+  private Instant time; // TODO
 
-  int orderValue() {
-    return 50;
-  }
+  /**
+   * Elevation in meters
+   */
+  private BigDecimal ele;
+
+  /**
+   * Address
+   */
+  private Address address; // index?
+
+  /**
+   * Phone numbers
+   */
+  private List<PhoneNumber> phoneNumbers;
 
   @Override
-  public String getName() {
-    if (super.getName() == null && feature != null && feature.getProperties() != null) {
-      super.setName(feature.getProperties().getName());
-    }
-    return super.getName() != null ? super.getName() : "unknown";
+  WptSettings doCreateDefaultSettings() {
+
+    return new WptSettings();
   }
 
 }
