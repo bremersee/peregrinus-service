@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.bremersee.peregrinus.geo.mapper.gpx;
+package org.bremersee.peregrinus.converter.gpx;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -48,13 +48,13 @@ import org.locationtech.jts.geom.LineString;
 /**
  * @author Christian Bremer
  */
-class RteMapper extends AbstractGpxConverter {
+class RteConverter extends AbstractGpxConverter {
 
-  private final WptMapper wptMapper;
+  private final WptConverter wptMapper;
 
-  RteMapper(JaxbContextBuilder jaxbContextBuilder) {
+  RteConverter(JaxbContextBuilder jaxbContextBuilder) {
     super(jaxbContextBuilder);
-    wptMapper = new WptMapper(jaxbContextBuilder);
+    wptMapper = new WptConverter(jaxbContextBuilder);
   }
 
   List<Rte> readRtes(final List<RteType> rteTypes) {

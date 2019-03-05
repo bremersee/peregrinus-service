@@ -14,9 +14,10 @@
  * limitations under the License.
  */
 
-package org.bremersee.peregrinus.geo.mapper.gpx;
+package org.bremersee.peregrinus.converter.gpx;
 
 import java.math.BigDecimal;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -37,12 +38,14 @@ import org.bremersee.xml.JaxbContextBuilder;
 import org.locationtech.jts.geom.Coordinate;
 import org.locationtech.jts.geom.LineString;
 
+//import java.util.Date;
+
 /**
  * @author Christian Bremer
  */
-class TrkMapper extends AbstractGpxConverter {
+class TrkConverter extends AbstractGpxConverter {
 
-  TrkMapper(JaxbContextBuilder jaxbContextBuilder) {
+  TrkConverter(JaxbContextBuilder jaxbContextBuilder) {
     super(jaxbContextBuilder);
   }
 
@@ -95,7 +98,7 @@ class TrkMapper extends AbstractGpxConverter {
     }
     final List<LineString> geoLines = new ArrayList<>(trkSegments.size());
     final List<List<BigDecimal>> eleLines = new ArrayList<>(trkSegments.size());
-    final List<List<Date>> timeLines = new ArrayList<>(trkSegments.size());
+    final List<List<Instant>> timeLines = new ArrayList<>(trkSegments.size());
     for (final TrksegType trksegType : trkSegments) {
       final LineString geoLine = parseTrkPoints(trksegType.getTrkpts(), eleLines, timeLines);
       if (geoLine != null) {
@@ -107,9 +110,9 @@ class TrkMapper extends AbstractGpxConverter {
       trk.setBbox(GeometryUtils.getBoundingBox(trk.getGeometry()));
       trk.getProperties().setEleLines(eleLines);
       trk.getProperties().setTimeLines(timeLines);
-      final Date start = timeLines.get(0).get(0);
-      final List<Date> lastTimeLine = timeLines.get(timeLines.size() - 1);
-      final Date stop = lastTimeLine.get(lastTimeLine.size() - 1);
+      final Instant start = timeLines.get(0).get(0);
+      final List<Instant> lastTimeLine = timeLines.get(timeLines.size() - 1);
+      final Instant stop = lastTimeLine.get(lastTimeLine.size() - 1);
       trk.getProperties().setStartTime(start);
       trk.getProperties().setStopTime(stop);
     }
@@ -119,20 +122,20 @@ class TrkMapper extends AbstractGpxConverter {
   private LineString parseTrkPoints(
       final List<WptType> wpts,
       final List<List<BigDecimal>> eleLines,
-      final List<List<Date>> timeLines) {
+      final List<List<Instant>> timeLines) {
 
     if (wpts == null || wpts.size() < 2) {
       return null;
     }
     final List<Coordinate> points = new ArrayList<>(wpts.size());
     final List<BigDecimal> eleLine = new ArrayList<>(wpts.size());
-    final List<Date> timeLine = new ArrayList<>(wpts.size());
+    final List<Instant> timeLine = new ArrayList<>(wpts.size());
     BigDecimal lastEle = findFirstEle(wpts);
-    Date lastTime = findFirstTime(wpts);
+    Instant lastTime = findFirstTime(wpts);
     for (final WptType wpt : wpts) {
       if (wpt != null && wpt.getLon() != null && wpt.getLat() != null) {
         final XMLGregorianCalendar cal = wpt.getTime();
-        final Date time = cal != null ? cal.toGregorianCalendar().getTime() : null;
+        final Instant time = cal != null ? cal.toGregorianCalendar().getTime().toInstant() : null;
         lastTime = time != null ? time : lastTime;
         lastEle = wpt.getEle() != null ? wpt.getEle() : lastEle;
         points.add(GeometryUtils.createCoordinate(wpt.getLon(), wpt.getLat()));
@@ -162,19 +165,19 @@ class TrkMapper extends AbstractGpxConverter {
     return new BigDecimal("0");
   }
 
-  private Date findFirstTime(final List<WptType> wpts) {
+  private Instant findFirstTime(final List<WptType> wpts) {
     if (wpts != null) {
       for (final WptType wpt : wpts) {
         if (wpt != null) {
           final XMLGregorianCalendar cal = wpt.getTime();
-          final Date time = cal != null ? cal.toGregorianCalendar().getTime() : null;
+          final Instant time = cal != null ? cal.toGregorianCalendar().getTime().toInstant() : null;
           if (time != null) {
             return time;
           }
         }
       }
     }
-    return new Date((0L));
+    return new Date((0L)).toInstant();
   }
 
 }

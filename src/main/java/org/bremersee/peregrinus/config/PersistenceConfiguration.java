@@ -18,15 +18,19 @@ package org.bremersee.peregrinus.config;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
+import java.util.regex.Pattern;
 import org.bremersee.geojson.spring.data.mongodb.convert.GeoJsonConverters;
-import org.bremersee.peregrinus.geo.repository.converter.LocaleToStringConverter;
-import org.bremersee.peregrinus.geo.repository.converter.StringToLocaleConverter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
+import org.springframework.core.convert.converter.Converter;
 import org.springframework.data.convert.CustomConversions;
+import org.springframework.data.convert.ReadingConverter;
+import org.springframework.data.convert.WritingConverter;
 import org.springframework.data.mongodb.core.convert.MongoCustomConversions;
 import org.springframework.data.mongodb.repository.config.EnableReactiveMongoRepositories;
+import org.springframework.util.StringUtils;
 
 /**
  * @author Christian Bremer
@@ -45,4 +49,32 @@ public class PersistenceConfiguration {
     return new MongoCustomConversions(converters);
   }
 
+  @WritingConverter
+  public static class LocaleToStringConverter implements Converter<Locale, String> {
+
+    @Override
+    public String convert(Locale locale) {
+      return locale != null ? locale.toString() : null;
+    }
+  }
+
+  @ReadingConverter
+  public static class StringToLocaleConverter implements Converter<String, Locale> {
+
+    @Override
+    public Locale convert(String s) {
+      if (StringUtils.hasText(s)) {
+        String[] parts = s.split(Pattern.quote("_"));
+        switch (parts.length) {
+          case 1:
+            return new Locale(parts[0]);
+          case 2:
+            return new Locale(parts[0], parts[1]);
+          default:
+            return new Locale(parts[0], parts[1], parts[2]);
+        }
+      }
+      return null;
+    }
+  }
 }

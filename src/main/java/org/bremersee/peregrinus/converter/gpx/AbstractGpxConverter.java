@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.bremersee.peregrinus.geo.mapper.gpx;
+package org.bremersee.peregrinus.converter.gpx;
 
 import java.time.Clock;
 import java.time.Instant;

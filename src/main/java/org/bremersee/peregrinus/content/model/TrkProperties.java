@@ -17,6 +17,7 @@
 package org.bremersee.peregrinus.content.model;
 
 import java.math.BigDecimal;
+import java.time.Instant;
 import java.util.Date;
 import java.util.List;
 import lombok.Getter;
@@ -35,7 +36,7 @@ public class TrkProperties extends FeatureProperties<TrkSettings> {
 
   private List<List<BigDecimal>> eleLines;
 
-  private List<List<Date>> timeLines;
+  private List<List<Instant>> timeLines;
 
   @Override
   TrkSettings doCreateDefaultSettings() {

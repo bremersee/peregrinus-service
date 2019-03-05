@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.bremersee.peregrinus.geo.mapper.gpx;
+package org.bremersee.peregrinus.converter.gpx;
 
 import java.time.Instant;
 import java.util.ArrayList;
@@ -33,9 +33,9 @@ import org.bremersee.xml.JaxbContextBuilder;
 /**
  * @author Christian Bremer
  */
-class WptMapper extends AbstractGpxConverter {
+class WptConverter extends AbstractGpxConverter {
 
-  WptMapper(JaxbContextBuilder jaxbContextBuilder) {
+  WptConverter(JaxbContextBuilder jaxbContextBuilder) {
     super(jaxbContextBuilder);
   }
 

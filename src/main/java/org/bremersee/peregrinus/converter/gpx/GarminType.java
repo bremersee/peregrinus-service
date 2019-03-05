@@ -14,20 +14,18 @@
  * limitations under the License.
  */
 
-package org.bremersee.peregrinus.geo.repository.converter;
-
-import java.util.Locale;
-import org.springframework.core.convert.converter.Converter;
-import org.springframework.data.convert.WritingConverter;
+package org.bremersee.peregrinus.converter.gpx;
 
 /**
  * @author Christian Bremer
  */
-@WritingConverter
-public class LocaleToStringConverter implements Converter<Locale, String> {
+public abstract class GarminType {
 
-  @Override
-  public String convert(Locale locale) {
-    return locale != null ? locale.toString() : null;
+  public static final String PHOTO = "photo";
+
+  public static final String USER = "user";
+
+  private GarminType() {
   }
+
 }

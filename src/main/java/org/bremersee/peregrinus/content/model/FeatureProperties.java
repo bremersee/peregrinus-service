@@ -23,7 +23,6 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo.Id;
 import java.time.Clock;
 import java.time.Instant;
 import java.time.ZoneId;
-import java.util.Date;
 import java.util.List;
 import lombok.Getter;
 import lombok.Setter;
@@ -73,13 +72,13 @@ public abstract class FeatureProperties<S extends FeatureSettings>
    * Start time of tracks or way points
    */
   @Indexed
-  private Date startTime;
+  private Instant startTime;
 
   /**
    * Stop time of tracks or way points
    */
   @Indexed
-  private Date stopTime;
+  private Instant stopTime;
 
   @Transient
   private S settings;
