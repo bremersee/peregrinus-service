@@ -25,11 +25,11 @@ import org.springframework.data.mongodb.core.mapping.Document;
 /**
  * @author Christian Bremer
  */
+@Document(collection = "feature-settings")
+@TypeAlias("TrkSettings")
 @Getter
 @Setter
 @ToString(callSuper = true)
-@Document(collection = "feature-settings")
-@TypeAlias("TrkSettings")
 public class TrkSettings extends FeatureSettings {
 
   private DisplayColor displayColor = DisplayColor.DARK_GRAY;

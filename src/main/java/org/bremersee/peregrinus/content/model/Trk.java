@@ -30,7 +30,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @TypeAlias("Trk")
 @Getter
 @Setter
-@ToString
+@ToString(callSuper = true)
 public class Trk extends Feature<MultiLineString, TrkProperties> {
 
   @Override

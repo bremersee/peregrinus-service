@@ -32,7 +32,7 @@ import org.springframework.data.annotation.TypeAlias;
 @TypeAlias("WptProperties")
 @Getter
 @Setter
-@ToString
+@ToString(callSuper = true)
 public class WptProperties extends FeatureProperties<WptSettings> {
 
   private String internalType; // photo, video or not // TODO

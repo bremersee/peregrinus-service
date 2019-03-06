@@ -30,7 +30,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @TypeAlias("Wpt")
 @Getter
 @Setter
-@ToString
+@ToString(callSuper = true)
 public class Wpt extends Feature<Point, WptProperties> {
 
   @Override

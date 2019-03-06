@@ -31,7 +31,7 @@ import org.springframework.data.annotation.TypeAlias;
 @TypeAlias("TrkProperties")
 @Getter
 @Setter
-@ToString
+@ToString(callSuper = true)
 public class TrkProperties extends FeatureProperties<TrkSettings> {
 
   private List<List<BigDecimal>> eleLines;

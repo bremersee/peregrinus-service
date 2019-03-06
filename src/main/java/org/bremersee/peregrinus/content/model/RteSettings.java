@@ -25,11 +25,11 @@ import org.springframework.data.mongodb.core.mapping.Document;
 /**
  * @author Christian Bremer
  */
+@Document(collection = "feature-settings")
+@TypeAlias("RteSettings")
 @Getter
 @Setter
 @ToString(callSuper = true)
-@Document(collection = "feature-settings")
-@TypeAlias("RteSettings")
 public class RteSettings extends FeatureSettings {
 
   private DisplayColor displayColor = DisplayColor.MAGENTA;

@@ -25,11 +25,11 @@ import org.springframework.data.mongodb.core.mapping.Document;
 /**
  * @author Christian Bremer
  */
+@Document(collection = "feature-settings")
+@TypeAlias("WptSettings")
 @Getter
 @Setter
 @ToString(callSuper = true)
-@Document(collection = "feature-settings")
-@TypeAlias("WptSettings")
 public class WptSettings extends FeatureSettings {
 
 }

@@ -28,7 +28,7 @@ import org.springframework.data.annotation.TypeAlias;
 @TypeAlias("RteProperties")
 @Getter
 @Setter
-@ToString
+@ToString(callSuper = true)
 public class RteProperties extends FeatureProperties<RteSettings> {
 
   private List<RteSegment> rteSegments;

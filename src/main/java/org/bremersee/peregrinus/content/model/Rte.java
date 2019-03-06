@@ -30,7 +30,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @TypeAlias("Rte")
 @Getter
 @Setter
-@ToString
+@ToString(callSuper = true)
 public class Rte extends Feature<MultiLineString, RteProperties> {
 
   @Override
