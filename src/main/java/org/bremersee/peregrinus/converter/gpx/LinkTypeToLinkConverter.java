@@ -16,25 +16,24 @@
 
 package org.bremersee.peregrinus.converter.gpx;
 
-import org.bremersee.common.model.PhoneNumber;
-import org.bremersee.garmin.gpx.v3.model.ext.PhoneNumberT;
+import org.bremersee.common.model.Link;
+import org.bremersee.gpx.model.LinkType;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.util.StringUtils;
 
 /**
  * @author Christian Bremer
  */
-public class PhoneNumberToGarminPhoneNumberConverter
-    implements Converter<PhoneNumber, PhoneNumberT> {
+public class LinkTypeToLinkConverter implements Converter<LinkType, Link> {
 
   @Override
-  public PhoneNumberT convert(PhoneNumber phoneNumber) {
-    if (phoneNumber == null || !StringUtils.hasText(phoneNumber.getValue())) {
+  public Link convert(LinkType linkType) {
+    if (linkType == null || !StringUtils.hasText(linkType.getHref())) {
       return null;
     }
-    final PhoneNumberT phoneNumberType = new PhoneNumberT();
-    phoneNumberType.setCategory(phoneNumber.getCategory());
-    phoneNumberType.setValue(phoneNumber.getValue());
-    return phoneNumberType;
+    return new Link()
+        .href(linkType.getHref())
+        .type(linkType.getType())
+        .text(linkType.getText());
   }
 }
