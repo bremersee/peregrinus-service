@@ -48,13 +48,13 @@ import org.locationtech.jts.geom.LineString;
 /**
  * @author Christian Bremer
  */
-class RteConverter extends AbstractGpxConverter {
+class RteTypeToRteConverter extends AbstractGpxConverter {
 
-  private final WptConverter wptMapper;
+  private final WptTypeToWptConverter wptMapper;
 
-  RteConverter(JaxbContextBuilder jaxbContextBuilder) {
+  RteTypeToRteConverter(JaxbContextBuilder jaxbContextBuilder) {
     super(jaxbContextBuilder);
-    wptMapper = new WptConverter(jaxbContextBuilder);
+    wptMapper = new WptTypeToWptConverter(jaxbContextBuilder);
   }
 
   List<Rte> readRtes(final List<RteType> rteTypes) {

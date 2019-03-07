@@ -1,13 +1,4 @@
 spring:
-  application:
-    name: ${APPLICATION_NAME:peregrinus}
-  data:
-    mongodb:
-      host: localhost
-      #      port: 27017
-      #      username: changeit
-      #      password: changeit
-      database: peregrinus
   jackson:
     date-format: com.fasterxml.jackson.databind.util.ISO8601DateFormat
     default-property-inclusion: non_null
@@ -16,12 +7,18 @@ spring:
     serialization:
       WRITE_DATES_AS_TIMESTAMPS: false
     time-zone: GMT
-
+  sleuth:
+    enabled: ${SLEUTH_ENABLED:false}
+    sampler:
+      probability: ${SLEUTH_PROBABILITY:1.0}
+  zipkin:
+    enabled: ${ZIPKIN_ENABLED:false}
+    base-url: ${ZIPKIN_BASE_URL:http://localhost:9411/}
   security:
     oauth2:
       resourceserver:
         jwt:
-          jwk-set-uri: https://openid.dev.bremersee.org/auth/realms/omnia/protocol/openid-connect/certs
+          jwk-set-uri: ${OPENID_KEYS_URI:https://openid.dev.bremersee.org/auth/realms/omnia/protocol/openid-connect/certs}
 
 management:
   endpoints:
@@ -29,20 +26,44 @@ management:
       exposure:
         include: "*"
 
+server:
+  port: ${SERVER_PORT:8080}
+
 logging:
   level:
     ROOT: info
     org.bremersee: debug
-    reactor: debug
+    reactor: info
     org.springframework: info
 
 bremersee:
   security:
     oauth2:
       password-flow:
-        client-id: omnia
-        client-secret: 2f586840-68df-4226-b105-397a56b2b4f2
-        token-endpoint: https://openid.dev.bremersee.org/auth/realms/omnia/protocol/openid-connect/token
+        client-id: ${OPENID_CLIENT_ID:omnia}
+        client-secret: ${OPENID_CLIENT_SECRET:changeit}
+        token-endpoint: ${OPENID_TOKEN_ENDPOINT:https://openid.dev.bremersee.org/auth/realms/omnia/protocol/openid-connect/token}
   exception-mapping:
     api-paths:
       - /api/**
+    exception-mappings:
+      - exception-class-name: org.springframework.dao.DuplicateKeyException
+        status: 409
+        message: "Entity already exists."
+        code: "PER:1000"
+      - exception-class-name: org.springframework.dao.OptimisticLockingFailureException
+        status: 409
+        message: "Version is not up to date."
+        code: "PER:1001"
+
+---
+
+spring:
+  profiles: mongodb
+
+  data:
+    mongodb:
+      uri: ${MONGODB_URI:mongodb://user:secret@192.168.1.40:27017,192.168.1.40:27018,192.168.1.40:27019/peregrinus?connect=direct}
+
+---
+

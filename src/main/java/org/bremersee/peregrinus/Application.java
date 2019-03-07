@@ -4,10 +4,10 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class PeregrinusServiceApplication { //implements CommandLineRunner {
+public class Application { //implements CommandLineRunner {
 
   public static void main(String[] args) {
-    SpringApplication.run(PeregrinusServiceApplication.class, args);
+    SpringApplication.run(Application.class, args);
   }
 
 }

@@ -27,22 +27,22 @@ import org.springframework.stereotype.Component;
  * @author Christian Bremer
  */
 @Component
-public class GpxConverterImpl extends AbstractGpxConverter {
+public class GpxToFeaturesConverter extends AbstractGpxConverter {
 
-  private final WptConverter wptMapper;
+  private final WptTypeToWptConverter wptMapper;
 
-  private final TrkConverter trkMapper;
+  private final TrkTypeToTrkConverter trkMapper;
 
-  private final RteConverter rteMapper;
+  private final RteTypeToRteConverter rteMapper;
 
-  public GpxConverterImpl(final JaxbContextBuilder jaxbContextBuilder) {
+  public GpxToFeaturesConverter(final JaxbContextBuilder jaxbContextBuilder) {
     super(jaxbContextBuilder);
-    wptMapper = new WptConverter(jaxbContextBuilder);
-    trkMapper = new TrkConverter(jaxbContextBuilder);
-    rteMapper = new RteConverter(jaxbContextBuilder);
+    wptMapper = new WptTypeToWptConverter(jaxbContextBuilder);
+    trkMapper = new TrkTypeToTrkConverter(jaxbContextBuilder);
+    rteMapper = new RteTypeToRteConverter(jaxbContextBuilder);
   }
 
-  public List<Feature> mapToGpxImport(final Gpx gpx) {
+  public List<Feature> convert(final Gpx gpx) {
 
     /*
     MetadataType metadata = gpx.getMetadata();

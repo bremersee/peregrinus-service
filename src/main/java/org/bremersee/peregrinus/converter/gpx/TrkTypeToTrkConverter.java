@@ -43,9 +43,9 @@ import org.locationtech.jts.geom.LineString;
 /**
  * @author Christian Bremer
  */
-class TrkConverter extends AbstractGpxConverter {
+class TrkTypeToTrkConverter extends AbstractGpxConverter {
 
-  TrkConverter(JaxbContextBuilder jaxbContextBuilder) {
+  TrkTypeToTrkConverter(JaxbContextBuilder jaxbContextBuilder) {
     super(jaxbContextBuilder);
   }
 

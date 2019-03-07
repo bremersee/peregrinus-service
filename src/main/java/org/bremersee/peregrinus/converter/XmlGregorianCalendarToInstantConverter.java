@@ -16,9 +16,22 @@
 
 package org.bremersee.peregrinus.converter;
 
+import java.time.Instant;
+import javax.xml.datatype.XMLGregorianCalendar;
+import org.springframework.core.convert.converter.Converter;
+
 /**
  * @author Christian Bremer
  */
-public class Placeholder {
+public class XmlGregorianCalendarToInstantConverter
+    implements Converter<XMLGregorianCalendar, Instant> {
+
+  @Override
+  public Instant convert(XMLGregorianCalendar xmlGregorianCalendar) {
+    if (xmlGregorianCalendar == null) {
+      return null;
+    }
+    return xmlGregorianCalendar.toGregorianCalendar().getTime().toInstant();
+  }
 
 }
