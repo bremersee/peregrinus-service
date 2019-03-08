@@ -37,39 +37,22 @@ import org.bremersee.peregrinus.content.model.TrkSettings;
 import org.bremersee.xml.JaxbContextBuilder;
 import org.locationtech.jts.geom.Coordinate;
 import org.locationtech.jts.geom.LineString;
-
-//import java.util.Date;
+import org.springframework.core.convert.converter.Converter;
 
 /**
  * @author Christian Bremer
  */
-class TrkTypeToTrkConverter extends AbstractGpxConverter {
+class TrkTypeToTrkConverter extends AbstractGpxConverter implements Converter<TrkType, Trk> {
 
   TrkTypeToTrkConverter(JaxbContextBuilder jaxbContextBuilder) {
     super(jaxbContextBuilder);
   }
 
-  List<Trk> readTrkTypes(final List<TrkType> trks) {
-    final List<Trk> trkList = new ArrayList<>();
-    if (trks != null) {
-      for (final TrkType trkType : trks) {
-        if (trkType != null) {
-          trkList.add(readTrkType(trkType));
-        }
-      }
-    }
-    return trkList;
-  }
-
-  private Trk readTrkType(final TrkType trkType) {
+  @Override
+  public Trk convert(final TrkType trkType) {
 
     final Trk trk = new Trk();
-    trk.setProperties(readCommonData(
-        TrkProperties::new,
-        trkType.getName(),
-        trkType.getDesc(),
-        trkType.getCmt(),
-        trkType.getLinks()));
+    trk.setProperties(convertCommonGpxType(trkType, TrkProperties::new));
     trk.getProperties().setSettings(new TrkSettings());
 
     final Optional<TrackExtension> trkExt = GpxJaxbContextHelper.findFirstExtension(
@@ -86,13 +69,13 @@ class TrkTypeToTrkConverter extends AbstractGpxConverter {
             displayColor,
             DisplayColor.DARK_GRAY));
 
-    parseTrkSegments(trkType.getTrksegs(), trk);
+    trkSegments(trkType.getTrksegs(), trk);
 
     return trk;
   }
 
   @SuppressWarnings("Duplicates")
-  private void parseTrkSegments(List<TrksegType> trkSegments, final Trk trk) {
+  private void trkSegments(List<TrksegType> trkSegments, final Trk trk) {
     if (trkSegments == null || trkSegments.isEmpty()) {
       return;
     }
@@ -100,7 +83,7 @@ class TrkTypeToTrkConverter extends AbstractGpxConverter {
     final List<List<BigDecimal>> eleLines = new ArrayList<>(trkSegments.size());
     final List<List<Instant>> timeLines = new ArrayList<>(trkSegments.size());
     for (final TrksegType trksegType : trkSegments) {
-      final LineString geoLine = parseTrkPoints(trksegType.getTrkpts(), eleLines, timeLines);
+      final LineString geoLine = trkPoints(trksegType.getTrkpts(), eleLines, timeLines);
       if (geoLine != null) {
         geoLines.add(geoLine);
       }
@@ -119,7 +102,7 @@ class TrkTypeToTrkConverter extends AbstractGpxConverter {
   }
 
   @SuppressWarnings("Duplicates")
-  private LineString parseTrkPoints(
+  private LineString trkPoints(
       final List<WptType> wpts,
       final List<List<BigDecimal>> eleLines,
       final List<List<Instant>> timeLines) {

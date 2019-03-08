@@ -24,7 +24,7 @@ import org.springframework.util.StringUtils;
 /**
  * @author Christian Bremer
  */
-public class LinkTypeToLinkConverter implements Converter<LinkType, Link> {
+class LinkTypeToLinkConverter implements Converter<LinkType, Link> {
 
   @Override
   public Link convert(LinkType linkType) {

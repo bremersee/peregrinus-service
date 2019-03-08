@@ -24,7 +24,7 @@ import org.springframework.util.StringUtils;
 /**
  * @author Christian Bremer
  */
-public class PhoneNumberTypeToPhoneNumberConverter
+class PhoneNumberTypeToPhoneNumberConverter
     implements Converter<PhoneNumberT, PhoneNumber> {
 
   @Override

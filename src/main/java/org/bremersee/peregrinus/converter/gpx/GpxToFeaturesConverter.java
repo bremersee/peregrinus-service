@@ -16,8 +16,9 @@
 
 package org.bremersee.peregrinus.converter.gpx;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
+import java.util.stream.Collectors;
 import org.bremersee.gpx.model.Gpx;
 import org.bremersee.peregrinus.content.model.Feature;
 import org.bremersee.xml.JaxbContextBuilder;
@@ -29,17 +30,17 @@ import org.springframework.stereotype.Component;
 @Component
 public class GpxToFeaturesConverter extends AbstractGpxConverter {
 
-  private final WptTypeToWptConverter wptMapper;
+  private final WptTypeToWptConverter wptTypeConverter;
 
-  private final TrkTypeToTrkConverter trkMapper;
+  private final TrkTypeToTrkConverter trkTypeConverter;
 
-  private final RteTypeToRteConverter rteMapper;
+  private final RteTypeToRteConverter rteTypeConverter;
 
   public GpxToFeaturesConverter(final JaxbContextBuilder jaxbContextBuilder) {
     super(jaxbContextBuilder);
-    wptMapper = new WptTypeToWptConverter(jaxbContextBuilder);
-    trkMapper = new TrkTypeToTrkConverter(jaxbContextBuilder);
-    rteMapper = new RteTypeToRteConverter(jaxbContextBuilder);
+    wptTypeConverter = new WptTypeToWptConverter(jaxbContextBuilder);
+    trkTypeConverter = new TrkTypeToTrkConverter(jaxbContextBuilder);
+    rteTypeConverter = new RteTypeToRteConverter(jaxbContextBuilder);
   }
 
   public List<Feature> convert(final Gpx gpx) {
@@ -58,10 +59,21 @@ public class GpxToFeaturesConverter extends AbstractGpxConverter {
     gpx.getVersion(); //version="1.1"
     */
 
-    final List<Feature> features = new ArrayList<>();
-    features.addAll(wptMapper.readWptTypes(gpx.getWpts()));
-    features.addAll(trkMapper.readTrkTypes(gpx.getTrks()));
-    features.addAll(rteMapper.readRtes(gpx.getRtes()));
+    final List<Feature> features = gpx.getWpts()
+        .stream()
+        .filter(Objects::nonNull)
+        .map(wptTypeConverter::convert)
+        .collect(Collectors.toList());
+    features.addAll(gpx.getTrks()
+        .stream()
+        .filter(Objects::nonNull)
+        .map(trkTypeConverter::convert)
+        .collect(Collectors.toList()));
+    features.addAll(gpx.getRtes()
+        .stream()
+        .filter(Objects::nonNull)
+        .map(rteTypeConverter::convert)
+        .collect(Collectors.toList()));
     return features;
   }
 

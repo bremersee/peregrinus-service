@@ -34,53 +34,35 @@ import org.bremersee.gpx.GpxJaxbContextHelper;
 import org.bremersee.gpx.model.RteType;
 import org.bremersee.gpx.model.WptType;
 import org.bremersee.peregrinus.content.model.DisplayColor;
-import org.bremersee.peregrinus.geo.model.GarminImportRteCalculationProperties;
 import org.bremersee.peregrinus.content.model.Rte;
 import org.bremersee.peregrinus.content.model.RteProperties;
 import org.bremersee.peregrinus.content.model.RteSegment;
 import org.bremersee.peregrinus.content.model.RteSegmentProperties;
 import org.bremersee.peregrinus.content.model.RteSettings;
 import org.bremersee.peregrinus.content.model.Wpt;
+import org.bremersee.peregrinus.geo.model.GarminImportRteCalculationProperties;
 import org.bremersee.xml.JaxbContextBuilder;
 import org.locationtech.jts.geom.Coordinate;
 import org.locationtech.jts.geom.LineString;
+import org.springframework.core.convert.converter.Converter;
 
 /**
  * @author Christian Bremer
  */
-class RteTypeToRteConverter extends AbstractGpxConverter {
+class RteTypeToRteConverter extends AbstractGpxConverter implements Converter<RteType, Rte> {
 
-  private final WptTypeToWptConverter wptMapper;
+  private final WptTypeToWptConverter wptTypeToWptConverter;
 
   RteTypeToRteConverter(JaxbContextBuilder jaxbContextBuilder) {
     super(jaxbContextBuilder);
-    wptMapper = new WptTypeToWptConverter(jaxbContextBuilder);
+    wptTypeToWptConverter = new WptTypeToWptConverter(jaxbContextBuilder);
   }
 
-  List<Rte> readRtes(final List<RteType> rteTypes) {
-    final List<Rte> rteList = new ArrayList<>();
-    if (rteTypes != null) {
-      for (final RteType rteType : rteTypes) {
-        if (rteType != null) {
-          final Rte rte = readRte(rteType);
-          if (rte != null) {
-            rteList.add(rte);
-          }
-        }
-      }
-    }
-    return rteList;
-  }
-
-  private Rte readRte(final RteType rteType) {
+  @Override
+  public Rte convert(final RteType rteType) {
 
     final Rte rte = new Rte();
-    rte.setProperties(readCommonData(
-        RteProperties::new,
-        rteType.getName(),
-        rteType.getDesc(),
-        rteType.getCmt(),
-        rteType.getLinks()));
+    rte.setProperties(convertCommonGpxType(rteType, RteProperties::new));
     rte.getProperties().setSettings(new RteSettings());
 
     // display color
@@ -106,7 +88,7 @@ class RteTypeToRteConverter extends AbstractGpxConverter {
 
     final String transportationMode = tripExt.map(Trip::getTransportationMode).orElse(null);
 
-    final List<RteSegmentWithCoordinates> rteSegmentWithCoordinates = readRtePts(
+    final List<RteSegmentWithCoordinates> rteSegmentWithCoordinates = rtePts(
         rteType.getRtepts(), transportationMode);
 
     if (rteSegmentWithCoordinates.size() < 2) {
@@ -143,14 +125,14 @@ class RteTypeToRteConverter extends AbstractGpxConverter {
     return rte;
   }
 
-  private List<RteSegmentWithCoordinates> readRtePts(
+  private List<RteSegmentWithCoordinates> rtePts(
       final List<WptType> rtePts,
       final String transportationMode) {
 
     final List<RteSegmentWithCoordinates> list = new ArrayList<>();
     if (rtePts != null) {
       for (final WptType rtePt : rtePts) {
-        final RteSegmentWithCoordinates entry = readRtePt(rtePt, transportationMode);
+        final RteSegmentWithCoordinates entry = rtePt(rtePt, transportationMode);
         if (entry != null) {
           list.add(entry);
         }
@@ -159,7 +141,7 @@ class RteTypeToRteConverter extends AbstractGpxConverter {
     return list;
   }
 
-  private RteSegmentWithCoordinates readRtePt(
+  private RteSegmentWithCoordinates rtePt(
       final WptType rtePt,
       final String transportationMode) {
 
@@ -167,10 +149,12 @@ class RteTypeToRteConverter extends AbstractGpxConverter {
       return null;
     }
 
-    final Wpt wpt = wptMapper.readWptType(rtePt);
+    final Wpt wpt = wptTypeToWptConverter.convert(rtePt);
+    if (wpt == null || wpt.getGeometry() == null) {
+      return null;
+    }
 
     final RteSegment rteSegment = new RteSegment();
-    rteSegment.setPoint(wpt.getGeometry());
 
     final RteSegmentProperties rteSegmentProperties = new RteSegmentProperties();
     rteSegment.setProperties(rteSegmentProperties);

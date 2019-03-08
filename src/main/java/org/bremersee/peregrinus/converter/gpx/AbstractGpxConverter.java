@@ -19,18 +19,14 @@ package org.bremersee.peregrinus.converter.gpx;
 import java.time.Clock;
 import java.time.Instant;
 import java.time.ZoneId;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.Objects;
 import java.util.function.Supplier;
+import java.util.stream.Collectors;
 import javax.xml.bind.Unmarshaller;
-import org.bremersee.common.model.Address;
 import org.bremersee.common.model.Link;
-import org.bremersee.common.model.PhoneNumber;
-import org.bremersee.garmin.gpx.v3.model.ext.AddressT;
-import org.bremersee.garmin.gpx.v3.model.ext.PhoneNumberT;
-import org.bremersee.gpx.model.LinkType;
+import org.bremersee.gpx.model.CommonGpxType;
 import org.bremersee.peregrinus.content.model.FeatureProperties;
+import org.bremersee.peregrinus.content.model.FeatureSettings;
 import org.bremersee.xml.JaxbContextBuilder;
 import org.springframework.util.StringUtils;
 
@@ -38,6 +34,10 @@ import org.springframework.util.StringUtils;
  * @author Christian Bremer
  */
 abstract class AbstractGpxConverter {
+
+  private LinkTypeToLinkConverter linkTypeToLinkConverter = new LinkTypeToLinkConverter();
+
+  private LinkToLinkTypeConverter linkToLinkTypeConverter = new LinkToLinkTypeConverter();
 
   private final JaxbContextBuilder jaxbContextBuilder;
 
@@ -49,27 +49,30 @@ abstract class AbstractGpxConverter {
     return jaxbContextBuilder.buildUnmarshaller();
   }
 
-  <T extends FeatureProperties> T readCommonData(
-      final Supplier<T> geoJsonPropertiesSupplier,
-      final String name,
-      final String desc,
-      final String cmt,
-      final List<? extends LinkType> links) {
+  <T extends FeatureProperties<? extends FeatureSettings>> T convertCommonGpxType(
+      CommonGpxType commonGpxType,
+      Supplier<T> geoJsonPropertiesSupplier) {
 
     final T geoJsonProperties = geoJsonPropertiesSupplier.get();
     geoJsonProperties.setCreated(Instant.now(Clock.system(ZoneId.of("UTC"))));
     geoJsonProperties.setModified(geoJsonProperties.getCreated());
-
-    geoJsonProperties.setName(name);
-    geoJsonProperties.setPlainTextDescription(readDescriptionAndComment(desc, cmt));
-    geoJsonProperties.setMarkdownDescription(geoJsonProperties.getPlainTextDescription());
-    geoJsonProperties.setLinks(readGarminLinks(links));
+    if (commonGpxType != null) {
+      geoJsonProperties.setName(commonGpxType.getName());
+      geoJsonProperties.setPlainTextDescription(getPlainTextDescription(commonGpxType));
+      geoJsonProperties.setMarkdownDescription(geoJsonProperties.getPlainTextDescription());
+      geoJsonProperties.setLinks(
+          commonGpxType.getLinks()
+              .stream()
+              .filter(Objects::nonNull)
+              .map(linkTypeToLinkConverter::convert)
+              .collect(Collectors.toList()));
+    }
     return geoJsonProperties;
   }
 
-  private String readDescriptionAndComment(final String desc, final String cmt) {
-    final String a = StringUtils.hasText(desc) ? desc : "";
-    final String b = StringUtils.hasText(cmt) ? cmt : "";
+  private String getPlainTextDescription(final CommonGpxType commonGpxType) {
+    final String a = StringUtils.hasText(commonGpxType.getDesc()) ? commonGpxType.getDesc() : "";
+    final String b = StringUtils.hasText(commonGpxType.getCmt()) ? commonGpxType.getCmt() : "";
     final StringBuilder sb = new StringBuilder();
     sb.append(a);
     if (!b.equals(a) && b.length() > 0) {
@@ -81,73 +84,42 @@ abstract class AbstractGpxConverter {
     return sb.length() > 0 ? sb.toString() : null;
   }
 
-  Address readGarminAddress(final AddressT addressType) {
-    if (addressType == null) {
-      return null;
-    }
-    final Address address = new Address();
-    address.setCity(addressType.getCity());
-    address.setCountry(addressType.getCountry());
-    address.setPostalCode(addressType.getPostalCode());
-    address.setState(addressType.getState());
-    if (addressType.getStreetAddresses() != null && !addressType.getStreetAddresses().isEmpty()) {
-      StringBuilder sb = new StringBuilder();
-      for (final String line : addressType.getStreetAddresses()) {
-        if (sb.length() > 0) {
-          sb.append("\n");
+  <T extends CommonGpxType> T convertFeatureProperties(
+      final FeatureProperties<? extends FeatureSettings> featureProperties,
+      final Supplier<T> gpxTypeSupplier) {
+
+    final T gpxType = gpxTypeSupplier.get();
+    if (featureProperties != null) {
+      gpxType.setCmt(getDescOrCmt(featureProperties, false));
+      gpxType.setDesc(getDescOrCmt(featureProperties, true));
+      gpxType.setName(featureProperties.getName());
+      if (featureProperties.getLinks() != null) {
+        for (Link link : featureProperties.getLinks()) {
+          if (link != null && StringUtils.hasText(link.getHref())) {
+            gpxType.getLinks().add(linkToLinkTypeConverter.convert(link));
+          }
         }
-        sb.append(line);
       }
-      address.setStreet(sb.toString());
     }
-    return address;
+    return gpxType;
   }
 
-  private Optional<Link> readGarminLink(final LinkType linkType) {
-    if (linkType == null || !StringUtils.hasText(linkType.getHref())) {
-      return Optional.empty();
-    }
-    return Optional.of(
-        new Link()
-            .href(linkType.getHref())
-            .type(linkType.getType())
-            .text(linkType.getText()));
-  }
-
-  private List<Link> readGarminLinks(final List<? extends LinkType> linkTypes) {
-
-    if (linkTypes == null || linkTypes.isEmpty()) {
+  private String getDescOrCmt(
+      final FeatureProperties<? extends FeatureSettings> featureProperties, boolean isDesc) {
+    if (featureProperties == null
+        || !StringUtils.hasText(featureProperties.getPlainTextDescription())) {
       return null;
     }
-    final List<Link> links = new ArrayList<>(linkTypes.size());
-    for (LinkType linkType : linkTypes) {
-      Optional<Link> link = readGarminLink(linkType);
-      link.ifPresent(links::add);
+    final String desc = featureProperties.getPlainTextDescription();
+    int i = desc.indexOf("\n---\n");
+    if (i > -1) {
+      if (isDesc) {
+        return desc.substring(0, i);
+      } else {
+        return desc.substring(i + "\n---\n".length());
+      }
     }
-    return links;
-  }
-
-  private Optional<PhoneNumber> readGarminPhoneNumber(final PhoneNumberT phoneNumberType) {
-    if (phoneNumberType == null || !StringUtils.hasText(phoneNumberType.getValue())) {
-      return Optional.empty();
-    }
-    return Optional.of(
-        new PhoneNumber()
-            .value(phoneNumberType.getValue())
-            .category(phoneNumberType.getCategory()));
-  }
-
-  List<PhoneNumber> readGarminPhoneNumbers(List<? extends PhoneNumberT> phoneNumberTypes) {
-
-    if (phoneNumberTypes == null || phoneNumberTypes.isEmpty()) {
-      return null;
-    }
-    final List<PhoneNumber> phoneNumbers = new ArrayList<>();
-    for (PhoneNumberT phoneNumberType : phoneNumberTypes) {
-      Optional<PhoneNumber> link = readGarminPhoneNumber(phoneNumberType);
-      link.ifPresent(phoneNumbers::add);
-    }
-    return phoneNumbers;
+    return desc;
   }
 
 }
