@@ -37,7 +37,6 @@ public class GpxToFeaturesConverter extends AbstractGpxConverter {
   private final RteTypeToRteConverter rteTypeConverter;
 
   public GpxToFeaturesConverter(final JaxbContextBuilder jaxbContextBuilder) {
-    super(jaxbContextBuilder);
     wptTypeConverter = new WptTypeToWptConverter(jaxbContextBuilder);
     trkTypeConverter = new TrkTypeToTrkConverter(jaxbContextBuilder);
     rteTypeConverter = new RteTypeToRteConverter(jaxbContextBuilder);

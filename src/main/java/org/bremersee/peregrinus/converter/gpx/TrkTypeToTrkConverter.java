@@ -44,8 +44,10 @@ import org.springframework.core.convert.converter.Converter;
  */
 class TrkTypeToTrkConverter extends AbstractGpxConverter implements Converter<TrkType, Trk> {
 
+  private final JaxbContextBuilder jaxbContextBuilder;
+
   TrkTypeToTrkConverter(JaxbContextBuilder jaxbContextBuilder) {
-    super(jaxbContextBuilder);
+    this.jaxbContextBuilder = jaxbContextBuilder;
   }
 
   @Override
@@ -59,7 +61,7 @@ class TrkTypeToTrkConverter extends AbstractGpxConverter implements Converter<Tr
         TrackExtension.class,
         true,
         trkType.getExtensions(),
-        getUnmarshaller());
+        jaxbContextBuilder.buildUnmarshaller());
 
     final DisplayColorT displayColor = trkExt.map(TrackExtension::getDisplayColor).orElse(null);
     trk

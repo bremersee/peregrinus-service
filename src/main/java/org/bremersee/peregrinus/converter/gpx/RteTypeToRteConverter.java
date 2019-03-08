@@ -53,9 +53,11 @@ class RteTypeToRteConverter extends AbstractGpxConverter implements Converter<Rt
 
   private final WptTypeToWptConverter wptTypeToWptConverter;
 
+  private final JaxbContextBuilder jaxbContextBuilder;
+
   RteTypeToRteConverter(JaxbContextBuilder jaxbContextBuilder) {
-    super(jaxbContextBuilder);
-    wptTypeToWptConverter = new WptTypeToWptConverter(jaxbContextBuilder);
+    this.jaxbContextBuilder = jaxbContextBuilder;
+    this.wptTypeToWptConverter = new WptTypeToWptConverter(jaxbContextBuilder);
   }
 
   @Override
@@ -70,7 +72,7 @@ class RteTypeToRteConverter extends AbstractGpxConverter implements Converter<Rt
         RouteExtension.class,
         true,
         rteType.getExtensions(),
-        getUnmarshaller());
+        jaxbContextBuilder.buildUnmarshaller());
 
     final DisplayColorT displayColor = rteTypeExt.map(RouteExtension::getDisplayColor).orElse(null);
     rte
@@ -84,7 +86,7 @@ class RteTypeToRteConverter extends AbstractGpxConverter implements Converter<Rt
         Trip.class,
         true,
         rteType.getExtensions(),
-        getUnmarshaller());
+        jaxbContextBuilder.buildUnmarshaller());
 
     final String transportationMode = tripExt.map(Trip::getTransportationMode).orElse(null);
 
@@ -169,7 +171,7 @@ class RteTypeToRteConverter extends AbstractGpxConverter implements Converter<Rt
         ViaPoint.class,
         true,
         rtePt.getExtensions(),
-        getUnmarshaller()).ifPresent(viaPoint -> {
+        jaxbContextBuilder.buildUnmarshaller()).ifPresent(viaPoint -> {
       calculationProperties.setArrivalTime(
           viaPoint.getArrivalTime() != null
               ? viaPoint.getArrivalTime().toGregorianCalendar().getTime()
@@ -195,7 +197,7 @@ class RteTypeToRteConverter extends AbstractGpxConverter implements Converter<Rt
         RoutePointExtension.class,
         true,
         rtePt.getExtensions(),
-        getUnmarshaller()).ifPresent(routePointExtension -> {
+        jaxbContextBuilder.buildUnmarshaller()).ifPresent(routePointExtension -> {
       if (routePointExtension.getRpts() != null) {
         for (AutoroutePointT pt : routePointExtension.getRpts()) {
           if (pt != null && pt.getLat() != null && pt.getLon() != null) {

@@ -22,12 +22,9 @@ import java.time.ZoneId;
 import java.util.Objects;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
-import javax.xml.bind.Unmarshaller;
-import org.bremersee.common.model.Link;
 import org.bremersee.gpx.model.CommonGpxType;
 import org.bremersee.peregrinus.content.model.FeatureProperties;
 import org.bremersee.peregrinus.content.model.FeatureSettings;
-import org.bremersee.xml.JaxbContextBuilder;
 import org.springframework.util.StringUtils;
 
 /**
@@ -37,16 +34,7 @@ abstract class AbstractGpxConverter {
 
   private LinkTypeToLinkConverter linkTypeToLinkConverter = new LinkTypeToLinkConverter();
 
-  private LinkToLinkTypeConverter linkToLinkTypeConverter = new LinkToLinkTypeConverter();
-
-  private final JaxbContextBuilder jaxbContextBuilder;
-
-  public AbstractGpxConverter(JaxbContextBuilder jaxbContextBuilder) {
-    this.jaxbContextBuilder = jaxbContextBuilder;
-  }
-
-  Unmarshaller getUnmarshaller() {
-    return jaxbContextBuilder.buildUnmarshaller();
+  AbstractGpxConverter() {
   }
 
   <T extends FeatureProperties<? extends FeatureSettings>> T convertCommonGpxType(
@@ -82,44 +70,6 @@ abstract class AbstractGpxConverter {
       sb.append(b);
     }
     return sb.length() > 0 ? sb.toString() : null;
-  }
-
-  <T extends CommonGpxType> T convertFeatureProperties(
-      final FeatureProperties<? extends FeatureSettings> featureProperties,
-      final Supplier<T> gpxTypeSupplier) {
-
-    final T gpxType = gpxTypeSupplier.get();
-    if (featureProperties != null) {
-      gpxType.setCmt(getDescOrCmt(featureProperties, false));
-      gpxType.setDesc(getDescOrCmt(featureProperties, true));
-      gpxType.setName(featureProperties.getName());
-      if (featureProperties.getLinks() != null) {
-        for (Link link : featureProperties.getLinks()) {
-          if (link != null && StringUtils.hasText(link.getHref())) {
-            gpxType.getLinks().add(linkToLinkTypeConverter.convert(link));
-          }
-        }
-      }
-    }
-    return gpxType;
-  }
-
-  private String getDescOrCmt(
-      final FeatureProperties<? extends FeatureSettings> featureProperties, boolean isDesc) {
-    if (featureProperties == null
-        || !StringUtils.hasText(featureProperties.getPlainTextDescription())) {
-      return null;
-    }
-    final String desc = featureProperties.getPlainTextDescription();
-    int i = desc.indexOf("\n---\n");
-    if (i > -1) {
-      if (isDesc) {
-        return desc.substring(0, i);
-      } else {
-        return desc.substring(i + "\n---\n".length());
-      }
-    }
-    return desc;
   }
 
 }

@@ -36,13 +36,15 @@ import org.springframework.core.convert.converter.Converter;
  */
 class WptTypeToWptConverter extends AbstractGpxConverter implements Converter<WptType, Wpt> {
 
+  private final JaxbContextBuilder jaxbContextBuilder;
+
   private AddressTypeToAddressConverter addressConverter = new AddressTypeToAddressConverter();
 
   private PhoneNumberTypeToPhoneNumberConverter phoneNumberConverter
       = new PhoneNumberTypeToPhoneNumberConverter();
 
   WptTypeToWptConverter(JaxbContextBuilder jaxbContextBuilder) {
-    super(jaxbContextBuilder);
+    this.jaxbContextBuilder = jaxbContextBuilder;
   }
 
   @Override
@@ -58,7 +60,7 @@ class WptTypeToWptConverter extends AbstractGpxConverter implements Converter<Wp
         WaypointExtension.class,
         true,
         wptType.getExtensions(),
-        getUnmarshaller());
+        jaxbContextBuilder.buildUnmarshaller());
 
     wpt.getProperties().setAddress(
         wptExt.map(ext -> addressConverter.convert(ext.getAddress())).orElse(null));
@@ -76,7 +78,7 @@ class WptTypeToWptConverter extends AbstractGpxConverter implements Converter<Wp
             CreationTimeExtension.class,
             true,
             wptType.getExtensions(),
-            getUnmarshaller())
+            jaxbContextBuilder.buildUnmarshaller())
         .map(CreationTimeExtension::getCreationTime)
         .orElse(wptType.getTime());
     final Instant time = cal != null ? cal.toGregorianCalendar().getTime().toInstant() : null;

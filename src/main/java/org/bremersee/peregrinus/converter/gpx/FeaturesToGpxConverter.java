@@ -59,14 +59,15 @@ public class FeaturesToGpxConverter {
 
   private void convertFeature(Feature feature, Gpx gpx) {
     if (feature instanceof Wpt) {
-      convertWpt((Wpt) feature, gpx);
+      //convertWpt((Wpt) feature, gpx);
     } else if (feature instanceof Trk) {
-      convertTrk((Trk) feature, gpx);
+      //convertTrk((Trk) feature, gpx);
     } else if (feature instanceof Rte) {
-      convertRte((Rte) feature, gpx);
+      //convertRte((Rte) feature, gpx);
     }
   }
 
+  /*
   private void convertWpt(Wpt wpt, Gpx gpx) {
     final WptType wptType = new WptType();
     wptType.setAgeofdgpsdata(null);
@@ -95,10 +96,12 @@ public class FeaturesToGpxConverter {
     gpx.getWpts().add(wptType);
   }
 
+
   private void convertTrk(Trk trk, Gpx gpx) {
   }
 
   private void convertRte(Rte rte, Gpx gpx) {
   }
+  */
 
 }
