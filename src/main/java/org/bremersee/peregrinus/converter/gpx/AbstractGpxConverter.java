@@ -32,30 +32,31 @@ import org.springframework.util.StringUtils;
  */
 abstract class AbstractGpxConverter {
 
-  private LinkTypeToLinkConverter linkTypeToLinkConverter = new LinkTypeToLinkConverter();
+  private static final LinkTypeToLinkConverter linkTypeToLinkConverter
+      = new LinkTypeToLinkConverter();
 
   AbstractGpxConverter() {
   }
 
   <T extends FeatureProperties<? extends FeatureSettings>> T convertCommonGpxType(
-      CommonGpxType commonGpxType,
-      Supplier<T> geoJsonPropertiesSupplier) {
+      final CommonGpxType commonGpxType,
+      final Supplier<T> featurePropertiesSupplier) {
 
-    final T geoJsonProperties = geoJsonPropertiesSupplier.get();
-    geoJsonProperties.setCreated(Instant.now(Clock.system(ZoneId.of("UTC"))));
-    geoJsonProperties.setModified(geoJsonProperties.getCreated());
+    final T featureProperties = featurePropertiesSupplier.get();
+    featureProperties.setCreated(Instant.now(Clock.system(ZoneId.of("UTC"))));
+    featureProperties.setModified(featureProperties.getCreated());
     if (commonGpxType != null) {
-      geoJsonProperties.setName(commonGpxType.getName());
-      geoJsonProperties.setPlainTextDescription(getPlainTextDescription(commonGpxType));
-      geoJsonProperties.setMarkdownDescription(geoJsonProperties.getPlainTextDescription());
-      geoJsonProperties.setLinks(
+      featureProperties.setName(commonGpxType.getName());
+      featureProperties.setPlainTextDescription(getPlainTextDescription(commonGpxType));
+      featureProperties.setMarkdownDescription(featureProperties.getPlainTextDescription());
+      featureProperties.setLinks(
           commonGpxType.getLinks()
               .stream()
               .filter(Objects::nonNull)
               .map(linkTypeToLinkConverter::convert)
               .collect(Collectors.toList()));
     }
-    return geoJsonProperties;
+    return featureProperties;
   }
 
   private String getPlainTextDescription(final CommonGpxType commonGpxType) {

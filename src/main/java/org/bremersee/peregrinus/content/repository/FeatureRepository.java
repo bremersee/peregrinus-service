@@ -16,23 +16,34 @@
 
 package org.bremersee.peregrinus.content.repository;
 
+import java.util.Collection;
+import javax.validation.constraints.NotNull;
 import org.bremersee.peregrinus.content.model.FeatureSettings;
+import org.springframework.validation.annotation.Validated;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 /**
  * @author Christian Bremer
  */
+@Validated
 public interface FeatureRepository {
 
-  <T> Mono<T> persist(T entity);
+  <T> Mono<T> findById(@NotNull String id, @NotNull Class<T> cls);
 
-  Mono<Void> delete(Object entity);
+  <T> Flux<T> findByIds(@NotNull Collection<String> ids, @NotNull Class<T> cls);
+
+  <T> Mono<T> persist(@NotNull T entity);
+
+  <T> Flux<T> persistAll(@NotNull Collection<T> entities);
+
+  Mono<Void> delete(@NotNull Object entity);
 
   <T extends FeatureSettings> Mono<T> findFeatureSettings(
-      Class<T> clazz,
-      String featureId,
-      String userId);
+      @NotNull Class<T> clazz,
+      @NotNull String featureId,
+      @NotNull String userId);
 
-  Mono<Void> deleteFeatureSettings(String featureId, String userId);
+  Mono<Void> deleteFeatureSettings(@NotNull String featureId, @NotNull String userId);
 
 }

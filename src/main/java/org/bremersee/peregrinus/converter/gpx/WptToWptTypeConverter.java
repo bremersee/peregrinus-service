@@ -35,12 +35,12 @@ class WptToWptTypeConverter extends AbstractFeatureConverter
 
   private final JaxbContextBuilder jaxbContextBuilder;
 
-  private InstantToXmlGregorianCalendarConverter timeConverter
+  private static final InstantToXmlGregorianCalendarConverter timeConverter
       = new InstantToXmlGregorianCalendarConverter();
 
-  private AddressToAddressTypeConverter addressConverter = new AddressToAddressTypeConverter();
+  private static final AddressToAddressTypeConverter addressConverter = new AddressToAddressTypeConverter();
 
-  private PhoneNumberToPhoneNumberTypeConverter phoneNumberConverter
+  private static final PhoneNumberToPhoneNumberTypeConverter phoneNumberConverter
       = new PhoneNumberToPhoneNumberTypeConverter();
 
   WptToWptTypeConverter(JaxbContextBuilder jaxbContextBuilder) {
@@ -51,24 +51,22 @@ class WptToWptTypeConverter extends AbstractFeatureConverter
   public WptType convert(final Wpt wpt) {
     final WptType wptType = convertFeatureProperties(wpt.getProperties(), WptType::new);
     final WptProperties properties = wpt.getProperties();
-    if (properties != null) {
-      wptType.setType(properties.getInternalType()); // TODO internalType
-      wptType.setTime(timeConverter.convert(properties.getTime()));
-      wptType.setEle(wpt.getProperties().getEle());
-      final WaypointExtension wptExt = new WaypointExtension();
-      wptExt.setAddress(addressConverter.convert(properties.getAddress()));
-      wptExt.getPhoneNumbers().addAll(
-          properties.getPhoneNumbers()
-              .stream()
-              .filter(Objects::nonNull)
-              .map(phoneNumberConverter::convert)
-              .collect(Collectors.toList()));
-      if (wptExt.getAddress() != null || !wptExt.getPhoneNumbers().isEmpty()) {
-        wptType.setExtensions(
-            ExtensionsTypeBuilder.builder(wptType.getExtensions())
-                .addElement(wptExt, jaxbContextBuilder.buildJaxbContext())
-                .build(true));
-      }
+    wptType.setType(properties.getInternalType()); // TODO internalType
+    wptType.setTime(timeConverter.convert(properties.getTime()));
+    wptType.setEle(wpt.getProperties().getEle());
+    final WaypointExtension wptExt = new WaypointExtension();
+    wptExt.setAddress(addressConverter.convert(properties.getAddress()));
+    wptExt.getPhoneNumbers().addAll(
+        properties.getPhoneNumbers()
+            .stream()
+            .filter(Objects::nonNull)
+            .map(phoneNumberConverter::convert)
+            .collect(Collectors.toList()));
+    if (wptExt.getAddress() != null || !wptExt.getPhoneNumbers().isEmpty()) {
+      wptType.setExtensions(
+          ExtensionsTypeBuilder.builder(wptType.getExtensions())
+              .addElement(wptExt, jaxbContextBuilder.buildJaxbContext())
+              .build(true));
     }
     return wptType;
   }

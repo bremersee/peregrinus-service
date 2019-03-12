@@ -14,46 +14,22 @@
  * limitations under the License.
  */
 
-package org.bremersee.peregrinus.geo.model;
+package org.bremersee.peregrinus.content.model;
 
-import java.time.Instant;
-import java.util.Date;
-import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
-import org.bremersee.garmin.trip.v1.model.ext.NamedRoadT;
+import org.springframework.data.annotation.TypeAlias;
+import org.springframework.data.mongodb.core.mapping.Document;
 
 /**
  * @author Christian Bremer
  */
+@Document(collection = "feature-settings")
+@TypeAlias("RtePtSettings")
 @Getter
 @Setter
 @ToString(callSuper = true)
-@EqualsAndHashCode(callSuper = true)
-public class GarminImportRteCalculationProperties extends AbstractRteCalculationProperties {
+public class RtePtSettings extends PtSettings {
 
-  private String transportationMode;
-
-  private Instant departureTime;
-
-  private Long stopDurationMillis;
-
-  private Instant arrivalTime;
-
-  private String calculationMode;
-
-  private String elevationMode;
-
-  private NamedRoadT namedRoad;
-
-  @Override
-  public String getProvider() {
-    return "GarminImport";
-  }
-
-  @Override
-  public boolean isCalculationSupported() {
-    return false;
-  }
 }

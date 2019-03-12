@@ -49,9 +49,9 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @JsonInclude(Include.NON_EMPTY)
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, property = "type", visible = true)
 @JsonSubTypes({
-    @Type(value = RteSettings.class, name = "RTE"),
-    @Type(value = TrkSettings.class, name = "TRK"),
-    @Type(value = WptSettings.class, name = "WPT")
+    @Type(value = WptProperties.class, name = "Wpt"),
+    @Type(value = TrkProperties.class, name = "Trk"),
+    @Type(value = RteProperties.class, name = "Rte")
 })
 @Getter
 @Setter

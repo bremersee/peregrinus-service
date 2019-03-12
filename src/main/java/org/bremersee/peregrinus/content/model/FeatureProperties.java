@@ -40,9 +40,9 @@ import org.springframework.util.StringUtils;
 @TypeAlias("FeatureProperties")
 @JsonTypeInfo(use = Id.NAME, property = "subType", visible = true)
 @JsonSubTypes({
-    @Type(value = RteProperties.class, name = "RTE"),
-    @Type(value = TrkProperties.class, name = "TRK"),
-    @Type(value = WptProperties.class, name = "WPT")
+    @Type(value = WptProperties.class, name = "Wpt"),
+    @Type(value = TrkProperties.class, name = "Trk"),
+    @Type(value = RteProperties.class, name = "Rte")
 })
 @Getter
 @Setter
@@ -87,6 +87,7 @@ public abstract class FeatureProperties<S extends FeatureSettings>
     final Instant now = Instant.now(Clock.system(ZoneId.of("UTC")));
     created = now;
     modified = now;
+    settings = doCreateDefaultSettings();
   }
 
   public S createDefaultSettings(

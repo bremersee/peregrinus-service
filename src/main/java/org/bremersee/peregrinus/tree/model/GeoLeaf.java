@@ -35,7 +35,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 public class GeoLeaf extends Leaf {
 
   @DBRef
-  private Feature feature;
+  private Feature feature; // TODO dbref not supported in reactive
 
   public GeoLeaf() {
   }

@@ -16,15 +16,6 @@
 
 package org.bremersee.peregrinus.converter.gpx;
 
-import java.time.Instant;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.stream.Collectors;
-import javax.xml.datatype.XMLGregorianCalendar;
-import org.bremersee.garmin.creationtime.v1.model.ext.CreationTimeExtension;
-import org.bremersee.garmin.gpx.v3.model.ext.WaypointExtension;
-import org.bremersee.geojson.utils.GeometryUtils;
-import org.bremersee.gpx.GpxJaxbContextHelper;
 import org.bremersee.gpx.model.WptType;
 import org.bremersee.peregrinus.content.model.Wpt;
 import org.bremersee.peregrinus.content.model.WptProperties;
@@ -34,61 +25,15 @@ import org.springframework.core.convert.converter.Converter;
 /**
  * @author Christian Bremer
  */
-class WptTypeToWptConverter extends AbstractGpxConverter implements Converter<WptType, Wpt> {
-
-  private final JaxbContextBuilder jaxbContextBuilder;
-
-  private AddressTypeToAddressConverter addressConverter = new AddressTypeToAddressConverter();
-
-  private PhoneNumberTypeToPhoneNumberConverter phoneNumberConverter
-      = new PhoneNumberTypeToPhoneNumberConverter();
+class WptTypeToWptConverter extends PtTypeToPtConverter implements Converter<WptType, Wpt> {
 
   WptTypeToWptConverter(JaxbContextBuilder jaxbContextBuilder) {
-    this.jaxbContextBuilder = jaxbContextBuilder;
+    super(jaxbContextBuilder);
   }
 
   @Override
   public Wpt convert(final WptType wptType) {
-
-    final Wpt wpt = new Wpt();
-    wpt.setProperties(convertCommonGpxType(wptType, WptProperties::new));
-
-    wpt.setGeometry(GeometryUtils.createPointWGS84(wptType.getLat(), wptType.getLon()));
-    wpt.setBbox(GeometryUtils.getBoundingBox(wpt.getGeometry()));
-
-    final Optional<WaypointExtension> wptExt = GpxJaxbContextHelper.findFirstExtension(
-        WaypointExtension.class,
-        true,
-        wptType.getExtensions(),
-        jaxbContextBuilder.buildUnmarshaller());
-
-    wpt.getProperties().setAddress(
-        wptExt.map(ext -> addressConverter.convert(ext.getAddress())).orElse(null));
-    wpt.getProperties().setEle(wptType.getEle());
-    wpt.getProperties().setPhoneNumbers(
-        wptExt.map(ext -> ext.getPhoneNumbers()
-            .stream()
-            .filter(Objects::nonNull)
-            .map(phoneNumberConverter::convert)
-            .collect(Collectors.toList()))
-            .orElse(null));
-
-    final XMLGregorianCalendar cal = GpxJaxbContextHelper
-        .findFirstExtension(
-            CreationTimeExtension.class,
-            true,
-            wptType.getExtensions(),
-            jaxbContextBuilder.buildUnmarshaller())
-        .map(CreationTimeExtension::getCreationTime)
-        .orElse(wptType.getTime());
-    final Instant time = cal != null ? cal.toGregorianCalendar().getTime().toInstant() : null;
-    wpt.getProperties().setTime(time);
-
-    if (GarminType.PHOTO.equals(wptType.getType())) {
-      // TODO wanted images
-    }
-
-    return wpt;
+    return convert(wptType, Wpt::new, WptProperties::new);
   }
 
 }

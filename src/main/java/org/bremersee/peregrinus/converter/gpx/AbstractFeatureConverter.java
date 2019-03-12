@@ -28,7 +28,8 @@ import org.springframework.util.StringUtils;
  */
 abstract class AbstractFeatureConverter {
 
-  private LinkToLinkTypeConverter linkToLinkTypeConverter = new LinkToLinkTypeConverter();
+  private static final LinkToLinkTypeConverter linkToLinkTypeConverter
+      = new LinkToLinkTypeConverter();
 
   AbstractFeatureConverter() {
   }
@@ -55,6 +56,7 @@ abstract class AbstractFeatureConverter {
 
   private String getDescOrCmt(
       final FeatureProperties<? extends FeatureSettings> featureProperties, boolean isDesc) {
+
     if (featureProperties == null
         || !StringUtils.hasText(featureProperties.getPlainTextDescription())) {
       return null;

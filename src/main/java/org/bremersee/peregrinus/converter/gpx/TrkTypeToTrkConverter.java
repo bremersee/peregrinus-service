@@ -21,8 +21,8 @@ import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
-import javax.xml.datatype.XMLGregorianCalendar;
 import org.bremersee.garmin.gpx.v3.model.ext.DisplayColorT;
 import org.bremersee.garmin.gpx.v3.model.ext.TrackExtension;
 import org.bremersee.geojson.utils.GeometryUtils;
@@ -33,16 +33,22 @@ import org.bremersee.gpx.model.WptType;
 import org.bremersee.peregrinus.content.model.DisplayColor;
 import org.bremersee.peregrinus.content.model.Trk;
 import org.bremersee.peregrinus.content.model.TrkProperties;
-import org.bremersee.peregrinus.content.model.TrkSettings;
+import org.bremersee.peregrinus.converter.XmlGregorianCalendarToInstantConverter;
 import org.bremersee.xml.JaxbContextBuilder;
 import org.locationtech.jts.geom.Coordinate;
 import org.locationtech.jts.geom.LineString;
+import org.locationtech.jts.geom.MultiLineString;
 import org.springframework.core.convert.converter.Converter;
+import reactor.util.function.Tuple3;
+import reactor.util.function.Tuples;
 
 /**
  * @author Christian Bremer
  */
 class TrkTypeToTrkConverter extends AbstractGpxConverter implements Converter<TrkType, Trk> {
+
+  private static final XmlGregorianCalendarToInstantConverter timeConverter
+      = new XmlGregorianCalendarToInstantConverter();
 
   private final JaxbContextBuilder jaxbContextBuilder;
 
@@ -53,116 +59,104 @@ class TrkTypeToTrkConverter extends AbstractGpxConverter implements Converter<Tr
   @Override
   public Trk convert(final TrkType trkType) {
 
-    final Trk trk = new Trk();
-    trk.setProperties(convertCommonGpxType(trkType, TrkProperties::new));
-    trk.getProperties().setSettings(new TrkSettings());
+    final Tuple3<MultiLineString, List<List<BigDecimal>>, List<List<Instant>>> tuple = convert(
+        trkType.getTrksegs());
 
-    final Optional<TrackExtension> trkExt = GpxJaxbContextHelper.findFirstExtension(
+    final Trk trk = new Trk();
+    trk.setGeometry(tuple.getT1());
+    trk.setBbox(GeometryUtils.getBoundingBox(trk.getGeometry()));
+    trk.setProperties(convertCommonGpxType(trkType, TrkProperties::new));
+    trk.getProperties().setEleLines(tuple.getT2());
+    trk.getProperties().setTimeLines(tuple.getT3());
+    trk.getProperties().getSettings().setDisplayColor(getDisplayColor(trkType));
+    trk.getProperties().setStartTime(getStartTime(trk.getProperties().getTimeLines()));
+    trk.getProperties().setStopTime(getStopTime(trk.getProperties().getTimeLines()));
+    return trk;
+  }
+
+  private Instant getStartTime(List<List<Instant>> timeList) {
+    return getTime(timeList, false);
+  }
+
+  private Instant getStopTime(List<List<Instant>> timeList) {
+    return getTime(timeList, true);
+  }
+
+  private Instant getTime(List<List<Instant>> timeList, boolean last) {
+    if (timeList != null && !timeList.isEmpty()) {
+      int i0 = last ? timeList.size() - 1 : 0;
+      final List<Instant> list = timeList.get(i0);
+      if (list != null && !list.isEmpty()) {
+        final int i1 = last ? list.size() - 1 : 0;
+        return list.get(i1);
+      }
+    }
+    return null;
+  }
+
+  private Optional<TrackExtension> getTrackExtension(final TrkType trkType) {
+    return GpxJaxbContextHelper.findFirstExtension(
         TrackExtension.class,
         true,
         trkType.getExtensions(),
         jaxbContextBuilder.buildUnmarshaller());
-
-    final DisplayColorT displayColor = trkExt.map(TrackExtension::getDisplayColor).orElse(null);
-    trk
-        .getProperties()
-        .getSettings()
-        .setDisplayColor(DisplayColor.findByGarminDisplayColor(
-            displayColor,
-            DisplayColor.DARK_GRAY));
-
-    trkSegments(trkType.getTrksegs(), trk);
-
-    return trk;
   }
 
-  @SuppressWarnings("Duplicates")
-  private void trkSegments(List<TrksegType> trkSegments, final Trk trk) {
-    if (trkSegments == null || trkSegments.isEmpty()) {
-      return;
-    }
-    final List<LineString> geoLines = new ArrayList<>(trkSegments.size());
-    final List<List<BigDecimal>> eleLines = new ArrayList<>(trkSegments.size());
-    final List<List<Instant>> timeLines = new ArrayList<>(trkSegments.size());
-    for (final TrksegType trksegType : trkSegments) {
-      final LineString geoLine = trkPoints(trksegType.getTrkpts(), eleLines, timeLines);
-      if (geoLine != null) {
-        geoLines.add(geoLine);
-      }
-    }
-    if (!geoLines.isEmpty()) {
-      trk.setGeometry(GeometryUtils.createMultiLineString(geoLines));
-      trk.setBbox(GeometryUtils.getBoundingBox(trk.getGeometry()));
-      trk.getProperties().setEleLines(eleLines);
-      trk.getProperties().setTimeLines(timeLines);
-      final Instant start = timeLines.get(0).get(0);
-      final List<Instant> lastTimeLine = timeLines.get(timeLines.size() - 1);
-      final Instant stop = lastTimeLine.get(lastTimeLine.size() - 1);
-      trk.getProperties().setStartTime(start);
-      trk.getProperties().setStopTime(stop);
-    }
+  private DisplayColor getDisplayColor(final TrkType trkType) {
+    return getTrackExtension(trkType)
+        .map(TrackExtension::getDisplayColor)
+        .map(this::getDisplayColor)
+        .orElse(DisplayColor.DARK_GRAY);
   }
 
-  @SuppressWarnings("Duplicates")
-  private LineString trkPoints(
-      final List<WptType> wpts,
-      final List<List<BigDecimal>> eleLines,
-      final List<List<Instant>> timeLines) {
-
-    if (wpts == null || wpts.size() < 2) {
-      return null;
-    }
-    final List<Coordinate> points = new ArrayList<>(wpts.size());
-    final List<BigDecimal> eleLine = new ArrayList<>(wpts.size());
-    final List<Instant> timeLine = new ArrayList<>(wpts.size());
-    BigDecimal lastEle = findFirstEle(wpts);
-    Instant lastTime = findFirstTime(wpts);
-    for (final WptType wpt : wpts) {
-      if (wpt != null && wpt.getLon() != null && wpt.getLat() != null) {
-        final XMLGregorianCalendar cal = wpt.getTime();
-        final Instant time = cal != null ? cal.toGregorianCalendar().getTime().toInstant() : null;
-        lastTime = time != null ? time : lastTime;
-        lastEle = wpt.getEle() != null ? wpt.getEle() : lastEle;
-        points.add(GeometryUtils.createCoordinate(wpt.getLon(), wpt.getLat()));
-        eleLine.add(lastEle);
-        timeLine.add(lastTime);
-      }
-    }
-    if (points.size() < 2) {
-      return null;
-    }
-    eleLines.add(eleLine);
-    timeLines.add(timeLine);
-    return GeometryUtils.createLinearRing(points);
+  private DisplayColor getDisplayColor(final DisplayColorT displayColorT) {
+    return DisplayColor.findByGarminDisplayColor(displayColorT, DisplayColor.DARK_GRAY);
   }
 
-  private BigDecimal findFirstEle(final List<WptType> wpts) {
-    if (wpts != null) {
-      for (final WptType wpt : wpts) {
-        if (wpt != null) {
-          final BigDecimal ele = wpt.getEle();
-          if (ele != null) {
-            return ele;
-          }
-        }
-      }
-    }
-    return new BigDecimal("0");
+  private Tuple3<MultiLineString, List<List<BigDecimal>>, List<List<Instant>>> convert(
+      final List<TrksegType> trkSegments) {
+
+    final List<LineString> lineList = new ArrayList<>();
+    final List<List<BigDecimal>> eleList = new ArrayList<>();
+    final List<List<Instant>> timeList = new ArrayList<>();
+    trkSegments
+        .stream()
+        .filter(Objects::nonNull)
+        .map(this::convert)
+        .forEach(tuple -> {
+          lineList.add(tuple.getT1());
+          eleList.add(tuple.getT2());
+          timeList.add(tuple.getT3());
+        });
+    return Tuples.of(GeometryUtils.createMultiLineString(lineList), eleList, timeList);
   }
 
-  private Instant findFirstTime(final List<WptType> wpts) {
-    if (wpts != null) {
-      for (final WptType wpt : wpts) {
-        if (wpt != null) {
-          final XMLGregorianCalendar cal = wpt.getTime();
-          final Instant time = cal != null ? cal.toGregorianCalendar().getTime().toInstant() : null;
-          if (time != null) {
-            return time;
-          }
-        }
-      }
-    }
-    return new Date((0L)).toInstant();
+  private Tuple3<LineString, List<BigDecimal>, List<Instant>> convert(
+      final TrksegType trkSegment) {
+
+    final List<Coordinate> coordinates = new ArrayList<>();
+    final List<BigDecimal> eleList = new ArrayList<>();
+    final List<Instant> timeList = new ArrayList<>();
+    trkSegment.getTrkpts()
+        .stream()
+        .filter(Objects::nonNull)
+        .map(this::convert)
+        .forEach(tuple -> {
+          coordinates.add(tuple.getT1());
+          eleList.add(tuple.getT2());
+          timeList.add(tuple.getT3());
+        });
+    return Tuples.of(GeometryUtils.createLineString(coordinates), eleList, timeList);
+  }
+
+  private Tuple3<Coordinate, BigDecimal, Instant> convert(
+      final WptType trkPt) {
+
+    final Coordinate coordinate = GeometryUtils.createCoordinateWGS84(
+        trkPt.getLat(), trkPt.getLon());
+    final BigDecimal ele = trkPt.getEle() != null ? trkPt.getEle() : BigDecimal.valueOf(0);
+    final Instant time = timeConverter.convert(trkPt.getTime());
+    return Tuples.of(coordinate, ele, time != null ? time : new Date(0).toInstant());
   }
 
 }

@@ -14,46 +14,39 @@
  * limitations under the License.
  */
 
-package org.bremersee.peregrinus.geo.model;
+package org.bremersee.peregrinus.content.model;
 
-import java.time.Instant;
-import java.util.Date;
-import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
-import org.bremersee.garmin.trip.v1.model.ext.NamedRoadT;
+import org.bremersee.peregrinus.geo.model.AbstractRteCalculationProperties;
+import org.springframework.data.annotation.TypeAlias;
 
 /**
  * @author Christian Bremer
  */
+@TypeAlias("RtePtProperties")
 @Getter
 @Setter
 @ToString(callSuper = true)
-@EqualsAndHashCode(callSuper = true)
-public class GarminImportRteCalculationProperties extends AbstractRteCalculationProperties {
+public class RtePtProperties extends PtProperties<RtePtSettings> {
 
-  private String transportationMode;
+  private AbstractRteCalculationProperties calculationProperties;
 
-  private Instant departureTime;
+  private Integer lengthInMeters;
 
-  private Long stopDurationMillis;
+  private Integer travelTimeInSeconds;
 
-  private Instant arrivalTime;
+  private Integer trafficDelayInSeconds;
 
-  private String calculationMode;
+  private Integer noTrafficTravelTimeInSeconds;
 
-  private String elevationMode;
+  private Integer historicTrafficTravelTimeInSeconds;
 
-  private NamedRoadT namedRoad;
-
-  @Override
-  public String getProvider() {
-    return "GarminImport";
-  }
+  private Integer liveTrafficIncidentsTravelTimeInSeconds;
 
   @Override
-  public boolean isCalculationSupported() {
-    return false;
+  RtePtSettings doCreateDefaultSettings() {
+    return new RtePtSettings();
   }
 }

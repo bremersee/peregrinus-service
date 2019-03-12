@@ -27,8 +27,8 @@ import org.bremersee.peregrinus.geo.model.GeoCodingQueryRequest;
 import org.bremersee.peregrinus.geo.model.GeoCodingResult;
 import org.bremersee.peregrinus.content.model.Rte;
 import org.bremersee.peregrinus.content.model.RteProperties;
-import org.bremersee.peregrinus.content.model.RteSegment;
-import org.bremersee.peregrinus.content.model.RteSegmentProperties;
+import org.bremersee.peregrinus.content.model.RtePt;
+import org.bremersee.peregrinus.content.model.RtePtProperties;
 import org.bremersee.peregrinus.geo.model.TomTomRteCalculationProperties;
 import org.bremersee.tomtom.model.BoundingBox;
 import org.bremersee.tomtom.model.GeocodeRequest;
@@ -170,7 +170,7 @@ public class TomTomMapperImpl implements TomTomMapper {
     // TODO name etc
 
     final List<LineString> lineStrings = new ArrayList<>();
-    final List<RteSegment> rteSegments = new ArrayList<>();
+    final List<RtePt> rteSegments = new ArrayList<>();
     for (final RouteLeg routeLeg : route.getLegs()) {
       if (routeLeg == null || routeLeg.getPoints() == null || routeLeg.getPoints().isEmpty()) {
         continue;
@@ -180,11 +180,11 @@ public class TomTomMapperImpl implements TomTomMapper {
         continue;
       }
       final List<Coordinate> line = new ArrayList<>();
-      final RteSegment rteSegment = new RteSegment();
-      rteSegment.setPoint(GeometryUtils
+      final RtePt rteSegment = new RtePt();
+      rteSegment.setGeometry(GeometryUtils
           .createPointWGS84(latLon.getLatitude(), latLon.getLongitude()));
 
-      final RteSegmentProperties rteSegmentProperties = new RteSegmentProperties();
+      final RtePtProperties rteSegmentProperties = new RtePtProperties();
       rteSegment.setProperties(rteSegmentProperties);
 
       rteSegmentProperties.setCalculationProperties(calculationProperties);
@@ -220,14 +220,14 @@ public class TomTomMapperImpl implements TomTomMapper {
     }
 
     final RouteLeg lastRouteLeg = route.getLegs().get(route.getLegs().size() - 1);
-    final RteSegment lastRteSegment = new RteSegment();
+    final RtePt lastRteSegment = new RtePt();
     rteSegments.add(lastRteSegment);
-    final RteSegmentProperties lastRteSegmentProperties = new RteSegmentProperties();
+    final RtePtProperties lastRteSegmentProperties = new RtePtProperties();
     lastRteSegment.setProperties(lastRteSegmentProperties);
 
     final LatitudeLongitude lastLatLon = lastRouteLeg
         .getPoints().get(lastRouteLeg.getPoints().size() - 1);
-    lastRteSegment.setPoint(
+    lastRteSegment.setGeometry(
         GeometryUtils.createPointWGS84(lastLatLon.getLatitude(), lastLatLon.getLongitude()));
 
     lastRteSegmentProperties.setName(null); // TODO
@@ -238,7 +238,7 @@ public class TomTomMapperImpl implements TomTomMapper {
       }
     }
 
-    rteProperties.setRteSegments(rteSegments);
+    rteProperties.setRtePts(rteSegments);
     rte.setGeometry(GeometryUtils.createMultiLineString(lineStrings));
 
     return rte;

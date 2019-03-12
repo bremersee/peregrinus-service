@@ -16,37 +16,20 @@
 
 package org.bremersee.peregrinus.content.model;
 
-import java.time.Instant;
-import java.util.Date;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
-import org.bremersee.peregrinus.geo.model.AbstractRteCalculationProperties;
+import org.springframework.data.annotation.TypeAlias;
+import org.springframework.data.mongodb.core.mapping.Document;
 
 /**
  * @author Christian Bremer
  */
+@Document(collection = "feature-settings")
+@TypeAlias("WptSettings")
 @Getter
 @Setter
-@ToString
-public class RteSegmentProperties {
-
-  private AbstractRteCalculationProperties calculationProperties;
-
-  private String name;
-
-  private Instant time; // arrival and departure
-
-  private Integer lengthInMeters;
-
-  private Integer travelTimeInSeconds;
-
-  private Integer trafficDelayInSeconds;
-
-  private Integer noTrafficTravelTimeInSeconds;
-
-  private Integer historicTrafficTravelTimeInSeconds;
-
-  private Integer liveTrafficIncidentsTravelTimeInSeconds;
+@ToString(callSuper = true)
+public abstract class PtSettings extends FeatureSettings {
 
 }

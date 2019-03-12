@@ -14,46 +14,44 @@
  * limitations under the License.
  */
 
-package org.bremersee.peregrinus.geo.model;
+package org.bremersee.peregrinus.content.model;
 
+import java.math.BigDecimal;
 import java.time.Instant;
-import java.util.Date;
-import lombok.EqualsAndHashCode;
+import java.util.List;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
-import org.bremersee.garmin.trip.v1.model.ext.NamedRoadT;
+import org.bremersee.common.model.Address;
+import org.bremersee.common.model.PhoneNumber;
+import org.springframework.data.annotation.TypeAlias;
 
 /**
  * @author Christian Bremer
  */
+@TypeAlias("PtProperties")
 @Getter
 @Setter
 @ToString(callSuper = true)
-@EqualsAndHashCode(callSuper = true)
-public class GarminImportRteCalculationProperties extends AbstractRteCalculationProperties {
+public abstract class PtProperties<S extends PtSettings> extends FeatureProperties<S> {
 
-  private String transportationMode;
+  private String internalType; // photo, video or not // TODO
 
-  private Instant departureTime;
+  private Instant time; // TODO
 
-  private Long stopDurationMillis;
+  /**
+   * Elevation in meters
+   */
+  private BigDecimal ele;
 
-  private Instant arrivalTime;
+  /**
+   * Address
+   */
+  private Address address; // index?
 
-  private String calculationMode;
+  /**
+   * Phone numbers
+   */
+  private List<PhoneNumber> phoneNumbers;
 
-  private String elevationMode;
-
-  private NamedRoadT namedRoad;
-
-  @Override
-  public String getProvider() {
-    return "GarminImport";
-  }
-
-  @Override
-  public boolean isCalculationSupported() {
-    return false;
-  }
 }

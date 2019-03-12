@@ -16,10 +16,12 @@
 
 package org.bremersee.peregrinus.content.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.util.List;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
+import org.springframework.data.annotation.Transient;
 import org.springframework.data.annotation.TypeAlias;
 
 /**
@@ -31,7 +33,11 @@ import org.springframework.data.annotation.TypeAlias;
 @ToString(callSuper = true)
 public class RteProperties extends FeatureProperties<RteSettings> {
 
-  private List<RteSegment> rteSegments;
+  @JsonIgnore
+  private List<String> rtePtIds;
+
+  @Transient
+  private List<RtePt> rtePts;
 
   @Override
   RteSettings doCreateDefaultSettings() {

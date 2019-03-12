@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 the original author or authors.
+ * Copyright 2019 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,22 +14,24 @@
  * limitations under the License.
  */
 
-package org.bremersee.peregrinus.content.model;
+package org.bremersee.peregrinus.converter;
 
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
-import org.springframework.data.annotation.TypeAlias;
-import org.springframework.data.mongodb.core.mapping.Document;
+import java.util.Date;
+import javax.xml.datatype.Duration;
+import org.springframework.core.convert.converter.Converter;
 
 /**
  * @author Christian Bremer
  */
-@Document(collection = "feature-settings")
-@TypeAlias("WptSettings")
-@Getter
-@Setter
-@ToString(callSuper = true)
-public class WptSettings extends PtSettings {
+public class XmlDurationToMillisConverter implements Converter<Duration, Long> {
 
+  @Override
+  public Long convert(Duration duration) {
+    if (duration == null) {
+      return null;
+    }
+    final Date tmp = new Date(0L);
+    duration.addTo(tmp);
+    return tmp.getTime();
+  }
 }

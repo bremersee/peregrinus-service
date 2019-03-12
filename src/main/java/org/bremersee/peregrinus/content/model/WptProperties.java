@@ -16,14 +16,9 @@
 
 package org.bremersee.peregrinus.content.model;
 
-import java.math.BigDecimal;
-import java.time.Instant;
-import java.util.List;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
-import org.bremersee.common.model.Address;
-import org.bremersee.common.model.PhoneNumber;
 import org.springframework.data.annotation.TypeAlias;
 
 /**
@@ -33,26 +28,7 @@ import org.springframework.data.annotation.TypeAlias;
 @Getter
 @Setter
 @ToString(callSuper = true)
-public class WptProperties extends FeatureProperties<WptSettings> {
-
-  private String internalType; // photo, video or not // TODO
-
-  private Instant time; // TODO
-
-  /**
-   * Elevation in meters
-   */
-  private BigDecimal ele;
-
-  /**
-   * Address
-   */
-  private Address address; // index?
-
-  /**
-   * Phone numbers
-   */
-  private List<PhoneNumber> phoneNumbers;
+public class WptProperties extends PtProperties<WptSettings> {
 
   @Override
   WptSettings doCreateDefaultSettings() {

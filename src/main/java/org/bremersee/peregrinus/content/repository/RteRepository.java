@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 the original author or authors.
+ * Copyright 2019 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,22 +14,17 @@
  * limitations under the License.
  */
 
-package org.bremersee.peregrinus.content.model;
+package org.bremersee.peregrinus.content.repository;
 
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
-import org.springframework.data.annotation.TypeAlias;
-import org.springframework.data.mongodb.core.mapping.Document;
+import org.bremersee.peregrinus.content.model.Rte;
+import org.springframework.data.mongodb.repository.ReactiveMongoRepository;
+import reactor.core.publisher.Flux;
 
 /**
  * @author Christian Bremer
  */
-@Document(collection = "feature-settings")
-@TypeAlias("WptSettings")
-@Getter
-@Setter
-@ToString(callSuper = true)
-public class WptSettings extends PtSettings {
+public interface RteRepository extends ReactiveMongoRepository<Rte, String> {
 
+  @Override
+  <S extends Rte> Flux<S> saveAll(Iterable<S> iterable);
 }
