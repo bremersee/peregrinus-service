@@ -28,27 +28,24 @@ import org.bremersee.peregrinus.converter.XmlDurationToMillisConverter;
 import org.bremersee.peregrinus.converter.XmlGregorianCalendarToInstantConverter;
 import org.bremersee.peregrinus.geo.model.GarminImportRteCalculationProperties;
 import org.bremersee.xml.JaxbContextBuilder;
-import org.springframework.core.convert.converter.Converter;
 import reactor.util.function.Tuple2;
 
 /**
  * @author Christian Bremer
  */
-class RtePtTypeToRtePtConverter extends PtTypeToPtConverter implements
-    Converter<Tuple2<WptType, String>, RtePt> {
+class RtePtTypeToRtePtConverter extends PtTypeToPtConverter {
 
-  private static final  XmlGregorianCalendarToInstantConverter timeConverter
+  private static final XmlGregorianCalendarToInstantConverter timeConverter
       = new XmlGregorianCalendarToInstantConverter();
 
   private static final XmlDurationToMillisConverter durationConverter
       = new XmlDurationToMillisConverter();
 
-  RtePtTypeToRtePtConverter(JaxbContextBuilder jaxbContextBuilder) {
+  RtePtTypeToRtePtConverter(final JaxbContextBuilder jaxbContextBuilder) {
     super(jaxbContextBuilder);
   }
 
-  @Override
-  public RtePt convert(final Tuple2<WptType, String> wptTypeAndTransportationMode) {
+  RtePt convert(final Tuple2<WptType, String> wptTypeAndTransportationMode) {
     final WptType wptType = wptTypeAndTransportationMode.getT1();
     final String transportationMode = wptTypeAndTransportationMode.getT2();
     final RtePt rtePt = convert(wptType, RtePt::new, RtePtProperties::new);

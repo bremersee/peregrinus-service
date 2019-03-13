@@ -37,7 +37,9 @@ public abstract class PtProperties<S extends PtSettings> extends FeatureProperti
 
   private String internalType; // photo, video or not // TODO
 
-  private Instant time; // TODO
+  //private Instant time; // TODO wozu hat ein punkt eine zeit?
+
+  //private String sym; // TODO
 
   /**
    * Elevation in meters

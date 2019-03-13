@@ -192,7 +192,7 @@ public class TomTomMapperImpl implements TomTomMapper {
       if (routeLeg.getSummary() != null) {
         final RouteSummary summary = routeLeg.getSummary();
         if (summary.getDepartureTime() != null) {
-          rteSegmentProperties.setTime(summary.getDepartureTime().toInstant());
+          //rteSegmentProperties.setTime(summary.getDepartureTime().toInstant());
           rteSegmentProperties.setHistoricTrafficTravelTimeInSeconds(
               summary.getHistoricTrafficTravelTimeInSeconds());
           rteSegmentProperties.setLengthInMeters(summary.getLengthInMeters());
@@ -234,7 +234,7 @@ public class TomTomMapperImpl implements TomTomMapper {
     if (lastRouteLeg.getSummary() != null) {
       final RouteSummary lastSummary = lastRouteLeg.getSummary();
       if (lastSummary.getArrivalTime() != null) {
-        lastRteSegmentProperties.setTime(lastSummary.getArrivalTime().toInstant());
+        //lastRteSegmentProperties.setTime(lastSummary.getArrivalTime().toInstant());
       }
     }
 

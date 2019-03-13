@@ -16,17 +16,18 @@
 
 package org.bremersee.peregrinus.converter.gpx;
 
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
 import org.bremersee.common.model.Address;
-import org.bremersee.garmin.gpx.v3.model.ext.AddressT;
-import org.springframework.core.convert.converter.Converter;
+import org.bremersee.garmin.model.CommonAddressT;
 
 /**
  * @author Christian Bremer
  */
-public class AddressTypeToAddressConverter implements Converter<AddressT, Address> {
+@NoArgsConstructor(access = AccessLevel.PACKAGE)
+class AddressTypeToAddressConverter {
 
-  @Override
-  public Address convert(AddressT addressType) {
+  Address convert(final CommonAddressT addressType) {
     if (addressType == null) {
       return null;
     }

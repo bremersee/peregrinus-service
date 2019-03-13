@@ -16,19 +16,19 @@
 
 package org.bremersee.peregrinus.converter.gpx;
 
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
 import org.bremersee.common.model.PhoneNumber;
-import org.bremersee.garmin.gpx.v3.model.ext.PhoneNumberT;
-import org.springframework.core.convert.converter.Converter;
+import org.bremersee.garmin.model.CommonPhoneNumberT;
 import org.springframework.util.StringUtils;
 
 /**
  * @author Christian Bremer
  */
-class PhoneNumberTypeToPhoneNumberConverter
-    implements Converter<PhoneNumberT, PhoneNumber> {
+@NoArgsConstructor(access = AccessLevel.PACKAGE)
+class PhoneNumberTypeToPhoneNumberConverter {
 
-  @Override
-  public PhoneNumber convert(PhoneNumberT phoneNumberType) {
+  PhoneNumber convert(final CommonPhoneNumberT phoneNumberType) {
     if (phoneNumberType == null || !StringUtils.hasText(phoneNumberType.getValue())) {
       return null;
     }

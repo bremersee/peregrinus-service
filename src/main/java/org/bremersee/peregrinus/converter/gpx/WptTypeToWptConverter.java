@@ -20,19 +20,17 @@ import org.bremersee.gpx.model.WptType;
 import org.bremersee.peregrinus.content.model.Wpt;
 import org.bremersee.peregrinus.content.model.WptProperties;
 import org.bremersee.xml.JaxbContextBuilder;
-import org.springframework.core.convert.converter.Converter;
 
 /**
  * @author Christian Bremer
  */
-class WptTypeToWptConverter extends PtTypeToPtConverter implements Converter<WptType, Wpt> {
+class WptTypeToWptConverter extends PtTypeToPtConverter {
 
-  WptTypeToWptConverter(JaxbContextBuilder jaxbContextBuilder) {
+  WptTypeToWptConverter(final JaxbContextBuilder jaxbContextBuilder) {
     super(jaxbContextBuilder);
   }
 
-  @Override
-  public Wpt convert(final WptType wptType) {
+  Wpt convert(final WptType wptType) {
     return convert(wptType, Wpt::new, WptProperties::new);
   }
 

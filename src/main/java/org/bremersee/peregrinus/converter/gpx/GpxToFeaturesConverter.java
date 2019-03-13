@@ -40,8 +40,7 @@ import reactor.util.function.Tuples;
  */
 @Component
 @Validated
-public class GpxToFeaturesConverter extends AbstractGpxConverter
-    implements Converter<Tuple2<Gpx, Boolean>, List<Feature>> {
+public class GpxToFeaturesConverter  {
 
   private final WptTypeToWptConverter wptTypeConverter;
 
@@ -56,7 +55,6 @@ public class GpxToFeaturesConverter extends AbstractGpxConverter
   }
 
   @NotNull
-  @Override
   public List<Feature> convert(@NotNull final Tuple2<Gpx, Boolean> gpxAndRemoveRouteWaypoints) {
 
     final Gpx gpx = gpxAndRemoveRouteWaypoints.getT1();

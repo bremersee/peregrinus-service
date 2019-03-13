@@ -16,7 +16,6 @@
 
 package org.bremersee.peregrinus.converter.gpx;
 
-import java.time.Instant;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Supplier;
@@ -34,9 +33,7 @@ import org.bremersee.gpx.model.WptType;
 import org.bremersee.peregrinus.content.model.Pt;
 import org.bremersee.peregrinus.content.model.PtProperties;
 import org.bremersee.peregrinus.content.model.PtSettings;
-import org.bremersee.peregrinus.converter.XmlGregorianCalendarToInstantConverter;
 import org.bremersee.xml.JaxbContextBuilder;
-import org.springframework.util.Assert;
 
 /**
  * @author Christian Bremer
@@ -49,14 +46,10 @@ abstract class PtTypeToPtConverter extends AbstractGpxConverter {
   private static final PhoneNumberTypeToPhoneNumberConverter phoneNumberConverter
       = new PhoneNumberTypeToPhoneNumberConverter();
 
-  private static final XmlGregorianCalendarToInstantConverter timeConverter
-      = new XmlGregorianCalendarToInstantConverter();
-
   @Getter(AccessLevel.PROTECTED)
   private final JaxbContextBuilder jaxbContextBuilder;
 
-  PtTypeToPtConverter(JaxbContextBuilder jaxbContextBuilder) {
-    Assert.notNull(jaxbContextBuilder, "");
+  PtTypeToPtConverter(final JaxbContextBuilder jaxbContextBuilder) {
     this.jaxbContextBuilder = jaxbContextBuilder;
   }
 
@@ -70,7 +63,7 @@ abstract class PtTypeToPtConverter extends AbstractGpxConverter {
     wpt.getProperties().setAddress(getAddress(wptType));
     wpt.getProperties().setEle(wptType.getEle());
     wpt.getProperties().setPhoneNumbers(getPhoneNumbers(wptType));
-    wpt.getProperties().setTime(getTime(wptType));
+    //wpt.getProperties().setTime(getTime(wptType));
 
     if (GarminType.PHOTO.equals(wptType.getType())) {
       // TODO wanted images
@@ -114,13 +107,6 @@ abstract class PtTypeToPtConverter extends AbstractGpxConverter {
         .stream()
         .map(phoneNumberConverter::convert)
         .collect(Collectors.toList());
-  }
-
-  private Instant getTime(WptType wptType) {
-    return getCreationTimeExtension(wptType)
-        .map(CreationTimeExtension::getCreationTime)
-        .map(timeConverter::convert)
-        .orElse(timeConverter.convert(wptType.getTime()));
   }
 
 }

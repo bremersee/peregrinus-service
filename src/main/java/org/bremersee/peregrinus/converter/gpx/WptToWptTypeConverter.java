@@ -16,58 +16,21 @@
 
 package org.bremersee.peregrinus.converter.gpx;
 
-import java.util.Objects;
-import java.util.stream.Collectors;
-import org.bremersee.garmin.gpx.v3.model.ext.WaypointExtension;
-import org.bremersee.gpx.ExtensionsTypeBuilder;
 import org.bremersee.gpx.model.WptType;
 import org.bremersee.peregrinus.content.model.Wpt;
-import org.bremersee.peregrinus.content.model.WptProperties;
-import org.bremersee.peregrinus.converter.InstantToXmlGregorianCalendarConverter;
 import org.bremersee.xml.JaxbContextBuilder;
-import org.springframework.core.convert.converter.Converter;
 
 /**
  * @author Christian Bremer
  */
-class WptToWptTypeConverter extends AbstractFeatureConverter
-    implements Converter<Wpt, WptType> {
+class WptToWptTypeConverter extends PtToPtTypeConverter<Wpt> {
 
-  private final JaxbContextBuilder jaxbContextBuilder;
-
-  private static final InstantToXmlGregorianCalendarConverter timeConverter
-      = new InstantToXmlGregorianCalendarConverter();
-
-  private static final AddressToAddressTypeConverter addressConverter = new AddressToAddressTypeConverter();
-
-  private static final PhoneNumberToPhoneNumberTypeConverter phoneNumberConverter
-      = new PhoneNumberToPhoneNumberTypeConverter();
-
-  WptToWptTypeConverter(JaxbContextBuilder jaxbContextBuilder) {
-    this.jaxbContextBuilder = jaxbContextBuilder;
+  WptToWptTypeConverter(final JaxbContextBuilder jaxbContextBuilder) {
+    super(jaxbContextBuilder);
   }
 
-  @Override
-  public WptType convert(final Wpt wpt) {
-    final WptType wptType = convertFeatureProperties(wpt.getProperties(), WptType::new);
-    final WptProperties properties = wpt.getProperties();
-    wptType.setType(properties.getInternalType()); // TODO internalType
-    wptType.setTime(timeConverter.convert(properties.getTime()));
-    wptType.setEle(wpt.getProperties().getEle());
-    final WaypointExtension wptExt = new WaypointExtension();
-    wptExt.setAddress(addressConverter.convert(properties.getAddress()));
-    wptExt.getPhoneNumbers().addAll(
-        properties.getPhoneNumbers()
-            .stream()
-            .filter(Objects::nonNull)
-            .map(phoneNumberConverter::convert)
-            .collect(Collectors.toList()));
-    if (wptExt.getAddress() != null || !wptExt.getPhoneNumbers().isEmpty()) {
-      wptType.setExtensions(
-          ExtensionsTypeBuilder.builder(wptType.getExtensions())
-              .addElement(wptExt, jaxbContextBuilder.buildJaxbContext())
-              .build(true));
-    }
-    return wptType;
+  WptType convert(final Wpt wpt) {
+    return super.convert(wpt);
   }
+
 }

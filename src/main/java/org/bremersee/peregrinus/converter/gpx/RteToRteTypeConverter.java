@@ -16,59 +16,75 @@
 
 package org.bremersee.peregrinus.converter.gpx;
 
-import org.bremersee.garmin.gpx.v3.model.ext.DisplayColorT;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 import org.bremersee.garmin.gpx.v3.model.ext.RouteExtension;
+import org.bremersee.garmin.trip.v1.model.ext.Trip;
+import org.bremersee.gpx.ExtensionsTypeBuilder;
+import org.bremersee.gpx.model.ExtensionsType;
 import org.bremersee.gpx.model.RteType;
 import org.bremersee.gpx.model.WptType;
 import org.bremersee.peregrinus.content.model.Rte;
-import org.bremersee.peregrinus.content.model.RteProperties;
 import org.bremersee.peregrinus.content.model.RtePt;
-import org.bremersee.peregrinus.content.model.RteSettings;
-import org.bremersee.peregrinus.converter.InstantToXmlGregorianCalendarConverter;
 import org.bremersee.xml.JaxbContextBuilder;
 import org.locationtech.jts.geom.LineString;
-import org.springframework.core.convert.converter.Converter;
+import org.locationtech.jts.geom.MultiLineString;
+import reactor.util.function.Tuple2;
+import reactor.util.function.Tuples;
 
 /**
  * @author Christian Bremer
  */
-public class RteToRteTypeConverter extends AbstractFeatureConverter
-    implements Converter<Rte, RteType> {
-
-  private static final InstantToXmlGregorianCalendarConverter timeConverter
-      = new InstantToXmlGregorianCalendarConverter();
+public class RteToRteTypeConverter extends AbstractFeatureConverter {
 
   private final JaxbContextBuilder jaxbContextBuilder;
 
-  RteToRteTypeConverter(JaxbContextBuilder jaxbContextBuilder) {
+  private final RtePtToRtePtTypeConverter rtePtConverter;
+
+  RteToRteTypeConverter(final JaxbContextBuilder jaxbContextBuilder) {
     this.jaxbContextBuilder = jaxbContextBuilder;
+    this.rtePtConverter = new RtePtToRtePtTypeConverter(jaxbContextBuilder);
   }
 
-  @Override
-  public RteType convert(Rte rte) {
+  Tuple2<RteType, List<WptType>> convert(final Rte rte) {
+    final Tuple2<List<WptType>, List<WptType>> points = getRteptsAndWpts(rte);
     final RteType rteType = convertFeatureProperties(rte.getProperties(), RteType::new);
-    final RteProperties properties = rte.getProperties();
-    final RteSettings rteSettings = properties.getSettings();
-    final RouteExtension routeExtension = new RouteExtension();
-    if (rteSettings != null && rteSettings.getDisplayColor() != null) {
-      routeExtension.setDisplayColor(rteSettings.getDisplayColor().getGarmin());
-    } else {
-      routeExtension.setDisplayColor(DisplayColorT.MAGENTA);
-    }
-    for (int n = 0; n < rte.getGeometry().getNumGeometries(); n++) {
-      LineString lineString = (LineString) rte.getGeometry().getGeometryN(n);
-      // TODO
-    }
-
-
-    rteType.getRtepts();
-
-
-    return rteType;
+    rteType.setExtensions(getRteTypeExtension(rte));
+    rteType.getRtepts().addAll(points.getT1());
+    return Tuples.of(rteType, points.getT2());
   }
 
-  private WptType convert(LineString lineString, RtePt rteSegment) {
+  private ExtensionsType getRteTypeExtension(final Rte rte) {
 
-    return null;
+    final RouteExtension routeExtension = new RouteExtension();
+    routeExtension.setDisplayColor(rte.getProperties().getSettings().getDisplayColor().getGarmin());
+    routeExtension.setIsAutoNamed(true);
+
+    final Trip trip = new Trip();
+    trip.setTransportationMode("Automotive"); // TODO
+
+    return ExtensionsTypeBuilder
+        .builder()
+        .addElement(routeExtension, jaxbContextBuilder.buildJaxbContext())
+        .addElement(trip, jaxbContextBuilder.buildJaxbContext())
+        .build(true);
+  }
+
+  private Tuple2<List<WptType>, List<WptType>> getRteptsAndWpts(final Rte rte) {
+
+    final List<WptType> rtePtTypes = new ArrayList<>();
+    final List<WptType> wptTypes = new ArrayList<>();
+    final MultiLineString routes = rte.getGeometry();
+    final List<RtePt> rtePts = rte.getProperties().getRtePts();
+    for (int n = 0; n < routes.getNumGeometries(); n++) {
+      final LineString route = (LineString) routes.getGeometryN(n);
+      final RtePt rtePt = rtePts.get(n);
+      final WptType rtePtType = rtePtConverter.convert(Tuples.of(rtePt, Optional.of(route)));
+      final WptType wptType = rtePtConverter.convert(Tuples.of(rtePt, Optional.empty()));
+      rtePtTypes.add(rtePtType);
+      wptTypes.add(wptType);
+    }
+    return Tuples.of(rtePtTypes, wptTypes);
   }
 }

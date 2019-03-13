@@ -26,7 +26,7 @@ import org.springframework.core.convert.converter.Converter;
 public class XmlDurationToMillisConverter implements Converter<Duration, Long> {
 
   @Override
-  public Long convert(Duration duration) {
+  public Long convert(final Duration duration) {
     if (duration == null) {
       return null;
     }

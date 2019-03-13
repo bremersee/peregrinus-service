@@ -16,25 +16,27 @@
 
 package org.bremersee.peregrinus.converter.gpx;
 
+import java.util.function.Supplier;
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
 import org.bremersee.common.model.PhoneNumber;
-import org.bremersee.garmin.gpx.v3.model.ext.PhoneNumberT;
-import org.springframework.core.convert.converter.Converter;
+import org.bremersee.garmin.model.CommonPhoneNumberT;
 import org.springframework.util.StringUtils;
+import reactor.util.function.Tuple2;
 
 /**
  * @author Christian Bremer
  */
-class PhoneNumberToPhoneNumberTypeConverter
-    implements Converter<PhoneNumber, PhoneNumberT> {
+@NoArgsConstructor(access = AccessLevel.PACKAGE)
+class PhoneNumberToPhoneNumberTypeConverter {
 
-  @Override
-  public PhoneNumberT convert(PhoneNumber phoneNumber) {
-    if (phoneNumber == null || !StringUtils.hasText(phoneNumber.getValue())) {
+  <T extends CommonPhoneNumberT> T convert(final Tuple2<PhoneNumber, Supplier<T>> phoneNumber) {
+    if (phoneNumber == null || !StringUtils.hasText(phoneNumber.getT1().getValue())) {
       return null;
     }
-    final PhoneNumberT phoneNumberType = new PhoneNumberT();
-    phoneNumberType.setCategory(phoneNumber.getCategory());
-    phoneNumberType.setValue(phoneNumber.getValue());
+    final T phoneNumberType = phoneNumber.getT2().get();
+    phoneNumberType.setCategory(phoneNumber.getT1().getCategory());
+    phoneNumberType.setValue(phoneNumber.getT1().getValue());
     return phoneNumberType;
   }
 }

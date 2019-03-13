@@ -38,26 +38,24 @@ import org.bremersee.xml.JaxbContextBuilder;
 import org.locationtech.jts.geom.Coordinate;
 import org.locationtech.jts.geom.LineString;
 import org.locationtech.jts.geom.MultiLineString;
-import org.springframework.core.convert.converter.Converter;
 import reactor.util.function.Tuple3;
 import reactor.util.function.Tuples;
 
 /**
  * @author Christian Bremer
  */
-class TrkTypeToTrkConverter extends AbstractGpxConverter implements Converter<TrkType, Trk> {
+class TrkTypeToTrkConverter extends AbstractGpxConverter {
 
   private static final XmlGregorianCalendarToInstantConverter timeConverter
       = new XmlGregorianCalendarToInstantConverter();
 
   private final JaxbContextBuilder jaxbContextBuilder;
 
-  TrkTypeToTrkConverter(JaxbContextBuilder jaxbContextBuilder) {
+  TrkTypeToTrkConverter(final JaxbContextBuilder jaxbContextBuilder) {
     this.jaxbContextBuilder = jaxbContextBuilder;
   }
 
-  @Override
-  public Trk convert(final TrkType trkType) {
+  Trk convert(final TrkType trkType) {
 
     final Tuple3<MultiLineString, List<List<BigDecimal>>, List<List<Instant>>> tuple = convert(
         trkType.getTrksegs());
@@ -74,17 +72,17 @@ class TrkTypeToTrkConverter extends AbstractGpxConverter implements Converter<Tr
     return trk;
   }
 
-  private Instant getStartTime(List<List<Instant>> timeList) {
+  private Instant getStartTime(final List<List<Instant>> timeList) {
     return getTime(timeList, false);
   }
 
-  private Instant getStopTime(List<List<Instant>> timeList) {
+  private Instant getStopTime(final List<List<Instant>> timeList) {
     return getTime(timeList, true);
   }
 
-  private Instant getTime(List<List<Instant>> timeList, boolean last) {
+  private Instant getTime(final List<List<Instant>> timeList, final boolean last) {
     if (timeList != null && !timeList.isEmpty()) {
-      int i0 = last ? timeList.size() - 1 : 0;
+      final int i0 = last ? timeList.size() - 1 : 0;
       final List<Instant> list = timeList.get(i0);
       if (list != null && !list.isEmpty()) {
         final int i1 = last ? list.size() - 1 : 0;

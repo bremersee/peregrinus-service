@@ -17,6 +17,8 @@
 package org.bremersee.peregrinus.converter.gpx;
 
 import java.util.function.Supplier;
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
 import org.bremersee.common.model.Link;
 import org.bremersee.gpx.model.CommonGpxType;
 import org.bremersee.peregrinus.content.model.FeatureProperties;
@@ -26,13 +28,11 @@ import org.springframework.util.StringUtils;
 /**
  * @author Christian Bremer
  */
+@NoArgsConstructor(access = AccessLevel.PACKAGE)
 abstract class AbstractFeatureConverter {
 
   private static final LinkToLinkTypeConverter linkToLinkTypeConverter
       = new LinkToLinkTypeConverter();
-
-  AbstractFeatureConverter() {
-  }
 
   <T extends CommonGpxType> T convertFeatureProperties(
       final FeatureProperties<? extends FeatureSettings> featureProperties,
@@ -55,7 +55,7 @@ abstract class AbstractFeatureConverter {
   }
 
   private String getDescOrCmt(
-      final FeatureProperties<? extends FeatureSettings> featureProperties, boolean isDesc) {
+      final FeatureProperties<? extends FeatureSettings> featureProperties, final boolean isDesc) {
 
     if (featureProperties == null
         || !StringUtils.hasText(featureProperties.getPlainTextDescription())) {

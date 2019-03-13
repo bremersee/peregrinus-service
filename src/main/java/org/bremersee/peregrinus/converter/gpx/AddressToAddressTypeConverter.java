@@ -16,31 +16,37 @@
 
 package org.bremersee.peregrinus.converter.gpx;
 
+import java.util.function.Supplier;
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
 import org.bremersee.common.model.Address;
-import org.bremersee.garmin.gpx.v3.model.ext.AddressT;
-import org.springframework.core.convert.converter.Converter;
+import org.bremersee.garmin.model.CommonAddressT;
 import org.springframework.util.StringUtils;
+import reactor.util.function.Tuple2;
 
 /**
  * @author Christian Bremer
  */
-public class AddressToAddressTypeConverter implements Converter<Address, AddressT> {
+@NoArgsConstructor(access = AccessLevel.PACKAGE)
+class AddressToAddressTypeConverter {
 
-  @Override
-  public AddressT convert(Address address) {
+  <T extends CommonAddressT> T convert(
+      final Tuple2<Address, Supplier<T>> address) {
+
     if (address == null) {
       return null;
     }
-    final AddressT addressType = new AddressT();
-    addressType.setCity(address.getCity());
-    addressType.setCountry(address.getCountry());
-    addressType.setPostalCode(address.getPostalCode());
-    addressType.setState(address.getState());
-    if (StringUtils.hasText(address.getStreet())) {
-      if (StringUtils.hasText(address.getStreetNumber())) {
-        addressType.getStreetAddresses().add(address.getStreet() + " " + address.getStreetNumber());
+    final T addressType = address.getT2().get();
+    addressType.setCity(address.getT1().getCity());
+    addressType.setCountry(address.getT1().getCountry());
+    addressType.setPostalCode(address.getT1().getPostalCode());
+    addressType.setState(address.getT1().getState());
+    if (StringUtils.hasText(address.getT1().getStreet())) {
+      if (StringUtils.hasText(address.getT1().getStreetNumber())) {
+        addressType.getStreetAddresses()
+            .add(address.getT1().getStreet() + " " + address.getT1().getStreetNumber());
       } else {
-        addressType.getStreetAddresses().add(address.getStreet());
+        addressType.getStreetAddresses().add(address.getT1().getStreet());
       }
     }
     return addressType;

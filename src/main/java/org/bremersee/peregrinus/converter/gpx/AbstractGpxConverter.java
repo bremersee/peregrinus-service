@@ -22,6 +22,8 @@ import java.time.ZoneId;
 import java.util.Objects;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
 import org.bremersee.gpx.model.CommonGpxType;
 import org.bremersee.peregrinus.content.model.FeatureProperties;
 import org.bremersee.peregrinus.content.model.FeatureSettings;
@@ -30,13 +32,11 @@ import org.springframework.util.StringUtils;
 /**
  * @author Christian Bremer
  */
+@NoArgsConstructor(access = AccessLevel.PACKAGE)
 abstract class AbstractGpxConverter {
 
   private static final LinkTypeToLinkConverter linkTypeToLinkConverter
       = new LinkTypeToLinkConverter();
-
-  AbstractGpxConverter() {
-  }
 
   <T extends FeatureProperties<? extends FeatureSettings>> T convertCommonGpxType(
       final CommonGpxType commonGpxType,

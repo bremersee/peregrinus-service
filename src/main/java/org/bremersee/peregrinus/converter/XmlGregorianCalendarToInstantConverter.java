@@ -27,7 +27,7 @@ public class XmlGregorianCalendarToInstantConverter
     implements Converter<XMLGregorianCalendar, Instant> {
 
   @Override
-  public Instant convert(XMLGregorianCalendar xmlGregorianCalendar) {
+  public Instant convert(final XMLGregorianCalendar xmlGregorianCalendar) {
     if (xmlGregorianCalendar == null) {
       return null;
     }

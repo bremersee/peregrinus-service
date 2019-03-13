@@ -34,27 +34,24 @@ import org.bremersee.peregrinus.content.model.RteProperties;
 import org.bremersee.peregrinus.content.model.RtePt;
 import org.bremersee.xml.JaxbContextBuilder;
 import org.locationtech.jts.geom.Coordinate;
-import org.springframework.core.convert.converter.Converter;
 import reactor.util.function.Tuple2;
 import reactor.util.function.Tuples;
 
 /**
  * @author Christian Bremer
  */
-class RteTypeToRteConverter extends AbstractGpxConverter
-    implements Converter<Tuple2<RteType, List<WptType>>, Rte> {
+class RteTypeToRteConverter extends AbstractGpxConverter {
 
   private final RtePtTypeToRtePtConverter rtePtTypeToRtePtConverter;
 
   private final JaxbContextBuilder jaxbContextBuilder;
 
-  RteTypeToRteConverter(JaxbContextBuilder jaxbContextBuilder) {
+  RteTypeToRteConverter(final JaxbContextBuilder jaxbContextBuilder) {
     this.jaxbContextBuilder = jaxbContextBuilder;
     this.rtePtTypeToRtePtConverter = new RtePtTypeToRtePtConverter(jaxbContextBuilder);
   }
 
-  @Override
-  public Rte convert(Tuple2<RteType, List<WptType>> rteTypesAndWptTypes) {
+  Rte convert(final Tuple2<RteType, List<WptType>> rteTypesAndWptTypes) {
 
     final RteType rteType = rteTypesAndWptTypes.getT1();
     final List<WptType> wptTypes = rteTypesAndWptTypes.getT2();

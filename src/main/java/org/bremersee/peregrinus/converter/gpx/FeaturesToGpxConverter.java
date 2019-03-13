@@ -16,92 +16,94 @@
 
 package org.bremersee.peregrinus.converter.gpx;
 
-import java.math.BigDecimal;
 import java.util.Collection;
+import java.util.List;
+import java.util.Objects;
+import java.util.stream.Collectors;
+import javax.validation.constraints.NotNull;
 import org.bremersee.gpx.model.Gpx;
+import org.bremersee.gpx.model.RteType;
 import org.bremersee.gpx.model.WptType;
 import org.bremersee.peregrinus.content.model.Feature;
 import org.bremersee.peregrinus.content.model.Rte;
 import org.bremersee.peregrinus.content.model.Trk;
 import org.bremersee.peregrinus.content.model.Wpt;
+import org.bremersee.xml.JaxbContextBuilder;
+import org.springframework.stereotype.Component;
+import org.springframework.validation.annotation.Validated;
+import reactor.util.function.Tuple2;
 
 /**
  * @author Christian Bremer
  */
+@Component
+@Validated
 public class FeaturesToGpxConverter {
 
-  public Gpx convert(Collection<? extends Feature> features) {
+  private final RteToRteTypeConverter rteConverter;
+
+  private final TrkToTrkTypeConverter trkConverter;
+
+  private final WptToWptTypeConverter wptConverter;
+
+  public FeaturesToGpxConverter(final JaxbContextBuilder jaxbContextBuilder) {
+    this.rteConverter = new RteToRteTypeConverter(jaxbContextBuilder);
+    this.trkConverter = new TrkToTrkTypeConverter(jaxbContextBuilder);
+    this.wptConverter = new WptToWptTypeConverter(jaxbContextBuilder);
+  }
+
+  @NotNull
+  public Gpx convert(@NotNull final Collection<? extends Feature> features) {
     final Gpx gpx = new Gpx();
 
-    /*
-    MetadataType metadata = gpx.getMetadata();
-    PersonType person = metadata.getAuthor(); // name, email, link
-    BoundsType bounds = metadata.getBounds(); // min/max Lat/Lon
-    CopyrightType copyright = metadata.getCopyright(); // author, license, year
-    metadata.getDesc(); // description
-    metadata.getKeywords(); // keywords
-    metadata.getLinks(); // link list
-    metadata.getName(); // name
-    metadata.getTime(); // time: 2018-10-27T14:40:01Z
-    gpx.getCreator(); // creator="Garmin Desktop App"
-    gpx.getVersion(); //version="1.1"
-    */
-
-    gpx.getRtes();
-    gpx.getTrks();
-    gpx.getWpts();
+     /*
+     MetadataType metadata = gpx.getMetadata();
+     PersonType person = metadata.getAuthor(); // name, email, link
+     BoundsType bounds = metadata.getBounds(); // min/max Lat/Lon
+     CopyrightType copyright = metadata.getCopyright(); // author, license, year
+     metadata.getDesc(); // description
+     metadata.getKeywords(); // keywords
+     metadata.getLinks(); // link list
+     metadata.getName(); // name
+     metadata.getTime(); // time: 2018-10-27T14:40:01Z
+     gpx.getCreator(); // creator="Garmin Desktop App"
+     gpx.getVersion(); //version="1.1"
+     */
 
     for (Feature feature : features) {
-      convertFeature(feature, gpx);
+      if (feature instanceof Wpt) {
+        gpx.getWpts().add(wptConverter.convert((Wpt) feature));
+      } else if (feature instanceof Trk) {
+        gpx.getTrks().add(trkConverter.convert((Trk) feature));
+      } else if (feature instanceof Rte) {
+        final Tuple2<RteType, List<WptType>> rteTuple = rteConverter.convert((Rte) feature);
+        if (rteTuple != null) {
+          gpx.getRtes().add(rteTuple.getT1());
+          gpx.getWpts().addAll(
+              rteTuple.getT2()
+                  .stream()
+                  .filter(Objects::nonNull)
+                  .filter(wptType -> !contains(gpx, wptType))
+                  .collect(Collectors.toList()));
+        }
+      }
     }
     return gpx;
   }
 
-  private void convertFeature(Feature feature, Gpx gpx) {
-    if (feature instanceof Wpt) {
-      //convertWpt((Wpt) feature, gpx);
-    } else if (feature instanceof Trk) {
-      //convertTrk((Trk) feature, gpx);
-    } else if (feature instanceof Rte) {
-      //convertRte((Rte) feature, gpx);
-    }
+  private boolean contains(final Gpx gpx, final WptType wptType) {
+    return contains(gpx.getWpts(), wptType);
   }
 
-  /*
-  private void convertWpt(Wpt wpt, Gpx gpx) {
-    final WptType wptType = new WptType();
-    wptType.setAgeofdgpsdata(null);
-    wptType.setCmt(wpt.getProperties().getPlainTextDescription());
-    wptType.setDesc(wpt.getProperties().getPlainTextDescription());
-    wptType.setDgpsid(null);
-    wptType.setEle(wpt.getProperties().getEle());
-    //wptType.setExtensions(null);
-    wptType.setFix(null);
-    wptType.setGeoidheight(null);
-    wptType.setHdop(null);
-    wptType.setLat(BigDecimal.valueOf(wpt.getGeometry().getY()));
-    wptType.setLon(BigDecimal.valueOf(wpt.getGeometry().getX()));
-    wptType.setMagvar(null);
-    wptType.setName(wpt.getProperties().getName());
-    wptType.setPdop(null);
-    wptType.setSat(null);
-    wptType.setSrc(null);
-    wptType.setSym(null);
-    wptType.setTime(null); // TODO
-    wptType.setType(wpt.getProperties().getInternalType()); // TODO internalType
-    wptType.setVdop(null);
-
-    wptType.getLinks();
-
-    gpx.getWpts().add(wptType);
+  private boolean contains(final List<WptType> wptTypeList, final WptType wptType) {
+    return wptTypeList.stream().anyMatch(wptType1 -> equals(wptType1, wptType));
   }
 
-
-  private void convertTrk(Trk trk, Gpx gpx) {
+  private boolean equals(final WptType wptType1, final WptType wptType2) {
+    return wptType1 != null && wptType2 != null
+        && wptType1.getName() != null && wptType1.getName().equals(wptType2.getName())
+        && wptType1.getLat() != null && wptType1.getLat().equals(wptType2.getLat())
+        && wptType1.getLon() != null && wptType1.getLon().equals(wptType2.getLon());
   }
-
-  private void convertRte(Rte rte, Gpx gpx) {
-  }
-  */
 
 }

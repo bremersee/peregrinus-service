@@ -16,18 +16,19 @@
 
 package org.bremersee.peregrinus.converter.gpx;
 
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
 import org.bremersee.common.model.Link;
 import org.bremersee.gpx.model.LinkType;
-import org.springframework.core.convert.converter.Converter;
 import org.springframework.util.StringUtils;
 
 /**
  * @author Christian Bremer
  */
-class LinkToLinkTypeConverter implements Converter<Link, LinkType> {
+@NoArgsConstructor(access = AccessLevel.PACKAGE)
+class LinkToLinkTypeConverter {
 
-  @Override
-  public LinkType convert(Link link) {
+  LinkType convert(final Link link) {
     if (link == null || !StringUtils.hasText(link.getHref())) {
       return null;
     }
