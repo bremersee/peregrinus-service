@@ -27,6 +27,12 @@ pipeline {
       agent {
         label 'maven'
       }
+      when {
+        anyOf {
+          branch 'develop'
+          branch 'master'
+        }
+      }
       steps {
         sh 'mvn -DskipTests -Ddockerfile.skip=false package dockerfile:push'
       }
@@ -45,6 +51,12 @@ pipeline {
     stage('Site') {
       agent {
         label 'maven'
+      }
+      when {
+        anyOf {
+          branch 'develop'
+          branch 'master'
+        }
       }
       steps {
         sh 'mvn site-deploy'

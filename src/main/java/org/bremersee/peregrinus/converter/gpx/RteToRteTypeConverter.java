@@ -34,6 +34,8 @@ import reactor.util.function.Tuple2;
 import reactor.util.function.Tuples;
 
 /**
+ * The rte to rte type converter.
+ *
  * @author Christian Bremer
  */
 public class RteToRteTypeConverter extends AbstractFeatureConverter {
@@ -42,11 +44,22 @@ public class RteToRteTypeConverter extends AbstractFeatureConverter {
 
   private final RtePtToRtePtTypeConverter rtePtConverter;
 
+  /**
+   * Instantiates a new rte to rte type converter.
+   *
+   * @param jaxbContextBuilder the jaxb context builder
+   */
   RteToRteTypeConverter(final JaxbContextBuilder jaxbContextBuilder) {
     this.jaxbContextBuilder = jaxbContextBuilder;
     this.rtePtConverter = new RtePtToRtePtTypeConverter(jaxbContextBuilder);
   }
 
+  /**
+   * Convert tuple.
+   *
+   * @param rte the rte
+   * @return the tuple
+   */
   Tuple2<RteType, List<WptType>> convert(final Rte rte) {
     final Tuple2<List<WptType>, List<WptType>> points = getRteptsAndWpts(rte);
     final RteType rteType = convertFeatureProperties(rte.getProperties(), RteType::new);
@@ -77,14 +90,16 @@ public class RteToRteTypeConverter extends AbstractFeatureConverter {
     final List<WptType> wptTypes = new ArrayList<>();
     final MultiLineString routes = rte.getGeometry();
     final List<RtePt> rtePts = rte.getProperties().getRtePts();
-    for (int n = 0; n < routes.getNumGeometries(); n++) {
-      final LineString route = (LineString) routes.getGeometryN(n);
+    final int size = routes.getNumGeometries();
+    for (int n = 0; n <= size; n++) {
+      final LineString line = n < size ? (LineString) routes.getGeometryN(n) : null;
       final RtePt rtePt = rtePts.get(n);
-      final WptType rtePtType = rtePtConverter.convert(Tuples.of(rtePt, Optional.of(route)));
-      final WptType wptType = rtePtConverter.convert(Tuples.of(rtePt, Optional.empty()));
+      final WptType rtePtType = rtePtConverter.convert(Tuples.of(rtePt, Optional.ofNullable(line)));
+      final WptType wptType = rtePtConverter.convert(rtePt);
       rtePtTypes.add(rtePtType);
       wptTypes.add(wptType);
     }
+
     return Tuples.of(rtePtTypes, wptTypes);
   }
 }

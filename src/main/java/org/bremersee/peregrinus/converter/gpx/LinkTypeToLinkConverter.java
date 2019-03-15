@@ -23,11 +23,19 @@ import org.bremersee.gpx.model.LinkType;
 import org.springframework.util.StringUtils;
 
 /**
+ * The garmin link type to link converter.
+ *
  * @author Christian Bremer
  */
 @NoArgsConstructor(access = AccessLevel.PACKAGE)
 class LinkTypeToLinkConverter {
 
+  /**
+   * Convert link.
+   *
+   * @param linkType the garmin link type
+   * @return the link
+   */
   Link convert(final LinkType linkType) {
     if (linkType == null || !StringUtils.hasText(linkType.getHref())) {
       return null;

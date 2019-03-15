@@ -18,6 +18,7 @@ package org.bremersee.peregrinus.converter.gpx;
 
 import java.math.BigDecimal;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -37,6 +38,9 @@ import org.bremersee.xml.JaxbContextBuilder;
 import reactor.util.function.Tuples;
 
 /**
+ * The pt (point) to pt (point) type converter.
+ *
+ * @param <T> the point type parameter
  * @author Christian Bremer
  */
 abstract class PtToPtTypeConverter<T extends Pt<? extends PtProperties<? extends PtSettings>>>
@@ -54,17 +58,28 @@ abstract class PtToPtTypeConverter<T extends Pt<? extends PtProperties<? extends
   @Getter(AccessLevel.PACKAGE)
   private final JaxbContextBuilder jaxbContextBuilder;
 
+  /**
+   * Instantiates a new pt to pt type converter.
+   *
+   * @param jaxbContextBuilder the jaxb context builder
+   */
   PtToPtTypeConverter(final JaxbContextBuilder jaxbContextBuilder) {
     this.jaxbContextBuilder = jaxbContextBuilder;
   }
 
+  /**
+   * Convert wpt type.
+   *
+   * @param pt the pt
+   * @return the wpt type
+   */
   WptType convert(final T pt) {
     final WptType wptType = super.convertFeatureProperties(pt.getProperties(), WptType::new);
     wptType.setTime(timeConverter.convert(pt.getProperties().getModified()));
     wptType.setSym("Flag, Blue");
     wptType.setLat(BigDecimal.valueOf(
         GeometryUtils.getLatitudeWGS84(pt.getGeometry().getCoordinate())));
-    wptType.setLat(BigDecimal.valueOf(
+    wptType.setLon(BigDecimal.valueOf(
         GeometryUtils.getLongitudeWGS84(pt.getGeometry().getCoordinate())));
     wptType.setEle(pt.getProperties().getEle());
     wptType.setExtensions(getWptTypeExtensions(wptType, pt));
@@ -78,29 +93,30 @@ abstract class PtToPtTypeConverter<T extends Pt<? extends PtProperties<? extends
       return wptType.getExtensions();
     }
     final WaypointExtension waypointExtension3 = new WaypointExtension();
-    waypointExtension3.setAddress(
-        addressConverter.convert(Tuples.of(pt.getProperties().getAddress(), AddressT::new)));
+    waypointExtension3.setAddress(addressConverter.convert(Tuples.of(
+        Optional.ofNullable(pt.getProperties().getAddress()), AddressT::new)));
     waypointExtension3.getPhoneNumbers().addAll(
         pt.getProperties().getPhoneNumbers()
             .stream()
             .filter(Objects::nonNull)
             .map(number -> (PhoneNumberT) phoneNumberConverter.convert(
-                Tuples.of(number, PhoneNumberT::new)))
+                Tuples.of(Optional.of(number), PhoneNumberT::new)))
             .collect(Collectors.toList()));
 
     final org.bremersee.garmin.waypoint.v1.model.ext.WaypointExtension waypointExtension1
         = new org.bremersee.garmin.waypoint.v1.model.ext.WaypointExtension();
-    waypointExtension1.setAddress(
-        addressConverter.convert(Tuples.of(pt.getProperties().getAddress(),
-            org.bremersee.garmin.waypoint.v1.model.ext.AddressT::new)));
+    waypointExtension1.setAddress(addressConverter.convert(Tuples.of(
+        Optional.ofNullable(pt.getProperties().getAddress()),
+        org.bremersee.garmin.waypoint.v1.model.ext.AddressT::new)));
     waypointExtension1.getPhoneNumbers().addAll(
         pt.getProperties().getPhoneNumbers()
             .stream()
             .filter(Objects::nonNull)
             .map(
                 number -> (org.bremersee.garmin.waypoint.v1.model.ext.PhoneNumberT) phoneNumberConverter
-                    .convert(Tuples
-                        .of(number, org.bremersee.garmin.waypoint.v1.model.ext.PhoneNumberT::new)))
+                    .convert(Tuples.of(
+                        Optional.of(number),
+                        org.bremersee.garmin.waypoint.v1.model.ext.PhoneNumberT::new)))
             .collect(Collectors.toList()));
 
     final CreationTimeExtension timeExtension = new CreationTimeExtension();

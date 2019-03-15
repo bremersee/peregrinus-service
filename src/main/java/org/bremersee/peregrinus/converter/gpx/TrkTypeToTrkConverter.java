@@ -42,6 +42,8 @@ import reactor.util.function.Tuple3;
 import reactor.util.function.Tuples;
 
 /**
+ * The garmin trk (track) type to trk (track) converter.
+ *
  * @author Christian Bremer
  */
 class TrkTypeToTrkConverter extends AbstractGpxConverter {
@@ -51,10 +53,21 @@ class TrkTypeToTrkConverter extends AbstractGpxConverter {
 
   private final JaxbContextBuilder jaxbContextBuilder;
 
+  /**
+   * Instantiates a new trk type to trk converter.
+   *
+   * @param jaxbContextBuilder the jaxb context builder
+   */
   TrkTypeToTrkConverter(final JaxbContextBuilder jaxbContextBuilder) {
     this.jaxbContextBuilder = jaxbContextBuilder;
   }
 
+  /**
+   * Convert trk type.
+   *
+   * @param trkType the trk type
+   * @return the trk
+   */
   Trk convert(final TrkType trkType) {
 
     final Tuple3<MultiLineString, List<List<BigDecimal>>, List<List<Instant>>> tuple = convert(

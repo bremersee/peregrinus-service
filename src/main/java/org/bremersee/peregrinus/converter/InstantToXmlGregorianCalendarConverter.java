@@ -27,6 +27,8 @@ import org.bremersee.exception.ServiceException;
 import org.springframework.core.convert.converter.Converter;
 
 /**
+ * The instant to xml gregorian calendar converter.
+ *
  * @author Christian Bremer
  */
 public class InstantToXmlGregorianCalendarConverter

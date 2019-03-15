@@ -31,6 +31,8 @@ import org.bremersee.xml.JaxbContextBuilder;
 import reactor.util.function.Tuple2;
 
 /**
+ * The rte pt type to rte pt converter.
+ *
  * @author Christian Bremer
  */
 class RtePtTypeToRtePtConverter extends PtTypeToPtConverter {
@@ -41,10 +43,21 @@ class RtePtTypeToRtePtConverter extends PtTypeToPtConverter {
   private static final XmlDurationToMillisConverter durationConverter
       = new XmlDurationToMillisConverter();
 
+  /**
+   * Instantiates a new rte pt type to rte pt converter.
+   *
+   * @param jaxbContextBuilder the jaxb context builder
+   */
   RtePtTypeToRtePtConverter(final JaxbContextBuilder jaxbContextBuilder) {
     super(jaxbContextBuilder);
   }
 
+  /**
+   * Convert rte pt.
+   *
+   * @param wptTypeAndTransportationMode the wpt type and transportation mode
+   * @return the rte pt
+   */
   RtePt convert(final Tuple2<WptType, String> wptTypeAndTransportationMode) {
     final WptType wptType = wptTypeAndTransportationMode.getT1();
     final String transportationMode = wptTypeAndTransportationMode.getT2();

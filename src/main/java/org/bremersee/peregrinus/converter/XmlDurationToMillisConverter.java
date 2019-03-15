@@ -21,6 +21,8 @@ import javax.xml.datatype.Duration;
 import org.springframework.core.convert.converter.Converter;
 
 /**
+ * The xml duration to millis converter.
+ *
  * @author Christian Bremer
  */
 public class XmlDurationToMillisConverter implements Converter<Duration, Long> {

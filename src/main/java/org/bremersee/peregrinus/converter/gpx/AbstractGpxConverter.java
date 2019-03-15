@@ -30,6 +30,8 @@ import org.bremersee.peregrinus.content.model.FeatureSettings;
 import org.springframework.util.StringUtils;
 
 /**
+ * The abstract gpx converter.
+ *
  * @author Christian Bremer
  */
 @NoArgsConstructor(access = AccessLevel.PACKAGE)
@@ -38,6 +40,14 @@ abstract class AbstractGpxConverter {
   private static final LinkTypeToLinkConverter linkTypeToLinkConverter
       = new LinkTypeToLinkConverter();
 
+  /**
+   * Convert common gpx type t.
+   *
+   * @param <T>                       the type parameter
+   * @param commonGpxType             the common gpx type
+   * @param featurePropertiesSupplier the feature properties supplier
+   * @return the t
+   */
   <T extends FeatureProperties<? extends FeatureSettings>> T convertCommonGpxType(
       final CommonGpxType commonGpxType,
       final Supplier<T> featurePropertiesSupplier) {

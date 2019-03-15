@@ -16,6 +16,7 @@
 
 package org.bremersee.peregrinus.converter.gpx;
 
+import java.util.Optional;
 import java.util.function.Supplier;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
@@ -25,28 +26,39 @@ import org.springframework.util.StringUtils;
 import reactor.util.function.Tuple2;
 
 /**
+ * The address to garmin address type converter.
+ *
  * @author Christian Bremer
  */
 @NoArgsConstructor(access = AccessLevel.PACKAGE)
 class AddressToAddressTypeConverter {
 
+  /**
+   * Converts an address into a garmin address.
+   *
+   * @param <T>          the garmin address type (can be {@code org.bremersee.garmin.gpx.v3.model.ext.AddressT}
+   *                     or {@code org.bremersee.garmin.waypoint.v1.model.ext.AddressT})
+   * @param addressTuple the address tuple
+   * @return the address
+   */
   <T extends CommonAddressT> T convert(
-      final Tuple2<Address, Supplier<T>> address) {
+      final Tuple2<Optional<Address>, Supplier<T>> addressTuple) {
 
-    if (address == null) {
+    if (addressTuple == null || !addressTuple.getT1().isPresent()) {
       return null;
     }
-    final T addressType = address.getT2().get();
-    addressType.setCity(address.getT1().getCity());
-    addressType.setCountry(address.getT1().getCountry());
-    addressType.setPostalCode(address.getT1().getPostalCode());
-    addressType.setState(address.getT1().getState());
-    if (StringUtils.hasText(address.getT1().getStreet())) {
-      if (StringUtils.hasText(address.getT1().getStreetNumber())) {
+    final Address address = addressTuple.getT1().get();
+    final T addressType = addressTuple.getT2().get();
+    addressType.setCity(address.getCity());
+    addressType.setCountry(address.getCountry());
+    addressType.setPostalCode(address.getPostalCode());
+    addressType.setState(address.getState());
+    if (StringUtils.hasText(address.getStreet())) {
+      if (StringUtils.hasText(address.getStreetNumber())) {
         addressType.getStreetAddresses()
-            .add(address.getT1().getStreet() + " " + address.getT1().getStreetNumber());
+            .add(address.getStreet() + " " + address.getStreetNumber());
       } else {
-        addressType.getStreetAddresses().add(address.getT1().getStreet());
+        addressType.getStreetAddresses().add(address.getStreet());
       }
     }
     return addressType;

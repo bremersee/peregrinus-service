@@ -36,6 +36,8 @@ import org.bremersee.peregrinus.content.model.PtSettings;
 import org.bremersee.xml.JaxbContextBuilder;
 
 /**
+ * The garmin pt (point) type to pt (point) converter.
+ *
  * @author Christian Bremer
  */
 abstract class PtTypeToPtConverter extends AbstractGpxConverter {
@@ -49,10 +51,25 @@ abstract class PtTypeToPtConverter extends AbstractGpxConverter {
   @Getter(AccessLevel.PROTECTED)
   private final JaxbContextBuilder jaxbContextBuilder;
 
+  /**
+   * Instantiates a new garmin pt type to pt converter.
+   *
+   * @param jaxbContextBuilder the jaxb context builder
+   */
   PtTypeToPtConverter(final JaxbContextBuilder jaxbContextBuilder) {
     this.jaxbContextBuilder = jaxbContextBuilder;
   }
 
+  /**
+   * Convert garmin point.
+   *
+   * @param <T>                  the point type parameter
+   * @param <P>                  the properties type parameter
+   * @param wptType              the wpt type
+   * @param ptSupplier           the pt supplier
+   * @param ptPropertiesSupplier the pt properties supplier
+   * @return the point
+   */
   <T extends Pt<P>, P extends PtProperties<? extends PtSettings>> T convert(
       final WptType wptType, Supplier<T> ptSupplier, Supplier<P> ptPropertiesSupplier) {
 

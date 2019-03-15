@@ -21,6 +21,8 @@ import javax.xml.datatype.XMLGregorianCalendar;
 import org.springframework.core.convert.converter.Converter;
 
 /**
+ * The xml gregorian calendar to instant converter.
+ *
  * @author Christian Bremer
  */
 public class XmlGregorianCalendarToInstantConverter

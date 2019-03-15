@@ -26,6 +26,8 @@ import org.bremersee.peregrinus.content.model.FeatureSettings;
 import org.springframework.util.StringUtils;
 
 /**
+ * The abstract feature converter.
+ *
  * @author Christian Bremer
  */
 @NoArgsConstructor(access = AccessLevel.PACKAGE)
@@ -34,6 +36,14 @@ abstract class AbstractFeatureConverter {
   private static final LinkToLinkTypeConverter linkToLinkTypeConverter
       = new LinkToLinkTypeConverter();
 
+  /**
+   * Convert feature properties.
+   *
+   * @param <T>               the type parameter
+   * @param featureProperties the feature properties
+   * @param gpxTypeSupplier   the gpx type supplier
+   * @return the t
+   */
   <T extends CommonGpxType> T convertFeatureProperties(
       final FeatureProperties<? extends FeatureSettings> featureProperties,
       final Supplier<T> gpxTypeSupplier) {

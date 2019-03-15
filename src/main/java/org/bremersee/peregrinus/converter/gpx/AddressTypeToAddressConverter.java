@@ -22,11 +22,19 @@ import org.bremersee.common.model.Address;
 import org.bremersee.garmin.model.CommonAddressT;
 
 /**
+ * The address type to address converter.
+ *
  * @author Christian Bremer
  */
 @NoArgsConstructor(access = AccessLevel.PACKAGE)
 class AddressTypeToAddressConverter {
 
+  /**
+   * Convert address.
+   *
+   * @param addressType the garmin address type
+   * @return the address
+   */
   Address convert(final CommonAddressT addressType) {
     if (addressType == null) {
       return null;

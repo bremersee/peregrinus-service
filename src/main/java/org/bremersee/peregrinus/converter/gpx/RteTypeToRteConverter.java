@@ -38,6 +38,8 @@ import reactor.util.function.Tuple2;
 import reactor.util.function.Tuples;
 
 /**
+ * The rte type to rte converter.
+ *
  * @author Christian Bremer
  */
 class RteTypeToRteConverter extends AbstractGpxConverter {
@@ -46,11 +48,22 @@ class RteTypeToRteConverter extends AbstractGpxConverter {
 
   private final JaxbContextBuilder jaxbContextBuilder;
 
+  /**
+   * Instantiates a new rte type to rte converter.
+   *
+   * @param jaxbContextBuilder the jaxb context builder
+   */
   RteTypeToRteConverter(final JaxbContextBuilder jaxbContextBuilder) {
     this.jaxbContextBuilder = jaxbContextBuilder;
     this.rtePtTypeToRtePtConverter = new RtePtTypeToRtePtConverter(jaxbContextBuilder);
   }
 
+  /**
+   * Convert rte.
+   *
+   * @param rteTypesAndWptTypes the rte types and wpt types
+   * @return the rte
+   */
   Rte convert(final Tuple2<RteType, List<WptType>> rteTypesAndWptTypes) {
 
     final RteType rteType = rteTypesAndWptTypes.getT1();
@@ -74,6 +87,7 @@ class RteTypeToRteConverter extends AbstractGpxConverter {
             rtePtsWithCoordinates
                 .stream()
                 .map(Tuple2::getT2)
+                .filter(list -> list.size() > 1)
                 .map(GeometryUtils::createLineString)
                 .collect(Collectors.toList())));
     return rte;

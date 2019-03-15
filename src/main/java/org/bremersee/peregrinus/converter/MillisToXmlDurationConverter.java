@@ -23,6 +23,8 @@ import org.bremersee.exception.ServiceException;
 import org.springframework.core.convert.converter.Converter;
 
 /**
+ * The millis to xml duration converter.
+ *
  * @author Christian Bremer
  */
 public class MillisToXmlDurationConverter implements Converter<Long, Duration> {

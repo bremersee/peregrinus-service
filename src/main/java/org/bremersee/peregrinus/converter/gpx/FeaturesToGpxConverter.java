@@ -34,6 +34,8 @@ import org.springframework.validation.annotation.Validated;
 import reactor.util.function.Tuple2;
 
 /**
+ * The features to gpx converter.
+ *
  * @author Christian Bremer
  */
 @Component
@@ -46,12 +48,23 @@ public class FeaturesToGpxConverter {
 
   private final WptToWptTypeConverter wptConverter;
 
+  /**
+   * Instantiates a new features to gpx converter.
+   *
+   * @param jaxbContextBuilder the jaxb context builder
+   */
   public FeaturesToGpxConverter(final JaxbContextBuilder jaxbContextBuilder) {
     this.rteConverter = new RteToRteTypeConverter(jaxbContextBuilder);
     this.trkConverter = new TrkToTrkTypeConverter(jaxbContextBuilder);
     this.wptConverter = new WptToWptTypeConverter(jaxbContextBuilder);
   }
 
+  /**
+   * Convert gpx.
+   *
+   * @param features the features
+   * @return the gpx
+   */
   @NotNull
   public Gpx convert(@NotNull final Collection<? extends Feature> features) {
     final Gpx gpx = new Gpx();

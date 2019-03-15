@@ -35,19 +35,32 @@ import org.locationtech.jts.geom.LineString;
 import reactor.util.function.Tuple2;
 
 /**
+ * The rte pt to rte pt type converter.
+ *
  * @author Christian Bremer
  */
 class RtePtToRtePtTypeConverter extends PtToPtTypeConverter<RtePt> {
 
+  /**
+   * Instantiates a new rte pt to rte pt type converter.
+   *
+   * @param jaxbContextBuilder the jaxb context builder
+   */
   RtePtToRtePtTypeConverter(final JaxbContextBuilder jaxbContextBuilder) {
     super(jaxbContextBuilder);
   }
 
+  /**
+   * Convert rte.
+   *
+   * @param rtePtWithPoints the rte pt with points
+   * @return the wpt type
+   */
   WptType convert(final Tuple2<RtePt, Optional<LineString>> rtePtWithPoints) {
     final WptType wpt = super.convert(rtePtWithPoints.getT1());
+    wpt.setType(null);
+    wpt.setEle(null);
     if (rtePtWithPoints.getT2().isPresent()) {
-      wpt.setType(null);
-      wpt.setEle(null);
       wpt.setExtensions(getRtePtExtensions(rtePtWithPoints.getT1(), rtePtWithPoints.getT2().get()));
     }
     return wpt;
@@ -76,6 +89,7 @@ class RtePtToRtePtTypeConverter extends PtToPtTypeConverter<RtePt> {
 
   private List<AutoroutePointT> getRoutePoints(LineString lineString) {
     return Arrays.stream(lineString.getCoordinates())
+        .skip(1)
         .map(this::getAutoroutePoint)
         .collect(Collectors.toList());
   }

@@ -48,7 +48,7 @@ public enum DisplayColor {
 
   YELLOW("Yellow", DisplayColorT.YELLOW, 0),
 
-  BLUE("Blue", DisplayColorT.BLACK, 0),
+  BLUE("Blue", DisplayColorT.BLUE, 0),
 
   MAGENTA("Magenta", DisplayColorT.MAGENTA, 0),
 

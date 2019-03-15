@@ -33,6 +33,8 @@ import org.locationtech.jts.geom.LineString;
 import org.locationtech.jts.geom.MultiLineString;
 
 /**
+ * The trk (track) to garmin trk (track) type converter.
+ *
  * @author Christian Bremer
  */
 class TrkToTrkTypeConverter extends AbstractFeatureConverter {
@@ -42,10 +44,21 @@ class TrkToTrkTypeConverter extends AbstractFeatureConverter {
 
   private final JaxbContextBuilder jaxbContextBuilder;
 
+  /**
+   * Instantiates a new trk to trk type converter.
+   *
+   * @param jaxbContextBuilder the jaxb context builder
+   */
   TrkToTrkTypeConverter(final JaxbContextBuilder jaxbContextBuilder) {
     this.jaxbContextBuilder = jaxbContextBuilder;
   }
 
+  /**
+   * Convert trk.
+   *
+   * @param trk the trk
+   * @return the trk type
+   */
   TrkType convert(final Trk trk) {
     final TrkType trkType = convertFeatureProperties(trk.getProperties(), TrkType::new);
     trkType.setExtensions(getTrackExtension(trkType, trk));

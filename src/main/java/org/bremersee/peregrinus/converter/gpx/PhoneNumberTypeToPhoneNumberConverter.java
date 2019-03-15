@@ -23,11 +23,19 @@ import org.bremersee.garmin.model.CommonPhoneNumberT;
 import org.springframework.util.StringUtils;
 
 /**
+ * The garmin phone number type to phone number converter.
+ *
  * @author Christian Bremer
  */
 @NoArgsConstructor(access = AccessLevel.PACKAGE)
 class PhoneNumberTypeToPhoneNumberConverter {
 
+  /**
+   * Convert garmin phone number into phone number.
+   *
+   * @param phoneNumberType the garmin phone number type
+   * @return the phone number
+   */
   PhoneNumber convert(final CommonPhoneNumberT phoneNumberType) {
     if (phoneNumberType == null || !StringUtils.hasText(phoneNumberType.getValue())) {
       return null;

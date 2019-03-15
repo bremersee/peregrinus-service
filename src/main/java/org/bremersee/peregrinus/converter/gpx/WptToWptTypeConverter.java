@@ -21,14 +21,22 @@ import org.bremersee.peregrinus.content.model.Wpt;
 import org.bremersee.xml.JaxbContextBuilder;
 
 /**
+ * The wpt to garmin wpt type converter.
+ *
  * @author Christian Bremer
  */
 class WptToWptTypeConverter extends PtToPtTypeConverter<Wpt> {
 
+  /**
+   * Instantiates a new wpt to wpt type converter.
+   *
+   * @param jaxbContextBuilder the jaxb context builder
+   */
   WptToWptTypeConverter(final JaxbContextBuilder jaxbContextBuilder) {
     super(jaxbContextBuilder);
   }
 
+  @Override
   WptType convert(final Wpt wpt) {
     return super.convert(wpt);
   }

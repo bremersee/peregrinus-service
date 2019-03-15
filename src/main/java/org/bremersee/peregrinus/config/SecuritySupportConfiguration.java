@@ -32,11 +32,11 @@ import org.springframework.security.oauth2.jwt.ReactiveJwtDecoder;
 @EnableConfigurationProperties({OAuth2Properties.class})
 public class SecuritySupportConfiguration {
 
-  private OAuth2Properties oAuth2Properties;
+  private OAuth2Properties properties;
 
   @Autowired
-  public SecuritySupportConfiguration(OAuth2Properties oAuth2Properties) {
-    this.oAuth2Properties = oAuth2Properties;
+  public SecuritySupportConfiguration(OAuth2Properties properties) {
+    this.properties = properties;
   }
 
   @Bean
@@ -50,7 +50,7 @@ public class SecuritySupportConfiguration {
       KeycloakReactiveJwtConverter keycloakJwtConverter) {
 
     final PasswordFlowReactiveAuthenticationManager manager
-        = new PasswordFlowReactiveAuthenticationManager(oAuth2Properties, jwtDecoder);
+        = new PasswordFlowReactiveAuthenticationManager(properties, jwtDecoder);
     manager.setJwtAuthenticationConverter(keycloakJwtConverter);
     return manager;
   }

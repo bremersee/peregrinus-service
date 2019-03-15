@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 the original author or authors.
+ * Copyright 2019 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,25 +14,11 @@
  * limitations under the License.
  */
 
-package org.bremersee.peregrinus.config;
-
-import java.util.ServiceLoader;
-import org.bremersee.xml.JaxbContextBuilder;
-import org.bremersee.xml.JaxbContextDataProvider;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
+package org.bremersee.peregrinus;
 
 /**
  * @author Christian Bremer
  */
-@Configuration
-public class JaxbContextConfiguration {
-
-  @Bean
-  public JaxbContextBuilder jaxbContextBuilder() {
-    return JaxbContextBuilder
-        .builder()
-        .processAll(ServiceLoader.load(JaxbContextDataProvider.class));
-  }
+public class Placeholder {
 
 }

@@ -16,6 +16,7 @@
 
 package org.bremersee.peregrinus.converter.gpx;
 
+import java.util.Optional;
 import java.util.function.Supplier;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
@@ -25,18 +26,33 @@ import org.springframework.util.StringUtils;
 import reactor.util.function.Tuple2;
 
 /**
+ * The phone number to garmin phone number type converter.
+ *
  * @author Christian Bremer
  */
 @NoArgsConstructor(access = AccessLevel.PACKAGE)
 class PhoneNumberToPhoneNumberTypeConverter {
 
-  <T extends CommonPhoneNumberT> T convert(final Tuple2<PhoneNumber, Supplier<T>> phoneNumber) {
-    if (phoneNumber == null || !StringUtils.hasText(phoneNumber.getT1().getValue())) {
+  /**
+   * Convert t.
+   *
+   * @param <T>              the garmin phone number type (can be
+   *                         {@code org.bremersee.garmin.gpx.v3.model.ext.PhoneNumberT}
+   *                         or {@code org.bremersee.garmin.waypoint.v1.model.ext.PhoneNumberT})
+   * @param phoneNumberTuple the phone number tuple
+   * @return the garmin phone number
+   */
+  <T extends CommonPhoneNumberT> T convert(
+      final Tuple2<Optional<PhoneNumber>, Supplier<T>> phoneNumberTuple) {
+    if (phoneNumberTuple == null
+        || !phoneNumberTuple.getT1().isPresent()
+        || !StringUtils.hasText(phoneNumberTuple.getT1().get().getValue())) {
       return null;
     }
-    final T phoneNumberType = phoneNumber.getT2().get();
-    phoneNumberType.setCategory(phoneNumber.getT1().getCategory());
-    phoneNumberType.setValue(phoneNumber.getT1().getValue());
+    final PhoneNumber phoneNumber = phoneNumberTuple.getT1().get();
+    final T phoneNumberType = phoneNumberTuple.getT2().get();
+    phoneNumberType.setCategory(phoneNumber.getCategory());
+    phoneNumberType.setValue(phoneNumber.getValue());
     return phoneNumberType;
   }
 }

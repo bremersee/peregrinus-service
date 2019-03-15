@@ -29,18 +29,19 @@ import org.bremersee.peregrinus.content.model.Rte;
 import org.bremersee.peregrinus.content.model.RtePt;
 import org.bremersee.xml.JaxbContextBuilder;
 import org.locationtech.jts.geom.Coordinate;
-import org.springframework.core.convert.converter.Converter;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.annotation.Validated;
 import reactor.util.function.Tuple2;
 import reactor.util.function.Tuples;
 
 /**
+ * The gpx to features converter.
+ *
  * @author Christian Bremer
  */
 @Component
 @Validated
-public class GpxToFeaturesConverter  {
+public class GpxToFeaturesConverter {
 
   private final WptTypeToWptConverter wptTypeConverter;
 
@@ -48,12 +49,23 @@ public class GpxToFeaturesConverter  {
 
   private final RteTypeToRteConverter rteTypeConverter;
 
+  /**
+   * Instantiates a new gpx to features converter.
+   *
+   * @param jaxbContextBuilder the jaxb context builder
+   */
   public GpxToFeaturesConverter(final JaxbContextBuilder jaxbContextBuilder) {
     wptTypeConverter = new WptTypeToWptConverter(jaxbContextBuilder);
     trkTypeConverter = new TrkTypeToTrkConverter(jaxbContextBuilder);
     rteTypeConverter = new RteTypeToRteConverter(jaxbContextBuilder);
   }
 
+  /**
+   * Convert list.
+   *
+   * @param gpxAndRemoveRouteWaypoints the gpx and remove route waypoints
+   * @return the list
+   */
   @NotNull
   public List<Feature> convert(@NotNull final Tuple2<Gpx, Boolean> gpxAndRemoveRouteWaypoints) {
 
