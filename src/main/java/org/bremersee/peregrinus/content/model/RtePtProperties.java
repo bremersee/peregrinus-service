@@ -20,12 +20,10 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 import org.bremersee.peregrinus.geo.model.AbstractRteCalculationProperties;
-import org.springframework.data.annotation.TypeAlias;
 
 /**
  * @author Christian Bremer
  */
-@TypeAlias("RtePtProperties")
 @Getter
 @Setter
 @ToString(callSuper = true)

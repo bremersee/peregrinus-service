@@ -14,33 +14,35 @@
  * limitations under the License.
  */
 
-package org.bremersee.peregrinus.content.model;
+package org.bremersee.peregrinus.content.repository.entity;
 
-import java.math.BigDecimal;
-import java.time.OffsetDateTime;
-import java.util.List;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
+import org.bremersee.peregrinus.geo.model.AbstractRteCalculationProperties;
+import org.springframework.data.annotation.TypeAlias;
 
 /**
  * @author Christian Bremer
  */
+@TypeAlias("RtePtProperties")
 @Getter
 @Setter
 @ToString(callSuper = true)
-public class TrkProperties extends FeatureProperties<TrkSettings> {
+public class RtePtEntityProperties extends PtEntityProperties {
 
-  private List<List<BigDecimal>> eleLines;
+  private AbstractRteCalculationProperties calculationProperties;
 
-  private List<List<OffsetDateTime>> timeLines;
+  private Integer lengthInMeters;
 
-  @Override
-  TrkSettings doCreateDefaultSettings() {
+  private Integer travelTimeInSeconds;
 
-    final TrkSettings settings = new TrkSettings();
-    settings.setDisplayColor(DisplayColor.DARK_GRAY);
-    return settings;
-  }
+  private Integer trafficDelayInSeconds;
+
+  private Integer noTrafficTravelTimeInSeconds;
+
+  private Integer historicTrafficTravelTimeInSeconds;
+
+  private Integer liveTrafficIncidentsTravelTimeInSeconds;
 
 }

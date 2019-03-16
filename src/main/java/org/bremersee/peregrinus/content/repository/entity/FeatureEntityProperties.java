@@ -14,43 +14,38 @@
  * limitations under the License.
  */
 
-package org.bremersee.peregrinus.content.model;
+package org.bremersee.peregrinus.content.repository.entity;
 
-import com.fasterxml.jackson.annotation.JsonSubTypes;
-import com.fasterxml.jackson.annotation.JsonSubTypes.Type;
-import com.fasterxml.jackson.annotation.JsonTypeInfo;
-import com.fasterxml.jackson.annotation.JsonTypeInfo.Id;
 import java.time.Clock;
+import java.time.Instant;
 import java.time.OffsetDateTime;
 import java.time.ZoneId;
-import java.util.Date;
 import java.util.List;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 import org.bremersee.common.model.Link;
 import org.bremersee.peregrinus.security.access.AccessControl;
+import org.springframework.data.annotation.TypeAlias;
+import org.springframework.data.mongodb.core.index.Indexed;
 
 /**
  * @author Christian Bremer
  */
-@JsonTypeInfo(use = Id.NAME, property = "subType", visible = true)
-@JsonSubTypes({
-    @Type(value = WptProperties.class, name = "Wpt"),
-    @Type(value = TrkProperties.class, name = "Trk"),
-    @Type(value = RteProperties.class, name = "Rte")
-})
+@TypeAlias("FeatureProperties")
 @Getter
 @Setter
 @ToString
-public abstract class FeatureProperties<S extends FeatureSettings> {
+public abstract class FeatureEntityProperties {
 
   private AccessControl accessControl = new AccessControl();
 
   private OffsetDateTime created;
 
+  @Indexed
   private OffsetDateTime modified;
 
+  @Indexed
   private String name;
 
   private String plainTextDescription; // desc == cmt
@@ -62,34 +57,21 @@ public abstract class FeatureProperties<S extends FeatureSettings> {
   private List<Link> links;
 
   /**
-   * Start time of tracks or way points
+   * Start time of tracks.
    */
-  private OffsetDateTime startTime;
+  @Indexed
+  private Instant startTime;
 
   /**
-   * Stop time of tracks or way points
+   * Stop time of tracks.
    */
-  private OffsetDateTime stopTime;
+  @Indexed
+  private Instant stopTime;
 
-  private S settings;
-
-  public FeatureProperties() {
+  public FeatureEntityProperties() {
     final OffsetDateTime now = OffsetDateTime.now(Clock.system(ZoneId.of("Z")));
     created = now;
     modified = now;
-    settings = doCreateDefaultSettings();
   }
-
-  public S createDefaultSettings(
-      final String featureId,
-      final String userId) {
-
-    final S settings = doCreateDefaultSettings();
-    settings.setFeatureId(featureId);
-    settings.setUserId(userId);
-    return settings;
-  }
-
-  abstract S doCreateDefaultSettings();
 
 }

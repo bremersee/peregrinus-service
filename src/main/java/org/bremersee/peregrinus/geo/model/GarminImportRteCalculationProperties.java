@@ -16,8 +16,7 @@
 
 package org.bremersee.peregrinus.geo.model;
 
-import java.time.Instant;
-import java.util.Date;
+import java.time.OffsetDateTime;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
@@ -35,11 +34,11 @@ public class GarminImportRteCalculationProperties extends AbstractRteCalculation
 
   private String transportationMode;
 
-  private Instant departureTime;
+  private OffsetDateTime departureTime;
 
   private Long stopDurationMillis;
 
-  private Instant arrivalTime;
+  private OffsetDateTime arrivalTime;
 
   private String calculationMode;
 

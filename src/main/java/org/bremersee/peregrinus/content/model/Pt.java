@@ -20,14 +20,10 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 import org.locationtech.jts.geom.Point;
-import org.springframework.data.annotation.TypeAlias;
-import org.springframework.data.mongodb.core.mapping.Document;
 
 /**
  * @author Christian Bremer
  */
-@Document(collection = "feature")
-@TypeAlias("Pt")
 @Getter
 @Setter
 @ToString(callSuper = true)

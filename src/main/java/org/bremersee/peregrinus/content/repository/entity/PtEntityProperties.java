@@ -14,33 +14,45 @@
  * limitations under the License.
  */
 
-package org.bremersee.peregrinus.content.model;
+package org.bremersee.peregrinus.content.repository.entity;
 
 import java.math.BigDecimal;
-import java.time.OffsetDateTime;
 import java.util.List;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
+import org.bremersee.common.model.Address;
+import org.bremersee.common.model.PhoneNumber;
+import org.springframework.data.annotation.TypeAlias;
 
 /**
  * @author Christian Bremer
  */
+@TypeAlias("PtProperties")
 @Getter
 @Setter
 @ToString(callSuper = true)
-public class TrkProperties extends FeatureProperties<TrkSettings> {
+public abstract class PtEntityProperties extends FeatureEntityProperties {
 
-  private List<List<BigDecimal>> eleLines;
+  private String internalType; // photo, video or not // TODO
 
-  private List<List<OffsetDateTime>> timeLines;
+  //private Instant time; // TODO wozu hat ein punkt eine zeit?
 
-  @Override
-  TrkSettings doCreateDefaultSettings() {
+  //private String sym; // TODO
 
-    final TrkSettings settings = new TrkSettings();
-    settings.setDisplayColor(DisplayColor.DARK_GRAY);
-    return settings;
-  }
+  /**
+   * Elevation in meters
+   */
+  private BigDecimal ele;
+
+  /**
+   * Address
+   */
+  private Address address; // index?
+
+  /**
+   * Phone numbers
+   */
+  private List<PhoneNumber> phoneNumbers;
 
 }

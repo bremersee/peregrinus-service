@@ -20,22 +20,13 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 import org.locationtech.jts.geom.MultiLineString;
-import org.springframework.data.annotation.TypeAlias;
-import org.springframework.data.mongodb.core.mapping.Document;
 
 /**
  * @author Christian Bremer
  */
-@Document(collection = "feature")
-@TypeAlias("Trk")
 @Getter
 @Setter
 @ToString(callSuper = true)
 public class Trk extends Feature<MultiLineString, TrkProperties> {
-
-  @Override
-  int orderValue() {
-    return 100;
-  }
 
 }

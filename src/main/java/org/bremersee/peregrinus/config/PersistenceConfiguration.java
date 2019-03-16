@@ -16,7 +16,10 @@
 
 package org.bremersee.peregrinus.config;
 
+import java.time.OffsetDateTime;
+import java.time.ZoneId;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 import java.util.regex.Pattern;
@@ -46,6 +49,8 @@ public class PersistenceConfiguration {
         GeoJsonConverters.getConvertersToRegister(null));
     converters.add(new LocaleToStringConverter());
     converters.add(new StringToLocaleConverter());
+    converters.add(new OffsetDateTimeToDateConverter());
+    converters.add(new DateToOffsetDateTimeConverter());
     return new MongoCustomConversions(converters);
   }
 
@@ -75,6 +80,32 @@ public class PersistenceConfiguration {
         }
       }
       return null;
+    }
+  }
+
+  @WritingConverter
+  public static class OffsetDateTimeToDateConverter
+      implements Converter<OffsetDateTime, Date> {
+
+    @Override
+    public Date convert(OffsetDateTime offsetDateTime) {
+      if (offsetDateTime == null) {
+        return null;
+      }
+      return Date.from(offsetDateTime.toInstant());
+    }
+  }
+
+  @ReadingConverter
+  public static class DateToOffsetDateTimeConverter
+      implements Converter<Date, OffsetDateTime> {
+
+    @Override
+    public OffsetDateTime convert(Date date) {
+      if (date == null) {
+        return null;
+      }
+      return OffsetDateTime.ofInstant(date.toInstant(), ZoneId.of("Z"));
     }
   }
 }

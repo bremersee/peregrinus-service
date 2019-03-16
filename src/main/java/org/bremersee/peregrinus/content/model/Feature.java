@@ -23,17 +23,10 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 import org.locationtech.jts.geom.Geometry;
-import org.springframework.data.annotation.Id;
-import org.springframework.data.annotation.TypeAlias;
-import org.springframework.data.mongodb.core.index.GeoSpatialIndexType;
-import org.springframework.data.mongodb.core.index.GeoSpatialIndexed;
-import org.springframework.data.mongodb.core.mapping.Document;
 
 /**
  * @author Christian Bremer
  */
-@Document(collection = "feature")
-@TypeAlias("Feature")
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, property = "type", visible = true)
 @JsonSubTypes({
 })
@@ -41,38 +34,14 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @Getter
 @Setter
 @ToString
-public abstract class Feature<G extends Geometry, P extends FeatureProperties>
-    implements Comparable<Feature> {
+public abstract class Feature<G extends Geometry, P extends FeatureProperties> {
 
-  @Id
   private String id;
 
-  @GeoSpatialIndexed(type = GeoSpatialIndexType.GEO_2DSPHERE)
   private G geometry;
 
   private double[] bbox;
 
   private P properties;
-
-  abstract int orderValue();
-
-  @SuppressWarnings("Duplicates")
-  @Override
-  public int compareTo(final Feature o) {
-    if (this == o) {
-      return 0;
-    }
-    if (o == null) {
-      return -1;
-    }
-    int c = orderValue() - o.orderValue();
-    if (c != 0) {
-      return c;
-    }
-    if (getProperties() != null) {
-      return getProperties().compareTo(o.getProperties());
-    }
-    return 0;
-  }
 
 }

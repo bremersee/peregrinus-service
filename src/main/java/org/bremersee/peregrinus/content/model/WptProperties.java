@@ -19,12 +19,10 @@ package org.bremersee.peregrinus.content.model;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
-import org.springframework.data.annotation.TypeAlias;
 
 /**
  * @author Christian Bremer
  */
-@TypeAlias("WptProperties")
 @Getter
 @Setter
 @ToString(callSuper = true)

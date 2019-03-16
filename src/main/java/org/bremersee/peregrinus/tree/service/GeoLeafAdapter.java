@@ -93,6 +93,7 @@ public class GeoLeafAdapter implements LeafAdapter {
   public Mono<AccessControl> updateAccessControl(
       final Leaf leaf,
       final AccessControl accessControl) {
+
     final GeoLeaf geoLeaf = (GeoLeaf) leaf;
     final Feature feature = geoLeaf.getFeature();
     feature.getProperties().setAccessControl(accessControl);

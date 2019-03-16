@@ -14,33 +14,22 @@
  * limitations under the License.
  */
 
-package org.bremersee.peregrinus.content.model;
+package org.bremersee.peregrinus.content.repository.entity;
 
-import java.math.BigDecimal;
-import java.time.OffsetDateTime;
-import java.util.List;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
+import org.springframework.data.annotation.TypeAlias;
+import org.springframework.data.mongodb.core.mapping.Document;
 
 /**
  * @author Christian Bremer
  */
+@Document(collection = "feature")
+@TypeAlias("RtePt")
 @Getter
 @Setter
 @ToString(callSuper = true)
-public class TrkProperties extends FeatureProperties<TrkSettings> {
-
-  private List<List<BigDecimal>> eleLines;
-
-  private List<List<OffsetDateTime>> timeLines;
-
-  @Override
-  TrkSettings doCreateDefaultSettings() {
-
-    final TrkSettings settings = new TrkSettings();
-    settings.setDisplayColor(DisplayColor.DARK_GRAY);
-    return settings;
-  }
+public class RtePtEntity extends PtEntity<RtePtEntityProperties> {
 
 }

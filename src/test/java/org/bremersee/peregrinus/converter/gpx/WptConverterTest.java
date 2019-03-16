@@ -16,7 +16,7 @@ import org.bremersee.gpx.model.WptType;
 import org.bremersee.peregrinus.TestConfig;
 import org.bremersee.peregrinus.content.model.Wpt;
 import org.bremersee.peregrinus.content.model.WptProperties;
-import org.bremersee.peregrinus.converter.XmlGregorianCalendarToInstantConverter;
+import org.bremersee.peregrinus.converter.XmlGregorianCalendarToOffsetDateTimeConverter;
 import org.bremersee.peregrinus.security.access.AccessControl;
 import org.junit.Assert;
 import org.junit.Test;
@@ -101,7 +101,7 @@ public class WptConverterTest {
     Assert.assertNotNull(wptType.getTime());
     Assert.assertEquals(
         wpt.getProperties().getModified(),
-        new XmlGregorianCalendarToInstantConverter().convert(wptType.getTime()));
+        new XmlGregorianCalendarToOffsetDateTimeConverter().convert(wptType.getTime()));
 
     Assert.assertNotNull(wptType.getName());
     Assert.assertEquals(wpt.getProperties().getName(), wptType.getName());

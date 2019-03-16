@@ -17,19 +17,16 @@
 package org.bremersee.peregrinus.content.model;
 
 import java.math.BigDecimal;
-import java.time.Instant;
 import java.util.List;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 import org.bremersee.common.model.Address;
 import org.bremersee.common.model.PhoneNumber;
-import org.springframework.data.annotation.TypeAlias;
 
 /**
  * @author Christian Bremer
  */
-@TypeAlias("PtProperties")
 @Getter
 @Setter
 @ToString(callSuper = true)

@@ -17,7 +17,8 @@
 package org.bremersee.peregrinus.converter.gpx;
 
 import java.math.BigDecimal;
-import java.time.Instant;
+import java.time.OffsetDateTime;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -33,7 +34,7 @@ import org.bremersee.gpx.model.WptType;
 import org.bremersee.peregrinus.content.model.DisplayColor;
 import org.bremersee.peregrinus.content.model.Trk;
 import org.bremersee.peregrinus.content.model.TrkProperties;
-import org.bremersee.peregrinus.converter.XmlGregorianCalendarToInstantConverter;
+import org.bremersee.peregrinus.converter.XmlGregorianCalendarToOffsetDateTimeConverter;
 import org.bremersee.xml.JaxbContextBuilder;
 import org.locationtech.jts.geom.Coordinate;
 import org.locationtech.jts.geom.LineString;
@@ -48,8 +49,8 @@ import reactor.util.function.Tuples;
  */
 class TrkTypeToTrkConverter extends AbstractGpxConverter {
 
-  private static final XmlGregorianCalendarToInstantConverter timeConverter
-      = new XmlGregorianCalendarToInstantConverter();
+  private static final XmlGregorianCalendarToOffsetDateTimeConverter timeConverter
+      = new XmlGregorianCalendarToOffsetDateTimeConverter();
 
   private final JaxbContextBuilder jaxbContextBuilder;
 
@@ -70,7 +71,7 @@ class TrkTypeToTrkConverter extends AbstractGpxConverter {
    */
   Trk convert(final TrkType trkType) {
 
-    final Tuple3<MultiLineString, List<List<BigDecimal>>, List<List<Instant>>> tuple = convert(
+    final Tuple3<MultiLineString, List<List<BigDecimal>>, List<List<OffsetDateTime>>> tuple = convert(
         trkType.getTrksegs());
 
     final Trk trk = new Trk();
@@ -85,18 +86,18 @@ class TrkTypeToTrkConverter extends AbstractGpxConverter {
     return trk;
   }
 
-  private Instant getStartTime(final List<List<Instant>> timeList) {
+  private OffsetDateTime getStartTime(final List<List<OffsetDateTime>> timeList) {
     return getTime(timeList, false);
   }
 
-  private Instant getStopTime(final List<List<Instant>> timeList) {
+  private OffsetDateTime getStopTime(final List<List<OffsetDateTime>> timeList) {
     return getTime(timeList, true);
   }
 
-  private Instant getTime(final List<List<Instant>> timeList, final boolean last) {
+  private OffsetDateTime getTime(final List<List<OffsetDateTime>> timeList, final boolean last) {
     if (timeList != null && !timeList.isEmpty()) {
       final int i0 = last ? timeList.size() - 1 : 0;
-      final List<Instant> list = timeList.get(i0);
+      final List<OffsetDateTime> list = timeList.get(i0);
       if (list != null && !list.isEmpty()) {
         final int i1 = last ? list.size() - 1 : 0;
         return list.get(i1);
@@ -124,12 +125,12 @@ class TrkTypeToTrkConverter extends AbstractGpxConverter {
     return DisplayColor.findByGarminDisplayColor(displayColorT, DisplayColor.DARK_GRAY);
   }
 
-  private Tuple3<MultiLineString, List<List<BigDecimal>>, List<List<Instant>>> convert(
+  private Tuple3<MultiLineString, List<List<BigDecimal>>, List<List<OffsetDateTime>>> convert(
       final List<TrksegType> trkSegments) {
 
     final List<LineString> lineList = new ArrayList<>();
     final List<List<BigDecimal>> eleList = new ArrayList<>();
-    final List<List<Instant>> timeList = new ArrayList<>();
+    final List<List<OffsetDateTime>> timeList = new ArrayList<>();
     trkSegments
         .stream()
         .filter(Objects::nonNull)
@@ -142,12 +143,12 @@ class TrkTypeToTrkConverter extends AbstractGpxConverter {
     return Tuples.of(GeometryUtils.createMultiLineString(lineList), eleList, timeList);
   }
 
-  private Tuple3<LineString, List<BigDecimal>, List<Instant>> convert(
+  private Tuple3<LineString, List<BigDecimal>, List<OffsetDateTime>> convert(
       final TrksegType trkSegment) {
 
     final List<Coordinate> coordinates = new ArrayList<>();
     final List<BigDecimal> eleList = new ArrayList<>();
-    final List<Instant> timeList = new ArrayList<>();
+    final List<OffsetDateTime> timeList = new ArrayList<>();
     trkSegment.getTrkpts()
         .stream()
         .filter(Objects::nonNull)
@@ -160,14 +161,17 @@ class TrkTypeToTrkConverter extends AbstractGpxConverter {
     return Tuples.of(GeometryUtils.createLineString(coordinates), eleList, timeList);
   }
 
-  private Tuple3<Coordinate, BigDecimal, Instant> convert(
+  private Tuple3<Coordinate, BigDecimal, OffsetDateTime> convert(
       final WptType trkPt) {
 
     final Coordinate coordinate = GeometryUtils.createCoordinateWGS84(
         trkPt.getLat(), trkPt.getLon());
     final BigDecimal ele = trkPt.getEle() != null ? trkPt.getEle() : BigDecimal.valueOf(0);
-    final Instant time = timeConverter.convert(trkPt.getTime());
-    return Tuples.of(coordinate, ele, time != null ? time : new Date(0).toInstant());
+    OffsetDateTime time = timeConverter.convert(trkPt.getTime());
+    if (time == null) {
+      time = OffsetDateTime.ofInstant(new Date(0).toInstant(), ZoneId.of("Z"));
+    }
+    return Tuples.of(coordinate, ele, time);
   }
 
 }

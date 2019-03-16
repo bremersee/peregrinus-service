@@ -17,7 +17,7 @@
 package org.bremersee.peregrinus.converter;
 
 import java.sql.Date;
-import java.time.Instant;
+import java.time.OffsetDateTime;
 import java.util.GregorianCalendar;
 import java.util.TimeZone;
 import javax.xml.datatype.DatatypeConfigurationException;
@@ -31,17 +31,17 @@ import org.springframework.core.convert.converter.Converter;
  *
  * @author Christian Bremer
  */
-public class InstantToXmlGregorianCalendarConverter
-    implements Converter<Instant, XMLGregorianCalendar> {
+public class OffsetDateTimeToXmlGregorianCalendarConverter
+    implements Converter<OffsetDateTime, XMLGregorianCalendar> {
 
   @Override
-  public XMLGregorianCalendar convert(final Instant instant) {
-    if (instant == null) {
+  public XMLGregorianCalendar convert(final OffsetDateTime offsetDateTime) {
+    if (offsetDateTime == null) {
       return null;
     }
     try {
       final GregorianCalendar source = new GregorianCalendar(TimeZone.getTimeZone("GMT"));
-      source.setTime(Date.from(instant));
+      source.setTime(Date.from(offsetDateTime.toInstant()));
       return DatatypeFactory.newInstance().newXMLGregorianCalendar(source);
 
     } catch (DatatypeConfigurationException e) {

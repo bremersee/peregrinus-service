@@ -17,7 +17,7 @@
 package org.bremersee.peregrinus.converter.gpx;
 
 import java.math.BigDecimal;
-import java.time.Instant;
+import java.time.OffsetDateTime;
 import java.util.List;
 import org.bremersee.garmin.gpx.v3.model.ext.TrackExtension;
 import org.bremersee.gpx.ExtensionsTypeBuilder;
@@ -26,7 +26,7 @@ import org.bremersee.gpx.model.TrkType;
 import org.bremersee.gpx.model.TrksegType;
 import org.bremersee.gpx.model.WptType;
 import org.bremersee.peregrinus.content.model.Trk;
-import org.bremersee.peregrinus.converter.InstantToXmlGregorianCalendarConverter;
+import org.bremersee.peregrinus.converter.OffsetDateTimeToXmlGregorianCalendarConverter;
 import org.bremersee.xml.JaxbContextBuilder;
 import org.locationtech.jts.geom.Coordinate;
 import org.locationtech.jts.geom.LineString;
@@ -39,8 +39,8 @@ import org.locationtech.jts.geom.MultiLineString;
  */
 class TrkToTrkTypeConverter extends AbstractFeatureConverter {
 
-  private static final InstantToXmlGregorianCalendarConverter timeConverter
-      = new InstantToXmlGregorianCalendarConverter();
+  private static final OffsetDateTimeToXmlGregorianCalendarConverter timeConverter
+      = new OffsetDateTimeToXmlGregorianCalendarConverter();
 
   private final JaxbContextBuilder jaxbContextBuilder;
 
@@ -65,7 +65,7 @@ class TrkToTrkTypeConverter extends AbstractFeatureConverter {
 
     final MultiLineString multiLineString = trk.getGeometry();
     final List<List<BigDecimal>> eleLines = trk.getProperties().getEleLines();
-    final List<List<Instant>> timeLines = trk.getProperties().getTimeLines();
+    final List<List<OffsetDateTime>> timeLines = trk.getProperties().getTimeLines();
     for (int n = 0; n < multiLineString.getNumGeometries(); n++) {
       final LineString lineString = (LineString) multiLineString.getGeometryN(n);
       trkType.getTrksegs().add(convert(lineString, eleLines.get(n), timeLines.get(n)));
@@ -77,13 +77,13 @@ class TrkToTrkTypeConverter extends AbstractFeatureConverter {
   private TrksegType convert(
       final LineString lineString,
       final List<BigDecimal> eleLine,
-      final List<Instant> timeLine) {
+      final List<OffsetDateTime> timeLine) {
 
     final TrksegType trkseg = new TrksegType();
     for (int n = 0; n < lineString.getCoordinates().length; n++) {
       final Coordinate coordinate = lineString.getCoordinateN(n);
       final BigDecimal ele = eleLine.get(n);
-      final Instant time = timeLine.get(n);
+      final OffsetDateTime time = timeLine.get(n);
       final WptType wptType = new WptType();
       wptType.setLon(BigDecimal.valueOf(coordinate.getX()));
       wptType.setLat(BigDecimal.valueOf(coordinate.getY()));

@@ -19,22 +19,13 @@ package org.bremersee.peregrinus.content.model;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
-import org.springframework.data.annotation.TypeAlias;
-import org.springframework.data.mongodb.core.mapping.Document;
 
 /**
  * @author Christian Bremer
  */
-@Document(collection = "feature")
-@TypeAlias("RtePt")
 @Getter
 @Setter
 @ToString(callSuper = true)
 public class RtePt extends Pt<RtePtProperties> {
-
-  @Override
-  int orderValue() {
-    return 0;
-  }
 
 }

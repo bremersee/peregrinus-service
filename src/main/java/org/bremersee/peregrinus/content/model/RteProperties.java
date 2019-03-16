@@ -16,27 +16,19 @@
 
 package org.bremersee.peregrinus.content.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.util.List;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
-import org.springframework.data.annotation.Transient;
-import org.springframework.data.annotation.TypeAlias;
 
 /**
  * @author Christian Bremer
  */
-@TypeAlias("RteProperties")
 @Getter
 @Setter
 @ToString(callSuper = true)
 public class RteProperties extends FeatureProperties<RteSettings> {
 
-  @JsonIgnore
-  private List<String> rtePtIds;
-
-  @Transient
   private List<RtePt> rtePts;
 
   @Override

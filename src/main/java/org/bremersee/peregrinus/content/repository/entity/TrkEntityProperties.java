@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 the original author or authors.
+ * Copyright 2018 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,26 +14,28 @@
  * limitations under the License.
  */
 
-package org.bremersee.peregrinus.converter;
+package org.bremersee.peregrinus.content.repository.entity;
 
+import java.math.BigDecimal;
 import java.time.Instant;
-import javax.xml.datatype.XMLGregorianCalendar;
-import org.springframework.core.convert.converter.Converter;
+import java.time.OffsetDateTime;
+import java.util.List;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
+import org.springframework.data.annotation.TypeAlias;
 
 /**
- * The xml gregorian calendar to instant converter.
- *
  * @author Christian Bremer
  */
-public class XmlGregorianCalendarToInstantConverter
-    implements Converter<XMLGregorianCalendar, Instant> {
+@TypeAlias("TrkProperties")
+@Getter
+@Setter
+@ToString(callSuper = true)
+public class TrkEntityProperties extends FeatureEntityProperties {
 
-  @Override
-  public Instant convert(final XMLGregorianCalendar xmlGregorianCalendar) {
-    if (xmlGregorianCalendar == null) {
-      return null;
-    }
-    return xmlGregorianCalendar.toGregorianCalendar().getTime().toInstant();
-  }
+  private List<List<BigDecimal>> eleLines;
+
+  private List<List<OffsetDateTime>> timeLines;
 
 }

@@ -17,6 +17,7 @@
 package org.bremersee.peregrinus.converter.gpx;
 
 import java.time.Instant;
+import java.time.OffsetDateTime;
 import java.util.Optional;
 import org.bremersee.garmin.trip.v1.model.ext.NamedRoadT;
 import org.bremersee.garmin.trip.v1.model.ext.ViaPoint;
@@ -25,7 +26,7 @@ import org.bremersee.gpx.model.WptType;
 import org.bremersee.peregrinus.content.model.RtePt;
 import org.bremersee.peregrinus.content.model.RtePtProperties;
 import org.bremersee.peregrinus.converter.XmlDurationToMillisConverter;
-import org.bremersee.peregrinus.converter.XmlGregorianCalendarToInstantConverter;
+import org.bremersee.peregrinus.converter.XmlGregorianCalendarToOffsetDateTimeConverter;
 import org.bremersee.peregrinus.geo.model.GarminImportRteCalculationProperties;
 import org.bremersee.xml.JaxbContextBuilder;
 import reactor.util.function.Tuple2;
@@ -37,8 +38,8 @@ import reactor.util.function.Tuple2;
  */
 class RtePtTypeToRtePtConverter extends PtTypeToPtConverter {
 
-  private static final XmlGregorianCalendarToInstantConverter timeConverter
-      = new XmlGregorianCalendarToInstantConverter();
+  private static final XmlGregorianCalendarToOffsetDateTimeConverter timeConverter
+      = new XmlGregorianCalendarToOffsetDateTimeConverter();
 
   private static final XmlDurationToMillisConverter durationConverter
       = new XmlDurationToMillisConverter();
@@ -92,14 +93,14 @@ class RtePtTypeToRtePtConverter extends PtTypeToPtConverter {
         getJaxbContextBuilder().buildUnmarshaller());
   }
 
-  private Instant getDepartureTime(final WptType wptType) {
+  private OffsetDateTime getDepartureTime(final WptType wptType) {
     return getViaPointExtension(wptType)
         .map(ViaPoint::getDepartureTime)
         .map(timeConverter::convert)
         .orElse(null);
   }
 
-  private Instant getArrivalTime(final WptType wptType) {
+  private OffsetDateTime getArrivalTime(final WptType wptType) {
     return getViaPointExtension(wptType)
         .map(ViaPoint::getArrivalTime)
         .map(timeConverter::convert)

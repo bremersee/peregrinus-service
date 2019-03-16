@@ -33,7 +33,7 @@ import org.bremersee.gpx.model.WptType;
 import org.bremersee.peregrinus.content.model.Pt;
 import org.bremersee.peregrinus.content.model.PtProperties;
 import org.bremersee.peregrinus.content.model.PtSettings;
-import org.bremersee.peregrinus.converter.InstantToXmlGregorianCalendarConverter;
+import org.bremersee.peregrinus.converter.OffsetDateTimeToXmlGregorianCalendarConverter;
 import org.bremersee.xml.JaxbContextBuilder;
 import reactor.util.function.Tuples;
 
@@ -52,8 +52,8 @@ abstract class PtToPtTypeConverter<T extends Pt<? extends PtProperties<? extends
   private static final PhoneNumberToPhoneNumberTypeConverter phoneNumberConverter
       = new PhoneNumberToPhoneNumberTypeConverter();
 
-  private static final InstantToXmlGregorianCalendarConverter timeConverter
-      = new InstantToXmlGregorianCalendarConverter();
+  private static final OffsetDateTimeToXmlGregorianCalendarConverter timeConverter
+      = new OffsetDateTimeToXmlGregorianCalendarConverter();
 
   @Getter(AccessLevel.PACKAGE)
   private final JaxbContextBuilder jaxbContextBuilder;

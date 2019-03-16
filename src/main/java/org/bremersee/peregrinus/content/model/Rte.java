@@ -20,22 +20,13 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 import org.locationtech.jts.geom.MultiLineString;
-import org.springframework.data.annotation.TypeAlias;
-import org.springframework.data.mongodb.core.mapping.Document;
 
 /**
  * @author Christian Bremer
  */
-@Document(collection = "feature")
-@TypeAlias("Rte")
 @Getter
 @Setter
 @ToString(callSuper = true)
 public class Rte extends Feature<MultiLineString, RteProperties> {
-
-  @Override
-  int orderValue() {
-    return 50;
-  }
 
 }

@@ -26,22 +26,10 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
-import org.springframework.data.annotation.Id;
-import org.springframework.data.annotation.TypeAlias;
-import org.springframework.data.annotation.Version;
-import org.springframework.data.mongodb.core.index.CompoundIndex;
-import org.springframework.data.mongodb.core.index.CompoundIndexes;
-import org.springframework.data.mongodb.core.index.Indexed;
-import org.springframework.data.mongodb.core.mapping.Document;
 
 /**
  * @author Christian Bremer
  */
-@Document(collection = "feature-settings")
-@TypeAlias("FeatureSettings")
-@CompoundIndexes({
-    @CompoundIndex(name = "uk_feature_user", def = "{'featureId': 1, 'userId': 1}", unique = true)
-})
 @JsonAutoDetect(
     fieldVisibility = Visibility.ANY,
     getterVisibility = Visibility.NONE,
@@ -58,16 +46,10 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @ToString
 public abstract class FeatureSettings {
 
-  @Id
   private String id;
 
-  @Version
-  private Long version;
-
-  @Indexed
   private String featureId;
 
-  @Indexed
   private String userId;
 
 }

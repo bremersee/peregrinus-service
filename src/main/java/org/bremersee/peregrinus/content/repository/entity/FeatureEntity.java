@@ -14,33 +14,36 @@
  * limitations under the License.
  */
 
-package org.bremersee.peregrinus.content.model;
+package org.bremersee.peregrinus.content.repository.entity;
 
-import java.math.BigDecimal;
-import java.time.OffsetDateTime;
-import java.util.List;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
+import org.locationtech.jts.geom.Geometry;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.annotation.TypeAlias;
+import org.springframework.data.mongodb.core.index.GeoSpatialIndexType;
+import org.springframework.data.mongodb.core.index.GeoSpatialIndexed;
+import org.springframework.data.mongodb.core.mapping.Document;
 
 /**
  * @author Christian Bremer
  */
+@Document(collection = "feature")
+@TypeAlias("Feature")
 @Getter
 @Setter
-@ToString(callSuper = true)
-public class TrkProperties extends FeatureProperties<TrkSettings> {
+@ToString
+public abstract class FeatureEntity<G extends Geometry, P extends FeatureEntityProperties> {
 
-  private List<List<BigDecimal>> eleLines;
+  @Id
+  private String id;
 
-  private List<List<OffsetDateTime>> timeLines;
+  @GeoSpatialIndexed(type = GeoSpatialIndexType.GEO_2DSPHERE)
+  private G geometry;
 
-  @Override
-  TrkSettings doCreateDefaultSettings() {
+  private double[] bbox;
 
-    final TrkSettings settings = new TrkSettings();
-    settings.setDisplayColor(DisplayColor.DARK_GRAY);
-    return settings;
-  }
+  private P properties;
 
 }

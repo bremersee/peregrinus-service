@@ -15,8 +15,8 @@ import org.junit.Test;
  */
 public class InstantToXmlGregorianCalendarConverterTest {
 
-  private static final InstantToXmlGregorianCalendarConverter converter
-      = new InstantToXmlGregorianCalendarConverter();
+  private static final OffsetDateTimeToXmlGregorianCalendarConverter converter
+      = new OffsetDateTimeToXmlGregorianCalendarConverter();
 
   /**
    * Tests convert.

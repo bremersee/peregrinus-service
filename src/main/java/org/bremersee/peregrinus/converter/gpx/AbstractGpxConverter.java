@@ -17,7 +17,7 @@
 package org.bremersee.peregrinus.converter.gpx;
 
 import java.time.Clock;
-import java.time.Instant;
+import java.time.OffsetDateTime;
 import java.time.ZoneId;
 import java.util.Objects;
 import java.util.function.Supplier;
@@ -53,7 +53,7 @@ abstract class AbstractGpxConverter {
       final Supplier<T> featurePropertiesSupplier) {
 
     final T featureProperties = featurePropertiesSupplier.get();
-    featureProperties.setCreated(Instant.now(Clock.system(ZoneId.of("UTC"))));
+    featureProperties.setCreated(OffsetDateTime.now(Clock.system(ZoneId.of("Z"))));
     featureProperties.setModified(featureProperties.getCreated());
     if (commonGpxType != null) {
       featureProperties.setName(commonGpxType.getName());
