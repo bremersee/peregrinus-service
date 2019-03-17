@@ -19,6 +19,6 @@ package org.bremersee.peregrinus.content.repository;
 /**
  * @author Christian Bremer
  */
-interface RteRepository {
+interface WptRepository {
 
 }

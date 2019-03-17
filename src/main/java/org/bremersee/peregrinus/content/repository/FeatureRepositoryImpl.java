@@ -21,32 +21,8 @@ import java.time.ZoneId;
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
-import java.util.function.Supplier;
-import org.bremersee.peregrinus.content.model.Feature;
-import org.bremersee.peregrinus.content.model.FeatureProperties;
 import org.bremersee.peregrinus.content.model.FeatureSettings;
 import org.bremersee.peregrinus.content.model.Rte;
-import org.bremersee.peregrinus.content.model.RteProperties;
-import org.bremersee.peregrinus.content.model.RtePt;
-import org.bremersee.peregrinus.content.model.RteSettings;
-import org.bremersee.peregrinus.content.model.Trk;
-import org.bremersee.peregrinus.content.model.TrkProperties;
-import org.bremersee.peregrinus.content.model.TrkSettings;
-import org.bremersee.peregrinus.content.model.Wpt;
-import org.bremersee.peregrinus.content.model.WptProperties;
-import org.bremersee.peregrinus.content.model.WptSettings;
-import org.bremersee.peregrinus.content.repository.entity.FeatureEntity;
-import org.bremersee.peregrinus.content.repository.entity.FeatureEntityProperties;
-import org.bremersee.peregrinus.content.repository.entity.FeatureEntitySettings;
-import org.bremersee.peregrinus.content.repository.entity.RteEntity;
-import org.bremersee.peregrinus.content.repository.entity.RteEntitySettings;
-import org.bremersee.peregrinus.content.repository.entity.RtePtEntity;
-import org.bremersee.peregrinus.content.repository.entity.RtePtEntitySettings;
-import org.bremersee.peregrinus.content.repository.entity.TrkEntity;
-import org.bremersee.peregrinus.content.repository.entity.TrkEntitySettings;
-import org.bremersee.peregrinus.content.repository.entity.WptEntity;
-import org.bremersee.peregrinus.content.repository.entity.WptEntitySettings;
-import org.locationtech.jts.geom.Geometry;
 import org.modelmapper.AbstractConverter;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.mongodb.core.ReactiveMongoOperations;
@@ -55,8 +31,6 @@ import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Repository;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
-import reactor.util.function.Tuple2;
-import reactor.util.function.Tuple3;
 
 /**
  * @author Christian Bremer
@@ -157,23 +131,41 @@ public class FeatureRepositoryImpl implements FeatureRepository {
       Class<T> clazz,
       String featureId,
       String userId) {
+    return Mono.empty();
+    /*
     return mongoOperations.findOne(Query.query(featureSettingsCriteria(featureId, userId)), clazz);
+    */
   }
 
   @Override
   public Mono<Void> deleteFeatureSettings(String featureId, String userId) {
+    return Mono.empty();
+    /*
     return mongoOperations
         .remove(Query.query(featureSettingsCriteria(featureId, userId)), FeatureSettings.class)
         .flatMap(deleteResult -> Mono.empty());
+        */
   }
 
 
-  public Mono<RtePt> persistRtePt(final RtePt rtePt) { // TODO Do I want to save settings, too?
-    mongoOperations.findOne(Query.query(Criteria.where("id").is(rtePt.getId())), RtePt.class)
-        .map(dto -> new RtePtEntity())
-        .map(entity -> mongoOperations.save(entity))
-    ;
-    return Mono.empty();
+  /*
+  public Mono<RtePt> persistRtePt(final RtePt rtePt, final String userId) {
+    final RtePtEntity featureEntity = mapFeature(rtePt, RtePtEntity::new,
+        RtePtEntityProperties::new);
+    final RtePtEntitySettings settingsEntity = mapSettings(rtePt.getProperties().getSettings(),
+        RtePtEntitySettings::new);
+    settingsEntity.setUserId(userId);
+    return mongoOperations
+        .save(featureEntity)
+        .flatMap(entity -> {
+          settingsEntity.setFeatureId(entity.getId());
+          return Mono.zip(Mono.just(entity), mongoOperations.save(settingsEntity));
+        })
+        .map(this::mapRtePt);
+  }
+
+  private Flux<RtePt> persistRtePts(final List<RtePt> rtePts, final String userId) {
+    return Flux.fromIterable(rtePts).flatMap(rtePt -> persistRtePt(rtePt, userId));
   }
 
   public Mono<RtePt> findRtePtById(final String id, final String userId) {
@@ -199,12 +191,30 @@ public class FeatureRepositoryImpl implements FeatureRepository {
         ;
   }
 
-  private RtePt mapRtePt(Tuple2<RtePtEntity, RtePtEntitySettings> tuple) {
-    RtePt rtePt = new RtePt();
-    return rtePt;
+  private RtePt mapRtePt(final Tuple2<RtePtEntity, RtePtEntitySettings> tuple) {
+    return mapFeature(
+        tuple.getT1(), tuple.getT2(), RtePt::new, RtePtProperties::new, RtePtSettings::new);
+  }
+
+  public Mono<Rte> persistRte(final Rte rte, final String userId) {
+    final RteEntity featureEntity = mapFeature(rte, RteEntity::new, RteEntityProperties::new);
+    final RteEntitySettings settingsEntity = mapSettings(rte.getProperties().getSettings(),
+        RteEntitySettings::new);
+    settingsEntity.setUserId(userId);
+    return mongoOperations
+        .save(featureEntity)
+        .flatMap(entity -> {
+          settingsEntity.setFeatureId(entity.getId());
+          return Mono.zip(
+              Mono.just(entity),
+              mongoOperations.save(settingsEntity),
+              persistRtePts(rte.getProperties().getRtePts(), userId).collectList());
+        })
+        .map(this::mapRte);
   }
 
   public Flux<Rte> findRtes(final String userId) {
+    //TODO demo
     return mongoOperations.find(null, RteEntity.class)
         .flatMap(entity -> zipRte(entity, userId))
         .map(this::mapRte);
@@ -284,6 +294,19 @@ public class FeatureRepositoryImpl implements FeatureRepository {
     return feature;
   }
 
+  private <T extends FeatureEntity<G, P>, G extends Geometry, P extends FeatureEntityProperties> T mapFeature(
+      final Feature<G, ?> feature,
+      final Supplier<T> featureSupplier,
+      final Supplier<P> propertiesSupplier) {
+
+    T featureEntity = featureSupplier.get();
+    featureEntity.setBbox(GeometryUtils.getBoundingBox(feature.getGeometry()));
+    featureEntity.setGeometry(feature.getGeometry());
+    featureEntity.setId(feature.getId());
+    featureEntity.setProperties(mapProperties(feature.getProperties(), propertiesSupplier));
+    return featureEntity;
+  }
+
   private <P extends FeatureProperties<S>, S extends FeatureSettings> P mapProperties(
       final FeatureEntityProperties entityProperties,
       final FeatureEntitySettings entitySettings,
@@ -296,13 +319,31 @@ public class FeatureRepositoryImpl implements FeatureRepository {
     return properties;
   }
 
-  private <T extends FeatureSettings> T mapSettings(
-      final FeatureEntitySettings entitySettings,
-      final Supplier<T> settingsSupplier) {
+  private <P extends FeatureEntityProperties> P mapProperties(
+      final FeatureProperties properties,
+      final Supplier<P> supplier) {
+    P entityProperties = supplier.get();
+    modelMapper.map(properties, entityProperties);
+    return entityProperties;
+  }
 
-    T settings = settingsSupplier.get();
+  private <S extends FeatureSettings> S mapSettings(
+      final FeatureEntitySettings entitySettings,
+      final Supplier<S> settingsSupplier) {
+
+    S settings = settingsSupplier.get();
     modelMapper.map(entitySettings, settings);
     return settings;
+  }
+
+  private <S extends FeatureEntitySettings> S mapSettings(
+      final FeatureSettings settings,
+      final Supplier<S> supplier) {
+    S entitySettings = supplier.get();
+    if (settings != null) {
+      modelMapper.map(settings, entitySettings);
+    }
+    return entitySettings;
   }
 
   private Criteria featureSettingsCriteria(String featureId, String userId) {
@@ -310,5 +351,6 @@ public class FeatureRepositoryImpl implements FeatureRepository {
         Criteria.where("featureId").is(featureId),
         Criteria.where("userId").is(userId));
   }
+  */
 
 }

@@ -27,7 +27,7 @@ import reactor.core.publisher.Mono;
  * @author Christian Bremer
  */
 @Validated
-public interface FeatureRepository {
+public interface FeatureRepository { //extends RteRepository, TrkRepository, WptRepository {
 
   <T> Mono<T> findById(@NotNull String id, @NotNull Class<T> cls);
 
