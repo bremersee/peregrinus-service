@@ -16,7 +16,10 @@
 
 package org.bremersee.peregrinus.content.model;
 
+import lombok.Builder;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 import org.locationtech.jts.geom.MultiLineString;
@@ -27,6 +30,13 @@ import org.locationtech.jts.geom.MultiLineString;
 @Getter
 @Setter
 @ToString(callSuper = true)
+@EqualsAndHashCode(callSuper = true)
+@NoArgsConstructor
 public class Trk extends Feature<MultiLineString, TrkProperties> {
 
+  @Builder
+  public Trk(String id, MultiLineString geometry, double[] bbox,
+      TrkProperties properties) {
+    super(id, geometry, bbox, properties);
+  }
 }

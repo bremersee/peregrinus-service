@@ -16,7 +16,9 @@
 
 package org.bremersee.peregrinus.content.model;
 
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 import org.locationtech.jts.geom.Point;
@@ -27,6 +29,11 @@ import org.locationtech.jts.geom.Point;
 @Getter
 @Setter
 @ToString(callSuper = true)
+@EqualsAndHashCode(callSuper = true)
+@NoArgsConstructor
 public abstract class Pt<P extends PtProperties> extends Feature<Point, P> {
 
+  public Pt(String id, Point geometry, double[] bbox, P properties) {
+    super(id, geometry, bbox, properties);
+  }
 }

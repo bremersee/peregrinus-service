@@ -17,12 +17,18 @@
 package org.bremersee.peregrinus.content.repository.entity;
 
 import java.math.BigDecimal;
+import java.time.OffsetDateTime;
+import java.util.ArrayList;
 import java.util.List;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 import org.bremersee.common.model.Address;
+import org.bremersee.common.model.Link;
 import org.bremersee.common.model.PhoneNumber;
+import org.bremersee.peregrinus.security.access.repository.entity.AccessControlEntity;
 import org.springframework.data.annotation.TypeAlias;
 
 /**
@@ -32,13 +38,11 @@ import org.springframework.data.annotation.TypeAlias;
 @Getter
 @Setter
 @ToString(callSuper = true)
+@EqualsAndHashCode(callSuper = true)
+@NoArgsConstructor
 public abstract class PtEntityProperties extends FeatureEntityProperties {
 
   private String internalType; // photo, video or not // TODO
-
-  //private Instant time; // TODO wozu hat ein punkt eine zeit?
-
-  //private String sym; // TODO
 
   /**
    * Elevation in meters
@@ -48,11 +52,33 @@ public abstract class PtEntityProperties extends FeatureEntityProperties {
   /**
    * Address
    */
-  private Address address; // index?
+  private Address address; // entity with index?
 
   /**
    * Phone numbers
    */
-  private List<PhoneNumber> phoneNumbers;
+  private List<PhoneNumber> phoneNumbers = new ArrayList<>();
 
+  public PtEntityProperties(
+      AccessControlEntity accessControl,
+      OffsetDateTime created,
+      OffsetDateTime modified,
+      String name,
+      String plainTextDescription,
+      String markdownDescription,
+      String internalComments,
+      List<Link> links,
+      OffsetDateTime startTime,
+      OffsetDateTime stopTime,
+      String internalType,
+      BigDecimal ele,
+      Address address,
+      List<PhoneNumber> phoneNumbers) {
+    super(accessControl, created, modified, name, plainTextDescription, markdownDescription,
+        internalComments, links, startTime, stopTime);
+    this.internalType = internalType;
+    this.ele = ele;
+    this.address = address;
+    this.phoneNumbers = phoneNumbers;
+  }
 }

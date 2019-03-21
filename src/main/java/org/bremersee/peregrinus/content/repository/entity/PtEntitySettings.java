@@ -16,7 +16,9 @@
 
 package org.bremersee.peregrinus.content.repository.entity;
 
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 import org.springframework.data.annotation.TypeAlias;
@@ -26,16 +28,15 @@ import org.springframework.data.mongodb.core.mapping.Document;
  * @author Christian Bremer
  */
 @Document(collection = "feature-settings")
-@TypeAlias("WptSettings")
+@TypeAlias("PtSettings")
 @Getter
 @Setter
 @ToString(callSuper = true)
+@EqualsAndHashCode(callSuper = true)
+@NoArgsConstructor
 public abstract class PtEntitySettings extends FeatureEntitySettings {
 
-  public PtEntitySettings() {
-  }
-
-  public PtEntitySettings(String featureId, String userId) {
-    super(featureId, userId);
+  public PtEntitySettings(String id, String featureId, String userId) {
+    super(id, featureId, userId);
   }
 }

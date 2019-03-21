@@ -16,7 +16,10 @@
 
 package org.bremersee.peregrinus.content.repository.entity;
 
+import lombok.Builder;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 import org.springframework.data.annotation.TypeAlias;
@@ -30,12 +33,13 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @Getter
 @Setter
 @ToString(callSuper = true)
+@EqualsAndHashCode(callSuper = true)
+@NoArgsConstructor
 public class WptEntitySettings extends PtEntitySettings {
 
-  public WptEntitySettings() {
+  @Builder
+  public WptEntitySettings(String id, String featureId, String userId) {
+    super(id, featureId, userId);
   }
 
-  public WptEntitySettings(String featureId, String userId) {
-    super(featureId, userId);
-  }
 }

@@ -18,10 +18,16 @@ package org.bremersee.peregrinus.content.model;
 
 import java.math.BigDecimal;
 import java.time.OffsetDateTime;
+import java.util.ArrayList;
 import java.util.List;
+import lombok.Builder;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
+import org.bremersee.common.model.Link;
+import org.bremersee.peregrinus.security.access.model.AccessControlDto;
 
 /**
  * @author Christian Bremer
@@ -29,15 +35,30 @@ import lombok.ToString;
 @Getter
 @Setter
 @ToString(callSuper = true)
+@EqualsAndHashCode(callSuper = true)
+@NoArgsConstructor
 public class TrkProperties extends FeatureProperties<TrkSettings> {
 
-  private List<List<BigDecimal>> eleLines;
+  private List<List<BigDecimal>> eleLines = new ArrayList<>();
 
-  private List<List<OffsetDateTime>> timeLines;
+  private List<List<OffsetDateTime>> timeLines = new ArrayList<>();
+
+  @Builder
+  public TrkProperties(AccessControlDto accessControl,
+      OffsetDateTime created, OffsetDateTime modified, String name,
+      String plainTextDescription, String markdownDescription, String internalComments,
+      List<Link> links, OffsetDateTime startTime,
+      OffsetDateTime stopTime, TrkSettings settings,
+      List<List<BigDecimal>> eleLines,
+      List<List<OffsetDateTime>> timeLines) {
+    super(accessControl, created, modified, name, plainTextDescription, markdownDescription,
+        internalComments, links, startTime, stopTime, settings);
+    this.eleLines = eleLines;
+    this.timeLines = timeLines;
+  }
 
   @Override
   TrkSettings doCreateDefaultSettings() {
-
     final TrkSettings settings = new TrkSettings();
     settings.setDisplayColor(DisplayColor.DARK_GRAY);
     return settings;

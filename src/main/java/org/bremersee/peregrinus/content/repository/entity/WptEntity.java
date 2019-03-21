@@ -16,9 +16,13 @@
 
 package org.bremersee.peregrinus.content.repository.entity;
 
+import lombok.Builder;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
+import org.locationtech.jts.geom.Point;
 import org.springframework.data.annotation.TypeAlias;
 import org.springframework.data.mongodb.core.mapping.Document;
 
@@ -30,6 +34,13 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @Getter
 @Setter
 @ToString(callSuper = true)
+@EqualsAndHashCode(callSuper = true)
+@NoArgsConstructor
 public class WptEntity extends PtEntity<WptEntityProperties> {
 
+  @Builder
+  public WptEntity(String id, Point geometry, double[] bbox,
+      WptEntityProperties properties) {
+    super(id, geometry, bbox, properties);
+  }
 }

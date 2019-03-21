@@ -22,8 +22,9 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.fasterxml.jackson.annotation.JsonTypeInfo.Id;
 import java.time.Clock;
 import java.time.OffsetDateTime;
-import java.time.ZoneId;
+import java.util.ArrayList;
 import java.util.List;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -41,6 +42,7 @@ import org.bremersee.peregrinus.security.access.model.AccessControlDto;
 })
 @Getter
 @Setter
+@EqualsAndHashCode
 @ToString
 public abstract class FeatureProperties<S extends FeatureSettings> {
 
@@ -58,7 +60,7 @@ public abstract class FeatureProperties<S extends FeatureSettings> {
 
   private String internalComments;
 
-  private List<Link> links;
+  private List<Link> links = new ArrayList<>();
 
   /**
    * Start time of tracks or way points
@@ -73,20 +75,37 @@ public abstract class FeatureProperties<S extends FeatureSettings> {
   private S settings;
 
   public FeatureProperties() {
-    final OffsetDateTime now = OffsetDateTime.now(Clock.system(ZoneId.of("Z")));
+    final OffsetDateTime now = OffsetDateTime.now(Clock.systemUTC());
     created = now;
     modified = now;
     settings = doCreateDefaultSettings();
   }
 
-  public S createDefaultSettings(
-      final String featureId,
-      final String userId) {
-
-    final S settings = doCreateDefaultSettings();
-    settings.setFeatureId(featureId);
-    settings.setUserId(userId);
-    return settings;
+  public FeatureProperties(
+      AccessControlDto accessControl,
+      OffsetDateTime created,
+      OffsetDateTime modified,
+      String name,
+      String plainTextDescription,
+      String markdownDescription,
+      String internalComments,
+      List<Link> links,
+      OffsetDateTime startTime,
+      OffsetDateTime stopTime,
+      S settings) {
+    this.accessControl = accessControl;
+    this.created = created;
+    this.modified = modified;
+    this.name = name;
+    this.plainTextDescription = plainTextDescription;
+    this.markdownDescription = markdownDescription;
+    this.internalComments = internalComments;
+    if (links != null) {
+      this.links = links;
+    }
+    this.startTime = startTime;
+    this.stopTime = stopTime;
+    this.settings = settings;
   }
 
   abstract S doCreateDefaultSettings();

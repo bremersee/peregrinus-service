@@ -17,12 +17,17 @@
 package org.bremersee.peregrinus.content.repository.entity;
 
 import java.math.BigDecimal;
-import java.time.Instant;
 import java.time.OffsetDateTime;
+import java.util.ArrayList;
 import java.util.List;
+import lombok.Builder;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
+import org.bremersee.common.model.Link;
+import org.bremersee.peregrinus.security.access.repository.entity.AccessControlEntity;
 import org.springframework.data.annotation.TypeAlias;
 
 /**
@@ -32,10 +37,25 @@ import org.springframework.data.annotation.TypeAlias;
 @Getter
 @Setter
 @ToString(callSuper = true)
+@EqualsAndHashCode(callSuper = true)
+@NoArgsConstructor
 public class TrkEntityProperties extends FeatureEntityProperties {
 
-  private List<List<BigDecimal>> eleLines;
+  private List<List<BigDecimal>> eleLines = new ArrayList<>();
 
-  private List<List<OffsetDateTime>> timeLines;
+  private List<List<OffsetDateTime>> timeLines = new ArrayList<>();
 
+  @Builder
+  public TrkEntityProperties(
+      AccessControlEntity accessControl,
+      OffsetDateTime created, OffsetDateTime modified, String name,
+      String plainTextDescription, String markdownDescription, String internalComments,
+      List<Link> links, OffsetDateTime startTime,
+      OffsetDateTime stopTime, List<List<BigDecimal>> eleLines,
+      List<List<OffsetDateTime>> timeLines) {
+    super(accessControl, created, modified, name, plainTextDescription, markdownDescription,
+        internalComments, links, startTime, stopTime);
+    this.eleLines = eleLines;
+    this.timeLines = timeLines;
+  }
 }

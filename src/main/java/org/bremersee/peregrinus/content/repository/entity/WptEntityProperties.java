@@ -16,9 +16,19 @@
 
 package org.bremersee.peregrinus.content.repository.entity;
 
+import java.math.BigDecimal;
+import java.time.OffsetDateTime;
+import java.util.List;
+import lombok.Builder;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
+import org.bremersee.common.model.Address;
+import org.bremersee.common.model.Link;
+import org.bremersee.common.model.PhoneNumber;
+import org.bremersee.peregrinus.security.access.repository.entity.AccessControlEntity;
 import org.springframework.data.annotation.TypeAlias;
 
 /**
@@ -28,6 +38,20 @@ import org.springframework.data.annotation.TypeAlias;
 @Getter
 @Setter
 @ToString(callSuper = true)
+@EqualsAndHashCode(callSuper = true)
+@NoArgsConstructor
 public class WptEntityProperties extends PtEntityProperties {
 
+  @Builder
+  public WptEntityProperties(
+      AccessControlEntity accessControl,
+      OffsetDateTime created, OffsetDateTime modified, String name,
+      String plainTextDescription, String markdownDescription, String internalComments,
+      List<Link> links, OffsetDateTime startTime,
+      OffsetDateTime stopTime, String internalType, BigDecimal ele,
+      Address address,
+      List<PhoneNumber> phoneNumbers) {
+    super(accessControl, created, modified, name, plainTextDescription, markdownDescription,
+        internalComments, links, startTime, stopTime, internalType, ele, address, phoneNumbers);
+  }
 }

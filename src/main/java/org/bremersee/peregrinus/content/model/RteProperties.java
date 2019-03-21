@@ -16,10 +16,17 @@
 
 package org.bremersee.peregrinus.content.model;
 
+import java.time.OffsetDateTime;
+import java.util.ArrayList;
 import java.util.List;
+import lombok.Builder;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
+import org.bremersee.common.model.Link;
+import org.bremersee.peregrinus.security.access.model.AccessControlDto;
 
 /**
  * @author Christian Bremer
@@ -27,13 +34,26 @@ import lombok.ToString;
 @Getter
 @Setter
 @ToString(callSuper = true)
+@EqualsAndHashCode(callSuper = true)
+@NoArgsConstructor
 public class RteProperties extends FeatureProperties<RteSettings> {
 
-  private List<RtePt> rtePts;
+  private List<RtePt> rtePts = new ArrayList<>();
+
+  @Builder
+  public RteProperties(AccessControlDto accessControl,
+      OffsetDateTime created, OffsetDateTime modified, String name,
+      String plainTextDescription, String markdownDescription, String internalComments,
+      List<Link> links, OffsetDateTime startTime,
+      OffsetDateTime stopTime, RteSettings settings,
+      List<RtePt> rtePts) {
+    super(accessControl, created, modified, name, plainTextDescription, markdownDescription,
+        internalComments, links, startTime, stopTime, settings);
+    this.rtePts = rtePts;
+  }
 
   @Override
   RteSettings doCreateDefaultSettings() {
-
     final RteSettings settings = new RteSettings();
     settings.setDisplayColor(DisplayColor.MAGENTA);
     return settings;

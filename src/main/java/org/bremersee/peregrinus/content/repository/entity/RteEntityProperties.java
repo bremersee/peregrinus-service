@@ -16,11 +16,18 @@
 
 package org.bremersee.peregrinus.content.repository.entity;
 
+import java.time.OffsetDateTime;
+import java.util.ArrayList;
 import java.util.List;
+import lombok.Builder;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
+import org.bremersee.common.model.Link;
 import org.bremersee.peregrinus.content.model.RtePt;
+import org.bremersee.peregrinus.security.access.repository.entity.AccessControlEntity;
 import org.springframework.data.annotation.TypeAlias;
 
 /**
@@ -30,8 +37,22 @@ import org.springframework.data.annotation.TypeAlias;
 @Getter
 @Setter
 @ToString(callSuper = true)
+@EqualsAndHashCode(callSuper = true)
+@NoArgsConstructor
 public class RteEntityProperties extends FeatureEntityProperties {
 
-  private List<RtePt> rtePts;
+  private List<RtePt> rtePts = new ArrayList<>();
 
+  @Builder
+  public RteEntityProperties(
+      AccessControlEntity accessControl,
+      OffsetDateTime created, OffsetDateTime modified, String name,
+      String plainTextDescription, String markdownDescription, String internalComments,
+      List<Link> links, OffsetDateTime startTime,
+      OffsetDateTime stopTime,
+      List<RtePt> rtePts) {
+    super(accessControl, created, modified, name, plainTextDescription, markdownDescription,
+        internalComments, links, startTime, stopTime);
+    this.rtePts = rtePts;
+  }
 }

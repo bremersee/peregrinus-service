@@ -16,7 +16,10 @@
 
 package org.bremersee.peregrinus.content.repository.entity;
 
+import lombok.Builder;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 import org.locationtech.jts.geom.MultiLineString;
@@ -31,6 +34,13 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @Getter
 @Setter
 @ToString(callSuper = true)
+@EqualsAndHashCode(callSuper = true)
+@NoArgsConstructor
 public class TrkEntity extends FeatureEntity<MultiLineString, TrkEntityProperties> {
 
+  @Builder
+  public TrkEntity(String id, MultiLineString geometry, double[] bbox,
+      TrkEntityProperties properties) {
+    super(id, geometry, bbox, properties);
+  }
 }

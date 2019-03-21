@@ -17,12 +17,18 @@
 package org.bremersee.peregrinus.content.model;
 
 import java.math.BigDecimal;
+import java.time.OffsetDateTime;
+import java.util.ArrayList;
 import java.util.List;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 import org.bremersee.common.model.Address;
+import org.bremersee.common.model.Link;
 import org.bremersee.common.model.PhoneNumber;
+import org.bremersee.peregrinus.security.access.model.AccessControlDto;
 
 /**
  * @author Christian Bremer
@@ -30,13 +36,11 @@ import org.bremersee.common.model.PhoneNumber;
 @Getter
 @Setter
 @ToString(callSuper = true)
+@EqualsAndHashCode(callSuper = true)
+@NoArgsConstructor
 public abstract class PtProperties<S extends PtSettings> extends FeatureProperties<S> {
 
   private String internalType; // photo, video or not // TODO
-
-  //private Instant time; // TODO wozu hat ein punkt eine zeit?
-
-  //private String sym; // TODO
 
   /**
    * Elevation in meters
@@ -51,6 +55,19 @@ public abstract class PtProperties<S extends PtSettings> extends FeatureProperti
   /**
    * Phone numbers
    */
-  private List<PhoneNumber> phoneNumbers;
+  private List<PhoneNumber> phoneNumbers = new ArrayList<>();
 
+  public PtProperties(AccessControlDto accessControl,
+      OffsetDateTime created, OffsetDateTime modified, String name,
+      String plainTextDescription, String markdownDescription, String internalComments,
+      List<Link> links, OffsetDateTime startTime,
+      OffsetDateTime stopTime, S settings, String internalType, BigDecimal ele,
+      Address address, List<PhoneNumber> phoneNumbers) {
+    super(accessControl, created, modified, name, plainTextDescription, markdownDescription,
+        internalComments, links, startTime, stopTime, settings);
+    this.internalType = internalType;
+    this.ele = ele;
+    this.address = address;
+    this.phoneNumbers = phoneNumbers;
+  }
 }

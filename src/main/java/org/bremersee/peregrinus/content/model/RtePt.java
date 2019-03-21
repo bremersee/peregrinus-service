@@ -16,9 +16,13 @@
 
 package org.bremersee.peregrinus.content.model;
 
+import lombok.Builder;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
+import org.locationtech.jts.geom.Point;
 
 /**
  * @author Christian Bremer
@@ -26,6 +30,16 @@ import lombok.ToString;
 @Getter
 @Setter
 @ToString(callSuper = true)
+@EqualsAndHashCode(callSuper = true)
+@NoArgsConstructor
 public class RtePt extends Pt<RtePtProperties> {
 
+  @Builder
+  public RtePt(
+      String id,
+      Point geometry,
+      double[] bbox,
+      RtePtProperties properties) {
+    super(id, geometry, bbox, properties);
+  }
 }

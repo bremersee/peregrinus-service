@@ -19,9 +19,13 @@ package org.bremersee.peregrinus.content.model;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.fasterxml.jackson.annotation.JsonTypeName;
+import java.util.Arrays;
+import java.util.Objects;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
+import org.bremersee.geojson.utils.GeometryUtils;
 import org.locationtech.jts.geom.Geometry;
 
 /**
@@ -34,6 +38,7 @@ import org.locationtech.jts.geom.Geometry;
 @Getter
 @Setter
 @ToString
+@NoArgsConstructor
 public abstract class Feature<G extends Geometry, P extends FeatureProperties> {
 
   private String id;
@@ -43,5 +48,34 @@ public abstract class Feature<G extends Geometry, P extends FeatureProperties> {
   private double[] bbox;
 
   private P properties;
+
+  public Feature(String id, G geometry, double[] bbox, P properties) {
+    this.id = id;
+    this.geometry = geometry;
+    this.bbox = bbox;
+    this.properties = properties;
+  }
+
+  @Override
+  public int hashCode() {
+    int result = Objects.hash(id, geometry, properties);
+    result = 31 * result + Arrays.hashCode(bbox);
+    return result;
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+    if (!(o instanceof Feature)) {
+      return false;
+    }
+    Feature<?, ?> feature = (Feature<?, ?>) o;
+    return Objects.equals(id, feature.id) &&
+        GeometryUtils.equals(geometry, feature.geometry) &&
+        Arrays.equals(bbox, feature.bbox) &&
+        Objects.equals(properties, feature.properties);
+  }
 
 }

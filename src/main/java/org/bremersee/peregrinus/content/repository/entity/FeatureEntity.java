@@ -16,9 +16,13 @@
 
 package org.bremersee.peregrinus.content.repository.entity;
 
+import java.util.Arrays;
+import java.util.Objects;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
+import org.bremersee.geojson.utils.GeometryUtils;
 import org.locationtech.jts.geom.Geometry;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.TypeAlias;
@@ -34,6 +38,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @Getter
 @Setter
 @ToString
+@NoArgsConstructor
 public abstract class FeatureEntity<G extends Geometry, P extends FeatureEntityProperties> {
 
   @Id
@@ -46,4 +51,32 @@ public abstract class FeatureEntity<G extends Geometry, P extends FeatureEntityP
 
   private P properties;
 
+  public FeatureEntity(String id, G geometry, double[] bbox, P properties) {
+    this.id = id;
+    this.geometry = geometry;
+    this.bbox = bbox;
+    this.properties = properties;
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+    if (!(o instanceof FeatureEntity)) {
+      return false;
+    }
+    FeatureEntity<?, ?> that = (FeatureEntity<?, ?>) o;
+    return Objects.equals(id, that.id) &&
+        GeometryUtils.equals(geometry, that.geometry) &&
+        Arrays.equals(bbox, that.bbox) &&
+        Objects.equals(properties, that.properties);
+  }
+
+  @Override
+  public int hashCode() {
+    int result = Objects.hash(id, geometry, properties);
+    result = 31 * result + Arrays.hashCode(bbox);
+    return result;
+  }
 }

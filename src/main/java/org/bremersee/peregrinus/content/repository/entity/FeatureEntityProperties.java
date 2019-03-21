@@ -17,10 +17,10 @@
 package org.bremersee.peregrinus.content.repository.entity;
 
 import java.time.Clock;
-import java.time.Instant;
 import java.time.OffsetDateTime;
-import java.time.ZoneId;
+import java.util.ArrayList;
 import java.util.List;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -35,6 +35,7 @@ import org.springframework.data.mongodb.core.index.Indexed;
 @TypeAlias("FeatureProperties")
 @Getter
 @Setter
+@EqualsAndHashCode
 @ToString
 public abstract class FeatureEntityProperties {
 
@@ -54,24 +55,48 @@ public abstract class FeatureEntityProperties {
 
   private String internalComments;
 
-  private List<Link> links;
+  private List<Link> links = new ArrayList<>();
 
   /**
    * Start time of tracks.
    */
   @Indexed
-  private Instant startTime;
+  private OffsetDateTime startTime;
 
   /**
    * Stop time of tracks.
    */
   @Indexed
-  private Instant stopTime;
+  private OffsetDateTime stopTime;
 
   public FeatureEntityProperties() {
-    final OffsetDateTime now = OffsetDateTime.now(Clock.system(ZoneId.of("Z")));
+    final OffsetDateTime now = OffsetDateTime.now(Clock.systemUTC());
     created = now;
     modified = now;
   }
 
+  public FeatureEntityProperties(
+      AccessControlEntity accessControl,
+      OffsetDateTime created,
+      OffsetDateTime modified,
+      String name,
+      String plainTextDescription,
+      String markdownDescription,
+      String internalComments,
+      List<Link> links,
+      OffsetDateTime startTime,
+      OffsetDateTime stopTime) {
+    this.accessControl = accessControl;
+    this.created = created;
+    this.modified = modified;
+    this.name = name;
+    this.plainTextDescription = plainTextDescription;
+    this.markdownDescription = markdownDescription;
+    this.internalComments = internalComments;
+    if (links != null) {
+      this.links = links;
+    }
+    this.startTime = startTime;
+    this.stopTime = stopTime;
+  }
 }

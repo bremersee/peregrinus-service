@@ -16,7 +16,9 @@
 
 package org.bremersee.peregrinus.content.model;
 
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
@@ -26,6 +28,11 @@ import lombok.ToString;
 @Getter
 @Setter
 @ToString(callSuper = true)
+@EqualsAndHashCode(callSuper = true)
+@NoArgsConstructor
 public abstract class PtSettings extends FeatureSettings {
 
+  public PtSettings(String id, String featureId, String userId) {
+    super(id, featureId, userId);
+  }
 }

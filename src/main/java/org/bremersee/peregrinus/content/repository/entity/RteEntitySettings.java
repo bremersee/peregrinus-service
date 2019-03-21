@@ -16,7 +16,10 @@
 
 package org.bremersee.peregrinus.content.repository.entity;
 
+import lombok.Builder;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 import org.bremersee.peregrinus.content.model.DisplayColor;
@@ -31,14 +34,18 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @Getter
 @Setter
 @ToString(callSuper = true)
+@EqualsAndHashCode(callSuper = true)
+@NoArgsConstructor
 public class RteEntitySettings extends FeatureEntitySettings {
 
   private DisplayColor displayColor = DisplayColor.MAGENTA;
 
-  public RteEntitySettings() {
-  }
-
-  public RteEntitySettings(String featureId, String userId) {
-    super(featureId, userId);
+  @Builder
+  public RteEntitySettings(String id, String featureId, String userId,
+      DisplayColor displayColor) {
+    super(id, featureId, userId);
+    if (displayColor != null) {
+      this.displayColor = displayColor;
+    }
   }
 }

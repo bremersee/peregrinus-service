@@ -16,7 +16,9 @@
 
 package org.bremersee.peregrinus.content.repository.entity;
 
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 import org.locationtech.jts.geom.Point;
@@ -31,6 +33,11 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @Getter
 @Setter
 @ToString(callSuper = true)
+@EqualsAndHashCode(callSuper = true)
+@NoArgsConstructor
 public abstract class PtEntity<P extends PtEntityProperties> extends FeatureEntity<Point, P> {
 
+  public PtEntity(String id, Point geometry, double[] bbox, P properties) {
+    super(id, geometry, bbox, properties);
+  }
 }

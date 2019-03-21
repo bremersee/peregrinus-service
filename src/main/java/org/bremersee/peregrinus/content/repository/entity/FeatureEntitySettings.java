@@ -16,7 +16,9 @@
 
 package org.bremersee.peregrinus.content.repository.entity;
 
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 import org.springframework.data.annotation.Id;
@@ -36,7 +38,9 @@ import org.springframework.data.mongodb.core.mapping.Document;
 })
 @Getter
 @Setter
+@EqualsAndHashCode
 @ToString
+@NoArgsConstructor
 public abstract class FeatureEntitySettings {
 
   @Id
@@ -48,10 +52,8 @@ public abstract class FeatureEntitySettings {
   @Indexed
   private String userId;
 
-  public FeatureEntitySettings() {
-  }
-
-  public FeatureEntitySettings(final String featureId, final String userId) {
+  public FeatureEntitySettings(String id, String featureId, String userId) {
+    this.id = id;
     this.featureId = featureId;
     this.userId = userId;
   }
