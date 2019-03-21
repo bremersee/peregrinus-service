@@ -30,7 +30,7 @@ import reactor.core.publisher.Mono;
  * @author Christian Bremer
  */
 @Validated
-public interface NodeService {
+public interface TreeService {
 
   Mono<Branch> createBranch(
       @NotNull @Length(min = 1) String name,

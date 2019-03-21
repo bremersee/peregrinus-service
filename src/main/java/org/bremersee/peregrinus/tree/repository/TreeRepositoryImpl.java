@@ -51,13 +51,13 @@ import reactor.util.function.Tuple2;
  */
 @Repository
 @Slf4j
-public class NodeRepositoryImpl implements NodeRepository {
+public class TreeRepositoryImpl implements TreeRepository {
 
   private final Map<Class<?>, NodeAdapter> nodeAdapterMap = new HashMap<>();
 
   private ReactiveMongoOperations mongoOperations;
 
-  public NodeRepositoryImpl(
+  public TreeRepositoryImpl(
       final ReactiveMongoOperations mongoOperations,
       final List<NodeAdapter> nodeAdapters) {
 

@@ -30,7 +30,7 @@ import reactor.core.publisher.Mono;
  * @author Christian Bremer
  */
 @Validated
-public interface NodeRepository {
+public interface TreeRepository {
 
   <T extends Node> Mono<T> persistNode(
       @NotNull T node,

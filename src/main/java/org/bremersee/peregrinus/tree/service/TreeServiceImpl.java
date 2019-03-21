@@ -28,7 +28,7 @@ import org.bremersee.peregrinus.security.access.model.AccessControlDto;
 import org.bremersee.peregrinus.security.access.PermissionConstants;
 import org.bremersee.peregrinus.tree.model.Branch;
 import org.bremersee.peregrinus.tree.model.Node;
-import org.bremersee.peregrinus.tree.repository.NodeRepository;
+import org.bremersee.peregrinus.tree.repository.TreeRepository;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.stereotype.Component;
@@ -42,19 +42,19 @@ import reactor.core.publisher.Mono;
  */
 @Component
 @Slf4j
-public class NodeServiceImpl implements NodeService {
+public class TreeServiceImpl implements TreeService {
 
-  private NodeRepository nodeRepository;
+  private TreeRepository treeRepository;
 
   private GroupControllerApi groupService;
 
-  public NodeServiceImpl(
-      final NodeRepository nodeRepository,
+  public TreeServiceImpl(
+      final TreeRepository treeRepository,
       final GroupControllerApi groupService) {
 
-    Assert.notNull(nodeRepository, "Node repository must not be null.");
+    Assert.notNull(treeRepository, "Node repository must not be null.");
     Assert.notNull(groupService, "Group service must not be null.");
-    this.nodeRepository = nodeRepository;
+    this.treeRepository = treeRepository;
     this.groupService = groupService;
   }
 
@@ -81,7 +81,7 @@ public class NodeServiceImpl implements NodeService {
               name, parentId, userId, newAccessControl, roles, groups));
     }
     final Branch branch = new Branch(userId, null, newAccessControl, name);
-    return nodeRepository.persistNode(branch, userId);
+    return treeRepository.persistNode(branch, userId);
   }
 
   private Mono<Branch> createBranch(
@@ -92,7 +92,7 @@ public class NodeServiceImpl implements NodeService {
       final Collection<String> roles,
       final Collection<String> groups) {
 
-    return nodeRepository
+    return treeRepository
         .findBranchById(parentId, PermissionConstants.WRITE, true, userId, roles,
             groups)
         .switchIfEmpty(Mono.error(ServiceException.forbidden("Branch", parentId)))
@@ -109,7 +109,7 @@ public class NodeServiceImpl implements NodeService {
                 .addUser(userId, PermissionConstants.ALL);
           }
           final Branch branch = new Branch(userId, null, newAccessControl, name);
-          return nodeRepository.persistNode(branch, userId);
+          return treeRepository.persistNode(branch, userId);
         });
   }
 
@@ -130,7 +130,7 @@ public class NodeServiceImpl implements NodeService {
         .collect(Collectors.toSet());
 
     return groupService.getMembershipIds()
-        .flatMapMany(groups -> nodeRepository.findRootBranches(
+        .flatMapMany(groups -> treeRepository.findRootBranches(
             PermissionConstants.READ, includePublic, userId, roles, groups)
             .flatMap(branch -> processBranch(branch, openBranchCommand, userId, roles, groups)));
   }
@@ -145,7 +145,7 @@ public class NodeServiceImpl implements NodeService {
     if (openBranchCommand.isBranchToBeOpen() && !parent.getSettings().isOpen()) {
       parent.getSettings().setOpen(true);
       if (OpenBranchCommand.CURRENT.equals(openBranchCommand)) {
-        return nodeRepository.persistNodeSettings(parent.getSettings(), userId)
+        return treeRepository.persistNodeSettings(parent.getSettings(), userId)
             .flatMap(branchSettings -> {
               parent.setSettings(branchSettings);
               return processBranch(
@@ -156,7 +156,7 @@ public class NodeServiceImpl implements NodeService {
     if (!parent.getSettings().isOpen()) {
       return Mono.just(parent);
     }
-    return nodeRepository.findNodesByParentId(
+    return treeRepository.findNodesByParentId(
         parent.getId(), PermissionConstants.READ, true, userId, roles, groups)
         .flatMap(child -> {
           if (child instanceof Branch) {
@@ -185,7 +185,7 @@ public class NodeServiceImpl implements NodeService {
         .map(GrantedAuthority::getAuthority)
         .collect(Collectors.toSet());
     return groupService.getMembershipIds()
-        .flatMap(groups -> nodeRepository.updateName(nodeId, name, userId, roles, groups)
+        .flatMap(groups -> treeRepository.updateName(nodeId, name, userId, roles, groups)
             .switchIfEmpty(Mono.error(ServiceException.forbidden("Node", nodeId))));
   }
 
@@ -202,7 +202,7 @@ public class NodeServiceImpl implements NodeService {
         .map(GrantedAuthority::getAuthority)
         .collect(Collectors.toSet());
     return groupService.getMembershipIds()
-        .flatMap(groups -> nodeRepository.updateAccessControl(
+        .flatMap(groups -> treeRepository.updateAccessControl(
             nodeId, accessControl, recursive, userId, roles, groups)
             .switchIfEmpty(Mono.error(ServiceException.forbidden("Node", nodeId))));
   }
@@ -218,7 +218,7 @@ public class NodeServiceImpl implements NodeService {
         .map(GrantedAuthority::getAuthority)
         .collect(Collectors.toSet());
     return groupService.getMembershipIds()
-        .flatMap(groups -> nodeRepository.removeNode(nodeId, userId, roles, groups))
+        .flatMap(groups -> treeRepository.removeNode(nodeId, userId, roles, groups))
         .switchIfEmpty(Mono.error(ServiceException.forbidden("Node", nodeId)));
   }
 
@@ -238,7 +238,7 @@ public class NodeServiceImpl implements NodeService {
         ? OpenBranchCommand.ALL
         : OpenBranchCommand.CURRENT;
     return groupService.getMembershipIds()
-        .flatMap(groups -> nodeRepository.findBranchById(
+        .flatMap(groups -> treeRepository.findBranchById(
             branchId, PermissionConstants.READ, true, userId, roles, groups)
             .flatMap(branch -> processBranch(branch, openBranchCommand, userId, roles, groups)));
   }
@@ -248,7 +248,7 @@ public class NodeServiceImpl implements NodeService {
       @NotNull final String branchId,
       @NotNull final Authentication authentication) {
 
-    return nodeRepository.closeBranch(branchId, authentication.getName())
+    return treeRepository.closeBranch(branchId, authentication.getName())
         .flatMap(result -> Mono.empty());
   }
 
