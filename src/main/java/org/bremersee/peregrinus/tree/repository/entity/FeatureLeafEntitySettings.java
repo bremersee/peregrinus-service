@@ -14,35 +14,30 @@
  * limitations under the License.
  */
 
-package org.bremersee.peregrinus.content.repository.entity;
+package org.bremersee.peregrinus.tree.repository.entity;
 
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
-import org.bremersee.peregrinus.geo.model.AbstractRteCalculationProperties;
 import org.springframework.data.annotation.TypeAlias;
+import org.springframework.data.mongodb.core.mapping.Document;
 
 /**
  * @author Christian Bremer
  */
-@TypeAlias("RtePtProperties")
+@Document(collection = "directory-settings")
+@TypeAlias("GeoLeafSettings")
 @Getter
 @Setter
-@ToString(callSuper = true)
-public class RtePtEntityProperties extends PtEntityProperties {
+@ToString
+@NoArgsConstructor
+public class FeatureLeafEntitySettings extends LeafEntitySettings {
 
-  private AbstractRteCalculationProperties calculationProperties;
+  private boolean displayedOnMap;
 
-  private Integer lengthInMeters;
-
-  private Integer travelTimeInSeconds;
-
-  private Integer trafficDelayInSeconds;
-
-  private Integer noTrafficTravelTimeInSeconds;
-
-  private Integer historicTrafficTravelTimeInSeconds;
-
-  private Integer liveTrafficIncidentsTravelTimeInSeconds;
+  public FeatureLeafEntitySettings(String nodeId, String userId) {
+    super(nodeId, userId);
+  }
 
 }

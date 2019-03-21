@@ -18,32 +18,71 @@ package org.bremersee.peregrinus.content.repository;
 
 import java.util.Collection;
 import javax.validation.constraints.NotNull;
-import org.bremersee.peregrinus.content.model.FeatureSettings;
+import org.bremersee.peregrinus.content.model.Feature;
+import org.bremersee.peregrinus.security.access.AccessControl;
+import org.springframework.lang.Nullable;
 import org.springframework.validation.annotation.Validated;
-import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 /**
  * @author Christian Bremer
  */
 @Validated
-public interface FeatureRepository { //extends RteRepository, TrkRepository, WptRepository {
+public interface FeatureRepository {
 
-  <T> Mono<T> findById(@NotNull String id, @NotNull Class<T> cls);
+  <F extends Feature> Mono<F> persist(@NotNull F feature, @NotNull String userId);
 
-  <T> Flux<T> findByIds(@NotNull Collection<String> ids, @NotNull Class<T> cls);
+  <F extends Feature> Mono<F> findById(@NotNull String id, @NotNull String userId);
 
-  <T> Mono<T> persist(@NotNull T entity);
+  Mono<Boolean> removeById(
+      @NotNull String id,
+      @NotNull String userId,
+      Collection<String> roles,
+      Collection<String> groups);
 
-  <T> Flux<T> persistAll(@NotNull Collection<T> entities);
+  Mono<Boolean> updateName(
+      String id,
+      String name,
+      String userId,
+      Collection<String> roles,
+      Collection<String> groups);
 
-  Mono<Void> delete(@NotNull Object entity);
+  Mono<Boolean> updateAccessControl(
+      String id,
+      AccessControl accessControl,
+      String userId,
+      Collection<String> roles,
+      Collection<String> groups);
 
-  <T extends FeatureSettings> Mono<T> findFeatureSettings(
-      @NotNull Class<T> clazz,
-      @NotNull String featureId,
-      @NotNull String userId);
+  Mono<Boolean> updateNameAndAccessControl(
+      @Nullable String featureId,
+      @Nullable String name,
+      @Nullable AccessControl accessControl);
 
-  Mono<Void> deleteFeatureSettings(@NotNull String featureId, @NotNull String userId);
+  /*
+  <F extends Feature<G, P>,
+      G extends Geometry, P extends FeatureProperties<S>,
+      S extends FeatureSettings> Mono<F> findById(
+      @NotNull String id, @NotNull Class<F> cls, @NotNull String userId);
+
+  <F extends Feature<G, P>,
+      G extends Geometry, P extends FeatureProperties<S>,
+      S extends FeatureSettings> Flux<F> findByIds(
+      @NotNull Collection<String> ids, @NotNull Class<F> cls, @NotNull String userId);
+
+  <F extends Feature<G, P>,
+      G extends Geometry, P extends FeatureProperties<S>,
+      S extends FeatureSettings> Mono<F> persistNodeSettings(
+      @NotNull F feature, @NotNull String userId);
+
+  <F extends Feature<G, P>,
+      G extends Geometry, P extends FeatureProperties<S>,
+      S extends FeatureSettings> Flux<F> persistAll(
+      @NotNull Collection<F> features, @NotNull String userId);
+
+  <F extends Feature<G, P>,
+      G extends Geometry, P extends FeatureProperties<S>,
+      S extends FeatureSettings> Mono<Boolean> delete(@NotNull F feature);
+      */
 
 }

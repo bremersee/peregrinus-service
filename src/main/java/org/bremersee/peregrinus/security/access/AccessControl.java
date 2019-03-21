@@ -18,6 +18,7 @@ package org.bremersee.peregrinus.security.access;
 
 import java.util.Collection;
 import java.util.Optional;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -33,6 +34,7 @@ import org.springframework.util.StringUtils;
 @Getter
 @Setter
 @ToString
+@EqualsAndHashCode
 @NoArgsConstructor
 @TypeAlias("AccessControl")
 public class AccessControl {
@@ -84,12 +86,20 @@ public class AccessControl {
   }
 
   public AccessControl ensureAdminAccess() {
-    addRole(AuthorityConstants.ADMIN_ROLE_NAME, PermissionConstants.ALL);
-    return this;
+    return ensureAdminAccess(AuthorityConstants.ADMIN_ROLE_NAME);
   }
 
   public AccessControl ensureAdminAccess(final String adminRole) {
     addRole(adminRole, PermissionConstants.ALL);
+    return this;
+  }
+
+  public AccessControl removeAdminAccess() {
+    return removeAdminAccess(AuthorityConstants.ADMIN_ROLE_NAME);
+  }
+
+  public AccessControl removeAdminAccess(final String adminRole) {
+    removeRole(adminRole, PermissionConstants.ALL);
     return this;
   }
 

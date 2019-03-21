@@ -1,6 +1,7 @@
 package org.bremersee.peregrinus.converter;
 
-import java.time.Instant;
+import java.time.Clock;
+import java.time.OffsetDateTime;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.TimeZone;
@@ -10,11 +11,11 @@ import org.junit.Assert;
 import org.junit.Test;
 
 /**
- * The xml gregorian calendar to instant converter test.
+ * The xml gregorian calendar to offset date time converter test.
  *
  * @author Christian Bremer
  */
-public class XmlGregorianCalendarToInstantConverterTest {
+public class XmlGregorianCalendarToOffsetDateTimeConverterTest {
 
   private static final XmlGregorianCalendarToOffsetDateTimeConverter converter
       = new XmlGregorianCalendarToOffsetDateTimeConverter();
@@ -26,12 +27,12 @@ public class XmlGregorianCalendarToInstantConverterTest {
    */
   @Test
   public void convert() throws Exception {
-    Instant actual = converter.convert(null);
+    OffsetDateTime actual = converter.convert(null);
     Assert.assertNull(actual);
 
-    Instant expected = Instant.now();
+    OffsetDateTime expected = OffsetDateTime.now(Clock.systemUTC());
     GregorianCalendar cal = new GregorianCalendar(TimeZone.getTimeZone("GMT"));
-    cal.setTime(Date.from(expected));
+    cal.setTime(Date.from(expected.toInstant()));
     XMLGregorianCalendar xmlCal = DatatypeFactory.newInstance().newXMLGregorianCalendar(cal);
     actual = converter.convert(xmlCal);
     Assert.assertNotNull(actual);

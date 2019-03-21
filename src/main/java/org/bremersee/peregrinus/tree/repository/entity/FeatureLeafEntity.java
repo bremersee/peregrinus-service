@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 the original author or authors.
+ * Copyright 2017 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.bremersee.peregrinus.content.repository.entity;
+package org.bremersee.peregrinus.tree.repository.entity;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -25,11 +25,13 @@ import org.springframework.data.mongodb.core.mapping.Document;
 /**
  * @author Christian Bremer
  */
-@Document(collection = "feature")
-@TypeAlias("RtePt")
+@Document(collection = "directory")
+@TypeAlias("GeoLeaf")
 @Getter
 @Setter
 @ToString(callSuper = true)
-public class RtePtEntity extends PtEntity<RtePtEntityProperties> {
+public class FeatureLeafEntity extends LeafEntity {
+
+  private String featureId;
 
 }

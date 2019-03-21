@@ -21,7 +21,7 @@ import lombok.Getter;
 /**
  * @author Christian Bremer
  */
-public enum OpenBranchCommand {
+enum OpenBranchCommand {
 
   ALL(true), CURRENT(true), RETAIN(false);
 

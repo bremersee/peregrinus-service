@@ -24,29 +24,15 @@ import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonSubTypes.Type;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import java.time.Clock;
-import java.time.Instant;
-import java.time.ZoneId;
-import javax.validation.constraints.NotNull;
+import java.time.OffsetDateTime;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
-import org.bremersee.peregrinus.content.model.RteSettings;
 import org.bremersee.peregrinus.security.access.AccessControl;
-import org.springframework.data.annotation.Id;
-import org.springframework.data.annotation.TypeAlias;
-import org.springframework.data.annotation.Version;
-import org.springframework.data.mongodb.core.index.Indexed;
-import org.springframework.data.mongodb.core.mapping.Document;
-import org.springframework.lang.Nullable;
-import org.springframework.util.Assert;
-import org.springframework.util.StringUtils;
-import org.springframework.validation.annotation.Validated;
 
 /**
  * @author Christian Bremer
  */
-@Document(collection = "directory")
-@TypeAlias("Node")
 @JsonAutoDetect(
     fieldVisibility = Visibility.ANY,
     getterVisibility = Visibility.NONE,
@@ -54,84 +40,48 @@ import org.springframework.validation.annotation.Validated;
 @JsonInclude(Include.NON_EMPTY)
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, property = "type", visible = true)
 @JsonSubTypes({
-    @Type(value = RteSettings.class, name = "rte-settings")
+    @Type(value = Branch.class, name = "branch"),
+    @Type(value = FeatureLeaf.class, name = "feature-leaf")
 })
 @Getter
 @Setter
 @ToString
-@Validated
-public abstract class Node implements Comparable<Node> {
+public abstract class Node<S extends NodeSettings> {
 
-  @Id
   private String id;
 
-  @Version
-  private Long version;
+  private OffsetDateTime created;
 
-  @Indexed
-  private Instant created;
-
-  @Indexed
   private String createdBy;
 
-  @Indexed
-  private Instant modified;
+  private OffsetDateTime modified;
 
-  @Indexed
   private String modifiedBy;
-
-  @Indexed
-  private String parentId;
 
   private AccessControl accessControl = new AccessControl();
 
+  private S settings;
+
+  private String parentId;
+
+  private String name;
+
   public Node() {
-    final Instant now = Instant.now(Clock.system(ZoneId.of("UTC")));
-    this.created = now;
-    this.modified = now;
+    final OffsetDateTime now = OffsetDateTime.now(Clock.systemUTC());
+    created = now;
+    modified = now;
   }
 
   public Node(
-      @Nullable String parentId,
-      @NotNull String owner) {
-    this();
-    this.accessControl.setOwner(owner);
-    this.createdBy = owner;
-    this.modifiedBy = owner;
+      final String userId,
+      final String parentId,
+      final AccessControl accessControl,
+      final S settings) {
+    this.createdBy = userId;
+    this.modifiedBy = userId;
     this.parentId = parentId;
-  }
-
-  public Node(
-      @Nullable String parentId,
-      @NotNull AccessControl accessControl) {
-    this();
-    Assert.hasText(accessControl.getOwner(), "Owner must be present.");
     this.accessControl = accessControl;
-    this.createdBy = accessControl.getOwner();
-    this.modifiedBy = accessControl.getOwner();
-    this.parentId = parentId;
-  }
-
-  abstract int orderValue();
-
-  public abstract String getName();
-
-  @SuppressWarnings("Duplicates")
-  @Override
-  public int compareTo(final Node o) {
-    if (this == o) {
-      return 0;
-    }
-    if (o == null) {
-      return -1;
-    }
-    int c = orderValue() - o.orderValue();
-    if (c != 0) {
-      return c;
-    }
-    final String n1 = StringUtils.hasText(getName()) ? getName() : "";
-    final String n2 = StringUtils.hasText(o.getName()) ? o.getName() : "";
-    return n1.compareToIgnoreCase(n2);
+    this.settings = settings;
   }
 
 }

@@ -14,20 +14,39 @@
  * limitations under the License.
  */
 
-package org.bremersee.peregrinus.tree.model;
+package org.bremersee.peregrinus.tree.repository.entity;
 
+import javax.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
+import org.bremersee.peregrinus.security.access.AccessControl;
+import org.springframework.data.annotation.TypeAlias;
+import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.lang.Nullable;
 
 /**
  * @author Christian Bremer
  */
+@Document(collection = "directory")
+@TypeAlias("Leaf")
+@ToString(callSuper = true)
 @Getter
 @Setter
-@ToString
 @NoArgsConstructor
-public abstract class LeafSettings extends NodeSettings {
+public abstract class LeafEntity extends NodeEntity {
+
+  public LeafEntity(
+      @Nullable String parentId,
+      @NotNull String owner) {
+    super(parentId, owner);
+  }
+
+  public LeafEntity(
+      @Nullable String parentId,
+      @NotNull AccessControl accessControl) {
+    super(parentId, accessControl);
+  }
 
 }

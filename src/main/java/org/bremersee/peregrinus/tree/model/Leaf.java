@@ -22,38 +22,24 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 import org.bremersee.peregrinus.security.access.AccessControl;
-import org.springframework.data.annotation.Transient;
-import org.springframework.data.annotation.TypeAlias;
-import org.springframework.data.mongodb.core.mapping.Document;
-import org.springframework.lang.Nullable;
 
 /**
  * @author Christian Bremer
  */
-@Document(collection = "directory")
-@TypeAlias("Leaf")
-@ToString(callSuper = true)
 @Getter
 @Setter
+@ToString(callSuper = true)
 @NoArgsConstructor
-public abstract class Leaf extends Node {
-
-  @Transient
-  private String name;
-
-  @Transient
-  private LeafSettings settings;
+public abstract class Leaf<S extends LeafSettings> extends Node<S> {
 
   public Leaf(
-      @Nullable String parentId,
-      @NotNull String owner) {
-    super(parentId, owner);
-  }
+      final String userId,
+      final String parentId,
+      final AccessControl accessControl,
+      final S settings,
+      @NotNull(message = "Name must not be null.") final String name) {
 
-  public Leaf(
-      @Nullable String parentId,
-      @NotNull AccessControl accessControl) {
-    super(parentId, accessControl);
+    super(userId, parentId, accessControl, settings);
+    setName(name);
   }
-
 }

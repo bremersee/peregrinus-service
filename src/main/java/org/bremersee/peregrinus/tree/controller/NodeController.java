@@ -18,7 +18,7 @@ package org.bremersee.peregrinus.tree.controller;
 
 import org.bremersee.peregrinus.security.access.AccessControl;
 import org.bremersee.peregrinus.tree.model.Branch;
-import org.bremersee.peregrinus.tree.service.TreeService;
+import org.bremersee.peregrinus.tree.service.NodeService;
 import org.hibernate.validator.constraints.Length;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.Authentication;
@@ -39,14 +39,14 @@ import reactor.core.publisher.Mono;
  * @author Christian Bremer
  */
 @RestController
-@RequestMapping(path = "/api/tree")
+@RequestMapping(path = "/api/nodes")
 @Validated
-public class TreeController {
+public class NodeController {
 
-  private TreeService treeService;
+  private NodeService nodeService;
 
-  public TreeController(TreeService treeService) {
-    this.treeService = treeService;
+  public NodeController(final NodeService nodeService) {
+    this.nodeService = nodeService;
   }
 
   @PostMapping(
@@ -58,7 +58,7 @@ public class TreeController {
       @RequestParam(value = "parentId", required = false) String parentId,
       @RequestBody(required = false) AccessControl accessControl,
       Authentication authentication) {
-    return treeService.createBranch(name, parentId, accessControl, authentication);
+    return nodeService.createBranch(name, parentId, accessControl, authentication);
   }
 
   @GetMapping(produces = {MediaType.APPLICATION_JSON_UTF8_VALUE})
@@ -66,31 +66,31 @@ public class TreeController {
       @RequestParam(value = "open-all", defaultValue = "false") Boolean openAll,
       @RequestParam(value = "pub", defaultValue = "false") Boolean includePublic,
       Authentication authentication) {
-    return treeService.loadBranches(openAll, includePublic, authentication);
+    return nodeService.loadBranches(openAll, includePublic, authentication);
   }
 
   @PutMapping(path = "/{nodeId}", params = {"name"})
-  public Mono<Void> renameNode(
+  public Mono<Boolean> renameNode(
       @PathVariable("nodeId") String nodeId,
       @RequestParam(value = "name") @Length(min = 1) String name,
       Authentication authentication) {
-    return treeService.renameNode(nodeId, name, authentication);
+    return nodeService.renameNode(nodeId, name, authentication);
   }
 
   @PutMapping(path = "/{nodeId}/access-control")
-  public Mono<AccessControl> updateAccessControl(
+  public Mono<Boolean> updateAccessControl(
       @PathVariable("nodeId") String nodeId,
       @RequestParam(value = "recursive", defaultValue = "false") Boolean recursive,
       @RequestBody AccessControl accessControl,
       Authentication authentication) {
-    return treeService.updateAccessControl(nodeId, recursive, accessControl, authentication);
+    return nodeService.updateAccessControl(nodeId, accessControl, recursive, authentication);
   }
 
   @DeleteMapping(path = "/{nodeId}")
-  public Mono<Void> deleteNode(
+  public Mono<Boolean> removeNode(
       @PathVariable("nodeId") String nodeId,
       Authentication authentication) {
-    return treeService.deleteNode(nodeId, authentication);
+    return nodeService.removeNode(nodeId, authentication);
   }
 
   @GetMapping(path = "/{branchId}/open", produces = {MediaType.APPLICATION_JSON_UTF8_VALUE})
@@ -98,14 +98,14 @@ public class TreeController {
       @PathVariable("branchId") String branchId,
       @RequestParam(value = "open-all", defaultValue = "false") Boolean openAll,
       Authentication authentication) {
-    return treeService.openBranch(branchId, openAll, authentication);
+    return nodeService.openBranch(branchId, openAll, authentication);
   }
 
   @PutMapping(path = "/{branchId}/close")
   public Mono<Void> closeBranch(
       @PathVariable("branchId") String branchId,
       Authentication authentication) {
-    return treeService.closeBranch(branchId, authentication);
+    return nodeService.closeBranch(branchId, authentication);
   }
 
 }

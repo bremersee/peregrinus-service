@@ -14,9 +14,10 @@
  * limitations under the License.
  */
 
-package org.bremersee.peregrinus.content.repository.entity;
+package org.bremersee.peregrinus.tree.repository.entity;
 
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 import org.springframework.data.annotation.TypeAlias;
@@ -25,17 +26,23 @@ import org.springframework.data.mongodb.core.mapping.Document;
 /**
  * @author Christian Bremer
  */
-@Document(collection = "feature-settings")
-@TypeAlias("RtePtSettings")
+@Document(collection = "directory-settings")
+@TypeAlias("BranchSettings")
 @Getter
 @Setter
-@ToString(callSuper = true)
-public class RtePtEntitySettings extends PtEntitySettings {
+@ToString
+@NoArgsConstructor
+public class BranchEntitySettings extends NodeEntitySettings {
 
-  public RtePtEntitySettings() {
+  private boolean open = true;
+
+  public BranchEntitySettings(String nodeId, String userId) {
+    this(nodeId, userId, true);
   }
 
-  public RtePtEntitySettings(String featureId, String userId) {
-    super(featureId, userId);
+  public BranchEntitySettings(String nodeId, String userId, boolean open) {
+    super(nodeId, userId);
+    this.open = open;
   }
+
 }

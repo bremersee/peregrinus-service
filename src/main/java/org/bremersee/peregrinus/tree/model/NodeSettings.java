@@ -27,22 +27,10 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
-import org.springframework.data.annotation.Id;
-import org.springframework.data.annotation.TypeAlias;
-import org.springframework.data.annotation.Version;
-import org.springframework.data.mongodb.core.index.CompoundIndex;
-import org.springframework.data.mongodb.core.index.CompoundIndexes;
-import org.springframework.data.mongodb.core.index.Indexed;
-import org.springframework.data.mongodb.core.mapping.Document;
 
 /**
  * @author Christian Bremer
  */
-@Document(collection = "directory-settings")
-@TypeAlias("NodeSettings")
-@CompoundIndexes({
-    @CompoundIndex(name = "uk_node_user", def = "{'nodeId': 1, 'userId': 1 }", unique = true)
-})
 @JsonAutoDetect(
     fieldVisibility = Visibility.ANY,
     getterVisibility = Visibility.NONE,
@@ -51,8 +39,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, property = "type", visible = true)
 @JsonSubTypes({
     @Type(value = BranchSettings.class, name = "branch-settings"),
-    @Type(value = LeafSettings.class, name = "leaf-settings"),
-    @Type(value = GeoLeafSettings.class, name = "geo-leaf-settings")
+    @Type(value = FeatureLeafSettings.class, name = "feature-leaf-settings")
 })
 @Getter
 @Setter
@@ -60,23 +47,12 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @NoArgsConstructor
 public class NodeSettings {
 
-  @Id
   private String id;
 
-  @Version
-  private Long version;
-
-  @Indexed
   private String nodeId;
 
-  @Indexed
   private String userId;
 
   // TODO state: new, normal, deleted (, deletion_accepted = remove)
-
-  public NodeSettings(String nodeId, String userId) {
-    this.nodeId = nodeId;
-    this.userId = userId;
-  }
 
 }

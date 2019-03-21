@@ -30,7 +30,7 @@ import reactor.core.publisher.Mono;
  * @author Christian Bremer
  */
 @Validated
-public interface TreeService {
+public interface NodeService {
 
   Mono<Branch> createBranch(
       @NotNull @Length(min = 1) String name,
@@ -43,18 +43,18 @@ public interface TreeService {
       boolean includePublic,
       @NotNull Authentication authentication);
 
-  Mono<Void> renameNode(
+  Mono<Boolean> renameNode(
       @NotNull String nodeId,
       @NotNull @Length(min = 1) String name,
       @NotNull Authentication authentication);
 
-  Mono<AccessControl> updateAccessControl(
+  Mono<Boolean> updateAccessControl(
       @NotNull String nodeId,
-      boolean recursive,
       @NotNull AccessControl accessControl,
+      boolean recursive,
       @NotNull Authentication authentication);
 
-  Mono<Void> deleteNode(
+  Mono<Boolean> removeNode(
       @NotNull String nodeId,
       @NotNull Authentication authentication);
 

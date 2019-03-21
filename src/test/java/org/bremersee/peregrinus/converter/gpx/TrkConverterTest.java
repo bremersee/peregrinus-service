@@ -1,7 +1,9 @@
 package org.bremersee.peregrinus.converter.gpx;
 
 import java.math.BigDecimal;
-import java.time.Instant;
+import java.time.Clock;
+import java.time.OffsetDateTime;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
@@ -63,20 +65,24 @@ public class TrkConverterTest {
       eleLines.add(eleLine);
     }
 
-    Instant start = new Date(System.currentTimeMillis() - 1000L * 60L).toInstant();
-    List<List<Instant>> timeLines = new ArrayList<>();
+    OffsetDateTime start = OffsetDateTime.ofInstant(
+        new Date(System.currentTimeMillis() - 1000L * 60L).toInstant(),
+        ZoneId.of("Z"));
+    List<List<OffsetDateTime>> timeLines = new ArrayList<>();
     for (int n = 0; n < multiLineString.getNumGeometries(); n++) {
-      List<Instant> timeLine = new ArrayList<>();
+      List<OffsetDateTime> timeLine = new ArrayList<>();
       LineString lineString = (LineString) multiLineString.getGeometryN(n);
       //noinspection unused
       for (Coordinate coordinate : lineString.getCoordinates()) {
-        timeLine.add(Instant.now());
+        timeLine.add(OffsetDateTime.now(Clock.systemUTC()));
       }
       timeLines.add(timeLine);
     }
-    Instant stop = new Date(System.currentTimeMillis() + 1000L * 60L).toInstant();
+    OffsetDateTime stop = OffsetDateTime.ofInstant(
+        new Date(System.currentTimeMillis() + 1000L * 60L).toInstant(),
+        ZoneId.of("Z"));
     timeLines.get(0).set(0, start);
-    List<Instant> lastLine = timeLines.get(timeLines.size() - 1);
+    List<OffsetDateTime> lastLine = timeLines.get(timeLines.size() - 1);
     lastLine.set(lastLine.size() - 1, stop);
 
     Link link0 = new Link();

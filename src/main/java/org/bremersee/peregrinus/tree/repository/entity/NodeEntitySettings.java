@@ -14,30 +14,47 @@
  * limitations under the License.
  */
 
-package org.bremersee.peregrinus.tree.model;
+package org.bremersee.peregrinus.tree.repository.entity;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
+import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.TypeAlias;
+import org.springframework.data.mongodb.core.index.CompoundIndex;
+import org.springframework.data.mongodb.core.index.CompoundIndexes;
+import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 /**
  * @author Christian Bremer
  */
 @Document(collection = "directory-settings")
-@TypeAlias("GeoLeafSettings")
+@TypeAlias("NodeSettings")
+@CompoundIndexes({
+    @CompoundIndex(name = "uk_node_user", def = "{'nodeId': 1, 'userId': 1 }", unique = true)
+})
 @Getter
 @Setter
 @ToString
 @NoArgsConstructor
-public class GeoLeafSettings extends LeafSettings {
+public class NodeEntitySettings {
 
-  private boolean displayedOnMap;
+  @Id
+  private String id;
 
-  public GeoLeafSettings(String nodeId, String userId) {
-    super(nodeId, userId);
+  @Indexed
+  private String nodeId;
+
+  @Indexed
+  private String userId;
+
+  // TODO state: new, normal, deleted (, deletion_accepted = remove)
+
+  public NodeEntitySettings(String nodeId, String userId) {
+    this.nodeId = nodeId;
+    this.userId = userId;
   }
 
 }

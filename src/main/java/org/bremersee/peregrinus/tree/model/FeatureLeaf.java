@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 the original author or authors.
+ * Copyright 2017 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,11 +14,21 @@
  * limitations under the License.
  */
 
-package org.bremersee.peregrinus.content.repository;
+package org.bremersee.peregrinus.tree.model;
+
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
+import org.bremersee.peregrinus.content.model.Feature;
 
 /**
  * @author Christian Bremer
  */
-interface TrkRepository {
+@Getter
+@Setter
+@ToString(callSuper = true)
+public class FeatureLeaf extends Leaf<FeatureLeafSettings> {
+
+  private Feature feature;
 
 }

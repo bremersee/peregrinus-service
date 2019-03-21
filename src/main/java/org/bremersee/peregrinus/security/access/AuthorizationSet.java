@@ -18,6 +18,7 @@ package org.bremersee.peregrinus.security.access;
 
 import java.util.LinkedHashSet;
 import java.util.Set;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -31,6 +32,7 @@ import org.springframework.data.mongodb.core.index.Indexed;
 @Getter
 @Setter
 @ToString
+@EqualsAndHashCode
 @NoArgsConstructor
 @TypeAlias("AuthorizationSet")
 public class AuthorizationSet {

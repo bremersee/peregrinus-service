@@ -20,6 +20,7 @@ import java.util.List;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
+import org.bremersee.peregrinus.content.model.RtePt;
 import org.springframework.data.annotation.TypeAlias;
 
 /**
@@ -31,6 +32,6 @@ import org.springframework.data.annotation.TypeAlias;
 @ToString(callSuper = true)
 public class RteEntityProperties extends FeatureEntityProperties {
 
-  private List<String> rtePtIds;
+  private List<RtePt> rtePts;
 
 }
