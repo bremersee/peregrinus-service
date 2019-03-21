@@ -23,13 +23,12 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo.Id;
 import java.time.Clock;
 import java.time.OffsetDateTime;
 import java.time.ZoneId;
-import java.util.Date;
 import java.util.List;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 import org.bremersee.common.model.Link;
-import org.bremersee.peregrinus.security.access.AccessControl;
+import org.bremersee.peregrinus.security.access.model.AccessControlDto;
 
 /**
  * @author Christian Bremer
@@ -45,7 +44,7 @@ import org.bremersee.peregrinus.security.access.AccessControl;
 @ToString
 public abstract class FeatureProperties<S extends FeatureSettings> {
 
-  private AccessControl accessControl = new AccessControl();
+  private AccessControlDto accessControl = new AccessControlDto();
 
   private OffsetDateTime created;
 

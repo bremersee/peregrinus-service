@@ -25,7 +25,7 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 import org.bremersee.common.model.Link;
-import org.bremersee.peregrinus.security.access.AccessControl;
+import org.bremersee.peregrinus.security.access.repository.entity.AccessControlEntity;
 import org.springframework.data.annotation.TypeAlias;
 import org.springframework.data.mongodb.core.index.Indexed;
 
@@ -38,7 +38,7 @@ import org.springframework.data.mongodb.core.index.Indexed;
 @ToString
 public abstract class FeatureEntityProperties {
 
-  private AccessControl accessControl = new AccessControl();
+  private AccessControlEntity accessControl = new AccessControlEntity();
 
   private OffsetDateTime created;
 

@@ -14,32 +14,33 @@
  * limitations under the License.
  */
 
-package org.bremersee.peregrinus.tree.model;
+package org.bremersee.peregrinus.security.access.model;
 
-import javax.validation.constraints.NotNull;
+import java.util.LinkedHashSet;
+import java.util.Set;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
-import org.bremersee.peregrinus.security.access.model.AccessControlDto;
+import org.bremersee.peregrinus.security.access.AuthorizationSet;
 
 /**
  * @author Christian Bremer
  */
 @Getter
 @Setter
-@ToString(callSuper = true)
+@ToString
+@EqualsAndHashCode
 @NoArgsConstructor
-public abstract class Leaf<S extends LeafSettings> extends Node<S> {
+public class AuthorizationSetDto implements AuthorizationSet {
 
-  public Leaf(
-      final String userId,
-      final String parentId,
-      final AccessControlDto accessControl,
-      final S settings,
-      @NotNull(message = "Name must not be null.") final String name) {
+  private boolean guest;
 
-    super(userId, parentId, accessControl, settings);
-    setName(name);
-  }
+  private Set<String> users = new LinkedHashSet<>();
+
+  private Set<String> roles = new LinkedHashSet<>();
+
+  private Set<String> groups = new LinkedHashSet<>();
+
 }

@@ -26,8 +26,10 @@ import org.bremersee.peregrinus.content.repository.entity.FeatureEntity;
 import org.bremersee.peregrinus.content.repository.entity.FeatureEntitySettings;
 import org.bremersee.peregrinus.content.repository.mapper.FeatureMapper;
 import org.bremersee.peregrinus.security.access.AccessControl;
-import org.bremersee.peregrinus.security.access.MongoRepositoryUtils;
 import org.bremersee.peregrinus.security.access.PermissionConstants;
+import org.bremersee.peregrinus.security.access.model.AccessControlDto;
+import org.bremersee.peregrinus.security.access.repository.MongoRepositoryUtils;
+import org.bremersee.peregrinus.security.access.repository.entity.AccessControlEntity;
 import org.springframework.data.mongodb.core.ReactiveMongoOperations;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
@@ -148,7 +150,8 @@ public class FeatureRepositoryImpl implements FeatureRepository {
     final Criteria oneAndTwo = new Criteria().andOperator(one, two);
     final Update update = new Update()
         .set("properties.modified", OffsetDateTime.now(Clock.systemUTC()))
-        .set("properties.accessControl", accessControl.ensureAdminAccess());
+        .set("properties.accessControl",
+            new AccessControlEntity(accessControl.ensureAdminAccess()));
     return mongoOperations.findAndModify(
         Query.query(oneAndTwo),
         update,
@@ -160,7 +163,7 @@ public class FeatureRepositoryImpl implements FeatureRepository {
   public Mono<Boolean> updateNameAndAccessControl(
       final String featureId,
       final String name,
-      final AccessControl accessControl) {
+      final AccessControlDto accessControl) {
 
     if (!StringUtils.hasText(featureId) || (!StringUtils.hasText(name) && accessControl == null)) {
       return Mono.just(Boolean.FALSE);

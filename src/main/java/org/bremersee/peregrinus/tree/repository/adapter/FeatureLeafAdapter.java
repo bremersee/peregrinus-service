@@ -20,6 +20,7 @@ import java.util.Collection;
 import org.bremersee.peregrinus.content.model.FeatureProperties;
 import org.bremersee.peregrinus.content.repository.FeatureRepository;
 import org.bremersee.peregrinus.security.access.AccessControl;
+import org.bremersee.peregrinus.security.access.model.AccessControlDto;
 import org.bremersee.peregrinus.tree.model.FeatureLeaf;
 import org.bremersee.peregrinus.tree.model.FeatureLeafSettings;
 import org.bremersee.peregrinus.tree.model.Node;
@@ -82,7 +83,7 @@ public class FeatureLeafAdapter extends AbstractNodeAdapter implements NodeAdapt
     }
     final FeatureProperties properties = leaf.getFeature().getProperties();
     final String newName = leaf.getName().equals(properties.getName()) ? null : leaf.getName();
-    final AccessControl newAccessControl = leaf.getAccessControl()
+    final AccessControlDto newAccessControl = leaf.getAccessControl()
         .equals(properties.getAccessControl())
         ? null
         : leaf.getAccessControl();

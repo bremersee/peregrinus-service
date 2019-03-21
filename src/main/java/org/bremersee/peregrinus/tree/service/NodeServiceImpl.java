@@ -24,6 +24,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.bremersee.exception.ServiceException;
 import org.bremersee.groupman.api.GroupControllerApi;
 import org.bremersee.peregrinus.security.access.AccessControl;
+import org.bremersee.peregrinus.security.access.model.AccessControlDto;
 import org.bremersee.peregrinus.security.access.PermissionConstants;
 import org.bremersee.peregrinus.tree.model.Branch;
 import org.bremersee.peregrinus.tree.model.Node;
@@ -70,7 +71,7 @@ public class NodeServiceImpl implements NodeService {
         .map(GrantedAuthority::getAuthority)
         .collect(Collectors.toSet());
 
-    final AccessControl newAccessControl = new AccessControl(accessControl)
+    final AccessControl newAccessControl = new AccessControlDto(accessControl)
         .owner(userId)
         .addUser(userId, PermissionConstants.ALL);
 
@@ -103,7 +104,7 @@ public class NodeServiceImpl implements NodeService {
               PermissionConstants.ADMINISTRATION, userId, roles, groups)) {
             newAccessControl = existAccessControl;
           } else {
-            newAccessControl = new AccessControl(accessControl)
+            newAccessControl = new AccessControlDto(accessControl)
                 .owner(userId)
                 .addUser(userId, PermissionConstants.ALL);
           }

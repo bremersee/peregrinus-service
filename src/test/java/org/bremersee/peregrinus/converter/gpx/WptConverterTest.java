@@ -17,7 +17,7 @@ import org.bremersee.peregrinus.TestConfig;
 import org.bremersee.peregrinus.content.model.Wpt;
 import org.bremersee.peregrinus.content.model.WptProperties;
 import org.bremersee.peregrinus.converter.XmlGregorianCalendarToOffsetDateTimeConverter;
-import org.bremersee.peregrinus.security.access.AccessControl;
+import org.bremersee.peregrinus.security.access.model.AccessControlDto;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -73,7 +73,7 @@ public class WptConverterTest {
     wpt.setGeometry(GeometryUtils.createPointWGS84(52.1, 10.2));
     wpt.setId("1");
     wpt.setProperties(new WptProperties());
-    wpt.getProperties().setAccessControl(new AccessControl());
+    wpt.getProperties().setAccessControl(new AccessControlDto());
     wpt.getProperties().setAddress(address);
     wpt.getProperties().setEle(BigDecimal.valueOf(12.3));
     wpt.getProperties().setLinks(Arrays.asList(link0, link1, link2, link3));

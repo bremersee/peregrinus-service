@@ -25,8 +25,9 @@ import java.util.Map;
 import javax.validation.constraints.NotNull;
 import lombok.extern.slf4j.Slf4j;
 import org.bremersee.peregrinus.security.access.AccessControl;
-import org.bremersee.peregrinus.security.access.MongoRepositoryUtils;
 import org.bremersee.peregrinus.security.access.PermissionConstants;
+import org.bremersee.peregrinus.security.access.repository.MongoRepositoryUtils;
+import org.bremersee.peregrinus.security.access.repository.entity.AccessControlEntity;
 import org.bremersee.peregrinus.tree.model.Node;
 import org.bremersee.peregrinus.tree.model.NodeSettings;
 import org.bremersee.peregrinus.tree.repository.adapter.NodeAdapter;
@@ -182,7 +183,7 @@ public class NodeRepositoryImpl implements NodeRepository {
     final Update update = new Update()
         .set("modified", OffsetDateTime.now(Clock.systemUTC()))
         .set("modifiedBy", userId)
-        .set("accessControl", accessControl.ensureAdminAccess());
+        .set("accessControl", new AccessControlEntity(accessControl.ensureAdminAccess()));
     return mongoOperations.findAndModify(
         Query.query(oneAndTwo),
         update,
@@ -214,7 +215,7 @@ public class NodeRepositoryImpl implements NodeRepository {
         .flatMap(nodeEntity -> {
           nodeEntity.setModified(OffsetDateTime.now(Clock.systemUTC()));
           nodeEntity.setModifiedBy(userId);
-          nodeEntity.setAccessControl(accessControl.ensureAdminAccess());
+          nodeEntity.setAccessControl(new AccessControlEntity(accessControl.ensureAdminAccess()));
           return mongoOperations.save(nodeEntity);
         })
         .flatMap(nodeEntity -> getNodeAdapter(nodeEntity).updateAccessControl(

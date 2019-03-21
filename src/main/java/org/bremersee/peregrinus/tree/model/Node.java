@@ -29,6 +29,7 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 import org.bremersee.peregrinus.security.access.AccessControl;
+import org.bremersee.peregrinus.security.access.model.AccessControlDto;
 
 /**
  * @author Christian Bremer
@@ -58,7 +59,7 @@ public abstract class Node<S extends NodeSettings> {
 
   private String modifiedBy;
 
-  private AccessControl accessControl = new AccessControl();
+  private AccessControlDto accessControl = new AccessControlDto();
 
   private S settings;
 
@@ -80,7 +81,7 @@ public abstract class Node<S extends NodeSettings> {
     this.createdBy = userId;
     this.modifiedBy = userId;
     this.parentId = parentId;
-    this.accessControl = accessControl;
+    this.accessControl = new AccessControlDto(accessControl);
     this.settings = settings;
   }
 

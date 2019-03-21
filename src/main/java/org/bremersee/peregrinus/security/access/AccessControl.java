@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 the original author or authors.
+ * Copyright 2019 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,99 +18,80 @@ package org.bremersee.peregrinus.security.access;
 
 import java.util.Collection;
 import java.util.Optional;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
+import javax.validation.constraints.NotNull;
 import org.bremersee.security.core.AuthorityConstants;
-import org.springframework.data.annotation.TypeAlias;
-import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.util.StringUtils;
+import org.springframework.validation.annotation.Validated;
 
 /**
  * @author Christian Bremer
  */
-@Getter
-@Setter
-@ToString
-@EqualsAndHashCode
-@NoArgsConstructor
-@TypeAlias("AccessControl")
-public class AccessControl {
+@Validated
+public interface AccessControl {
 
-  @Indexed
-  private String owner;
+  String getOwner();
 
-  private AuthorizationSet administration = new AuthorizationSet();
+  void setOwner(String owner);
 
-  private AuthorizationSet create = new AuthorizationSet();
+  @NotNull
+  AuthorizationSet getAdministration();
 
-  private AuthorizationSet delete = new AuthorizationSet();
+  @NotNull
+  AuthorizationSet getCreate();
 
-  private AuthorizationSet read = new AuthorizationSet();
+  @NotNull
+  AuthorizationSet getDelete();
 
-  private AuthorizationSet write = new AuthorizationSet();
+  @NotNull
+  AuthorizationSet getRead();
 
-  public AccessControl(final AccessControl accessControl) {
-    if (accessControl != null) {
-      owner = accessControl.getOwner();
-      for (final String permission : PermissionConstants.ALL) {
-        accessControl.findAuthorizationSet(permission)
-            .ifPresent(authorizationSet -> findAuthorizationSet(permission)
-                .ifPresent(as -> {
-                  as.getGroups().addAll(authorizationSet.getGroups());
-                  as.getRoles().addAll(authorizationSet.getRoles());
-                  as.getUsers().addAll(authorizationSet.getUsers());
-                }));
-      }
-    }
-  }
+  @NotNull
+  AuthorizationSet getWrite();
 
-  public Optional<AuthorizationSet> findAuthorizationSet(Object permission) {
+  default Optional<AuthorizationSet> findAuthorizationSet(final Object permission) {
     final String permissionStr = String.valueOf(permission);
     switch (permissionStr) {
       case PermissionConstants.ADMINISTRATION:
-        return Optional.of(administration);
+        return Optional.of(getAdministration());
       case PermissionConstants.CREATE:
-        return Optional.of(create);
+        return Optional.of(getCreate());
       case PermissionConstants.DELETE:
-        return Optional.of(delete);
+        return Optional.of(getDelete());
       case PermissionConstants.READ:
-        return Optional.of(read);
+        return Optional.of(getRead());
       case PermissionConstants.WRITE:
-        return Optional.of(write);
+        return Optional.of(getWrite());
       default:
         return Optional.empty();
     }
   }
 
-  public AccessControl ensureAdminAccess() {
+  default AccessControl ensureAdminAccess() {
     return ensureAdminAccess(AuthorityConstants.ADMIN_ROLE_NAME);
   }
 
-  public AccessControl ensureAdminAccess(final String adminRole) {
+  default AccessControl ensureAdminAccess(final String adminRole) {
     addRole(adminRole, PermissionConstants.ALL);
     return this;
   }
 
-  public AccessControl removeAdminAccess() {
+  default AccessControl removeAdminAccess() {
     return removeAdminAccess(AuthorityConstants.ADMIN_ROLE_NAME);
   }
 
-  public AccessControl removeAdminAccess(final String adminRole) {
+  default AccessControl removeAdminAccess(final String adminRole) {
     removeRole(adminRole, PermissionConstants.ALL);
     return this;
   }
 
-  public AccessControl owner(String owner) {
+  default AccessControl owner(String owner) {
     if (StringUtils.hasText(owner)) {
-      this.owner = owner;
+      setOwner(owner);
     }
     return addUser(owner, PermissionConstants.ALL);
   }
 
-  public AccessControl addUser(String user, String... permissionConstants) {
+  default AccessControl addUser(String user, String... permissionConstants) {
     if (StringUtils.hasText(user) && permissionConstants != null) {
       for (final String permission : permissionConstants) {
         findAuthorizationSet(permission)
@@ -120,7 +101,7 @@ public class AccessControl {
     return this;
   }
 
-  public AccessControl addRole(String role, String... permissionConstants) {
+  default AccessControl addRole(String role, String... permissionConstants) {
     if (StringUtils.hasText(role) && permissionConstants != null) {
       for (final String permission : permissionConstants) {
         findAuthorizationSet(permission)
@@ -130,7 +111,7 @@ public class AccessControl {
     return this;
   }
 
-  public AccessControl addGroup(String group, String... permissionConstants) {
+  default AccessControl addGroup(String group, String... permissionConstants) {
     if (StringUtils.hasText(group) && permissionConstants != null) {
       for (final String permission : permissionConstants) {
         findAuthorizationSet(permission)
@@ -140,7 +121,7 @@ public class AccessControl {
     return this;
   }
 
-  public AccessControl removeUser(String user, String... permissionConstants) {
+  default AccessControl removeUser(String user, String... permissionConstants) {
     if (StringUtils.hasText(user) && permissionConstants != null) {
       for (final String permission : permissionConstants) {
         findAuthorizationSet(permission)
@@ -150,7 +131,7 @@ public class AccessControl {
     return this;
   }
 
-  public AccessControl removeRole(String role, String... permissionConstants) {
+  default AccessControl removeRole(String role, String... permissionConstants) {
     if (StringUtils.hasText(role) && permissionConstants != null) {
       for (final String permission : permissionConstants) {
         findAuthorizationSet(permission)
@@ -160,7 +141,7 @@ public class AccessControl {
     return this;
   }
 
-  public AccessControl removeGroup(String group, String... permissionConstants) {
+  default AccessControl removeGroup(String group, String... permissionConstants) {
     if (StringUtils.hasText(group) && permissionConstants != null) {
       for (final String permission : permissionConstants) {
         findAuthorizationSet(permission)
@@ -170,7 +151,7 @@ public class AccessControl {
     return this;
   }
 
-  public boolean hasPermission(
+  default boolean hasPermission(
       Object permission,
       String user,
       Collection<String> roles,
@@ -182,7 +163,10 @@ public class AccessControl {
     if (user != null && user.equals(getOwner())) {
       return true;
     }
-    final AuthorizationSet set = findAuthorizationSet(permission).orElse(new AuthorizationSet());
+    final AuthorizationSet set = findAuthorizationSet(permission).orElse(null);
+    if (set == null) {
+      return false;
+    }
     if (set.isGuest()) {
       return true;
     }

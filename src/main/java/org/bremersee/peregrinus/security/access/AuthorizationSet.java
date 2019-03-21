@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 the original author or authors.
+ * Copyright 2019 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,37 +16,27 @@
 
 package org.bremersee.peregrinus.security.access;
 
-import java.util.LinkedHashSet;
 import java.util.Set;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
-import org.springframework.data.annotation.TypeAlias;
-import org.springframework.data.mongodb.core.index.Indexed;
+import javax.validation.constraints.NotNull;
+import org.springframework.validation.annotation.Validated;
 
 /**
  * @author Christian Bremer
  */
-@Getter
-@Setter
-@ToString
-@EqualsAndHashCode
-@NoArgsConstructor
-@TypeAlias("AuthorizationSet")
-public class AuthorizationSet {
+@Validated
+public interface AuthorizationSet {
 
-  @Indexed
-  private boolean guest;
+  boolean isGuest();
 
-  @Indexed
-  private Set<String> users = new LinkedHashSet<>();
+  void setGuest(boolean guest);
 
-  @Indexed
-  private Set<String> roles = new LinkedHashSet<>();
+  @NotNull
+  Set<String> getUsers();
 
-  @Indexed
-  private Set<String> groups = new LinkedHashSet<>();
+  @NotNull
+  Set<String> getRoles();
+
+  @NotNull
+  Set<String> getGroups();
 
 }

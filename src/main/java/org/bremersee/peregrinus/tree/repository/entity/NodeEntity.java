@@ -24,6 +24,7 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 import org.bremersee.peregrinus.security.access.AccessControl;
+import org.bremersee.peregrinus.security.access.repository.entity.AccessControlEntity;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.TypeAlias;
 import org.springframework.data.mongodb.core.index.Indexed;
@@ -61,7 +62,7 @@ public abstract class NodeEntity {
   @Indexed
   private String parentId;
 
-  private AccessControl accessControl = new AccessControl();
+  private AccessControlEntity accessControl = new AccessControlEntity();
 
   public NodeEntity() {
     final OffsetDateTime now = OffsetDateTime.now(Clock.system(ZoneId.of("Z")));
@@ -84,7 +85,7 @@ public abstract class NodeEntity {
       @NotNull AccessControl accessControl) {
     this();
     Assert.hasText(accessControl.getOwner(), "Owner must be present.");
-    this.accessControl = accessControl;
+    this.accessControl = new AccessControlEntity(accessControl);
     this.createdBy = accessControl.getOwner();
     this.modifiedBy = accessControl.getOwner();
     this.parentId = parentId;

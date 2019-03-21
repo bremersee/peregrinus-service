@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.bremersee.peregrinus.security.access;
+package org.bremersee.peregrinus.security.access.repository;
 
 import java.util.ArrayList;
 import java.util.Collection;
