@@ -91,9 +91,9 @@ public interface AccessControl {
     return addUser(owner, PermissionConstants.ALL);
   }
 
-  default AccessControl addUser(String user, String... permissionConstants) {
-    if (StringUtils.hasText(user) && permissionConstants != null) {
-      for (final String permission : permissionConstants) {
+  default AccessControl addUser(String user, String... permissions) {
+    if (StringUtils.hasText(user) && permissions != null) {
+      for (final String permission : permissions) {
         findAuthorizationSet(permission)
             .ifPresent(authorizationSet -> authorizationSet.getUsers().add(user));
       }
@@ -101,9 +101,9 @@ public interface AccessControl {
     return this;
   }
 
-  default AccessControl addRole(String role, String... permissionConstants) {
-    if (StringUtils.hasText(role) && permissionConstants != null) {
-      for (final String permission : permissionConstants) {
+  default AccessControl addRole(String role, String... permissions) {
+    if (StringUtils.hasText(role) && permissions != null) {
+      for (final String permission : permissions) {
         findAuthorizationSet(permission)
             .ifPresent(authorizationSet -> authorizationSet.getRoles().add(role));
       }
@@ -111,9 +111,9 @@ public interface AccessControl {
     return this;
   }
 
-  default AccessControl addGroup(String group, String... permissionConstants) {
-    if (StringUtils.hasText(group) && permissionConstants != null) {
-      for (final String permission : permissionConstants) {
+  default AccessControl addGroup(String group, String... permissions) {
+    if (StringUtils.hasText(group) && permissions != null) {
+      for (final String permission : permissions) {
         findAuthorizationSet(permission)
             .ifPresent(authorizationSet -> authorizationSet.getGroups().add(group));
       }
@@ -121,9 +121,9 @@ public interface AccessControl {
     return this;
   }
 
-  default AccessControl removeUser(String user, String... permissionConstants) {
-    if (StringUtils.hasText(user) && permissionConstants != null) {
-      for (final String permission : permissionConstants) {
+  default AccessControl removeUser(String user, String... permissions) {
+    if (StringUtils.hasText(user) && permissions != null) {
+      for (final String permission : permissions) {
         findAuthorizationSet(permission)
             .ifPresent(authorizationSet -> authorizationSet.getUsers().remove(user));
       }
@@ -131,9 +131,9 @@ public interface AccessControl {
     return this;
   }
 
-  default AccessControl removeRole(String role, String... permissionConstants) {
-    if (StringUtils.hasText(role) && permissionConstants != null) {
-      for (final String permission : permissionConstants) {
+  default AccessControl removeRole(String role, String... permissions) {
+    if (StringUtils.hasText(role) && permissions != null) {
+      for (final String permission : permissions) {
         findAuthorizationSet(permission)
             .ifPresent(authorizationSet -> authorizationSet.getRoles().remove(role));
       }
@@ -141,9 +141,9 @@ public interface AccessControl {
     return this;
   }
 
-  default AccessControl removeGroup(String group, String... permissionConstants) {
-    if (StringUtils.hasText(group) && permissionConstants != null) {
-      for (final String permission : permissionConstants) {
+  default AccessControl removeGroup(String group, String... permissions) {
+    if (StringUtils.hasText(group) && permissions != null) {
+      for (final String permission : permissions) {
         findAuthorizationSet(permission)
             .ifPresent(authorizationSet -> authorizationSet.getGroups().remove(group));
       }
