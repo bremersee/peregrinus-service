@@ -18,20 +18,15 @@ package org.bremersee.peregrinus.tree.repository.entity;
 
 import java.time.Clock;
 import java.time.OffsetDateTime;
-import java.time.ZoneId;
-import javax.validation.constraints.NotNull;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
-import org.bremersee.peregrinus.security.access.AccessControl;
 import org.bremersee.peregrinus.security.access.repository.entity.AccessControlEntity;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.TypeAlias;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
-import org.springframework.lang.Nullable;
-import org.springframework.util.Assert;
-import org.springframework.validation.annotation.Validated;
 
 /**
  * @author Christian Bremer
@@ -40,8 +35,8 @@ import org.springframework.validation.annotation.Validated;
 @TypeAlias("Node")
 @Getter
 @Setter
+@EqualsAndHashCode
 @ToString
-@Validated
 public abstract class NodeEntity {
 
   @Id
@@ -64,31 +59,27 @@ public abstract class NodeEntity {
 
   private AccessControlEntity accessControl = new AccessControlEntity();
 
-  public NodeEntity() {
-    final OffsetDateTime now = OffsetDateTime.now(Clock.system(ZoneId.of("Z")));
+  NodeEntity() {
+    final OffsetDateTime now = OffsetDateTime.now(Clock.systemUTC());
     this.created = now;
     this.modified = now;
   }
 
-  public NodeEntity(
-      @Nullable String parentId,
-      @NotNull String owner) {
-    this();
-    this.accessControl.setOwner(owner);
-    this.createdBy = owner;
-    this.modifiedBy = owner;
+  NodeEntity(
+      String id,
+      OffsetDateTime created,
+      String createdBy,
+      OffsetDateTime modified,
+      String modifiedBy,
+      String parentId,
+      AccessControlEntity accessControl) {
+    this.id = id;
+    this.created = created;
+    this.createdBy = createdBy;
+    this.modified = modified;
+    this.modifiedBy = modifiedBy;
     this.parentId = parentId;
-  }
-
-  public NodeEntity(
-      @Nullable String parentId,
-      @NotNull AccessControl accessControl) {
-    this();
-    Assert.hasText(accessControl.getOwner(), "Owner must be present.");
-    this.accessControl = new AccessControlEntity(accessControl);
-    this.createdBy = accessControl.getOwner();
-    this.modifiedBy = accessControl.getOwner();
-    this.parentId = parentId;
+    this.accessControl = accessControl;
   }
 
 }

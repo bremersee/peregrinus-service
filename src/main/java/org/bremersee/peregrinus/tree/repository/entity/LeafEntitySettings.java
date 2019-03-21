@@ -16,6 +16,7 @@
 
 package org.bremersee.peregrinus.tree.repository.entity;
 
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -30,12 +31,12 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @TypeAlias("LeafSettings")
 @Getter
 @Setter
-@ToString
+@EqualsAndHashCode(callSuper = true)
+@ToString(callSuper = true)
 @NoArgsConstructor
 public abstract class LeafEntitySettings extends NodeEntitySettings {
 
-  public LeafEntitySettings(String nodeId, String userId) {
-    super(nodeId, userId);
+  public LeafEntitySettings(String id, String nodeId, String userId) {
+    super(id, nodeId, userId);
   }
-
 }

@@ -16,9 +16,14 @@
 
 package org.bremersee.peregrinus.tree.repository.entity;
 
+import java.time.OffsetDateTime;
+import lombok.Builder;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
+import org.bremersee.peregrinus.security.access.repository.entity.AccessControlEntity;
 import org.springframework.data.annotation.TypeAlias;
 import org.springframework.data.mongodb.core.mapping.Document;
 
@@ -29,9 +34,24 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @TypeAlias("GeoLeaf")
 @Getter
 @Setter
+@EqualsAndHashCode(callSuper = true)
 @ToString(callSuper = true)
+@NoArgsConstructor
 public class FeatureLeafEntity extends LeafEntity {
 
   private String featureId;
 
+  @Builder
+  public FeatureLeafEntity(
+      String id,
+      OffsetDateTime created,
+      String createdBy,
+      OffsetDateTime modified,
+      String modifiedBy,
+      String parentId,
+      AccessControlEntity accessControl,
+      String featureId) {
+    super(id, created, createdBy, modified, modifiedBy, parentId, accessControl);
+    this.featureId = featureId;
+  }
 }

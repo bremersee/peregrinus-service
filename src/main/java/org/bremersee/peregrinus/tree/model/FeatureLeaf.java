@@ -16,19 +16,43 @@
 
 package org.bremersee.peregrinus.tree.model;
 
+import java.time.OffsetDateTime;
+import lombok.Builder;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 import org.bremersee.peregrinus.content.model.Feature;
+import org.bremersee.peregrinus.security.access.model.AccessControlDto;
 
 /**
  * @author Christian Bremer
  */
 @Getter
 @Setter
+@EqualsAndHashCode(callSuper = true)
 @ToString(callSuper = true)
 public class FeatureLeaf extends Leaf<FeatureLeafSettings> {
 
   private Feature feature;
 
+  public FeatureLeaf() {
+    setSettings(new FeatureLeafSettings());
+  }
+
+  @Builder
+  public FeatureLeaf(
+      String id,
+      OffsetDateTime created,
+      String createdBy,
+      OffsetDateTime modified,
+      String modifiedBy,
+      AccessControlDto accessControl,
+      FeatureLeafSettings settings,
+      String parentId,
+      String name,
+      Feature feature) {
+    super(id, created, createdBy, modified, modifiedBy, accessControl, settings, parentId, name);
+    this.feature = feature;
+  }
 }

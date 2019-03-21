@@ -16,6 +16,7 @@
 
 package org.bremersee.peregrinus.tree.model;
 
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -26,8 +27,13 @@ import lombok.ToString;
  */
 @Getter
 @Setter
-@ToString
+@EqualsAndHashCode(callSuper = true)
+@ToString(callSuper = true)
 @NoArgsConstructor
 public abstract class LeafSettings extends NodeSettings {
+
+  public LeafSettings(String id, String nodeId, String userId) {
+    super(id, nodeId, userId);
+  }
 
 }

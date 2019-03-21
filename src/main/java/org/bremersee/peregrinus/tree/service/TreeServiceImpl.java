@@ -16,6 +16,8 @@
 
 package org.bremersee.peregrinus.tree.service;
 
+import java.time.Clock;
+import java.time.OffsetDateTime;
 import java.util.Collection;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -24,8 +26,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.bremersee.exception.ServiceException;
 import org.bremersee.groupman.api.GroupControllerApi;
 import org.bremersee.peregrinus.security.access.AccessControl;
-import org.bremersee.peregrinus.security.access.model.AccessControlDto;
 import org.bremersee.peregrinus.security.access.PermissionConstants;
+import org.bremersee.peregrinus.security.access.model.AccessControlDto;
 import org.bremersee.peregrinus.tree.model.Branch;
 import org.bremersee.peregrinus.tree.model.Node;
 import org.bremersee.peregrinus.tree.repository.TreeRepository;
@@ -80,7 +82,12 @@ public class TreeServiceImpl implements TreeService {
           .flatMap(groups -> createBranch(
               name, parentId, userId, newAccessControl, roles, groups));
     }
-    final Branch branch = new Branch(userId, null, newAccessControl, name);
+    final Branch branch = Branch.builder()
+        .modifiedBy(userId)
+        .modified(OffsetDateTime.now(Clock.systemUTC()))
+        .name(name)
+        .accessControl(new AccessControlDto(newAccessControl))
+        .build();
     return treeRepository.persistNode(branch, userId);
   }
 
@@ -108,7 +115,12 @@ public class TreeServiceImpl implements TreeService {
                 .owner(userId)
                 .addUser(userId, PermissionConstants.ALL);
           }
-          final Branch branch = new Branch(userId, null, newAccessControl, name);
+          final Branch branch = Branch.builder()
+              .modifiedBy(userId)
+              .modified(OffsetDateTime.now(Clock.systemUTC()))
+              .name(name)
+              .accessControl(new AccessControlDto(newAccessControl))
+              .build();
           return treeRepository.persistNode(branch, userId);
         });
   }

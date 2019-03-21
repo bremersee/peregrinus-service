@@ -35,6 +35,10 @@ public abstract class AbstractNodeAdapter {
   @Getter(AccessLevel.PROTECTED)
   private ModelMapper modelMapper = new ModelMapper();
 
+  public AbstractNodeAdapter() {
+
+  }
+
   <T1 extends NodeEntity, T2 extends NodeEntitySettings> Tuple2<T1, T2> mapNode(
       final Node node,
       final String userId,

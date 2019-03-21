@@ -16,34 +16,45 @@
 
 package org.bremersee.peregrinus.tree.model;
 
+import java.time.OffsetDateTime;
+import java.util.ArrayList;
 import java.util.List;
-import javax.validation.constraints.NotNull;
+import lombok.Builder;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
-import org.bremersee.peregrinus.security.access.AccessControl;
+import org.bremersee.peregrinus.security.access.model.AccessControlDto;
 
 /**
  * @author Christian Bremer
  */
 @Getter
 @Setter
+@EqualsAndHashCode(callSuper = true)
 @ToString(callSuper = true)
-public class Branch extends Node<BranchSettings> {
+public final class Branch extends Node<BranchSettings> {
 
-  private List<Node> children;
+  private List<Node> children = new ArrayList<>();
 
   public Branch() {
     setSettings(new BranchSettings());
   }
 
+  @Builder
   public Branch(
-      final String userId,
-      final String parentId,
-      final AccessControl accessControl,
-      @NotNull(message = "Name must not be null.") final String name) {
-
-    super(userId, parentId, accessControl, new BranchSettings());
-    setName(name);
+      String id,
+      OffsetDateTime created,
+      String createdBy,
+      OffsetDateTime modified,
+      String modifiedBy,
+      AccessControlDto accessControl,
+      BranchSettings settings,
+      String parentId,
+      String name,
+      List<Node> children) {
+    super(id, created, createdBy, modified, modifiedBy, accessControl, settings, parentId, name);
+    this.children = children;
   }
+
 }

@@ -16,37 +16,37 @@
 
 package org.bremersee.peregrinus.tree.repository.entity;
 
-import javax.validation.constraints.NotNull;
+import java.time.OffsetDateTime;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
-import org.bremersee.peregrinus.security.access.AccessControl;
+import org.bremersee.peregrinus.security.access.repository.entity.AccessControlEntity;
 import org.springframework.data.annotation.TypeAlias;
 import org.springframework.data.mongodb.core.mapping.Document;
-import org.springframework.lang.Nullable;
 
 /**
  * @author Christian Bremer
  */
 @Document(collection = "directory")
 @TypeAlias("Leaf")
-@ToString(callSuper = true)
 @Getter
 @Setter
+@EqualsAndHashCode(callSuper = true)
+@ToString(callSuper = true)
 @NoArgsConstructor
 public abstract class LeafEntity extends NodeEntity {
 
   public LeafEntity(
-      @Nullable String parentId,
-      @NotNull String owner) {
-    super(parentId, owner);
-  }
-
-  public LeafEntity(
-      @Nullable String parentId,
-      @NotNull AccessControl accessControl) {
-    super(parentId, accessControl);
+      String id,
+      OffsetDateTime created,
+      String createdBy,
+      OffsetDateTime modified,
+      String modifiedBy,
+      String parentId,
+      AccessControlEntity accessControl) {
+    super(id, created, createdBy, modified, modifiedBy, parentId, accessControl);
   }
 
 }

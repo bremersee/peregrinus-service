@@ -16,6 +16,8 @@
 
 package org.bremersee.peregrinus.tree.repository.entity;
 
+import lombok.AccessLevel;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -37,8 +39,9 @@ import org.springframework.data.mongodb.core.mapping.Document;
 })
 @Getter
 @Setter
+@EqualsAndHashCode
 @ToString
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PACKAGE)
 public class NodeEntitySettings {
 
   @Id
@@ -52,9 +55,9 @@ public class NodeEntitySettings {
 
   // TODO state: new, normal, deleted (, deletion_accepted = remove)
 
-  public NodeEntitySettings(String nodeId, String userId) {
+  NodeEntitySettings(String id, String nodeId, String userId) {
+    this.id = id;
     this.nodeId = nodeId;
     this.userId = userId;
   }
-
 }

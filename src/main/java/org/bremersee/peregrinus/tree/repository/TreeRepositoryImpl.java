@@ -304,7 +304,11 @@ public class TreeRepositoryImpl implements TreeRepository {
     return mongoOperations
         .findAndModify(Query.query(nodeSettingsCriteria(branchId, userId)), update,
             BranchEntitySettings.class)
-        .switchIfEmpty(Mono.just(new BranchEntitySettings(branchId, userId, false)))
+        .switchIfEmpty(Mono.just(
+            BranchEntitySettings.builder()
+                .nodeId(branchId)
+                .userId(userId).open(false)
+                .build()))
         .flatMap(branchEntitySettings -> mongoOperations.save(branchEntitySettings))
         .map(branchEntitySettings -> Boolean.TRUE);
   }

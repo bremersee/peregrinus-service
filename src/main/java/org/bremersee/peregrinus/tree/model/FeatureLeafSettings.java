@@ -16,6 +16,8 @@
 
 package org.bremersee.peregrinus.tree.model;
 
+import lombok.Builder;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -26,10 +28,16 @@ import lombok.ToString;
  */
 @Getter
 @Setter
-@ToString
+@EqualsAndHashCode(callSuper = true)
+@ToString(callSuper = true)
 @NoArgsConstructor
 public class FeatureLeafSettings extends LeafSettings {
 
   private boolean displayedOnMap;
 
+  @Builder
+  public FeatureLeafSettings(String id, String nodeId, String userId, boolean displayedOnMap) {
+    super(id, nodeId, userId);
+    this.displayedOnMap = displayedOnMap;
+  }
 }

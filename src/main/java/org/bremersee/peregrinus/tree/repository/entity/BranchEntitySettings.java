@@ -16,6 +16,8 @@
 
 package org.bremersee.peregrinus.tree.repository.entity;
 
+import lombok.Builder;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -30,19 +32,16 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @TypeAlias("BranchSettings")
 @Getter
 @Setter
-@ToString
+@EqualsAndHashCode(callSuper = true)
+@ToString(callSuper = true)
 @NoArgsConstructor
-public class BranchEntitySettings extends NodeEntitySettings {
+public final class BranchEntitySettings extends NodeEntitySettings {
 
   private boolean open = true;
 
-  public BranchEntitySettings(String nodeId, String userId) {
-    this(nodeId, userId, true);
-  }
-
-  public BranchEntitySettings(String nodeId, String userId, boolean open) {
-    super(nodeId, userId);
+  @Builder
+  public BranchEntitySettings(String id, String nodeId, String userId, boolean open) {
+    super(id, nodeId, userId);
     this.open = open;
   }
-
 }

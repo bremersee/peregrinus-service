@@ -16,6 +16,8 @@
 
 package org.bremersee.peregrinus.tree.repository.entity;
 
+import lombok.Builder;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -30,14 +32,20 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @TypeAlias("GeoLeafSettings")
 @Getter
 @Setter
-@ToString
+@EqualsAndHashCode(callSuper = true)
+@ToString(callSuper = true)
 @NoArgsConstructor
 public class FeatureLeafEntitySettings extends LeafEntitySettings {
 
   private boolean displayedOnMap;
 
-  public FeatureLeafEntitySettings(String nodeId, String userId) {
-    super(nodeId, userId);
+  @Builder
+  public FeatureLeafEntitySettings(
+      String id,
+      String nodeId,
+      String userId,
+      boolean displayedOnMap) {
+    super(id, nodeId, userId);
+    this.displayedOnMap = displayedOnMap;
   }
-
 }

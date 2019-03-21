@@ -25,10 +25,10 @@ import com.fasterxml.jackson.annotation.JsonSubTypes.Type;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import java.time.Clock;
 import java.time.OffsetDateTime;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
-import org.bremersee.peregrinus.security.access.AccessControl;
 import org.bremersee.peregrinus.security.access.model.AccessControlDto;
 
 /**
@@ -46,6 +46,7 @@ import org.bremersee.peregrinus.security.access.model.AccessControlDto;
 })
 @Getter
 @Setter
+@EqualsAndHashCode
 @ToString
 public abstract class Node<S extends NodeSettings> {
 
@@ -67,22 +68,31 @@ public abstract class Node<S extends NodeSettings> {
 
   private String name;
 
-  public Node() {
+  Node() {
     final OffsetDateTime now = OffsetDateTime.now(Clock.systemUTC());
     created = now;
     modified = now;
   }
 
-  public Node(
-      final String userId,
-      final String parentId,
-      final AccessControl accessControl,
-      final S settings) {
-    this.createdBy = userId;
-    this.modifiedBy = userId;
-    this.parentId = parentId;
-    this.accessControl = new AccessControlDto(accessControl);
+  Node(
+      String id,
+      OffsetDateTime created,
+      String createdBy,
+      OffsetDateTime modified,
+      String modifiedBy,
+      AccessControlDto accessControl,
+      S settings,
+      String parentId,
+      String name) {
+    this.id = id;
+    this.created = created;
+    this.createdBy = createdBy;
+    this.modified = modified;
+    this.modifiedBy = modifiedBy;
+    this.accessControl = accessControl;
     this.settings = settings;
+    this.parentId = parentId;
+    this.name = name;
   }
 
 }

@@ -16,7 +16,8 @@
 
 package org.bremersee.peregrinus.tree.model;
 
-import javax.validation.constraints.NotNull;
+import java.time.OffsetDateTime;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -28,18 +29,21 @@ import org.bremersee.peregrinus.security.access.model.AccessControlDto;
  */
 @Getter
 @Setter
+@EqualsAndHashCode(callSuper = true)
 @ToString(callSuper = true)
 @NoArgsConstructor
 public abstract class Leaf<S extends LeafSettings> extends Node<S> {
 
   public Leaf(
-      final String userId,
-      final String parentId,
-      final AccessControlDto accessControl,
-      final S settings,
-      @NotNull(message = "Name must not be null.") final String name) {
-
-    super(userId, parentId, accessControl, settings);
-    setName(name);
+      String id,
+      OffsetDateTime created,
+      String createdBy,
+      OffsetDateTime modified,
+      String modifiedBy,
+      AccessControlDto accessControl,
+      S settings, String parentId,
+      String name) {
+    super(id, created, createdBy, modified, modifiedBy, accessControl, settings, parentId, name);
   }
+
 }

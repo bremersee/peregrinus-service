@@ -23,6 +23,8 @@ import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonSubTypes.Type;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
+import lombok.AccessLevel;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -43,8 +45,9 @@ import lombok.ToString;
 })
 @Getter
 @Setter
+@EqualsAndHashCode
 @ToString
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PACKAGE)
 public class NodeSettings {
 
   private String id;
@@ -54,5 +57,11 @@ public class NodeSettings {
   private String userId;
 
   // TODO state: new, normal, deleted (, deletion_accepted = remove)
+
+  NodeSettings(String id, String nodeId, String userId) {
+    this.id = id;
+    this.nodeId = nodeId;
+    this.userId = userId;
+  }
 
 }
