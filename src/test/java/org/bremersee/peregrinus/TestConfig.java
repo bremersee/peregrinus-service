@@ -18,20 +18,28 @@ package org.bremersee.peregrinus;
 
 import java.util.ServiceLoader;
 import lombok.Getter;
+import org.bremersee.peregrinus.config.ModelMapperConfiguration;
 import org.bremersee.xml.JaxbContextBuilder;
 import org.bremersee.xml.JaxbContextDataProvider;
+import org.modelmapper.ModelMapper;
 
 /**
  * @author Christian Bremer
  */
-public class TestConfig {
+public abstract class TestConfig {
 
   @Getter
   private static final JaxbContextBuilder jaxbContextBuilder;
 
+  @Getter
+  private static final ModelMapper modelMapper;
+
   static {
     jaxbContextBuilder = JaxbContextBuilder.builder().processAll(
         ServiceLoader.load(JaxbContextDataProvider.class));
+    modelMapper = new ModelMapperConfiguration().modelMapper();
   }
 
+  private TestConfig() {
+  }
 }

@@ -1,27 +1,25 @@
 package org.bremersee.peregrinus.tree.repository.adapter;
 
+import static org.bremersee.peregrinus.TestData.ANNA;
+import static org.bremersee.peregrinus.TestData.ANNAS_FRIEND;
+import static org.bremersee.peregrinus.TestData.accessControlDto;
+import static org.bremersee.peregrinus.TestData.accessControlEntity;
+import static org.bremersee.peregrinus.TestData.rootBranch;
+import static org.bremersee.peregrinus.TestData.rootBranchEntity;
+import static org.bremersee.peregrinus.TestData.rootBranchEntitySettings;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
-import java.math.BigDecimal;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
-import org.bremersee.geojson.utils.GeometryUtils;
-import org.bremersee.peregrinus.config.ModelMapperConfiguration;
-import org.bremersee.peregrinus.content.model.Wpt;
-import org.bremersee.peregrinus.content.model.WptProperties;
-import org.bremersee.peregrinus.content.model.WptSettings;
+import org.bremersee.peregrinus.TestConfig;
 import org.bremersee.peregrinus.security.access.AccessControl;
-import org.bremersee.peregrinus.security.access.PermissionConstants;
 import org.bremersee.peregrinus.security.access.model.AccessControlDto;
-import org.bremersee.peregrinus.security.access.repository.entity.AccessControlEntity;
 import org.bremersee.peregrinus.tree.model.Branch;
 import org.bremersee.peregrinus.tree.model.BranchSettings;
-import org.bremersee.peregrinus.tree.model.FeatureLeaf;
-import org.bremersee.peregrinus.tree.model.FeatureLeafSettings;
 import org.bremersee.peregrinus.tree.repository.entity.BranchEntity;
 import org.bremersee.peregrinus.tree.repository.entity.BranchEntitySettings;
 import org.junit.Assert;
@@ -33,103 +31,11 @@ import reactor.test.StepVerifier;
  */
 public class BranchAdapterTest {
 
-  private static final BranchAdapter branchAdapter = new BranchAdapter(
-      new ModelMapperConfiguration().modelMapper());
-
-  private static final String ANNA = "anna";
-
-  private static final String ANNAS_FRIEND = "stephan";
-
-  private static AccessControlDto accessControlDto(String owner) {
-    AccessControlDto accessControl = new AccessControlDto();
-    accessControl.setOwner(owner);
-    accessControl.addUser(owner, PermissionConstants.ALL);
-    accessControl.addGroup("friends", PermissionConstants.READ, PermissionConstants.WRITE);
-    accessControl.addRole("ROLE_AUDIT", PermissionConstants.READ, PermissionConstants.DELETE);
-    return accessControl;
-  }
-
-  private static AccessControlEntity accessControlEntity(AccessControl accessControl) {
-    return new AccessControlEntity(accessControl.ensureAdminAccess());
-  }
-
-  private static Wpt wpt() {
-    return Wpt.builder()
-        .geometry(GeometryUtils.createPointWGS84(52.1, 10.2))
-        .id("333")
-        .properties(WptProperties.builder()
-            .accessControl(accessControlDto(ANNAS_FRIEND))
-            .ele(BigDecimal.valueOf(123.4))
-            .name("Child leaf")
-            .settings(WptSettings.builder()
-                .id("3333")
-                .featureId("333")
-                .userId(ANNAS_FRIEND)
-                .build())
-            .build())
-        .build();
-  }
-
-  private static Branch childBranch() {
-    return Branch.builder()
-        .accessControl(accessControlDto(ANNA))
-        .createdBy(ANNA)
-        .id("2")
-        .modifiedBy(ANNA)
-        .name("Child branch")
-        .parentId("1")
-        .settings(BranchSettings.builder().id("22").nodeId("2").open(false).userId(ANNA).build())
-        .build();
-  }
-
-  private static FeatureLeaf childLeaf() {
-    final Wpt wpt = wpt();
-    return FeatureLeaf.builder()
-        .accessControl(accessControlDto(ANNA))
-        .createdBy(ANNA)
-        .feature(wpt)
-        .id("3")
-        .modifiedBy(ANNA)
-        .name("Child leaf")
-        .parentId("1")
-        .settings(FeatureLeafSettings.builder().id("33").nodeId("3").userId(ANNA).build())
-        .build();
-  }
-
-  private static Branch root() {
-    return Branch.builder()
-        .accessControl(accessControlDto(ANNA))
-        .children(Arrays.asList(childLeaf(), childBranch()))
-        .createdBy(ANNAS_FRIEND)
-        .id("1")
-        .modifiedBy(ANNA)
-        .name("root")
-        .settings(BranchSettings.builder().id("11").nodeId("1").userId(ANNA).build())
-        .build();
-  }
-
-  private static BranchEntity rootEntity() {
-    return BranchEntity.builder()
-        .accessControl(accessControlEntity(accessControlDto(ANNAS_FRIEND)))
-        .createdBy(ANNA)
-        .modifiedBy(ANNAS_FRIEND)
-        .name("child")
-        .parentId("1")
-        .build();
-  }
-
-  private static BranchEntitySettings rootEntitySettings() {
-    return BranchEntitySettings.builder()
-        .id("11")
-        .nodeId("1")
-        .userId(ANNAS_FRIEND)
-        .open(Boolean.FALSE)
-        .build();
-  }
+  private static final BranchAdapter adapter = new BranchAdapter(TestConfig.getModelMapper());
 
   @Test
   public void getSupportedClasses() {
-    final List<Class<?>> classes = Arrays.asList(branchAdapter.getSupportedClasses());
+    final List<Class<?>> classes = Arrays.asList(adapter.getSupportedClasses());
     assertTrue(classes.contains(BranchEntity.class));
     assertTrue(classes.contains(BranchEntitySettings.class));
     assertTrue(classes.contains(Branch.class));
@@ -138,9 +44,9 @@ public class BranchAdapterTest {
 
   @Test
   public void mapNode() {
-    final Branch branch = root();
+    final Branch branch = rootBranch();
     StepVerifier
-        .create(branchAdapter.mapNode(branch, ANNA))
+        .create(adapter.mapNode(branch, ANNA))
         .assertNext(tuple -> {
           assertNotNull(tuple);
           assertNotNull(tuple.getT1());
@@ -177,9 +83,9 @@ public class BranchAdapterTest {
   @Test
   public void mapNodeSettings() {
 
-    final BranchSettings branchSettings = root().getSettings();
+    final BranchSettings branchSettings = rootBranch().getSettings();
     StepVerifier
-        .create(branchAdapter.mapNodeSettings(branchSettings, ANNA))
+        .create(adapter.mapNodeSettings(branchSettings, ANNA))
         .assertNext(branchEntitySettings -> {
           assertNotNull(branchEntitySettings);
 
@@ -187,7 +93,7 @@ public class BranchAdapterTest {
           System.out.println(branchEntitySettings);
 
           assertEquals(branchSettings.getId(), branchEntitySettings.getId());
-          assertEquals(root().getId(), branchEntitySettings.getNodeId());
+          assertEquals(rootBranch().getId(), branchEntitySettings.getNodeId());
           assertEquals(branchSettings.getOpen(), branchEntitySettings.getOpen());
           assertEquals(branchSettings.getUserId(), branchEntitySettings.getUserId());
         })
@@ -197,10 +103,10 @@ public class BranchAdapterTest {
 
   @Test
   public void mapNodeEntity() {
-    final BranchEntity root = rootEntity();
-    final BranchEntitySettings rootSettings = rootEntitySettings();
+    final BranchEntity root = rootBranchEntity();
+    final BranchEntitySettings rootSettings = rootBranchEntitySettings();
     StepVerifier
-        .create(branchAdapter.mapNodeEntity(root, rootSettings))
+        .create(adapter.mapNodeEntity(root, rootSettings))
         .assertNext(branch -> {
           assertNotNull(branch);
 
@@ -233,14 +139,15 @@ public class BranchAdapterTest {
 
   @Test
   public void getNodeName() {
-    assertEquals(rootEntity().getName(), branchAdapter.getNodeName(rootEntity(), root()));
+    assertEquals(
+        rootBranchEntity().getName(), adapter.getNodeName(rootBranchEntity(), rootBranch()));
   }
 
   @Test
   public void mapNodeEntitySettings() {
-    final BranchEntitySettings rootSettings = rootEntitySettings();
+    final BranchEntitySettings rootSettings = rootBranchEntitySettings();
     StepVerifier
-        .create(branchAdapter.mapNodeEntitySettings(rootSettings))
+        .create(adapter.mapNodeEntitySettings(rootSettings))
         .assertNext(branchSettings -> {
           assertNotNull(branchSettings);
           assertEquals(rootSettings.getId(), branchSettings.getId());
@@ -257,7 +164,7 @@ public class BranchAdapterTest {
     final String expectedNewName = UUID.randomUUID().toString();
     final BranchEntity branchEntity = BranchEntity.builder().build();
     StepVerifier
-        .create(branchAdapter.updateName(
+        .create(adapter.updateName(
             branchEntity, expectedNewName, ANNA, Collections.emptyList(), Collections.emptyList()))
         .assertNext(nodeEntity -> {
           assertNotNull(nodeEntity);
@@ -274,7 +181,7 @@ public class BranchAdapterTest {
         .accessControl(accessControlEntity(accessControlDto(ANNA)))
         .build();
     StepVerifier
-        .create(branchAdapter.updateAccessControl(
+        .create(adapter.updateAccessControl(
             branchEntity, accessControl, ANNA, Collections.emptyList(), Collections.emptyList()))
         .assertNext(nodeEntity -> {
           assertNotNull(nodeEntity);
@@ -286,9 +193,9 @@ public class BranchAdapterTest {
 
   @Test
   public void defaultSettings() {
-    BranchEntity branchEntity = rootEntity();
+    BranchEntity branchEntity = rootBranchEntity();
     StepVerifier
-        .create(branchAdapter.defaultSettings(branchEntity, ANNA))
+        .create(adapter.defaultSettings(branchEntity, ANNA))
         .assertNext(branchEntitySettings -> {
           assertNotNull(branchEntitySettings);
           assertEquals(branchEntity.getId(), branchEntitySettings.getNodeId());
