@@ -1,7 +1,9 @@
 package org.bremersee.peregrinus.tree.repository.adapter;
 
 import static org.bremersee.peregrinus.TestData.accessControlEntity;
+import static org.bremersee.peregrinus.TestData.rte;
 import static org.bremersee.peregrinus.TestData.rteLeaf;
+import static org.bremersee.peregrinus.TestData.trk;
 import static org.bremersee.peregrinus.TestData.trkLeaf;
 import static org.bremersee.peregrinus.TestData.wpt;
 import static org.bremersee.peregrinus.TestData.wptLeaf;
@@ -49,6 +51,16 @@ public class FeatureLeafAdapterTest {
             eq(wpt().getId()),
             anyString()))
         .thenReturn(Mono.just(wpt()));
+    when(
+        featureRepository.findById(
+            eq(trk().getId()),
+            anyString()))
+        .thenReturn(Mono.just(trk()));
+    when(
+        featureRepository.findById(
+            eq(rte().getId()),
+            anyString()))
+        .thenReturn(Mono.just(rte()));
 
     adapter = new FeatureLeafAdapter(
         TestConfig.getModelMapper(),
@@ -114,6 +126,37 @@ public class FeatureLeafAdapterTest {
 
   @Test
   public void mapNodeSettings() {
+    for (FeatureLeaf featureLeaf : Arrays.asList(wptLeaf(), rteLeaf(), trkLeaf())) {
+      StepVerifier
+          .create(adapter.mapNodeSettings(
+              featureLeaf.getSettings(), featureLeaf.getSettings().getUserId()))
+          .assertNext(nodeEntitySettings -> {
+            assertNotNull(nodeEntitySettings);
+            assertTrue(nodeEntitySettings instanceof FeatureLeafEntitySettings);
+
+            FeatureLeafEntitySettings featureLeafEntitySettings
+                = (FeatureLeafEntitySettings) nodeEntitySettings;
+
+            System.out.println("### Feature leaf entity settings");
+            System.out.println(featureLeafEntitySettings);
+
+            assertEquals(
+                featureLeaf.getSettings().getDisplayedOnMap(),
+                featureLeafEntitySettings.getDisplayedOnMap());
+            assertEquals(
+                featureLeaf.getSettings().getId(),
+                featureLeafEntitySettings.getId());
+            assertEquals(
+                featureLeaf.getSettings().getNodeId(),
+                featureLeafEntitySettings.getNodeId());
+            assertEquals(
+                featureLeaf.getSettings().getUserId(),
+                featureLeafEntitySettings.getUserId());
+
+          })
+          .expectNextCount(0)
+          .verifyComplete();
+    }
   }
 
   @Test
