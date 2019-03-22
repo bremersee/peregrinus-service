@@ -52,14 +52,20 @@ public abstract class FeatureEntity<G extends Geometry, P extends FeatureEntityP
   private P properties;
 
   public FeatureEntity(String id, G geometry, double[] bbox, P properties) {
-    this.id = id;
-    this.geometry = geometry;
-    this.bbox = bbox;
-    this.properties = properties;
+    setId(id);
+    setGeometry(geometry);
+    setBbox(bbox);
+    setProperties(properties);
+  }
+
+  public void setProperties(final P properties) {
+    if (properties != null) {
+      this.properties = properties;
+    }
   }
 
   @Override
-  public boolean equals(Object o) {
+  public boolean equals(final Object o) {
     if (this == o) {
       return true;
     }

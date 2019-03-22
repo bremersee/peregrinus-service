@@ -23,7 +23,6 @@ import java.util.List;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 import org.bremersee.common.model.Link;
@@ -38,24 +37,51 @@ import org.springframework.data.annotation.TypeAlias;
 @Setter
 @ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
-@NoArgsConstructor
 public class TrkEntityProperties extends FeatureEntityProperties {
 
-  private List<List<BigDecimal>> eleLines = new ArrayList<>();
+  private List<List<BigDecimal>> eleLines;
 
-  private List<List<OffsetDateTime>> timeLines = new ArrayList<>();
+  private List<List<OffsetDateTime>> timeLines;
+
+  public TrkEntityProperties() {
+    eleLines = new ArrayList<>();
+    timeLines = new ArrayList<>();
+  }
 
   @Builder
   public TrkEntityProperties(
       AccessControlEntity accessControl,
-      OffsetDateTime created, OffsetDateTime modified, String name,
-      String plainTextDescription, String markdownDescription, String internalComments,
-      List<Link> links, OffsetDateTime startTime,
-      OffsetDateTime stopTime, List<List<BigDecimal>> eleLines,
+      OffsetDateTime created,
+      OffsetDateTime modified,
+      String name,
+      String plainTextDescription,
+      String markdownDescription,
+      String internalComments,
+      List<Link> links,
+      OffsetDateTime startTime,
+      OffsetDateTime stopTime,
+      List<List<BigDecimal>> eleLines,
       List<List<OffsetDateTime>> timeLines) {
+
     super(accessControl, created, modified, name, plainTextDescription, markdownDescription,
         internalComments, links, startTime, stopTime);
-    this.eleLines = eleLines;
-    this.timeLines = timeLines;
+    setEleLines(eleLines);
+    setTimeLines(timeLines);
+  }
+
+  public void setEleLines(List<List<BigDecimal>> eleLines) {
+    if (eleLines == null) {
+      this.eleLines = new ArrayList<>();
+    } else {
+      this.eleLines = eleLines;
+    }
+  }
+
+  public void setTimeLines(List<List<OffsetDateTime>> timeLines) {
+    if (timeLines == null) {
+      this.timeLines = new ArrayList<>();
+    } else {
+      this.timeLines = timeLines;
+    }
   }
 }

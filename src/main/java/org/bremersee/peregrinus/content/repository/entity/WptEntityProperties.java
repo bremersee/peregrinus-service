@@ -45,12 +45,20 @@ public class WptEntityProperties extends PtEntityProperties {
   @Builder
   public WptEntityProperties(
       AccessControlEntity accessControl,
-      OffsetDateTime created, OffsetDateTime modified, String name,
-      String plainTextDescription, String markdownDescription, String internalComments,
-      List<Link> links, OffsetDateTime startTime,
-      OffsetDateTime stopTime, String internalType, BigDecimal ele,
+      OffsetDateTime created,
+      OffsetDateTime modified,
+      String name,
+      String plainTextDescription,
+      String markdownDescription,
+      String internalComments,
+      List<Link> links,
+      OffsetDateTime startTime,
+      OffsetDateTime stopTime,
+      String internalType,
+      BigDecimal ele,
       Address address,
       List<PhoneNumber> phoneNumbers) {
+
     super(accessControl, created, modified, name, plainTextDescription, markdownDescription,
         internalComments, links, startTime, stopTime, internalType, ele, address, phoneNumbers);
   }

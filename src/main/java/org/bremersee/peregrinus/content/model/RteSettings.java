@@ -19,7 +19,6 @@ package org.bremersee.peregrinus.content.model;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
@@ -30,15 +29,26 @@ import lombok.ToString;
 @Setter
 @ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
-@NoArgsConstructor
 public class RteSettings extends FeatureSettings {
 
-  private DisplayColor displayColor = DisplayColor.MAGENTA;
+  private DisplayColor displayColor;
+
+  public RteSettings() {
+    displayColor = DisplayColor.MAGENTA;
+  }
 
   @Builder
-  public RteSettings(String id, String featureId, String userId,
+  public RteSettings(
+      String id,
+      String featureId,
+      String userId,
       DisplayColor displayColor) {
+
     super(id, featureId, userId);
+    setDisplayColor(displayColor);
+  }
+
+  public void setDisplayColor(DisplayColor displayColor) {
     if (displayColor != null) {
       this.displayColor = displayColor;
     }

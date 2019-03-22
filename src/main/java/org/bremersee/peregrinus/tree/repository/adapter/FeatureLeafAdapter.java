@@ -70,7 +70,8 @@ public class FeatureLeafAdapter extends AbstractNodeAdapter implements NodeAdapt
     final FeatureLeaf leaf = (FeatureLeaf) node;
     return Mono.just(mapNode(node, userId, FeatureLeafEntity::new, FeatureLeafEntitySettings::new))
         .flatMap(tuple -> Mono.zip(
-            updateFeature(leaf).flatMap(b -> Mono.just(tuple.getT1())),
+            updateFeature(leaf)
+                .flatMap(b -> Mono.just(tuple.getT1())),
             Mono.just(tuple.getT2())
         ))
         .map(tuple -> {
@@ -91,8 +92,12 @@ public class FeatureLeafAdapter extends AbstractNodeAdapter implements NodeAdapt
         .equals(properties.getAccessControl())
         ? null
         : leaf.getAccessControl();
+    if (newName == null && newAccessControl == null) {
+      return Mono.just(Boolean.FALSE);
+    }
     return featureRepository.updateNameAndAccessControl(
-        leaf.getFeature().getId(), newName, newAccessControl);
+        leaf.getFeature().getId(), newName, newAccessControl)
+        .switchIfEmpty(Mono.just(Boolean.FALSE));
   }
 
   @Override

@@ -22,7 +22,6 @@ import java.util.List;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 import org.bremersee.common.model.Address;
@@ -37,25 +36,33 @@ import org.bremersee.peregrinus.security.access.model.AccessControlDto;
 @Setter
 @ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
-@NoArgsConstructor
 public class WptProperties extends PtProperties<WptSettings> {
 
+  public WptProperties() {
+    setSettings(new WptSettings());
+  }
+
   @Builder
-  public WptProperties(AccessControlDto accessControl,
-      OffsetDateTime created, OffsetDateTime modified, String name,
-      String plainTextDescription, String markdownDescription, String internalComments,
-      List<Link> links, OffsetDateTime startTime,
-      OffsetDateTime stopTime, WptSettings settings, String internalType,
-      BigDecimal ele, Address address,
+  public WptProperties(
+      AccessControlDto accessControl,
+      OffsetDateTime created,
+      OffsetDateTime modified,
+      String name,
+      String plainTextDescription,
+      String markdownDescription,
+      String internalComments,
+      List<Link> links,
+      OffsetDateTime startTime,
+      OffsetDateTime stopTime,
+      WptSettings settings,
+      String internalType,
+      BigDecimal ele,
+      Address address,
       List<PhoneNumber> phoneNumbers) {
+
     super(accessControl, created, modified, name, plainTextDescription, markdownDescription,
         internalComments, links, startTime, stopTime, settings, internalType, ele, address,
         phoneNumbers);
-  }
-
-  @Override
-  WptSettings doCreateDefaultSettings() {
-    return new WptSettings();
   }
 
 }

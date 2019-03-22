@@ -22,7 +22,6 @@ import java.util.List;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 import org.bremersee.common.model.Address;
@@ -38,7 +37,6 @@ import org.bremersee.peregrinus.security.access.model.AccessControlDto;
 @Setter
 @ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
-@NoArgsConstructor
 public class RtePtProperties extends PtProperties<RtePtSettings> {
 
   private AbstractRteCalculationProperties calculationProperties;
@@ -54,6 +52,11 @@ public class RtePtProperties extends PtProperties<RtePtSettings> {
   private Integer historicTrafficTravelTimeInSeconds;
 
   private Integer liveTrafficIncidentsTravelTimeInSeconds;
+
+  public RtePtProperties() {
+    noAccessControl();
+    noSettings();
+  }
 
   @Builder
   public RtePtProperties(
@@ -79,6 +82,7 @@ public class RtePtProperties extends PtProperties<RtePtSettings> {
       Integer noTrafficTravelTimeInSeconds,
       Integer historicTrafficTravelTimeInSeconds,
       Integer liveTrafficIncidentsTravelTimeInSeconds) {
+
     super(accessControl, created, modified, name, plainTextDescription, markdownDescription,
         internalComments, links, startTime, stopTime, settings, internalType, ele, address,
         phoneNumbers);
@@ -92,7 +96,21 @@ public class RtePtProperties extends PtProperties<RtePtSettings> {
   }
 
   @Override
-  RtePtSettings doCreateDefaultSettings() {
-    return new RtePtSettings();
+  public AccessControlDto getAccessControl() {
+    return null;
   }
+
+  @Override
+  public void setAccessControl(AccessControlDto accessControl) {
+  }
+
+  @Override
+  public RtePtSettings getSettings() {
+    return null;
+  }
+
+  @Override
+  public void setSettings(RtePtSettings settings) {
+  }
+
 }

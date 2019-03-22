@@ -19,7 +19,6 @@ package org.bremersee.peregrinus.content.model;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 import org.locationtech.jts.geom.Point;
@@ -31,8 +30,11 @@ import org.locationtech.jts.geom.Point;
 @Setter
 @ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
-@NoArgsConstructor
 public class Wpt extends Pt<WptProperties> {
+
+  public Wpt() {
+    setProperties(new WptProperties());
+  }
 
   @Builder
   public Wpt(String id, Point geometry, double[] bbox,

@@ -2,10 +2,12 @@ package org.bremersee.peregrinus.tree.repository.adapter;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
 import java.math.BigDecimal;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.List;
 import java.util.UUID;
 import org.bremersee.geojson.utils.GeometryUtils;
 import org.bremersee.peregrinus.config.ModelMapperConfiguration;
@@ -45,6 +47,10 @@ public class BranchAdapterTest {
     accessControl.addGroup("friends", PermissionConstants.READ, PermissionConstants.WRITE);
     accessControl.addRole("ROLE_AUDIT", PermissionConstants.READ, PermissionConstants.DELETE);
     return accessControl;
+  }
+
+  private static AccessControlEntity accessControlEntity(AccessControl accessControl) {
+    return new AccessControlEntity(accessControl.ensureAdminAccess());
   }
 
   private static Wpt wpt() {
@@ -90,10 +96,6 @@ public class BranchAdapterTest {
         .build();
   }
 
-  private static AccessControlEntity accessControlEntity(AccessControl accessControl) {
-    return new AccessControlEntity(accessControl.ensureAdminAccess());
-  }
-
   private static Branch root() {
     return Branch.builder()
         .accessControl(accessControlDto(ANNA))
@@ -123,6 +125,15 @@ public class BranchAdapterTest {
         .userId(ANNAS_FRIEND)
         .open(Boolean.FALSE)
         .build();
+  }
+
+  @Test
+  public void getSupportedClasses() {
+    final List<Class<?>> classes = Arrays.asList(branchAdapter.getSupportedClasses());
+    assertTrue(classes.contains(BranchEntity.class));
+    assertTrue(classes.contains(BranchEntitySettings.class));
+    assertTrue(classes.contains(Branch.class));
+    assertTrue(classes.contains(BranchSettings.class));
   }
 
   @Test

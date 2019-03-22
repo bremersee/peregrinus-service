@@ -46,7 +46,7 @@ import org.bremersee.peregrinus.security.access.model.AccessControlDto;
 @ToString
 public abstract class FeatureProperties<S extends FeatureSettings> {
 
-  private AccessControlDto accessControl = new AccessControlDto();
+  private AccessControlDto accessControl;
 
   private OffsetDateTime created;
 
@@ -60,7 +60,7 @@ public abstract class FeatureProperties<S extends FeatureSettings> {
 
   private String internalComments;
 
-  private List<Link> links = new ArrayList<>();
+  private List<Link> links;
 
   /**
    * Start time of tracks or way points
@@ -78,7 +78,8 @@ public abstract class FeatureProperties<S extends FeatureSettings> {
     final OffsetDateTime now = OffsetDateTime.now(Clock.systemUTC());
     created = now;
     modified = now;
-    settings = doCreateDefaultSettings();
+    accessControl = new AccessControlDto();
+    links = new ArrayList<>();
   }
 
   public FeatureProperties(
@@ -93,21 +94,59 @@ public abstract class FeatureProperties<S extends FeatureSettings> {
       OffsetDateTime startTime,
       OffsetDateTime stopTime,
       S settings) {
-    this.accessControl = accessControl;
-    this.created = created;
-    this.modified = modified;
-    this.name = name;
-    this.plainTextDescription = plainTextDescription;
-    this.markdownDescription = markdownDescription;
-    this.internalComments = internalComments;
-    if (links != null) {
-      this.links = links;
-    }
-    this.startTime = startTime;
-    this.stopTime = stopTime;
-    this.settings = settings;
+
+    setAccessControl(accessControl);
+    setCreated(created);
+    setModified(modified);
+    setName(name);
+    setPlainTextDescription(plainTextDescription);
+    setMarkdownDescription(markdownDescription);
+    setInternalComments(internalComments);
+    setLinks(links);
+    setStartTime(startTime);
+    setStopTime(stopTime);
+    setSettings(settings);
   }
 
-  abstract S doCreateDefaultSettings();
+  public void setAccessControl(AccessControlDto accessControl) {
+    if (accessControl != null) {
+      this.accessControl = accessControl;
+    }
+  }
 
+  public void setCreated(OffsetDateTime created) {
+    if (created != null) {
+      this.created = created;
+    }
+  }
+
+  public void setModified(OffsetDateTime modified) {
+    if (modified != null) {
+      this.modified = modified;
+    }
+  }
+
+  public void setLinks(List<Link> links) {
+    if (links == null) {
+      this.links = new ArrayList<>();
+    } else {
+      this.links = links;
+    }
+  }
+
+  public void setSettings(S settings) {
+    if (settings != null) {
+      this.settings = settings;
+    }
+  }
+
+  @SuppressWarnings("WeakerAccess")
+  protected void noAccessControl() {
+    this.accessControl = null;
+  }
+
+  @SuppressWarnings("WeakerAccess")
+  protected void noSettings() {
+    this.settings = null;
+  }
 }

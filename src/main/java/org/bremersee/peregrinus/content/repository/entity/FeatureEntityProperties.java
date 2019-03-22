@@ -39,7 +39,7 @@ import org.springframework.data.mongodb.core.index.Indexed;
 @ToString
 public abstract class FeatureEntityProperties {
 
-  private AccessControlEntity accessControl = new AccessControlEntity();
+  private AccessControlEntity accessControl;
 
   private OffsetDateTime created;
 
@@ -55,7 +55,7 @@ public abstract class FeatureEntityProperties {
 
   private String internalComments;
 
-  private List<Link> links = new ArrayList<>();
+  private List<Link> links;
 
   /**
    * Start time of tracks.
@@ -73,6 +73,8 @@ public abstract class FeatureEntityProperties {
     final OffsetDateTime now = OffsetDateTime.now(Clock.systemUTC());
     created = now;
     modified = now;
+    accessControl = new AccessControlEntity();
+    links = new ArrayList<>();
   }
 
   public FeatureEntityProperties(
@@ -86,17 +88,43 @@ public abstract class FeatureEntityProperties {
       List<Link> links,
       OffsetDateTime startTime,
       OffsetDateTime stopTime) {
-    this.accessControl = accessControl;
-    this.created = created;
-    this.modified = modified;
-    this.name = name;
-    this.plainTextDescription = plainTextDescription;
-    this.markdownDescription = markdownDescription;
-    this.internalComments = internalComments;
-    if (links != null) {
+
+    setAccessControl(accessControl);
+    setCreated(created);
+    setModified(modified);
+    setName(name);
+    setPlainTextDescription(plainTextDescription);
+    setMarkdownDescription(markdownDescription);
+    setInternalComments(internalComments);
+    setLinks(links);
+    setStartTime(startTime);
+    setStopTime(stopTime);
+  }
+
+  public void setAccessControl(AccessControlEntity accessControl) {
+    if (accessControl != null) {
+      this.accessControl = accessControl;
+    }
+  }
+
+  public void setCreated(OffsetDateTime created) {
+    if (created != null) {
+      this.created = created;
+    }
+  }
+
+  public void setModified(OffsetDateTime modified) {
+    if (modified != null) {
+      this.modified = modified;
+    }
+  }
+
+  public void setLinks(List<Link> links) {
+    if (links == null) {
+      this.links = new ArrayList<>();
+    } else {
       this.links = links;
     }
-    this.startTime = startTime;
-    this.stopTime = stopTime;
   }
+
 }

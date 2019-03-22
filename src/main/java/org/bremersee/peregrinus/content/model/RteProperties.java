@@ -22,7 +22,6 @@ import java.util.List;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 import org.bremersee.common.model.Link;
@@ -35,28 +34,40 @@ import org.bremersee.peregrinus.security.access.model.AccessControlDto;
 @Setter
 @ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
-@NoArgsConstructor
 public class RteProperties extends FeatureProperties<RteSettings> {
 
   private List<RtePt> rtePts = new ArrayList<>();
 
+  public RteProperties() {
+    setSettings(new RteSettings());
+    rtePts = new ArrayList<>();
+  }
+
   @Builder
-  public RteProperties(AccessControlDto accessControl,
-      OffsetDateTime created, OffsetDateTime modified, String name,
-      String plainTextDescription, String markdownDescription, String internalComments,
-      List<Link> links, OffsetDateTime startTime,
-      OffsetDateTime stopTime, RteSettings settings,
+  public RteProperties(
+      AccessControlDto accessControl,
+      OffsetDateTime created,
+      OffsetDateTime modified,
+      String name,
+      String plainTextDescription,
+      String markdownDescription,
+      String internalComments,
+      List<Link> links,
+      OffsetDateTime startTime,
+      OffsetDateTime stopTime,
+      RteSettings settings,
       List<RtePt> rtePts) {
+
     super(accessControl, created, modified, name, plainTextDescription, markdownDescription,
         internalComments, links, startTime, stopTime, settings);
-    this.rtePts = rtePts;
+    setRtePts(rtePts);
   }
 
-  @Override
-  RteSettings doCreateDefaultSettings() {
-    final RteSettings settings = new RteSettings();
-    settings.setDisplayColor(DisplayColor.MAGENTA);
-    return settings;
+  public void setRtePts(List<RtePt> rtePts) {
+    if (rtePts == null) {
+      this.rtePts = new ArrayList<>();
+    } else {
+      this.rtePts = rtePts;
+    }
   }
-
 }

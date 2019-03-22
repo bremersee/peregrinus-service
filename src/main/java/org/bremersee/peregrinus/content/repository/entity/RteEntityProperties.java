@@ -22,7 +22,6 @@ import java.util.List;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 import org.bremersee.common.model.Link;
@@ -38,21 +37,38 @@ import org.springframework.data.annotation.TypeAlias;
 @Setter
 @ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
-@NoArgsConstructor
 public class RteEntityProperties extends FeatureEntityProperties {
 
-  private List<RtePt> rtePts = new ArrayList<>();
+  private List<RtePt> rtePts;
+
+  public RteEntityProperties() {
+    rtePts = new ArrayList<>();
+  }
 
   @Builder
   public RteEntityProperties(
       AccessControlEntity accessControl,
-      OffsetDateTime created, OffsetDateTime modified, String name,
-      String plainTextDescription, String markdownDescription, String internalComments,
-      List<Link> links, OffsetDateTime startTime,
+      OffsetDateTime created,
+      OffsetDateTime modified,
+      String name,
+      String plainTextDescription,
+      String markdownDescription,
+      String internalComments,
+      List<Link> links,
+      OffsetDateTime startTime,
       OffsetDateTime stopTime,
       List<RtePt> rtePts) {
+
     super(accessControl, created, modified, name, plainTextDescription, markdownDescription,
         internalComments, links, startTime, stopTime);
-    this.rtePts = rtePts;
+    setRtePts(rtePts);
+  }
+
+  public void setRtePts(List<RtePt> rtePts) {
+    if (rtePts == null) {
+      this.rtePts = new ArrayList<>();
+    } else {
+      this.rtePts = rtePts;
+    }
   }
 }

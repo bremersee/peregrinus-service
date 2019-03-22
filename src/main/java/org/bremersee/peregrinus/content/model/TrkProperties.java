@@ -23,7 +23,6 @@ import java.util.List;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 import org.bremersee.common.model.Link;
@@ -36,32 +35,53 @@ import org.bremersee.peregrinus.security.access.model.AccessControlDto;
 @Setter
 @ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
-@NoArgsConstructor
 public class TrkProperties extends FeatureProperties<TrkSettings> {
 
-  private List<List<BigDecimal>> eleLines = new ArrayList<>();
+  private List<List<BigDecimal>> eleLines;
 
-  private List<List<OffsetDateTime>> timeLines = new ArrayList<>();
+  private List<List<OffsetDateTime>> timeLines;
+
+  public TrkProperties() {
+    eleLines = new ArrayList<>();
+    timeLines = new ArrayList<>();
+    setSettings(new TrkSettings());
+  }
 
   @Builder
-  public TrkProperties(AccessControlDto accessControl,
-      OffsetDateTime created, OffsetDateTime modified, String name,
-      String plainTextDescription, String markdownDescription, String internalComments,
-      List<Link> links, OffsetDateTime startTime,
-      OffsetDateTime stopTime, TrkSettings settings,
+  public TrkProperties(
+      AccessControlDto accessControl,
+      OffsetDateTime created,
+      OffsetDateTime modified,
+      String name,
+      String plainTextDescription,
+      String markdownDescription,
+      String internalComments,
+      List<Link> links,
+      OffsetDateTime startTime,
+      OffsetDateTime stopTime,
+      TrkSettings settings,
       List<List<BigDecimal>> eleLines,
       List<List<OffsetDateTime>> timeLines) {
+
     super(accessControl, created, modified, name, plainTextDescription, markdownDescription,
         internalComments, links, startTime, stopTime, settings);
-    this.eleLines = eleLines;
-    this.timeLines = timeLines;
+    setEleLines(eleLines);
+    setTimeLines(timeLines);
   }
 
-  @Override
-  TrkSettings doCreateDefaultSettings() {
-    final TrkSettings settings = new TrkSettings();
-    settings.setDisplayColor(DisplayColor.DARK_GRAY);
-    return settings;
+  public void setEleLines(List<List<BigDecimal>> eleLines) {
+    if (eleLines == null) {
+      this.eleLines = new ArrayList<>();
+    } else {
+      this.eleLines = eleLines;
+    }
   }
 
+  public void setTimeLines(List<List<OffsetDateTime>> timeLines) {
+    if (timeLines == null) {
+      this.timeLines = new ArrayList<>();
+    } else {
+      this.timeLines = timeLines;
+    }
+  }
 }
