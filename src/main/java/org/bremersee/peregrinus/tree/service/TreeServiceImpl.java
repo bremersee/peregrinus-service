@@ -154,7 +154,8 @@ public class TreeServiceImpl implements TreeService {
       final Collection<String> roles,
       final Collection<String> groups) {
 
-    if (openBranchCommand.isBranchToBeOpen() && !parent.getSettings().isOpen()) {
+    if (openBranchCommand.isBranchToBeOpen()
+        && Boolean.FALSE.equals(parent.getSettings().getOpen())) {
       parent.getSettings().setOpen(true);
       if (OpenBranchCommand.CURRENT.equals(openBranchCommand)) {
         return treeRepository.persistNodeSettings(parent.getSettings(), userId)
@@ -165,7 +166,7 @@ public class TreeServiceImpl implements TreeService {
             });
       }
     }
-    if (!parent.getSettings().isOpen()) {
+    if (Boolean.FALSE.equals(parent.getSettings().getOpen())) {
       return Mono.just(parent);
     }
     return treeRepository.findNodesByParentId(

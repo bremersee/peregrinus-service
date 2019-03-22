@@ -1,5 +1,9 @@
 package org.bremersee.peregrinus.converter;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+
 import java.util.Date;
 import java.util.Random;
 import javax.xml.datatype.Duration;
@@ -21,13 +25,13 @@ public class MillisToXmlDurationConverterTest {
   @Test
   public void convert() {
     Duration actual = converter.convert(null);
-    Assert.assertNull(actual);
+    assertNull(actual);
 
     long expected = Math.abs(new Random().nextInt());
     actual = converter.convert(expected);
-    Assert.assertNotNull(actual);
+    assertNotNull(actual);
     Date tmp = new Date(0L);
     actual.addTo(tmp);
-    Assert.assertEquals(expected, tmp.getTime());
+    assertEquals(expected, tmp.getTime());
   }
 }

@@ -20,24 +20,31 @@ import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 import lombok.ToString;
 
 /**
  * @author Christian Bremer
  */
-@Getter
-@Setter
 @EqualsAndHashCode(callSuper = true)
 @ToString(callSuper = true)
 @NoArgsConstructor
 public final class BranchSettings extends NodeSettings {
 
-  private boolean open = true;
+  @Getter
+  private Boolean open = true;
 
   @Builder
-  public BranchSettings(String id, String nodeId, String userId, boolean open) {
+  public BranchSettings(String id, String nodeId, String userId, Boolean open) {
     super(id, nodeId, userId);
-    this.open = open;
+    if (open != null) {
+      this.open = open;
+    }
   }
+
+  public void setOpen(Boolean open) {
+    if (open != null) {
+      this.open = open;
+    }
+  }
+
 }

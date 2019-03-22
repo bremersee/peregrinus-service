@@ -42,16 +42,12 @@ public abstract class NodeEntity {
   @Id
   private String id;
 
-  @Indexed
   private OffsetDateTime created;
 
-  @Indexed
   private String createdBy;
 
-  @Indexed
   private OffsetDateTime modified;
 
-  @Indexed
   private String modifiedBy;
 
   @Indexed
@@ -73,13 +69,35 @@ public abstract class NodeEntity {
       String modifiedBy,
       String parentId,
       AccessControlEntity accessControl) {
-    this.id = id;
-    this.created = created;
-    this.createdBy = createdBy;
-    this.modified = modified;
-    this.modifiedBy = modifiedBy;
-    this.parentId = parentId;
-    this.accessControl = accessControl;
+
+    final OffsetDateTime now = OffsetDateTime.now(Clock.systemUTC());
+    this.created = created == null ? now : created;
+    this.modified = modified == null ? now : modified;
+    setId(id);
+    setCreated(created);
+    setCreatedBy(createdBy);
+    setModified(modified);
+    setModifiedBy(modifiedBy);
+    setAccessControl(accessControl);
+    setParentId(parentId);
+  }
+
+  public void setCreated(final OffsetDateTime created) {
+    if (created != null) {
+      this.created = created;
+    }
+  }
+
+  public void setModified(final OffsetDateTime modified) {
+    if (modified != null) {
+      this.modified = modified;
+    }
+  }
+
+  public void setAccessControl(final AccessControlEntity accessControl) {
+    if (accessControl != null) {
+      this.accessControl = accessControl;
+    }
   }
 
 }

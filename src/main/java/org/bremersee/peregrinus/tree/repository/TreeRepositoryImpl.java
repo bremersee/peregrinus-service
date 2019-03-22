@@ -238,6 +238,7 @@ public class TreeRepositoryImpl implements TreeRepository {
       final Collection<String> roles,
       final Collection<String> groups) {
 
+    // TODO delete other settings
     final List<Criteria> criteriaList = MongoRepositoryUtils.buildCriteriaList(
         PermissionConstants.DELETE, true, userId, roles, groups);
     final Criteria one = Criteria.where("id").is(id);

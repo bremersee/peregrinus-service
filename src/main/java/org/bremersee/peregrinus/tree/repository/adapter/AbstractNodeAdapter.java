@@ -17,6 +17,7 @@
 package org.bremersee.peregrinus.tree.repository.adapter;
 
 import java.util.function.Supplier;
+import javax.validation.constraints.NotNull;
 import lombok.AccessLevel;
 import lombok.Getter;
 import org.bremersee.peregrinus.tree.model.Node;
@@ -24,19 +25,23 @@ import org.bremersee.peregrinus.tree.model.NodeSettings;
 import org.bremersee.peregrinus.tree.repository.entity.NodeEntity;
 import org.bremersee.peregrinus.tree.repository.entity.NodeEntitySettings;
 import org.modelmapper.ModelMapper;
+import org.springframework.util.Assert;
+import org.springframework.validation.annotation.Validated;
 import reactor.util.function.Tuple2;
 import reactor.util.function.Tuples;
 
 /**
  * @author Christian Bremer
  */
+@Validated
 public abstract class AbstractNodeAdapter {
 
   @Getter(AccessLevel.PROTECTED)
-  private ModelMapper modelMapper = new ModelMapper();
+  private ModelMapper modelMapper;
 
-  public AbstractNodeAdapter() {
-
+  public AbstractNodeAdapter(final ModelMapper modelMapper) {
+    Assert.notNull(modelMapper, "Model mapper must not be null.");
+    this.modelMapper = modelMapper;
   }
 
   <T1 extends NodeEntity, T2 extends NodeEntitySettings> Tuple2<T1, T2> mapNode(
@@ -60,11 +65,16 @@ public abstract class AbstractNodeAdapter {
 
     final S settings = nodeSettingsSupplier.get();
     modelMapper.map(nodeEntitySettings, settings);
+
     final T node = nodeSupplier.get();
     modelMapper.map(nodeEntity, node);
+    node.setSettings(settings);
     node.getAccessControl().removeAdminAccess();
+    node.setName(getNodeName(nodeEntity, node));
     return node;
   }
+
+  abstract protected @NotNull String getNodeName(NodeEntity nodeEntity, Node node);
 
   <T extends NodeEntitySettings> T mapNodeSettings(
       final NodeSettings nodeSettings,

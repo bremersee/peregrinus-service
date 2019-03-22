@@ -1,5 +1,9 @@
 package org.bremersee.peregrinus.converter;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+
 import java.time.Clock;
 import java.time.OffsetDateTime;
 import java.util.Date;
@@ -7,7 +11,6 @@ import java.util.GregorianCalendar;
 import java.util.TimeZone;
 import javax.xml.datatype.DatatypeFactory;
 import javax.xml.datatype.XMLGregorianCalendar;
-import org.junit.Assert;
 import org.junit.Test;
 
 /**
@@ -28,14 +31,14 @@ public class XmlGregorianCalendarToOffsetDateTimeConverterTest {
   @Test
   public void convert() throws Exception {
     OffsetDateTime actual = converter.convert(null);
-    Assert.assertNull(actual);
+    assertNull(actual);
 
     OffsetDateTime expected = OffsetDateTime.now(Clock.systemUTC());
     GregorianCalendar cal = new GregorianCalendar(TimeZone.getTimeZone("GMT"));
     cal.setTime(Date.from(expected.toInstant()));
     XMLGregorianCalendar xmlCal = DatatypeFactory.newInstance().newXMLGregorianCalendar(cal);
     actual = converter.convert(xmlCal);
-    Assert.assertNotNull(actual);
-    Assert.assertEquals(expected, actual);
+    assertNotNull(actual);
+    assertEquals(expected, actual);
   }
 }

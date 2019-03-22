@@ -60,4 +60,5 @@ public class NodeEntitySettings {
     this.nodeId = nodeId;
     this.userId = userId;
   }
+
 }

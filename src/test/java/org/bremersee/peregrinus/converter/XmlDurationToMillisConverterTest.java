@@ -1,5 +1,9 @@
 package org.bremersee.peregrinus.converter;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+
 import java.util.Random;
 import javax.xml.datatype.DatatypeFactory;
 import javax.xml.datatype.Duration;
@@ -23,12 +27,12 @@ public class XmlDurationToMillisConverterTest {
   @Test
   public void convert() throws Exception {
     Long actual = converter.convert(null);
-    Assert.assertNull(actual);
+    assertNull(actual);
 
     long expected = Math.abs(new Random().nextInt());
     Duration duration = DatatypeFactory.newInstance().newDuration(expected);
     actual = converter.convert(duration);
-    Assert.assertNotNull(actual);
-    Assert.assertEquals(expected, actual.longValue());
+    assertNotNull(actual);
+    assertEquals(expected, actual.longValue());
   }
 }

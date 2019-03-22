@@ -20,7 +20,6 @@ import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 import lombok.ToString;
 import org.springframework.data.annotation.TypeAlias;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -30,22 +29,27 @@ import org.springframework.data.mongodb.core.mapping.Document;
  */
 @Document(collection = "directory-settings")
 @TypeAlias("GeoLeafSettings")
-@Getter
-@Setter
 @EqualsAndHashCode(callSuper = true)
 @ToString(callSuper = true)
 @NoArgsConstructor
 public class FeatureLeafEntitySettings extends LeafEntitySettings {
 
-  private boolean displayedOnMap;
+  @Getter
+  private Boolean displayedOnMap = false;
 
   @Builder
   public FeatureLeafEntitySettings(
       String id,
       String nodeId,
       String userId,
-      boolean displayedOnMap) {
+      Boolean displayedOnMap) {
     super(id, nodeId, userId);
-    this.displayedOnMap = displayedOnMap;
+    setDisplayedOnMap(displayedOnMap);
+  }
+
+  public void setDisplayedOnMap(Boolean displayedOnMap) {
+    if (displayedOnMap != null) {
+      this.displayedOnMap = displayedOnMap;
+    }
   }
 }

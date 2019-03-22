@@ -29,6 +29,7 @@ import org.bremersee.peregrinus.tree.repository.entity.FeatureLeafEntity;
 import org.bremersee.peregrinus.tree.repository.entity.FeatureLeafEntitySettings;
 import org.bremersee.peregrinus.tree.repository.entity.NodeEntity;
 import org.bremersee.peregrinus.tree.repository.entity.NodeEntitySettings;
+import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Component;
 import org.springframework.util.Assert;
 import reactor.core.publisher.Mono;
@@ -42,7 +43,10 @@ public class FeatureLeafAdapter extends AbstractNodeAdapter implements NodeAdapt
 
   private FeatureRepository featureRepository;
 
-  public FeatureLeafAdapter(final FeatureRepository featureRepository) {
+  public FeatureLeafAdapter(
+      final ModelMapper modelMapper,
+      final FeatureRepository featureRepository) {
+    super(modelMapper);
     Assert.notNull(featureRepository, "Feature repository must not be null.");
     this.featureRepository = featureRepository;
   }
@@ -117,6 +121,11 @@ public class FeatureLeafAdapter extends AbstractNodeAdapter implements NodeAdapt
           featureLeaf.setFeature(feature);
           return featureLeaf;
         });
+  }
+
+  @Override
+  protected String getNodeName(final NodeEntity nodeEntity, final Node node) {
+    return ((FeatureLeaf) node).getFeature().getProperties().getName();
   }
 
   @Override

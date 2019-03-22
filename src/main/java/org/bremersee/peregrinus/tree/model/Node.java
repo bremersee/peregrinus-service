@@ -84,15 +84,42 @@ public abstract class Node<S extends NodeSettings> {
       S settings,
       String parentId,
       String name) {
-    this.id = id;
-    this.created = created;
-    this.createdBy = createdBy;
-    this.modified = modified;
-    this.modifiedBy = modifiedBy;
-    this.accessControl = accessControl;
-    this.settings = settings;
-    this.parentId = parentId;
-    this.name = name;
+
+    final OffsetDateTime now = OffsetDateTime.now(Clock.systemUTC());
+    this.created = created == null ? now : created;
+    this.modified = modified == null ? now : modified;
+    setId(id);
+    setCreated(created);
+    setCreatedBy(createdBy);
+    setModified(modified);
+    setModifiedBy(modifiedBy);
+    setAccessControl(accessControl);
+    setSettings(settings);
+    setParentId(parentId);
+    setName(name);
   }
 
+  public void setCreated(final OffsetDateTime created) {
+    if (created != null) {
+      this.created = created;
+    }
+  }
+
+  public void setModified(final OffsetDateTime modified) {
+    if (modified != null) {
+      this.modified = modified;
+    }
+  }
+
+  public void setAccessControl(final AccessControlDto accessControl) {
+    if (accessControl != null) {
+      this.accessControl = accessControl;
+    }
+  }
+
+  public void setSettings(final S settings) {
+    if (settings != null) {
+      this.settings = settings;
+    }
+  }
 }

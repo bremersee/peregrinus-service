@@ -18,6 +18,7 @@ package org.bremersee.peregrinus.tree.repository.adapter;
 
 import java.util.Collection;
 import org.bremersee.peregrinus.security.access.AccessControl;
+import org.bremersee.peregrinus.security.access.repository.entity.AccessControlEntity;
 import org.bremersee.peregrinus.tree.model.Branch;
 import org.bremersee.peregrinus.tree.model.BranchSettings;
 import org.bremersee.peregrinus.tree.model.Node;
@@ -26,6 +27,7 @@ import org.bremersee.peregrinus.tree.repository.entity.BranchEntity;
 import org.bremersee.peregrinus.tree.repository.entity.BranchEntitySettings;
 import org.bremersee.peregrinus.tree.repository.entity.NodeEntity;
 import org.bremersee.peregrinus.tree.repository.entity.NodeEntitySettings;
+import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Component;
 import reactor.core.publisher.Mono;
 import reactor.util.function.Tuple2;
@@ -35,6 +37,10 @@ import reactor.util.function.Tuple2;
  */
 @Component
 public class BranchAdapter extends AbstractNodeAdapter implements NodeAdapter {
+
+  public BranchAdapter(ModelMapper modelMapper) {
+    super(modelMapper);
+  }
 
   @Override
   public Class<?>[] getSupportedClasses() {
@@ -70,6 +76,11 @@ public class BranchAdapter extends AbstractNodeAdapter implements NodeAdapter {
   }
 
   @Override
+  protected String getNodeName(final NodeEntity nodeEntity, final Node node) {
+    return ((BranchEntity) nodeEntity).getName();
+  }
+
+  @Override
   public Mono<BranchSettings> mapNodeEntitySettings(
       final NodeEntitySettings nodeSettings) {
     return Mono.just(super.mapNodeEntitySettings(nodeSettings, BranchSettings::new));
@@ -82,6 +93,8 @@ public class BranchAdapter extends AbstractNodeAdapter implements NodeAdapter {
       final String userId,
       final Collection<String> roles,
       final Collection<String> groups) {
+    // the 'real' update is done in the repository
+    ((BranchEntity) nodeEntity).setName(name);
     return Mono.just(nodeEntity);
   }
 
@@ -92,6 +105,8 @@ public class BranchAdapter extends AbstractNodeAdapter implements NodeAdapter {
       final String userId,
       final Collection<String> roles,
       final Collection<String> groups) {
+    // the 'real' update is done in the repository
+    nodeEntity.setAccessControl(new AccessControlEntity(accessControl.ensureAdminAccess()));
     return Mono.just(nodeEntity);
   }
 

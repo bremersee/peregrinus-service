@@ -20,24 +20,28 @@ import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 import lombok.ToString;
 
 /**
  * @author Christian Bremer
  */
-@Getter
-@Setter
 @EqualsAndHashCode(callSuper = true)
 @ToString(callSuper = true)
 @NoArgsConstructor
 public class FeatureLeafSettings extends LeafSettings {
 
-  private boolean displayedOnMap;
+  @Getter
+  private Boolean displayedOnMap = false;
 
   @Builder
-  public FeatureLeafSettings(String id, String nodeId, String userId, boolean displayedOnMap) {
+  public FeatureLeafSettings(String id, String nodeId, String userId, Boolean displayedOnMap) {
     super(id, nodeId, userId);
-    this.displayedOnMap = displayedOnMap;
+    setDisplayedOnMap(displayedOnMap);
+  }
+
+  public void setDisplayedOnMap(final Boolean displayedOnMap) {
+    if (displayedOnMap != null) {
+      this.displayedOnMap = displayedOnMap;
+    }
   }
 }

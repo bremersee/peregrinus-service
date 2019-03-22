@@ -20,7 +20,6 @@ import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 import lombok.ToString;
 import org.springframework.data.annotation.TypeAlias;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -30,18 +29,26 @@ import org.springframework.data.mongodb.core.mapping.Document;
  */
 @Document(collection = "directory-settings")
 @TypeAlias("BranchSettings")
-@Getter
-@Setter
 @EqualsAndHashCode(callSuper = true)
 @ToString(callSuper = true)
 @NoArgsConstructor
 public final class BranchEntitySettings extends NodeEntitySettings {
 
-  private boolean open = true;
+  @Getter
+  private Boolean open = true;
 
   @Builder
-  public BranchEntitySettings(String id, String nodeId, String userId, boolean open) {
+  public BranchEntitySettings(String id, String nodeId, String userId, Boolean open) {
     super(id, nodeId, userId);
-    this.open = open;
+    if (open != null) {
+      this.open = open;
+    }
   }
+
+  public void setOpen(Boolean open) {
+    if (open != null) {
+      this.open = open;
+    }
+  }
+
 }
