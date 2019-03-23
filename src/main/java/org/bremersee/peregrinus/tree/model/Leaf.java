@@ -41,7 +41,8 @@ public abstract class Leaf<S extends LeafSettings> extends Node<S> {
       OffsetDateTime modified,
       String modifiedBy,
       AccessControlDto accessControl,
-      S settings, String parentId,
+      S settings,
+      String parentId,
       String name) {
     super(id, created, createdBy, modified, modifiedBy, accessControl, settings, parentId, name);
   }

@@ -138,12 +138,6 @@ public class BranchAdapterTest {
   }
 
   @Test
-  public void getNodeName() {
-    assertEquals(
-        rootBranchEntity().getName(), adapter.getNodeName(rootBranchEntity(), rootBranch()));
-  }
-
-  @Test
   public void mapNodeEntitySettings() {
     final BranchEntitySettings rootSettings = rootBranchEntitySettings();
     StepVerifier

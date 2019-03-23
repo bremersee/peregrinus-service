@@ -20,6 +20,7 @@ import java.util.function.Supplier;
 import javax.validation.constraints.NotNull;
 import lombok.AccessLevel;
 import lombok.Getter;
+import org.bremersee.peregrinus.security.access.model.AccessControlDto;
 import org.bremersee.peregrinus.tree.model.Node;
 import org.bremersee.peregrinus.tree.model.NodeSettings;
 import org.bremersee.peregrinus.tree.repository.entity.NodeEntity;
@@ -67,14 +68,17 @@ public abstract class AbstractNodeAdapter {
     modelMapper.map(nodeEntitySettings, settings);
 
     final T node = nodeSupplier.get();
-    modelMapper.map(nodeEntity, node);
-    node.setSettings(settings);
+    node.setAccessControl(new AccessControlDto(nodeEntity.getAccessControl()));
     node.getAccessControl().removeAdminAccess();
-    node.setName(getNodeName(nodeEntity, node));
+    node.setCreated(nodeEntity.getCreated());
+    node.setCreatedBy(nodeEntity.getCreatedBy());
+    node.setId(nodeEntity.getId());
+    node.setModified(nodeEntity.getModified());
+    node.setModifiedBy(nodeEntity.getModifiedBy());
+    node.setParentId(nodeEntity.getParentId());
+    node.setSettings(settings);
     return node;
   }
-
-  abstract protected @NotNull String getNodeName(NodeEntity nodeEntity, Node node);
 
   <T extends NodeEntitySettings> T mapNodeSettings(
       final NodeSettings nodeSettings,

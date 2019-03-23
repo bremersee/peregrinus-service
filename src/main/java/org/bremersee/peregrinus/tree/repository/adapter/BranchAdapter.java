@@ -71,13 +71,12 @@ public class BranchAdapter extends AbstractNodeAdapter implements NodeAdapter {
   public Mono<Branch> mapNodeEntity(
       final NodeEntity nodeEntity,
       final NodeEntitySettings nodeEntitySettings) {
-    return Mono.just(
-        super.mapNodeEntity(nodeEntity, nodeEntitySettings, Branch::new, BranchSettings::new));
-  }
 
-  @Override
-  protected String getNodeName(final NodeEntity nodeEntity, final Node node) {
-    return ((BranchEntity) nodeEntity).getName();
+    final BranchEntity branchEntity = (BranchEntity) nodeEntity;
+    final Branch branch = super.mapNodeEntity(
+        nodeEntity, nodeEntitySettings, Branch::new, BranchSettings::new);
+    branch.setName(branchEntity.getName());
+    return Mono.just(branch);
   }
 
   @Override

@@ -42,6 +42,11 @@ import org.bremersee.peregrinus.content.model.TrkSettings;
 import org.bremersee.peregrinus.content.model.Wpt;
 import org.bremersee.peregrinus.content.model.WptProperties;
 import org.bremersee.peregrinus.content.model.WptSettings;
+import org.bremersee.peregrinus.content.repository.entity.RteEntity;
+import org.bremersee.peregrinus.content.repository.entity.RteEntityProperties;
+import org.bremersee.peregrinus.content.repository.entity.RteEntitySettings;
+import org.bremersee.peregrinus.content.repository.entity.TrkEntity;
+import org.bremersee.peregrinus.content.repository.entity.TrkEntityProperties;
 import org.bremersee.peregrinus.content.repository.entity.WptEntity;
 import org.bremersee.peregrinus.content.repository.entity.WptEntityProperties;
 import org.bremersee.peregrinus.security.access.AccessControl;
@@ -54,6 +59,8 @@ import org.bremersee.peregrinus.tree.model.FeatureLeaf;
 import org.bremersee.peregrinus.tree.model.FeatureLeafSettings;
 import org.bremersee.peregrinus.tree.repository.entity.BranchEntity;
 import org.bremersee.peregrinus.tree.repository.entity.BranchEntitySettings;
+import org.bremersee.peregrinus.tree.repository.entity.FeatureLeafEntity;
+import org.bremersee.peregrinus.tree.repository.entity.FeatureLeafEntitySettings;
 import org.locationtech.jts.geom.Coordinate;
 import org.locationtech.jts.geom.LineString;
 import org.locationtech.jts.geom.MultiLineString;
@@ -67,6 +74,346 @@ public abstract class TestData {
   public static final String ANNA = "anna";
 
   public static final String ANNAS_FRIEND = "stephan";
+
+  private static final String rootBranchId = "b0";
+  private static final String rootBranchSettingsId = "bs0";
+
+  private static final String childBranchId = "b0.1";
+  private static final String childBranchSettingsId = "bs0.1";
+
+  private static final String wptId = "f0";
+  private static final String wptSettingsId = "fs0";
+  private static final String wptLeafId = "fl0";
+
+  private static final String trkId = "f1";
+  private static final String trkSettingsId = "fs1";
+  private static final String trkLeafId = "fl1";
+
+  private static final String rteId = "f2";
+  private static final String rteSettingsId = "fs2";
+  private static final String rteLeafId = "fl2";
+
+  public static Branch rootBranch() {
+    return Branch.builder()
+        .accessControl(accessControlDto(ANNA))
+        .children(Arrays.asList(wptLeaf(), childBranch()))
+        .createdBy(ANNAS_FRIEND)
+        .id(rootBranchId)
+        .modifiedBy(ANNA)
+        .name("Root")
+        .settings(BranchSettings.builder()
+            .id(rootBranchSettingsId)
+            .nodeId(rootBranchId)
+            .userId(ANNA)
+            .build())
+        .build();
+  }
+
+  public static BranchEntity rootBranchEntity() {
+    final Branch root = rootBranch();
+    return BranchEntity.builder()
+        .accessControl(accessControlEntity(root.getAccessControl()))
+        .created(root.getCreated())
+        .createdBy(root.getCreatedBy())
+        .modified(root.getModified())
+        .modifiedBy(root.getModifiedBy())
+        .name(root.getName())
+        .parentId(root.getParentId())
+        .build();
+  }
+
+  public static BranchEntitySettings rootBranchEntitySettings() {
+    final Branch root = rootBranch();
+    return BranchEntitySettings.builder()
+        .id(root.getSettings().getId())
+        .nodeId(root.getId())
+        .userId(root.getSettings().getUserId())
+        .open(root.getSettings().getOpen())
+        .build();
+  }
+
+  public static Branch childBranch() {
+    return Branch.builder()
+        .accessControl(accessControlDto(ANNA))
+        .createdBy(ANNA)
+        .id(childBranchId)
+        .modifiedBy(ANNA)
+        .name("Child branch")
+        .parentId(rootBranchId)
+        .settings(BranchSettings.builder()
+            .id(childBranchSettingsId)
+            .nodeId(childBranchId)
+            .open(false)
+            .userId(ANNA)
+            .build())
+        .build();
+  }
+
+  public static Wpt wpt() {
+    return Wpt.builder()
+        .geometry(GeometryUtils.createPointWGS84(52.1, 10.2))
+        .id(wptId)
+        .properties(WptProperties.builder()
+            .accessControl(accessControlDto(ANNAS_FRIEND))
+            .address(address())
+            .ele(BigDecimal.valueOf(123.4))
+            .internalComments("An internal comment")
+            .links(links())
+            .markdownDescription("# My Test Waypoint\n\nThis way point is not very interesting.")
+            .name("My test wpt")
+            .phoneNumbers(phoneNumbers())
+            .plainTextDescription("Imported from garmin ...")
+            .settings(WptSettings.builder()
+                .id(wptSettingsId)
+                .featureId(wptId)
+                .userId(ANNAS_FRIEND)
+                .build())
+            .build())
+        .build();
+  }
+
+  public static WptEntity wptEntity() {
+    final Wpt wpt = wpt();
+    return WptEntity.builder()
+        .geometry(wpt.getGeometry())
+        .id(wpt.getId())
+        .properties(WptEntityProperties.builder()
+            .accessControl(accessControlEntity(wpt.getProperties().getAccessControl()))
+            .address(wpt.getProperties().getAddress())
+            .created(wpt.getProperties().getCreated())
+            .ele(wpt.getProperties().getEle())
+            .internalComments(wpt.getProperties().getInternalComments())
+            .links(wpt.getProperties().getLinks())
+            .markdownDescription(wpt.getProperties().getMarkdownDescription())
+            .modified(wpt.getProperties().getModified())
+            .name(wpt.getProperties().getName())
+            .phoneNumbers(wpt.getProperties().getPhoneNumbers())
+            .plainTextDescription(wpt.getProperties().getPlainTextDescription())
+            .build())
+        .build();
+  }
+
+  public static FeatureLeaf wptLeaf() {
+    final Wpt wpt = wpt();
+    return FeatureLeaf.builder()
+        .accessControl(wpt.getProperties().getAccessControl())
+        .createdBy(wpt.getProperties().getSettings().getUserId())
+        .feature(wpt)
+        .id(wptLeafId)
+        .modifiedBy(wpt.getProperties().getSettings().getUserId())
+        .name(wpt.getProperties().getName())
+        .parentId(rootBranchId)
+        .settings(FeatureLeafSettings.builder()
+            .id(wpt.getProperties().getSettings().getId())
+            .displayedOnMap(true)
+            .nodeId(wptLeafId)
+            .userId(wpt.getProperties().getSettings().getUserId())
+            .build())
+        .build();
+  }
+
+  public static FeatureLeafEntity wptLeafEntity() {
+    final Wpt wpt = wpt();
+    final FeatureLeaf featureLeaf = wptLeaf();
+    return FeatureLeafEntity.builder()
+        .accessControl(accessControlEntity(featureLeaf.getAccessControl()))
+        .createdBy(wpt.getProperties().getSettings().getUserId())
+        .featureId(wpt.getId())
+        .id(featureLeaf.getId())
+        .modifiedBy(wpt.getProperties().getSettings().getUserId())
+        .parentId(featureLeaf.getParentId())
+        .build();
+  }
+
+  public static FeatureLeafEntitySettings wptLeafEntitySettings() {
+    final FeatureLeaf wptLeaf = wptLeaf();
+    return FeatureLeafEntitySettings.builder()
+        .displayedOnMap(wptLeaf.getSettings().getDisplayedOnMap())
+        .id(wptLeaf.getSettings().getId())
+        .nodeId(wptLeaf.getSettings().getNodeId())
+        .userId(wptLeaf.getSettings().getUserId())
+        .build();
+  }
+
+  public static Trk trk() {
+    return Trk.builder()
+        .bbox(GeometryUtils.getBoundingBox(trkMultiLineString()))
+        .geometry(trkMultiLineString())
+        .id(trkId)
+        .properties(TrkProperties.builder()
+            .accessControl(accessControlDto(ANNA))
+            .eleLines(trkEleLines())
+            .internalComments("Try this track!")
+            .name("My test track")
+            .settings(TrkSettings.builder()
+                .displayColor(DisplayColor.DARK_RED)
+                .featureId(trkId)
+                .id(trkSettingsId)
+                .userId(ANNA)
+                .build())
+            .startTime(trkStartTime())
+            .stopTime(trkStopTime())
+            .timeLines(trkTimeLines())
+            .build())
+        .build();
+  }
+
+  public static TrkEntity trkEntity() {
+    final Trk trk = trk();
+    return TrkEntity.builder()
+        .bbox(trk.getBbox())
+        .geometry(trk.getGeometry())
+        .id(trk.getId())
+        .properties(TrkEntityProperties.builder()
+            .accessControl(accessControlEntity(trk.getProperties().getAccessControl()))
+            .created(trk.getProperties().getCreated())
+            .eleLines(trk.getProperties().getEleLines())
+            .internalComments(trk.getProperties().getInternalComments())
+            .links(trk.getProperties().getLinks())
+            .markdownDescription(trk.getProperties().getMarkdownDescription())
+            .modified(trk.getProperties().getModified())
+            .name(trk.getProperties().getName())
+            .plainTextDescription(trk.getProperties().getPlainTextDescription())
+            .startTime(trk.getProperties().getStartTime())
+            .stopTime(trk.getProperties().getStopTime())
+            .timeLines(trk.getProperties().getTimeLines())
+            .build())
+        .build();
+  }
+
+  public static FeatureLeaf trkLeaf() {
+    final Trk trk = trk();
+    return FeatureLeaf.builder()
+        .accessControl(trk.getProperties().getAccessControl())
+        .createdBy(trk.getProperties().getSettings().getUserId())
+        .feature(trk)
+        .id(trkLeafId)
+        .modifiedBy(trk.getProperties().getSettings().getUserId())
+        .name(trk.getProperties().getName())
+        .parentId(childBranchId)
+        .settings(FeatureLeafSettings.builder()
+            .id(trkSettingsId)
+            .displayedOnMap(false)
+            .nodeId(trkLeafId)
+            .userId(trk.getProperties().getSettings().getUserId())
+            .build())
+        .build();
+  }
+
+  public static FeatureLeafEntity trkLeafEntity() {
+    final Trk trk = trk();
+    final FeatureLeaf featureLeaf = trkLeaf();
+    return FeatureLeafEntity.builder()
+        .accessControl(accessControlEntity(featureLeaf.getAccessControl()))
+        .createdBy(trk.getProperties().getSettings().getUserId())
+        .featureId(trk.getId())
+        .id(featureLeaf.getId())
+        .modifiedBy(trk.getProperties().getSettings().getUserId())
+        .parentId(featureLeaf.getParentId())
+        .build();
+  }
+
+  public static FeatureLeafEntitySettings trkLeafEntitySettings() {
+    FeatureLeaf trkLeaf = trkLeaf();
+    return FeatureLeafEntitySettings.builder()
+        .displayedOnMap(trkLeaf.getSettings().getDisplayedOnMap())
+        .id(trkLeaf.getId())
+        .nodeId(trkLeaf.getSettings().getNodeId())
+        .userId(trkLeaf.getSettings().getUserId())
+        .build();
+  }
+
+  public static Rte rte() {
+    return Rte.builder()
+        .bbox(GeometryUtils.getBoundingBox(rteMultiLineString()))
+        .geometry(rteMultiLineString())
+        .id(rteId)
+        .properties(RteProperties.builder()
+            .accessControl(accessControlDto(ANNA))
+            .name("My test route")
+            .rtePts(rtePts())
+            .settings(RteSettings.builder()
+                .displayColor(DisplayColor.LIGHT_GRAY)
+                .featureId(rteId)
+                .id(rteSettingsId)
+                .userId(ANNA)
+                .build())
+            .build())
+        .build();
+  }
+
+  public static RteEntity rteEntity() {
+    final Rte rte = rte();
+    return RteEntity.builder()
+        .bbox(rte.getBbox())
+        .geometry(rte.getGeometry())
+        .id(rte.getId())
+        .properties(RteEntityProperties.builder()
+            .accessControl(accessControlEntity(rte.getProperties().getAccessControl()))
+            .created(rte.getProperties().getCreated())
+            .internalComments(rte.getProperties().getInternalComments())
+            .links(rte.getProperties().getLinks())
+            .markdownDescription(rte.getProperties().getMarkdownDescription())
+            .modified(rte.getProperties().getModified())
+            .name(rte.getProperties().getName())
+            .plainTextDescription(rte.getProperties().getPlainTextDescription())
+            .rtePts(rte.getProperties().getRtePts())
+            .build())
+        .build();
+  }
+
+  public static RteEntitySettings rteEntitySettings() {
+    final Rte rte = rte();
+    return RteEntitySettings.builder()
+        .displayColor(rte.getProperties().getSettings().getDisplayColor())
+        .featureId(rte.getId())
+        .id(rte.getProperties().getSettings().getId())
+        .userId(rte.getProperties().getSettings().getUserId())
+        .build();
+  }
+
+  public static FeatureLeaf rteLeaf() {
+    final Rte rte = rte();
+    return FeatureLeaf.builder()
+        .accessControl(rte.getProperties().getAccessControl())
+        .createdBy(rte.getProperties().getSettings().getUserId())
+        .feature(rte)
+        .id(rteLeafId)
+        .modifiedBy(rte.getProperties().getSettings().getUserId())
+        .name(rte.getProperties().getName())
+        .parentId(childBranchId)
+        .settings(FeatureLeafSettings.builder()
+            .id(rteSettingsId)
+            .displayedOnMap(false)
+            .nodeId(rteLeafId)
+            .userId(rte.getProperties().getSettings().getUserId())
+            .build())
+        .build();
+  }
+
+  public static FeatureLeafEntity rteLeafEntity() {
+    final Rte rte = rte();
+    final FeatureLeaf featureLeaf = rteLeaf();
+    return FeatureLeafEntity.builder()
+        .accessControl(accessControlEntity(featureLeaf.getAccessControl()))
+        .createdBy(rte.getProperties().getSettings().getUserId())
+        .featureId(rte.getId())
+        .id(featureLeaf.getId())
+        .modifiedBy(rte.getProperties().getSettings().getUserId())
+        .parentId(featureLeaf.getParentId())
+        .build();
+  }
+
+  public static FeatureLeafEntitySettings rteLeafEntitySettings() {
+    FeatureLeaf rteLeaf = rteLeaf();
+    return FeatureLeafEntitySettings.builder()
+        .displayedOnMap(rteLeaf.getSettings().getDisplayedOnMap())
+        .id(rteLeaf.getId())
+        .nodeId(rteLeaf.getSettings().getNodeId())
+        .userId(rteLeaf.getSettings().getUserId())
+        .build();
+  }
+
 
   public static AccessControlDto accessControlDto(String owner) {
     AccessControlDto accessControl = new AccessControlDto();
@@ -116,66 +463,6 @@ public abstract class TestData {
     phoneNumber1.setValue("0234567891");
     phoneNumber1.setCategory("Mobile");
     return Arrays.asList(phoneNumber0, phoneNumber1);
-  }
-
-  public static Wpt wpt() {
-    return Wpt.builder()
-        .geometry(GeometryUtils.createPointWGS84(52.1, 10.2))
-        .id("333")
-        .properties(WptProperties.builder()
-            .accessControl(accessControlDto(ANNAS_FRIEND))
-            .address(address())
-            .ele(BigDecimal.valueOf(123.4))
-            .internalComments("An internal comment")
-            .links(links())
-            .markdownDescription("# My Test Waypoint\n\nThis way point is not very interesting.")
-            .name("Child leaf")
-            .phoneNumbers(phoneNumbers())
-            .plainTextDescription("Imported from garmin ...")
-            .settings(WptSettings.builder()
-                .id("3333")
-                .featureId("333")
-                .userId(ANNAS_FRIEND)
-                .build())
-            .build())
-        .build();
-  }
-
-  public static WptEntity wptEntity() {
-    return WptEntity.builder()
-        .geometry(GeometryUtils.createPointWGS84(52.1, 10.2))
-        .id("333")
-        .properties(WptEntityProperties.builder()
-            .accessControl(accessControlEntity(accessControlDto(ANNAS_FRIEND).ensureAdminAccess()))
-            .address(address())
-            .ele(BigDecimal.valueOf(123.4))
-            .internalComments("An internal comment")
-            .links(links())
-            .markdownDescription("# My Test Waypoint\n\nThis way point is not very interesting.")
-            .name("Child leaf")
-            .phoneNumbers(phoneNumbers())
-            .plainTextDescription("Imported from garmin ...")
-            .build())
-        .build();
-  }
-
-  public static FeatureLeaf wptLeaf() {
-    final Wpt wpt = wpt();
-    return FeatureLeaf.builder()
-        .accessControl(wpt.getProperties().getAccessControl())
-        .createdBy(wpt.getProperties().getSettings().getUserId())
-        .feature(wpt)
-        .id("3")
-        .modifiedBy(wpt.getProperties().getSettings().getUserId())
-        .name(wpt.getProperties().getName())
-        .parentId("1")
-        .settings(FeatureLeafSettings.builder()
-            .id("33")
-            .displayedOnMap(true)
-            .nodeId("3")
-            .userId(wpt.getProperties().getSettings().getUserId())
-            .build())
-        .build();
   }
 
   public static MultiLineString trkMultiLineString() {
@@ -240,52 +527,6 @@ public abstract class TestData {
     return last.get(last.size() - 1);
   }
 
-  public static TrkProperties trkProperties() {
-    return TrkProperties.builder()
-        .accessControl(accessControlDto(ANNA))
-        .eleLines(trkEleLines())
-        .internalComments("Try this track!")
-        .name("My test track")
-        .settings(TrkSettings.builder()
-            .displayColor(DisplayColor.DARK_RED)
-            .featureId("444")
-            .id("4444")
-            .userId(ANNA)
-            .build())
-        .startTime(trkStartTime())
-        .stopTime(trkStopTime())
-        .timeLines(trkTimeLines())
-        .build();
-  }
-
-  public static Trk trk() {
-    return Trk.builder()
-        .bbox(GeometryUtils.getBoundingBox(trkMultiLineString()))
-        .geometry(trkMultiLineString())
-        .id("444")
-        .properties(trkProperties())
-        .build();
-  }
-
-  public static FeatureLeaf trkLeaf() {
-    final Trk trk = trk();
-    return FeatureLeaf.builder()
-        .accessControl(trk.getProperties().getAccessControl())
-        .createdBy(trk.getProperties().getSettings().getUserId())
-        .feature(trk)
-        .id("4")
-        .modifiedBy(trk.getProperties().getSettings().getUserId())
-        .name(trk.getProperties().getName())
-        .parentId("1")
-        .settings(FeatureLeafSettings.builder()
-            .id("44")
-            .displayedOnMap(false)
-            .nodeId("4")
-            .userId(trk.getProperties().getSettings().getUserId())
-            .build())
-        .build();
-  }
-
   public static MultiLineString rteMultiLineString() {
     return (MultiLineString) GeometryUtils.fromWKT(
         "MULTILINESTRING ("
@@ -324,90 +565,6 @@ public abstract class TestData {
                 .name("RtePt2")
                 .build())
             .build());
-  }
-
-  public static RteProperties rteProperties() {
-    return RteProperties.builder()
-        .accessControl(accessControlDto(ANNA))
-        .name("My test route")
-        .rtePts(rtePts())
-        .settings(RteSettings.builder()
-            .displayColor(DisplayColor.LIGHT_GRAY)
-            .featureId("555")
-            .id("5555")
-            .userId(ANNA).build())
-        .build();
-  }
-
-  public static Rte rte() {
-    return Rte.builder()
-        .bbox(GeometryUtils.getBoundingBox(rteMultiLineString()))
-        .geometry(rteMultiLineString())
-        .id("555")
-        .properties(rteProperties())
-        .build();
-  }
-
-  public static FeatureLeaf rteLeaf() {
-    final Rte rte = rte();
-    return FeatureLeaf.builder()
-        .accessControl(rte.getProperties().getAccessControl())
-        .createdBy(rte.getProperties().getSettings().getUserId())
-        .feature(rte)
-        .id("5")
-        .modifiedBy(rte.getProperties().getSettings().getUserId())
-        .name(rte.getProperties().getName())
-        .parentId("1")
-        .settings(FeatureLeafSettings.builder()
-            .id("55")
-            .displayedOnMap(false)
-            .nodeId("5")
-            .userId(rte.getProperties().getSettings().getUserId())
-            .build())
-        .build();
-  }
-
-  public static Branch childBranch() {
-    return Branch.builder()
-        .accessControl(accessControlDto(ANNA))
-        .createdBy(ANNA)
-        .id("2")
-        .modifiedBy(ANNA)
-        .name("Child branch")
-        .parentId("1")
-        .settings(BranchSettings.builder().id("22").nodeId("2").open(false).userId(ANNA).build())
-        .build();
-  }
-
-  public static Branch rootBranch() {
-    return Branch.builder()
-        .accessControl(accessControlDto(ANNA))
-        .children(Arrays.asList(wptLeaf(), childBranch()))
-        .createdBy(ANNAS_FRIEND)
-        .id("1")
-        .modifiedBy(ANNA)
-        .name("rootBranch")
-        .settings(BranchSettings.builder().id("11").nodeId("1").userId(ANNA).build())
-        .build();
-  }
-
-  public static BranchEntity rootBranchEntity() {
-    return BranchEntity.builder()
-        .accessControl(accessControlEntity(accessControlDto(ANNAS_FRIEND)))
-        .createdBy(ANNA)
-        .modifiedBy(ANNAS_FRIEND)
-        .name("child")
-        .parentId("1")
-        .build();
-  }
-
-  public static BranchEntitySettings rootBranchEntitySettings() {
-    return BranchEntitySettings.builder()
-        .id("11")
-        .nodeId("1")
-        .userId(ANNAS_FRIEND)
-        .open(Boolean.FALSE)
-        .build();
   }
 
   private TestData() {

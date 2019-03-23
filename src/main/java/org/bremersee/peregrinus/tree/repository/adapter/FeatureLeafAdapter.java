@@ -124,13 +124,9 @@ public class FeatureLeafAdapter extends AbstractNodeAdapter implements NodeAdapt
     return featureRepository.findById(leaf.getFeatureId(), leafSettings.getUserId())
         .map(feature -> {
           featureLeaf.setFeature(feature);
+          featureLeaf.setName(feature.getProperties().getName());
           return featureLeaf;
         });
-  }
-
-  @Override
-  protected String getNodeName(final NodeEntity nodeEntity, final Node node) {
-    return ((FeatureLeaf) node).getFeature().getProperties().getName();
   }
 
   @Override
