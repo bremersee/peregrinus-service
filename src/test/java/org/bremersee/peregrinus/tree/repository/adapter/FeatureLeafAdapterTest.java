@@ -25,6 +25,7 @@ import static org.mockito.Mockito.when;
 import java.util.Arrays;
 import java.util.List;
 import org.bremersee.peregrinus.TestConfig;
+import org.bremersee.peregrinus.content.model.Feature;
 import org.bremersee.peregrinus.content.repository.FeatureRepository;
 import org.bremersee.peregrinus.security.access.model.AccessControlDto;
 import org.bremersee.peregrinus.tree.model.FeatureLeaf;
@@ -37,7 +38,7 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
-import reactor.util.function.Tuple2;
+import reactor.util.function.Tuple4;
 import reactor.util.function.Tuples;
 
 /**
@@ -173,12 +174,12 @@ public class FeatureLeafAdapterTest {
   @Test
   public void mapNodeEntity() {
     //noinspection unchecked
-    Tuple2<NodeEntity, NodeEntitySettings>[] tuples = new Tuple2[]{
-        Tuples.of(wptLeafEntity(), wptLeafEntitySettings()),
-        Tuples.of(trkLeafEntity(), trkLeafEntitySettings()),
-        Tuples.of(rteLeafEntity(), rteLeafEntitySettings())
+    Tuple4<NodeEntity, NodeEntitySettings, Feature, FeatureLeaf>[] tuples = new Tuple4[]{
+        Tuples.of(wptLeafEntity(), wptLeafEntitySettings(), wpt(), wptLeaf()),
+        Tuples.of(trkLeafEntity(), trkLeafEntitySettings(), trk(), trkLeaf()),
+        Tuples.of(rteLeafEntity(), rteLeafEntitySettings(), rte(), rteLeaf())
     };
-    for (Tuple2<NodeEntity, NodeEntitySettings> tuple : tuples) {
+    for (Tuple4<NodeEntity, NodeEntitySettings, Feature, FeatureLeaf> tuple : tuples) {
       StepVerifier
           .create(adapter.mapNodeEntity(tuple.getT1(), tuple.getT2()))
           .assertNext(featureLeaf -> {
@@ -212,13 +213,15 @@ public class FeatureLeafAdapterTest {
             assertEquals(
                 featureLeafEntity.getModifiedBy(),
                 featureLeaf.getModifiedBy());
-            assertNotNull(featureLeaf.getName());
+            assertEquals(
+                tuple.getT3().getProperties().getName(),
+                featureLeaf.getName());
             assertEquals(
                 featureLeafEntity.getParentId(),
                 featureLeaf.getParentId());
             assertEquals(
-                featureLeafEntity.getId(),
-                featureLeaf.getSettings().getNodeId());
+                tuple.getT4().getSettings(),
+                featureLeaf.getSettings());
 
           })
           .expectNextCount(0)

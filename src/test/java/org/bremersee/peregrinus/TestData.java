@@ -317,7 +317,7 @@ public abstract class TestData {
     FeatureLeaf trkLeaf = trkLeaf();
     return FeatureLeafEntitySettings.builder()
         .displayedOnMap(trkLeaf.getSettings().getDisplayedOnMap())
-        .id(trkLeaf.getId())
+        .id(trkSettingsId)
         .nodeId(trkLeaf.getSettings().getNodeId())
         .userId(trkLeaf.getSettings().getUserId())
         .build();
@@ -408,7 +408,7 @@ public abstract class TestData {
     FeatureLeaf rteLeaf = rteLeaf();
     return FeatureLeafEntitySettings.builder()
         .displayedOnMap(rteLeaf.getSettings().getDisplayedOnMap())
-        .id(rteLeaf.getId())
+        .id(rteSettingsId)
         .nodeId(rteLeaf.getSettings().getNodeId())
         .userId(rteLeaf.getSettings().getUserId())
         .build();
