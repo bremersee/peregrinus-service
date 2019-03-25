@@ -23,7 +23,9 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 import javax.validation.constraints.NotNull;
+import org.bremersee.security.access.PermissionConstants;
 import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.lang.Nullable;
 import org.springframework.util.StringUtils;
 import org.springframework.validation.annotation.Validated;
@@ -33,6 +35,32 @@ import org.springframework.validation.annotation.Validated;
  */
 @Validated
 public abstract class MongoRepositoryUtils {
+
+  public static final String FEATURE_ACL_JSON_PATH = "properties.acl";
+
+  public static final String NODE_ACL_JSON_PATH = "acl";
+
+  public static @NotNull Update createUpdate(
+      @NotNull final AclEntity acl,
+      @NotNull final String jsonPath) {
+    return extendUpdate(acl, jsonPath, null);
+  }
+
+  public static @NotNull Update extendUpdate(
+      @NotNull final AclEntity acl,
+      @NotNull final String jsonPath,
+      @Nullable final Update update) {
+
+    final int n = jsonPath.startsWith("$.") ? 2 : 0;
+    final String suffix = jsonPath.endsWith(".") ? "" : ".";
+    final String path = jsonPath.substring(n) + suffix;
+    return (update != null ? update : new Update())
+        .set(path + PermissionConstants.ADMINISTRATION, acl.getAdministration())
+        .set(path + PermissionConstants.CREATE, acl.getCreate())
+        .set(path + PermissionConstants.DELETE, acl.getDelete())
+        .set(path + PermissionConstants.READ, acl.getRead())
+        .set(path + PermissionConstants.WRITE, acl.getWrite());
+  }
 
   @NotNull
   public static List<Criteria> buildCriteriaList(

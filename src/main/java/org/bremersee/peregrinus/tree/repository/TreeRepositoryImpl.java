@@ -174,15 +174,11 @@ public class TreeRepositoryImpl implements TreeRepository {
       final Collection<String> roles,
       final Collection<String> groups) {
 
-    final AclEntity aclEntity = aclMapper.map(acl);
-    final Update update = new Update()
+    final Update update = MongoRepositoryUtils.createUpdate(
+        aclMapper.map(acl),
+        MongoRepositoryUtils.NODE_ACL_JSON_PATH)
         .set("modified", OffsetDateTime.now(Clock.systemUTC()))
-        .set("modifiedBy", userId)
-        .set("acl." + PermissionConstants.ADMINISTRATION, aclEntity.getAdministration())
-        .set("acl." + PermissionConstants.CREATE, aclEntity.getCreate())
-        .set("acl." + PermissionConstants.DELETE, aclEntity.getDelete())
-        .set("acl." + PermissionConstants.READ, aclEntity.getRead())
-        .set("acl." + PermissionConstants.WRITE, aclEntity.getWrite());
+        .set("modifiedBy", userId);
     return mongoOperations.findAndModify(
         Query.query(MongoRepositoryUtils.buildCriteria(
             Criteria.where("id").is(id),

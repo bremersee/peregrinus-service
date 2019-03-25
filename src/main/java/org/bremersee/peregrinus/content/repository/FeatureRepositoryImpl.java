@@ -146,14 +146,11 @@ public class FeatureRepositoryImpl implements FeatureRepository {
       final Collection<String> roles,
       final Collection<String> groups) {
 
-    final AclEntity aclEntity = aclMapper.map(acl);
-    final Update update = new Update()
-        .set("properties.modified", OffsetDateTime.now(Clock.systemUTC()))
-        .set("properties.acl." + PermissionConstants.ADMINISTRATION, aclEntity.getAdministration())
-        .set("properties.acl." + PermissionConstants.CREATE, aclEntity.getCreate())
-        .set("properties.acl." + PermissionConstants.DELETE, aclEntity.getDelete())
-        .set("properties.acl." + PermissionConstants.READ, aclEntity.getRead())
-        .set("properties.acl." + PermissionConstants.WRITE, aclEntity.getWrite());
+    final Update update = MongoRepositoryUtils.createUpdate(
+        aclMapper.map(acl),
+        MongoRepositoryUtils.FEATURE_ACL_JSON_PATH)
+        .set("modified", OffsetDateTime.now(Clock.systemUTC()))
+        .set("modifiedBy", userId);
     return mongoOperations.findAndModify(
         Query.query(MongoRepositoryUtils.buildCriteria(
             Criteria.where("id").is(id),
@@ -169,23 +166,18 @@ public class FeatureRepositoryImpl implements FeatureRepository {
       final String name,
       final AccessControlList acl) {
 
-    if (!StringUtils.hasText(featureId) || (!StringUtils.hasText(name) && acl == null)) {
+    if (featureId == null || (name == null && acl == null)) {
       return Mono.just(Boolean.FALSE);
     }
-    Update update = new Update()
-        .set("properties.modified", OffsetDateTime.now(Clock.systemUTC()));
+    Update update = Update.update("properties.modified", OffsetDateTime.now(Clock.systemUTC()));
     if (StringUtils.hasText(name)) {
       update = update.set("properties.name", name);
     }
     if (acl != null) {
-      final AclEntity aclEntity = aclMapper.map(acl);
-      update = update
-          .set("properties.acl." + PermissionConstants.ADMINISTRATION,
-              aclEntity.getAdministration())
-          .set("properties.acl." + PermissionConstants.CREATE, aclEntity.getCreate())
-          .set("properties.acl." + PermissionConstants.DELETE, aclEntity.getDelete())
-          .set("properties.acl." + PermissionConstants.READ, aclEntity.getRead())
-          .set("properties.acl." + PermissionConstants.WRITE, aclEntity.getWrite());
+      update = MongoRepositoryUtils.extendUpdate(
+          aclMapper.map(acl),
+          MongoRepositoryUtils.FEATURE_ACL_JSON_PATH,
+          update);
     }
     return mongoOperations.findAndModify(
         Query.query(Criteria.where("id").is(featureId)),
