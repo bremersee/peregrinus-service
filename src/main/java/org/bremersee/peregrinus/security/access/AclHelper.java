@@ -16,6 +16,8 @@
 
 package org.bremersee.peregrinus.security.access;
 
+import java.time.Clock;
+import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
@@ -25,6 +27,7 @@ import java.util.stream.Collectors;
 import javax.validation.constraints.NotNull;
 import org.bremersee.security.access.PermissionConstants;
 import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.lang.Nullable;
 import org.springframework.util.StringUtils;
@@ -42,8 +45,12 @@ public abstract class AclHelper {
 
   public static @NotNull Update createUpdate(
       @NotNull final AclEntity acl,
-      @NotNull final String jsonPath) {
-    return extendUpdate(acl, jsonPath, null);
+      @NotNull final String jsonPath,
+      @NotNull final String userId) {
+
+    final Update update = Update.update("modifiedBy", userId)
+        .set("modified", OffsetDateTime.now(Clock.systemUTC()));
+    return extendUpdate(acl, jsonPath, update);
   }
 
   public static @NotNull Update extendUpdate(
@@ -62,8 +69,7 @@ public abstract class AclHelper {
         .set(path + PermissionConstants.WRITE, acl.getWrite());
   }
 
-  @NotNull
-  public static List<Criteria> buildCriteriaList(
+  public static @NotNull List<Criteria> buildCriteriaList(
       @NotNull final String permission,
       final boolean includePublic,
       @Nullable final String userId,
@@ -72,38 +78,7 @@ public abstract class AclHelper {
     return buildCriteriaList(permission, includePublic, userId, roles, groups, null);
   }
 
-  @NotNull
-  public static Criteria buildCriteria(
-      @NotNull final String permission,
-      final boolean includePublic,
-      @Nullable final String userId,
-      @Nullable final Collection<String> roles,
-      @Nullable final Collection<String> groups) {
-    return new Criteria().orOperator(buildCriteriaList(
-        permission,
-        includePublic,
-        userId,
-        roles,
-        groups,
-        null)
-        .toArray(new Criteria[0]));
-  }
-
-  @NotNull
-  public static Criteria buildCriteria(
-      @NotNull final Criteria criteria,
-      @NotNull final String permission,
-      final boolean includePublic,
-      @Nullable final String userId,
-      @Nullable final Collection<String> roles,
-      @Nullable final Collection<String> groups) {
-    return new Criteria().andOperator(
-        criteria,
-        buildCriteria(permission, includePublic, userId, roles, groups, null));
-  }
-
-  @NotNull
-  public static List<Criteria> buildCriteriaList(
+  public static @NotNull List<Criteria> buildCriteriaList(
       @NotNull final String permission,
       final boolean includePublic,
       @Nullable final String userId,
@@ -138,7 +113,16 @@ public abstract class AclHelper {
     return criteriaList;
   }
 
-  public static Criteria buildCriteria(
+  public static @NotNull Criteria buildCriteria(
+      @NotNull final String permission,
+      final boolean includePublic,
+      @Nullable final String userId,
+      @Nullable final Collection<String> roles,
+      @Nullable final Collection<String> groups) {
+    return buildCriteria(permission, includePublic, userId, roles, groups, null);
+  }
+
+  public static @NotNull Criteria buildCriteria(
       @NotNull final String permission,
       final boolean includePublic,
       @Nullable final String userId,
@@ -155,7 +139,17 @@ public abstract class AclHelper {
         .toArray(new Criteria[0]));
   }
 
-  public static Criteria buildCriteria(
+  public static @NotNull Criteria buildCriteria(
+      @NotNull final Criteria criteria,
+      @NotNull final String permission,
+      final boolean includePublic,
+      @Nullable final String userId,
+      @Nullable final Collection<String> roles,
+      @Nullable final Collection<String> groups) {
+    return buildCriteria(criteria, permission, includePublic, userId, roles, groups, null);
+  }
+
+  public static @NotNull Criteria buildCriteria(
       @NotNull final Criteria criteria,
       @NotNull final String permission,
       final boolean includePublic,
@@ -167,4 +161,29 @@ public abstract class AclHelper {
         criteria,
         buildCriteria(permission, includePublic, userId, roles, groups, accessControlPropertyName));
   }
+
+  public static @NotNull Query andQuery(
+      @NotNull final Criteria criteria,
+      @NotNull final String permission,
+      final boolean includePublic,
+      @Nullable final String userId,
+      @Nullable final Collection<String> roles,
+      @Nullable final Collection<String> groups) {
+    return andQuery(criteria, permission, includePublic, userId, roles, groups, null);
+  }
+
+  public static @NotNull Query andQuery(
+      @NotNull final Criteria criteria,
+      @NotNull final String permission,
+      final boolean includePublic,
+      @Nullable final String userId,
+      @Nullable final Collection<String> roles,
+      @Nullable final Collection<String> groups,
+      @Nullable final String accessControlPropertyName) {
+    return Query.query(new Criteria().andOperator(
+        criteria,
+        buildCriteria(permission, includePublic, userId, roles, groups,
+            accessControlPropertyName)));
+  }
+
 }

@@ -17,9 +17,10 @@
 package org.bremersee.peregrinus.content.repository;
 
 import static org.bremersee.peregrinus.security.access.AclHelper.FEATURE_ACL_JSON_PATH;
-import static org.bremersee.peregrinus.security.access.AclHelper.buildCriteria;
+import static org.bremersee.peregrinus.security.access.AclHelper.andQuery;
 import static org.bremersee.peregrinus.security.access.AclHelper.createUpdate;
 import static org.bremersee.peregrinus.security.access.AclHelper.extendUpdate;
+import static org.bremersee.security.access.PermissionConstants.ADMINISTRATION;
 import static org.bremersee.security.access.PermissionConstants.DELETE;
 import static org.bremersee.security.access.PermissionConstants.WRITE;
 import static org.springframework.data.mongodb.core.query.Criteria.where;
@@ -40,8 +41,8 @@ import org.bremersee.peregrinus.content.repository.entity.FeatureEntity;
 import org.bremersee.peregrinus.content.repository.entity.FeatureEntitySettings;
 import org.bremersee.peregrinus.content.repository.mapper.FeatureMapper;
 import org.bremersee.peregrinus.security.access.AclEntity;
+import org.bremersee.peregrinus.security.access.AclHelper;
 import org.bremersee.security.access.AclMapper;
-import org.bremersee.security.access.PermissionConstants;
 import org.springframework.data.mongodb.core.ReactiveMongoOperations;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
@@ -115,8 +116,7 @@ public class FeatureRepositoryImpl implements FeatureRepository {
       final Collection<String> roles,
       final Collection<String> groups) {
 
-    final Query query = Query.query(buildCriteria(
-        where("id").is(id), DELETE, true, userId, roles, groups));
+    final Query query = AclHelper.andQuery(where("id").is(id), DELETE, true, userId, roles, groups);
     return mongoOperations
         .remove(query, FeatureEntity.class)
         .map(deleteResult -> deleteResult.getDeletedCount() > 0L)
@@ -133,14 +133,10 @@ public class FeatureRepositoryImpl implements FeatureRepository {
       final Collection<String> roles,
       final Collection<String> groups) {
 
-    final Update update = new Update()
-        .set("properties.modified", OffsetDateTime.now(Clock.systemUTC()))
-        .set("properties.name", name);
-    final Query query = query(buildCriteria(
-        where("id").is(id), WRITE, true, userId, roles, groups));
-    return mongoOperations
-        .findAndModify(query, update, FeatureEntity.class)
-        .flatMap(entity -> just(Boolean.TRUE));
+    final Update update = Update.update("properties.name", name)
+        .set("properties.modified", OffsetDateTime.now(Clock.systemUTC()));
+    final Query query = AclHelper.andQuery(where("id").is(id), WRITE, true, userId, roles, groups);
+    return update(update, query);
   }
 
   @Override
@@ -151,12 +147,13 @@ public class FeatureRepositoryImpl implements FeatureRepository {
       final Collection<String> roles,
       final Collection<String> groups) {
 
-    final Update update = createUpdate(aclMapper.map(acl), FEATURE_ACL_JSON_PATH)
-        .set("modified", OffsetDateTime.now(Clock.systemUTC()))
-        .set("modifiedBy", userId);
-    final Query query = query(buildCriteria(
-        where("id").is(id),
-        PermissionConstants.ADMINISTRATION, true, userId, roles, groups));
+    final Update update = createUpdate(aclMapper.map(acl), FEATURE_ACL_JSON_PATH, userId);
+    final Query query = AclHelper
+        .andQuery(where("id").is(id), ADMINISTRATION, true, userId, roles, groups);
+    return update(update, query);
+  }
+
+  private Mono<Boolean> update(final Update update, final Query query) {
     return mongoOperations
         .findAndModify(query, update, FeatureEntity.class)
         .flatMap(entity -> just(Boolean.TRUE));

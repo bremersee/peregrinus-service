@@ -17,7 +17,7 @@
 package org.bremersee.peregrinus.tree.repository;
 
 import static org.bremersee.peregrinus.security.access.AclHelper.NODE_ACL_JSON_PATH;
-import static org.bremersee.peregrinus.security.access.AclHelper.buildCriteria;
+import static org.bremersee.peregrinus.security.access.AclHelper.andQuery;
 import static org.bremersee.peregrinus.security.access.AclHelper.createUpdate;
 import static org.bremersee.security.access.PermissionConstants.ADMINISTRATION;
 import static org.bremersee.security.access.PermissionConstants.DELETE;
@@ -38,6 +38,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.bremersee.common.model.AccessControlList;
 import org.bremersee.exception.ServiceException;
 import org.bremersee.peregrinus.security.access.AclEntity;
+import org.bremersee.peregrinus.security.access.AclHelper;
 import org.bremersee.peregrinus.tree.model.Node;
 import org.bremersee.peregrinus.tree.model.NodeSettings;
 import org.bremersee.peregrinus.tree.repository.adapter.NodeAdapter;
@@ -118,8 +119,8 @@ public class TreeRepositoryImpl implements TreeRepository {
       final Collection<String> roles,
       final Collection<String> groups) {
 
-    final Query query = query(buildCriteria(
-        where("id").is(id), permission, includePublic, userId, roles, groups));
+    final Query query = AclHelper.andQuery(
+        where("id").is(id), permission, includePublic, userId, roles, groups);
     return mongoOperations
         .findOne(query, NodeEntity.class)
         .flatMap(nodeEntity -> zip(just(nodeEntity), findNodeSettings(nodeEntity, userId)))
@@ -140,8 +141,8 @@ public class TreeRepositoryImpl implements TreeRepository {
         : new Criteria().orOperator(
             where("parentId").exists(false),
             where("parentId").is(null));
-    final Query query = query(buildCriteria(
-        criteria, permission, includePublic, userId, roles, groups));
+    final Query query = AclHelper
+        .andQuery(criteria, permission, includePublic, userId, roles, groups);
     return mongoOperations
         .find(query, NodeEntity.class)
         .flatMap(nodeEntity -> zip(
@@ -162,8 +163,7 @@ public class TreeRepositoryImpl implements TreeRepository {
         .set("modified", OffsetDateTime.now(Clock.systemUTC()))
         .set("modifiedBy", userId)
         .set("name", name);
-    final Query query = query(buildCriteria(
-        where("id").is(id), WRITE, true, userId, roles, groups));
+    final Query query = AclHelper.andQuery(where("id").is(id), WRITE, true, userId, roles, groups);
     return mongoOperations.findAndModify(query, update, NodeEntity.class)
         .flatMap(nodeEntity -> getNodeAdapter(nodeEntity)
             .updateName(nodeEntity, name, userId, roles, groups))
@@ -178,11 +178,9 @@ public class TreeRepositoryImpl implements TreeRepository {
       final Collection<String> roles,
       final Collection<String> groups) {
 
-    final Update update = createUpdate(aclMapper.map(acl), NODE_ACL_JSON_PATH)
-        .set("modified", OffsetDateTime.now(Clock.systemUTC()))
-        .set("modifiedBy", userId);
-    final Query query = query(buildCriteria(
-        where("id").is(id), ADMINISTRATION, true, userId, roles, groups));
+    final Update update = createUpdate(aclMapper.map(acl), NODE_ACL_JSON_PATH, userId);
+    final Query query = AclHelper
+        .andQuery(where("id").is(id), ADMINISTRATION, true, userId, roles, groups);
     return mongoOperations.findAndModify(query, update, NodeEntity.class)
         .flatMap(nodeEntity -> getNodeAdapter(nodeEntity).updateAccessControl(
             nodeEntity, acl, userId, roles, groups))
@@ -202,8 +200,9 @@ public class TreeRepositoryImpl implements TreeRepository {
       final Collection<String> roles,
       final Collection<String> groups) {
 
-    final Query query = query(buildCriteria(
-        where("parentId").is(parentId), ADMINISTRATION, true, userId, roles, groups));
+    final Query query = AclHelper.andQuery(
+        where("parentId").is(parentId),
+        ADMINISTRATION, true, userId, roles, groups);
     return mongoOperations
         .find(query, NodeEntity.class)
         .flatMap(nodeEntity -> {
@@ -235,8 +234,7 @@ public class TreeRepositoryImpl implements TreeRepository {
       final Collection<String> groups) {
 
     // TODO delete other settings
-    final Query query = query(buildCriteria(
-        where("id").is(id), DELETE, true, userId, roles, groups));
+    final Query query = AclHelper.andQuery(where("id").is(id), DELETE, true, userId, roles, groups);
     return mongoOperations
         .findAndRemove(query, NodeEntity.class)
         .flatMap(nodeEntity -> getNodeAdapter(nodeEntity)
