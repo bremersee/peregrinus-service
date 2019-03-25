@@ -34,7 +34,7 @@ import org.springframework.validation.annotation.Validated;
  * @author Christian Bremer
  */
 @Validated
-public abstract class MongoRepositoryUtils {
+public abstract class AclHelper {
 
   public static final String FEATURE_ACL_JSON_PATH = "properties.acl";
 

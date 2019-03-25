@@ -16,17 +16,28 @@
 
 package org.bremersee.peregrinus.tree.repository;
 
+import static org.bremersee.peregrinus.security.access.AclHelper.NODE_ACL_JSON_PATH;
+import static org.bremersee.peregrinus.security.access.AclHelper.buildCriteria;
+import static org.bremersee.peregrinus.security.access.AclHelper.createUpdate;
+import static org.bremersee.security.access.PermissionConstants.ADMINISTRATION;
+import static org.bremersee.security.access.PermissionConstants.DELETE;
+import static org.bremersee.security.access.PermissionConstants.WRITE;
+import static org.springframework.data.mongodb.core.query.Criteria.where;
+import static org.springframework.data.mongodb.core.query.Query.query;
+import static org.springframework.util.Assert.notNull;
+import static reactor.core.publisher.Mono.just;
+import static reactor.core.publisher.Mono.zip;
+
 import java.time.Clock;
 import java.time.OffsetDateTime;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import javax.validation.constraints.NotNull;
 import lombok.extern.slf4j.Slf4j;
 import org.bremersee.common.model.AccessControlList;
+import org.bremersee.exception.ServiceException;
 import org.bremersee.peregrinus.security.access.AclEntity;
-import org.bremersee.peregrinus.security.access.MongoRepositoryUtils;
 import org.bremersee.peregrinus.tree.model.Node;
 import org.bremersee.peregrinus.tree.model.NodeSettings;
 import org.bremersee.peregrinus.tree.repository.adapter.NodeAdapter;
@@ -35,13 +46,11 @@ import org.bremersee.peregrinus.tree.repository.entity.BranchEntitySettings;
 import org.bremersee.peregrinus.tree.repository.entity.NodeEntity;
 import org.bremersee.peregrinus.tree.repository.entity.NodeEntitySettings;
 import org.bremersee.security.access.AclMapper;
-import org.bremersee.security.access.PermissionConstants;
 import org.springframework.data.mongodb.core.ReactiveMongoOperations;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Repository;
-import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -65,9 +74,9 @@ public class TreeRepositoryImpl implements TreeRepository {
       final AclMapper<AclEntity> aclMapper,
       final List<NodeAdapter> nodeAdapters) {
 
-    Assert.notNull(mongoOperations, "Mongo operations must not be null.");
-    Assert.notNull(aclMapper, "Acl mapper must not be null.");
-    Assert.notNull(nodeAdapters, "Node adapters must not be null.");
+    notNull(mongoOperations, "Mongo operations must not be null.");
+    notNull(aclMapper, "Acl mapper must not be null.");
+    notNull(nodeAdapters, "Node adapters must not be null.");
     this.mongoOperations = mongoOperations;
     this.aclMapper = aclMapper;
     for (final NodeAdapter nodeAdapter : nodeAdapters) {
@@ -96,7 +105,7 @@ public class TreeRepositoryImpl implements TreeRepository {
 
     return mongoOperations.save(tuple.getT1()).flatMap(entity -> {
       tuple.getT2().setNodeId(entity.getId());
-      return Mono.zip(Mono.just(entity), mongoOperations.save(tuple.getT2()));
+      return zip(just(entity), mongoOperations.save(tuple.getT2()));
     });
   }
 
@@ -109,13 +118,11 @@ public class TreeRepositoryImpl implements TreeRepository {
       final Collection<String> roles,
       final Collection<String> groups) {
 
+    final Query query = query(buildCriteria(
+        where("id").is(id), permission, includePublic, userId, roles, groups));
     return mongoOperations
-        .findOne(Query.query(MongoRepositoryUtils.buildCriteria(
-            Criteria.where("id").is(id),
-            permission, includePublic, userId, roles, groups)), NodeEntity.class)
-        .flatMap(nodeEntity -> Mono.zip(
-            Mono.just(nodeEntity),
-            findNodeSettings(nodeEntity, userId)))
+        .findOne(query, NodeEntity.class)
+        .flatMap(nodeEntity -> zip(just(nodeEntity), findNodeSettings(nodeEntity, userId)))
         .flatMap(this::mapNode);
   }
 
@@ -129,16 +136,16 @@ public class TreeRepositoryImpl implements TreeRepository {
       final Collection<String> groups) {
 
     final Criteria criteria = StringUtils.hasText(parentId)
-        ? Criteria.where("parentId").is(parentId)
+        ? where("parentId").is(parentId)
         : new Criteria().orOperator(
-            Criteria.where("parentId").exists(false),
-            Criteria.where("parentId").is(null));
+            where("parentId").exists(false),
+            where("parentId").is(null));
+    final Query query = query(buildCriteria(
+        criteria, permission, includePublic, userId, roles, groups));
     return mongoOperations
-        .find(Query.query(MongoRepositoryUtils.buildCriteria(
-            criteria,
-            permission, includePublic, userId, roles, groups)), NodeEntity.class)
-        .flatMap(nodeEntity -> Mono.zip(
-            Mono.just(nodeEntity),
+        .find(query, NodeEntity.class)
+        .flatMap(nodeEntity -> zip(
+            just(nodeEntity),
             findNodeSettings(nodeEntity, userId)))
         .flatMap(this::mapNode);
   }
@@ -155,15 +162,12 @@ public class TreeRepositoryImpl implements TreeRepository {
         .set("modified", OffsetDateTime.now(Clock.systemUTC()))
         .set("modifiedBy", userId)
         .set("name", name);
-    return mongoOperations.findAndModify(
-        Query.query(MongoRepositoryUtils.buildCriteria(
-            Criteria.where("id").is(id),
-            PermissionConstants.WRITE, true, userId, roles, groups)),
-        update,
-        NodeEntity.class)
+    final Query query = query(buildCriteria(
+        where("id").is(id), WRITE, true, userId, roles, groups));
+    return mongoOperations.findAndModify(query, update, NodeEntity.class)
         .flatMap(nodeEntity -> getNodeAdapter(nodeEntity)
             .updateName(nodeEntity, name, userId, roles, groups))
-        .flatMap(nodeEntity -> Mono.just(Boolean.TRUE));
+        .flatMap(nodeEntity -> just(Boolean.TRUE));
   }
 
   @Override
@@ -174,17 +178,12 @@ public class TreeRepositoryImpl implements TreeRepository {
       final Collection<String> roles,
       final Collection<String> groups) {
 
-    final Update update = MongoRepositoryUtils.createUpdate(
-        aclMapper.map(acl),
-        MongoRepositoryUtils.NODE_ACL_JSON_PATH)
+    final Update update = createUpdate(aclMapper.map(acl), NODE_ACL_JSON_PATH)
         .set("modified", OffsetDateTime.now(Clock.systemUTC()))
         .set("modifiedBy", userId);
-    return mongoOperations.findAndModify(
-        Query.query(MongoRepositoryUtils.buildCriteria(
-            Criteria.where("id").is(id),
-            PermissionConstants.ADMINISTRATION, true, userId, roles, groups)),
-        update,
-        NodeEntity.class)
+    final Query query = query(buildCriteria(
+        where("id").is(id), ADMINISTRATION, true, userId, roles, groups));
+    return mongoOperations.findAndModify(query, update, NodeEntity.class)
         .flatMap(nodeEntity -> getNodeAdapter(nodeEntity).updateAccessControl(
             nodeEntity, acl, userId, roles, groups))
         .flatMap(nodeEntity -> {
@@ -192,7 +191,7 @@ public class TreeRepositoryImpl implements TreeRepository {
             return updateAccessControlRecursive(
                 nodeEntity.getId(), acl, userId, roles, groups);
           }
-          return Mono.just(Boolean.TRUE);
+          return just(Boolean.TRUE);
         });
   }
 
@@ -203,11 +202,10 @@ public class TreeRepositoryImpl implements TreeRepository {
       final Collection<String> roles,
       final Collection<String> groups) {
 
+    final Query query = query(buildCriteria(
+        where("parentId").is(parentId), ADMINISTRATION, true, userId, roles, groups));
     return mongoOperations
-        .find(Query.query(MongoRepositoryUtils.buildCriteria(
-            Criteria.where("parentId").is(parentId),
-            PermissionConstants.ADMINISTRATION, true, userId, roles, groups)),
-            NodeEntity.class)
+        .find(query, NodeEntity.class)
         .flatMap(nodeEntity -> {
           final AclEntity aclEntity = aclMapper.map(acl);
           aclEntity.setOwner(nodeEntity.getAcl().getOwner());
@@ -223,10 +221,10 @@ public class TreeRepositoryImpl implements TreeRepository {
             return updateAccessControlRecursive(
                 nodeEntity.getId(), acl, userId, roles, groups);
           }
-          return Mono.just(Boolean.TRUE);
+          return just(Boolean.TRUE);
         })
         .count()
-        .flatMap(c -> Mono.just(Boolean.TRUE));
+        .flatMap(c -> just(Boolean.TRUE));
   }
 
   @Override
@@ -237,22 +235,22 @@ public class TreeRepositoryImpl implements TreeRepository {
       final Collection<String> groups) {
 
     // TODO delete other settings
+    final Query query = query(buildCriteria(
+        where("id").is(id), DELETE, true, userId, roles, groups));
     return mongoOperations
-        .findAndRemove(Query.query(MongoRepositoryUtils.buildCriteria(
-            Criteria.where("id").is(id),
-            PermissionConstants.DELETE, true, userId, roles, groups)),
-            NodeEntity.class)
+        .findAndRemove(query, NodeEntity.class)
         .flatMap(nodeEntity -> getNodeAdapter(nodeEntity)
             .removeNode(nodeEntity, userId, roles, groups))
-        .flatMap(nodeEntity -> mongoOperations.remove(
-            Query.query(nodeSettingsCriteria(nodeEntity.getId(), userId)),
-            NodeEntitySettings.class)
+        .flatMap(nodeEntity -> mongoOperations
+            .remove(
+                query(nodeSettingsCriteria(nodeEntity.getId(), userId)),
+                NodeEntitySettings.class)
             .map(deleteResult -> nodeEntity))
         .flatMap(nodeEntity -> {
           if (nodeEntity instanceof BranchEntity) {
             return deleteNodeRecursive(nodeEntity.getId(), userId, roles, groups);
           }
-          return Mono.just(Boolean.TRUE);
+          return just(Boolean.TRUE);
         });
   }
 
@@ -262,23 +260,24 @@ public class TreeRepositoryImpl implements TreeRepository {
       final Collection<String> roles,
       final Collection<String> groups) {
 
-    final Criteria one = Criteria.where("parentId").is(parentId);
-    return mongoOperations.find(Query.query(one), NodeEntity.class)
+    final Query query = query(where("parentId").is(parentId));
+    return mongoOperations.find(query, NodeEntity.class)
         .flatMap(nodeEntity -> mongoOperations.remove(nodeEntity).map(deleteResult -> nodeEntity))
         .flatMap(nodeEntity -> getNodeAdapter(nodeEntity)
             .removeNode(nodeEntity, userId, roles, groups))
-        .flatMap(nodeEntity -> mongoOperations.remove(
-            Query.query(nodeSettingsCriteria(nodeEntity.getId(), userId)),
-            NodeEntitySettings.class)
+        .flatMap(nodeEntity -> mongoOperations
+            .remove(
+                query(nodeSettingsCriteria(nodeEntity.getId(), userId)),
+                NodeEntitySettings.class)
             .map(deleteResult -> nodeEntity))
         .flatMap(nodeEntity -> {
           if (nodeEntity instanceof BranchEntity) {
             return deleteNodeRecursive(nodeEntity.getId(), userId, roles, groups);
           }
-          return Mono.just(Boolean.TRUE);
+          return just(Boolean.TRUE);
         })
         .count()
-        .flatMap(c -> Mono.just(Boolean.TRUE));
+        .flatMap(c -> just(Boolean.TRUE));
   }
 
   @Override
@@ -294,15 +293,14 @@ public class TreeRepositoryImpl implements TreeRepository {
 
   @Override
   public Mono<Boolean> closeBranch(
-      @NotNull final String branchId,
-      @NotNull final String userId) {
+      final String branchId,
+      final String userId) {
 
-    final Update update = new Update()
-        .set("open", false);
+    final Update update = Update.update("open", false);
+    final Query query = query(nodeSettingsCriteria(branchId, userId));
     return mongoOperations
-        .findAndModify(Query.query(nodeSettingsCriteria(branchId, userId)), update,
-            BranchEntitySettings.class)
-        .switchIfEmpty(Mono.just(
+        .findAndModify(query, update, BranchEntitySettings.class)
+        .switchIfEmpty(just(
             BranchEntitySettings.builder()
                 .nodeId(branchId)
                 .userId(userId).open(false)
@@ -314,19 +312,22 @@ public class TreeRepositoryImpl implements TreeRepository {
   private Mono<? extends NodeEntitySettings> findNodeSettings(
       final NodeEntity nodeEntity,
       final String userId) {
+
+    final Query query = query(nodeSettingsCriteria(nodeEntity.getId(), userId));
     return mongoOperations
-        .findOne(Query.query(nodeSettingsCriteria(nodeEntity.getId(), userId)),
-            NodeEntitySettings.class)
+        .findOne(query, NodeEntitySettings.class)
         .switchIfEmpty(getNodeAdapter(nodeEntity).defaultSettings(nodeEntity, userId));
   }
 
   private Mono<? extends Node> mapNode(
       final Tuple2<? extends NodeEntity, ? extends NodeEntitySettings> tuple) {
+
     return getNodeAdapter(tuple.getT1()).mapNodeEntity(tuple.getT1(), tuple.getT2());
   }
 
   private NodeAdapter getNodeAdapter(final Object obj) {
-    Assert.notNull(obj, "Object must not be null.");
+
+    notNull(obj, "Object must not be null.");
     final Class<?> cls;
     if (obj instanceof Class<?>) {
       cls = (Class<?>) obj;
@@ -335,17 +336,18 @@ public class TreeRepositoryImpl implements TreeRepository {
     }
     final NodeAdapter nodeAdapter = nodeAdapterMap.get(cls);
     if (nodeAdapter == null) {
-      RuntimeException e = new RuntimeException("No node adapter found for " + cls.getName());
-      log.error("Getting node adapter failed.", e);
-      throw e;
+      final ServiceException se = ServiceException.internalServerError(
+          "No node adapter found for " + cls.getName(), "changeit"); // TODO
+      log.error("Getting node adapter failed.", se);
+      throw se;
     }
     return nodeAdapter;
   }
 
   private Criteria nodeSettingsCriteria(final String nodeId, final String userId) {
     return new Criteria().andOperator(
-        Criteria.where("nodeId").is(nodeId),
-        Criteria.where("userId").is(userId));
+        where("nodeId").is(nodeId),
+        where("userId").is(userId));
   }
 
 }
