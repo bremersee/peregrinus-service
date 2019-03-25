@@ -17,7 +17,6 @@ import org.bremersee.peregrinus.content.model.Rte;
 import org.bremersee.peregrinus.content.model.RteProperties;
 import org.bremersee.peregrinus.content.model.RtePt;
 import org.bremersee.peregrinus.content.model.RtePtProperties;
-import org.bremersee.peregrinus.security.access.model.AccessControlDto;
 import org.junit.Assert;
 import org.junit.Test;
 import org.locationtech.jts.geom.MultiLineString;
@@ -88,7 +87,6 @@ public class RteConverterTest {
     rte.setBbox(GeometryUtils.getBoundingBox(multiLineString));
     rte.setGeometry(multiLineString);
     rte.setProperties(new RteProperties());
-    rte.getProperties().setAccessControl(new AccessControlDto());
     rte.getProperties().setName("Rte Test");
     rte.getProperties().setRtePts(Arrays.asList(pt0, pt1, pt2));
     rte.getProperties().getSettings().setDisplayColor(DisplayColor.DARK_GREEN);

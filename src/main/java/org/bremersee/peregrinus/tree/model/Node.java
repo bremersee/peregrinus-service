@@ -29,7 +29,9 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
-import org.bremersee.peregrinus.security.access.model.AccessControlDto;
+import org.bremersee.common.model.AccessControlList;
+import org.bremersee.security.access.AclBuilder;
+import org.bremersee.security.access.PermissionConstants;
 
 /**
  * @author Christian Bremer
@@ -60,7 +62,7 @@ public abstract class Node<S extends NodeSettings> {
 
   private String modifiedBy;
 
-  private AccessControlDto accessControl = new AccessControlDto();
+  private AccessControlList acl;
 
   private S settings;
 
@@ -72,6 +74,7 @@ public abstract class Node<S extends NodeSettings> {
     final OffsetDateTime now = OffsetDateTime.now(Clock.systemUTC());
     created = now;
     modified = now;
+    acl = AclBuilder.builder().defaults(PermissionConstants.ALL).buildAccessControlList();
   }
 
   Node(
@@ -80,7 +83,7 @@ public abstract class Node<S extends NodeSettings> {
       String createdBy,
       OffsetDateTime modified,
       String modifiedBy,
-      AccessControlDto accessControl,
+      AccessControlList acl,
       S settings,
       String parentId,
       String name) {
@@ -93,7 +96,7 @@ public abstract class Node<S extends NodeSettings> {
     setCreatedBy(createdBy);
     setModified(modified);
     setModifiedBy(modifiedBy);
-    setAccessControl(accessControl);
+    setAcl(acl);
     setSettings(settings);
     setParentId(parentId);
     setName(name);
@@ -111,9 +114,9 @@ public abstract class Node<S extends NodeSettings> {
     }
   }
 
-  public void setAccessControl(final AccessControlDto accessControl) {
-    if (accessControl != null) {
-      this.accessControl = accessControl;
+  public void setAcl(final AccessControlList acl) {
+    if (acl != null) {
+      this.acl = acl;
     }
   }
 

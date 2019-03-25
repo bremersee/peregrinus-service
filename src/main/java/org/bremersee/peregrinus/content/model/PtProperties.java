@@ -22,13 +22,12 @@ import java.util.ArrayList;
 import java.util.List;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
+import org.bremersee.common.model.AccessControlList;
 import org.bremersee.common.model.Address;
 import org.bremersee.common.model.Link;
 import org.bremersee.common.model.PhoneNumber;
-import org.bremersee.peregrinus.security.access.model.AccessControlDto;
 
 /**
  * @author Christian Bremer
@@ -37,7 +36,6 @@ import org.bremersee.peregrinus.security.access.model.AccessControlDto;
 @Setter
 @ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
-@NoArgsConstructor
 public abstract class PtProperties<S extends PtSettings> extends FeatureProperties<S> {
 
   private String internalType; // photo, video or not // TODO
@@ -55,19 +53,42 @@ public abstract class PtProperties<S extends PtSettings> extends FeatureProperti
   /**
    * Phone numbers
    */
-  private List<PhoneNumber> phoneNumbers = new ArrayList<>();
+  private List<PhoneNumber> phoneNumbers;
 
-  public PtProperties(AccessControlDto accessControl,
-      OffsetDateTime created, OffsetDateTime modified, String name,
-      String plainTextDescription, String markdownDescription, String internalComments,
-      List<Link> links, OffsetDateTime startTime,
-      OffsetDateTime stopTime, S settings, String internalType, BigDecimal ele,
-      Address address, List<PhoneNumber> phoneNumbers) {
-    super(accessControl, created, modified, name, plainTextDescription, markdownDescription,
+  public PtProperties() {
+    phoneNumbers = new ArrayList<>();
+  }
+
+  public PtProperties(
+      AccessControlList acl,
+      OffsetDateTime created,
+      OffsetDateTime modified,
+      String name,
+      String plainTextDescription,
+      String markdownDescription,
+      String internalComments,
+      List<Link> links,
+      OffsetDateTime startTime,
+      OffsetDateTime stopTime,
+      S settings,
+      String internalType,
+      BigDecimal ele,
+      Address address,
+      List<PhoneNumber> phoneNumbers) {
+
+    super(acl, created, modified, name, plainTextDescription, markdownDescription,
         internalComments, links, startTime, stopTime, settings);
-    this.internalType = internalType;
-    this.ele = ele;
-    this.address = address;
-    this.phoneNumbers = phoneNumbers;
+    setInternalType(internalType);
+    setEle(ele);
+    setAddress(address);
+    setPhoneNumbers(phoneNumbers);
+  }
+
+  public void setPhoneNumbers(List<PhoneNumber> phoneNumbers) {
+    if (phoneNumbers == null) {
+      this.phoneNumbers = new ArrayList<>();
+    } else {
+      this.phoneNumbers = phoneNumbers;
+    }
   }
 }

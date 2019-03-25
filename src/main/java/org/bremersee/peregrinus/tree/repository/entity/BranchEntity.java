@@ -23,7 +23,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
-import org.bremersee.peregrinus.security.access.repository.entity.AccessControlEntity;
+import org.bremersee.peregrinus.security.access.AclEntity;
 import org.springframework.data.annotation.TypeAlias;
 import org.springframework.data.mongodb.core.mapping.Document;
 
@@ -49,9 +49,9 @@ public final class BranchEntity extends NodeEntity {
       OffsetDateTime modified,
       String modifiedBy,
       String parentId,
-      AccessControlEntity accessControl,
+      AclEntity acl,
       String name) {
-    super(id, created, createdBy, modified, modifiedBy, parentId, accessControl);
+    super(id, created, createdBy, modified, modifiedBy, parentId, acl);
     this.name = name;
   }
 }

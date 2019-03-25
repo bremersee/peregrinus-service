@@ -82,7 +82,7 @@ public abstract class AbstractFeatureMapper {
 
     P properties = propertiesSupplier.get();
     modelMapper.map(entityProperties, properties);
-    properties.getAccessControl().removeAdminAccess();
+    //properties.getAcl().removeAdminAccess();
     properties.setSettings(mapSettings(entitySettings, settingsSupplier));
     return properties;
   }
@@ -92,7 +92,7 @@ public abstract class AbstractFeatureMapper {
       final Supplier<P> supplier) {
     P entityProperties = supplier.get();
     modelMapper.map(properties, entityProperties);
-    entityProperties.getAccessControl().ensureAdminAccess();
+    //entityProperties.getAccessControl().ensureAdminAccess();
     return entityProperties;
   }
 

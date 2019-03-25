@@ -28,7 +28,7 @@ import lombok.ToString;
 import org.bremersee.common.model.Address;
 import org.bremersee.common.model.Link;
 import org.bremersee.common.model.PhoneNumber;
-import org.bremersee.peregrinus.security.access.repository.entity.AccessControlEntity;
+import org.bremersee.peregrinus.security.access.AclEntity;
 import org.springframework.data.annotation.TypeAlias;
 
 /**
@@ -44,7 +44,7 @@ public class WptEntityProperties extends PtEntityProperties {
 
   @Builder
   public WptEntityProperties(
-      AccessControlEntity accessControl,
+      AclEntity acl,
       OffsetDateTime created,
       OffsetDateTime modified,
       String name,
@@ -59,7 +59,7 @@ public class WptEntityProperties extends PtEntityProperties {
       Address address,
       List<PhoneNumber> phoneNumbers) {
 
-    super(accessControl, created, modified, name, plainTextDescription, markdownDescription,
+    super(acl, created, modified, name, plainTextDescription, markdownDescription,
         internalComments, links, startTime, stopTime, internalType, ele, address, phoneNumbers);
   }
 }

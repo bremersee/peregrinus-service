@@ -28,8 +28,10 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
+import org.bremersee.common.model.AccessControlList;
 import org.bremersee.common.model.Link;
-import org.bremersee.peregrinus.security.access.model.AccessControlDto;
+import org.bremersee.security.access.AclBuilder;
+import org.bremersee.security.access.PermissionConstants;
 
 /**
  * @author Christian Bremer
@@ -46,7 +48,7 @@ import org.bremersee.peregrinus.security.access.model.AccessControlDto;
 @ToString
 public abstract class FeatureProperties<S extends FeatureSettings> {
 
-  private AccessControlDto accessControl;
+  private AccessControlList acl;
 
   private OffsetDateTime created;
 
@@ -78,12 +80,12 @@ public abstract class FeatureProperties<S extends FeatureSettings> {
     final OffsetDateTime now = OffsetDateTime.now(Clock.systemUTC());
     created = now;
     modified = now;
-    accessControl = new AccessControlDto();
+    acl = AclBuilder.builder().defaults(PermissionConstants.ALL).buildAccessControlList();
     links = new ArrayList<>();
   }
 
   public FeatureProperties(
-      AccessControlDto accessControl,
+      AccessControlList acl,
       OffsetDateTime created,
       OffsetDateTime modified,
       String name,
@@ -95,7 +97,7 @@ public abstract class FeatureProperties<S extends FeatureSettings> {
       OffsetDateTime stopTime,
       S settings) {
 
-    setAccessControl(accessControl);
+    setAcl(acl);
     setCreated(created);
     setModified(modified);
     setName(name);
@@ -108,9 +110,9 @@ public abstract class FeatureProperties<S extends FeatureSettings> {
     setSettings(settings);
   }
 
-  public void setAccessControl(AccessControlDto accessControl) {
-    if (accessControl != null) {
-      this.accessControl = accessControl;
+  public void setAcl(AccessControlList acl) {
+    if (acl != null) {
+      this.acl = acl;
     }
   }
 
@@ -141,8 +143,8 @@ public abstract class FeatureProperties<S extends FeatureSettings> {
   }
 
   @SuppressWarnings("WeakerAccess")
-  protected void noAccessControl() {
-    this.accessControl = null;
+  protected void noAcl() {
+    this.acl = null;
   }
 
   @SuppressWarnings("WeakerAccess")

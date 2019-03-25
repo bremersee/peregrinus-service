@@ -23,14 +23,14 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import javax.validation.constraints.NotNull;
 import lombok.extern.slf4j.Slf4j;
+import org.bremersee.common.model.AccessControlList;
 import org.bremersee.exception.ServiceException;
 import org.bremersee.groupman.api.GroupControllerApi;
-import org.bremersee.peregrinus.security.access.AccessControl;
-import org.bremersee.peregrinus.security.access.PermissionConstants;
-import org.bremersee.peregrinus.security.access.model.AccessControlDto;
 import org.bremersee.peregrinus.tree.model.Branch;
 import org.bremersee.peregrinus.tree.model.Node;
 import org.bremersee.peregrinus.tree.repository.TreeRepository;
+import org.bremersee.security.access.AclBuilder;
+import org.bremersee.security.access.PermissionConstants;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.stereotype.Component;
@@ -64,7 +64,6 @@ public class TreeServiceImpl implements TreeService {
   public Mono<Branch> createBranch(
       final String name,
       final String parentId,
-      final AccessControl accessControl,
       final Authentication authentication) {
 
     final String userId = authentication.getName();
@@ -72,54 +71,35 @@ public class TreeServiceImpl implements TreeService {
         .stream()
         .map(GrantedAuthority::getAuthority)
         .collect(Collectors.toSet());
-
-    final AccessControl newAccessControl = new AccessControlDto(accessControl)
-        .owner(userId)
-        .addUser(userId, PermissionConstants.ALL);
-
-    if (StringUtils.hasText(parentId)) {
-      return groupService.getMembershipIds()
-          .flatMap(groups -> createBranch(
-              name, parentId, userId, newAccessControl, roles, groups));
-    }
-    final Branch branch = Branch.builder()
-        .modifiedBy(userId)
-        .modified(OffsetDateTime.now(Clock.systemUTC()))
-        .name(name)
-        .accessControl(new AccessControlDto(newAccessControl))
-        .build();
-    return treeRepository.persistNode(branch, userId);
+    return groupService.getMembershipIds()
+        .flatMap(groups -> createBranch(
+            name, parentId, userId, roles, groups));
   }
 
   private Mono<Branch> createBranch(
       final String name,
       final String parentId,
       final String userId,
-      final AccessControl accessControl,
       final Collection<String> roles,
       final Collection<String> groups) {
 
     return treeRepository
         .findBranchById(parentId, PermissionConstants.WRITE, true, userId, roles,
             groups)
-        .switchIfEmpty(Mono.error(ServiceException.forbidden("Branch", parentId)))
-        .map(Node::getAccessControl)
-        .flatMap(existAccessControl -> {
-          final AccessControl newAccessControl;
-          if (accessControl == null
-              || !existAccessControl.hasPermission(
-              PermissionConstants.ADMINISTRATION, userId, roles, groups)) {
-            newAccessControl = existAccessControl;
-          } else {
-            newAccessControl = new AccessControlDto(accessControl)
+        .map(Node::getAcl)
+        .switchIfEmpty(StringUtils.hasText(parentId)
+            ? Mono.error(ServiceException.forbidden("Branch", parentId))
+            : Mono.just(AclBuilder
+                .builder()
                 .owner(userId)
-                .addUser(userId, PermissionConstants.ALL);
-          }
+                .addUser(userId, PermissionConstants.ALL)
+                .buildAccessControlList()))
+        .flatMap(existAcl -> {
           final Branch branch = Branch.builder()
               .modifiedBy(userId)
               .modified(OffsetDateTime.now(Clock.systemUTC()))
               .name(name)
-              .accessControl(new AccessControlDto(newAccessControl))
+              .acl(existAcl)
               .build();
           return treeRepository.persistNode(branch, userId);
         });
@@ -205,8 +185,7 @@ public class TreeServiceImpl implements TreeService {
   @Override
   public Mono<Boolean> updateAccessControl(
       final String nodeId,
-      final AccessControl accessControl,
-      boolean recursive,
+      final AccessControlList acl,
       final Authentication authentication) {
 
     final String userId = authentication.getName();
@@ -216,7 +195,7 @@ public class TreeServiceImpl implements TreeService {
         .collect(Collectors.toSet());
     return groupService.getMembershipIds()
         .flatMap(groups -> treeRepository.updateAccessControl(
-            nodeId, accessControl, recursive, userId, roles, groups)
+            nodeId, acl, userId, roles, groups)
             .switchIfEmpty(Mono.error(ServiceException.forbidden("Node", nodeId))));
   }
 

@@ -16,12 +16,13 @@
 
 package org.bremersee.peregrinus.config;
 
-import java.util.LinkedHashSet;
-import java.util.Set;
-import org.bremersee.peregrinus.security.access.model.AuthorizationSetDto;
-import org.bremersee.peregrinus.security.access.repository.entity.AuthorizationSetEntity;
+import org.bremersee.common.model.AccessControlList;
+import org.bremersee.peregrinus.content.model.Feature;
+import org.bremersee.peregrinus.security.access.AclEntity;
+import org.bremersee.security.access.AclMapper;
+import org.bremersee.security.access.AclMapperImpl;
+import org.bremersee.security.access.PermissionConstants;
 import org.modelmapper.ModelMapper;
-import org.modelmapper.Provider;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -33,36 +34,56 @@ import org.springframework.context.annotation.Configuration;
 public class ModelMapperConfiguration {
 
   @Bean
+  public AclMapper<AclEntity> aclMapper() {
+    return new AclMapperImpl<>(
+        AclEntity::new,
+        PermissionConstants.ALL,
+        true,
+        false);
+  }
+
+  @Bean
   public ModelMapper modelMapper() {
-    final Provider<Set> linkedHashSetProvider = request -> new LinkedHashSet<>();
     final ModelMapper modelMapper = new ModelMapper();
     modelMapper
-        .typeMap(AuthorizationSetDto.class, AuthorizationSetEntity.class)
+        .typeMap(AccessControlList.class, AclEntity.class)
+        .setConverter(context -> aclMapper().map(context.getSource()));
+    modelMapper
+        .typeMap(AclEntity.class, AccessControlList.class)
+        .setConverter(context -> aclMapper().map(context.getSource()));
+    modelMapper
+        .typeMap(String.class, Feature.class)
+        .setConverter(context -> null);
+
+    /*
+    final Provider<Set> linkedHashSetProvider = request -> new LinkedHashSet<>();
+    modelMapper
+        .typeMap(AuthorizationSetDto.class, AceEntity.class)
         .addMappings(mapping -> {
           mapping
               .with(linkedHashSetProvider)
-              .map(AuthorizationSetDto::getGroups, AuthorizationSetEntity::setGroups);
+              .map(AuthorizationSetDto::getGroups, AceEntity::setGroups);
           mapping
               .with(linkedHashSetProvider)
-              .map(AuthorizationSetDto::getRoles, AuthorizationSetEntity::setRoles);
+              .map(AuthorizationSetDto::getRoles, AceEntity::setRoles);
           mapping
               .with(linkedHashSetProvider)
-              .map(AuthorizationSetDto::getUsers, AuthorizationSetEntity::setUsers);
+              .map(AuthorizationSetDto::getUsers, AceEntity::setUsers);
         });
     modelMapper
-        .typeMap(AuthorizationSetEntity.class, AuthorizationSetDto.class)
+        .typeMap(AceEntity.class, AuthorizationSetDto.class)
         .addMappings(mapping -> {
           mapping
               .with(linkedHashSetProvider)
-              .map(AuthorizationSetEntity::getGroups, AuthorizationSetDto::setGroups);
+              .map(AceEntity::getGroups, AuthorizationSetDto::setGroups);
           mapping
               .with(linkedHashSetProvider)
-              .map(AuthorizationSetEntity::getRoles, AuthorizationSetDto::setRoles);
+              .map(AceEntity::getRoles, AuthorizationSetDto::setRoles);
           mapping
               .with(linkedHashSetProvider)
-              .map(AuthorizationSetEntity::getUsers, AuthorizationSetDto::setUsers);
+              .map(AceEntity::getUsers, AuthorizationSetDto::setUsers);
         });
-
+    */
     return modelMapper;
   }
 

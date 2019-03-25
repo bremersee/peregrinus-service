@@ -22,7 +22,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
-import org.bremersee.peregrinus.security.access.model.AccessControlDto;
+import org.bremersee.common.model.AccessControlList;
 
 /**
  * @author Christian Bremer
@@ -40,11 +40,11 @@ public abstract class Leaf<S extends LeafSettings> extends Node<S> {
       String createdBy,
       OffsetDateTime modified,
       String modifiedBy,
-      AccessControlDto accessControl,
+      AccessControlList acl,
       S settings,
       String parentId,
       String name) {
-    super(id, created, createdBy, modified, modifiedBy, accessControl, settings, parentId, name);
+    super(id, created, createdBy, modified, modifiedBy, acl, settings, parentId, name);
   }
 
 }

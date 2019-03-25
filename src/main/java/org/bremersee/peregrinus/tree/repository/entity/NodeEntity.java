@@ -22,7 +22,9 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
-import org.bremersee.peregrinus.security.access.repository.entity.AccessControlEntity;
+import org.bremersee.peregrinus.security.access.AclEntity;
+import org.bremersee.security.access.AclBuilder;
+import org.bremersee.security.access.PermissionConstants;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.TypeAlias;
 import org.springframework.data.mongodb.core.index.Indexed;
@@ -53,12 +55,13 @@ public abstract class NodeEntity {
   @Indexed
   private String parentId;
 
-  private AccessControlEntity accessControl = new AccessControlEntity();
+  private AclEntity acl;
 
   NodeEntity() {
     final OffsetDateTime now = OffsetDateTime.now(Clock.systemUTC());
     this.created = now;
     this.modified = now;
+    this.acl = AclBuilder.builder().defaults(PermissionConstants.ALL).build(AclEntity::new);
   }
 
   NodeEntity(
@@ -68,7 +71,7 @@ public abstract class NodeEntity {
       OffsetDateTime modified,
       String modifiedBy,
       String parentId,
-      AccessControlEntity accessControl) {
+      AclEntity acl) {
 
     final OffsetDateTime now = OffsetDateTime.now(Clock.systemUTC());
     this.created = created == null ? now : created;
@@ -78,7 +81,7 @@ public abstract class NodeEntity {
     setCreatedBy(createdBy);
     setModified(modified);
     setModifiedBy(modifiedBy);
-    setAccessControl(accessControl);
+    setAcl(acl);
     setParentId(parentId);
   }
 
@@ -94,9 +97,9 @@ public abstract class NodeEntity {
     }
   }
 
-  public void setAccessControl(final AccessControlEntity accessControl) {
-    if (accessControl != null) {
-      this.accessControl = accessControl;
+  public void setAcl(final AclEntity acl) {
+    if (acl != null) {
+      this.acl = acl;
     }
   }
 

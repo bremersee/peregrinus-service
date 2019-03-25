@@ -25,8 +25,8 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
+import org.bremersee.common.model.AccessControlList;
 import org.bremersee.common.model.Link;
-import org.bremersee.peregrinus.security.access.model.AccessControlDto;
 
 /**
  * @author Christian Bremer
@@ -49,7 +49,7 @@ public class TrkProperties extends FeatureProperties<TrkSettings> {
 
   @Builder
   public TrkProperties(
-      AccessControlDto accessControl,
+      AccessControlList acl,
       OffsetDateTime created,
       OffsetDateTime modified,
       String name,
@@ -63,7 +63,7 @@ public class TrkProperties extends FeatureProperties<TrkSettings> {
       List<List<BigDecimal>> eleLines,
       List<List<OffsetDateTime>> timeLines) {
 
-    super(accessControl, created, modified, name, plainTextDescription, markdownDescription,
+    super(acl, created, modified, name, plainTextDescription, markdownDescription,
         internalComments, links, startTime, stopTime, settings);
     setEleLines(eleLines);
     setTimeLines(timeLines);

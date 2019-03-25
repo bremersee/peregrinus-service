@@ -17,8 +17,7 @@
 package org.bremersee.peregrinus.tree.repository.adapter;
 
 import java.util.Collection;
-import org.bremersee.peregrinus.security.access.AccessControl;
-import org.bremersee.peregrinus.security.access.repository.entity.AccessControlEntity;
+import org.bremersee.common.model.AccessControlList;
 import org.bremersee.peregrinus.tree.model.Branch;
 import org.bremersee.peregrinus.tree.model.BranchSettings;
 import org.bremersee.peregrinus.tree.model.Node;
@@ -38,7 +37,8 @@ import reactor.util.function.Tuple2;
 @Component
 public class BranchAdapter extends AbstractNodeAdapter implements NodeAdapter {
 
-  public BranchAdapter(ModelMapper modelMapper) {
+  public BranchAdapter(
+      final ModelMapper modelMapper) {
     super(modelMapper);
   }
 
@@ -100,12 +100,12 @@ public class BranchAdapter extends AbstractNodeAdapter implements NodeAdapter {
   @Override
   public Mono<NodeEntity> updateAccessControl(
       final NodeEntity nodeEntity,
-      final AccessControl accessControl,
+      final AccessControlList acl,
       final String userId,
       final Collection<String> roles,
       final Collection<String> groups) {
     // the 'real' update is done in the repository
-    nodeEntity.setAccessControl(new AccessControlEntity(accessControl.ensureAdminAccess()));
+    //nodeEntity.setAcl(AclBuilder.builder().from(acl).ensureAdminAccess().build(AclEntity::new));
     return Mono.just(nodeEntity);
   }
 

@@ -17,7 +17,7 @@
 package org.bremersee.peregrinus.tree.service;
 
 import javax.validation.constraints.NotNull;
-import org.bremersee.peregrinus.security.access.AccessControl;
+import org.bremersee.common.model.AccessControlList;
 import org.bremersee.peregrinus.tree.model.Branch;
 import org.hibernate.validator.constraints.Length;
 import org.springframework.lang.Nullable;
@@ -35,7 +35,6 @@ public interface TreeService {
   Mono<Branch> createBranch(
       @NotNull @Length(min = 1) String name,
       @Nullable String parentId,
-      @Nullable AccessControl accessControl,
       @NotNull Authentication authentication);
 
   Flux<Branch> loadBranches(
@@ -50,8 +49,7 @@ public interface TreeService {
 
   Mono<Boolean> updateAccessControl(
       @NotNull String nodeId,
-      @NotNull AccessControl accessControl,
-      boolean recursive,
+      @NotNull AccessControlList acl,
       @NotNull Authentication authentication);
 
   Mono<Boolean> removeNode(

@@ -22,8 +22,8 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
+import org.bremersee.common.model.AccessControlList;
 import org.bremersee.peregrinus.content.model.Feature;
-import org.bremersee.peregrinus.security.access.model.AccessControlDto;
 
 /**
  * @author Christian Bremer
@@ -47,12 +47,12 @@ public class FeatureLeaf extends Leaf<FeatureLeafSettings> {
       String createdBy,
       OffsetDateTime modified,
       String modifiedBy,
-      AccessControlDto accessControl,
+      AccessControlList acl,
       FeatureLeafSettings settings,
       String parentId,
       String name,
       Feature feature) {
-    super(id, created, createdBy, modified, modifiedBy, accessControl, settings, parentId, name);
+    super(id, created, createdBy, modified, modifiedBy, acl, settings, parentId, name);
     this.feature = feature;
   }
 }

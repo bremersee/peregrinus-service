@@ -24,8 +24,8 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
+import org.bremersee.common.model.AccessControlList;
 import org.bremersee.common.model.Link;
-import org.bremersee.peregrinus.security.access.model.AccessControlDto;
 
 /**
  * @author Christian Bremer
@@ -36,7 +36,7 @@ import org.bremersee.peregrinus.security.access.model.AccessControlDto;
 @EqualsAndHashCode(callSuper = true)
 public class RteProperties extends FeatureProperties<RteSettings> {
 
-  private List<RtePt> rtePts = new ArrayList<>();
+  private List<RtePt> rtePts;
 
   public RteProperties() {
     setSettings(new RteSettings());
@@ -45,7 +45,7 @@ public class RteProperties extends FeatureProperties<RteSettings> {
 
   @Builder
   public RteProperties(
-      AccessControlDto accessControl,
+      AccessControlList acl,
       OffsetDateTime created,
       OffsetDateTime modified,
       String name,
@@ -58,7 +58,7 @@ public class RteProperties extends FeatureProperties<RteSettings> {
       RteSettings settings,
       List<RtePt> rtePts) {
 
-    super(accessControl, created, modified, name, plainTextDescription, markdownDescription,
+    super(acl, created, modified, name, plainTextDescription, markdownDescription,
         internalComments, links, startTime, stopTime, settings);
     setRtePts(rtePts);
   }

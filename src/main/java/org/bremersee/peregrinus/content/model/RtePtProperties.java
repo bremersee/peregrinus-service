@@ -24,11 +24,11 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
+import org.bremersee.common.model.AccessControlList;
 import org.bremersee.common.model.Address;
 import org.bremersee.common.model.Link;
 import org.bremersee.common.model.PhoneNumber;
 import org.bremersee.peregrinus.geo.model.AbstractRteCalculationProperties;
-import org.bremersee.peregrinus.security.access.model.AccessControlDto;
 
 /**
  * @author Christian Bremer
@@ -54,13 +54,13 @@ public class RtePtProperties extends PtProperties<RtePtSettings> {
   private Integer liveTrafficIncidentsTravelTimeInSeconds;
 
   public RtePtProperties() {
-    noAccessControl();
+    noAcl();
     noSettings();
   }
 
   @Builder
   public RtePtProperties(
-      AccessControlDto accessControl,
+      AccessControlList acl,
       OffsetDateTime created,
       OffsetDateTime modified,
       String name,
@@ -83,7 +83,7 @@ public class RtePtProperties extends PtProperties<RtePtSettings> {
       Integer historicTrafficTravelTimeInSeconds,
       Integer liveTrafficIncidentsTravelTimeInSeconds) {
 
-    super(accessControl, created, modified, name, plainTextDescription, markdownDescription,
+    super(acl, created, modified, name, plainTextDescription, markdownDescription,
         internalComments, links, startTime, stopTime, settings, internalType, ele, address,
         phoneNumbers);
     this.calculationProperties = calculationProperties;
@@ -96,12 +96,12 @@ public class RtePtProperties extends PtProperties<RtePtSettings> {
   }
 
   @Override
-  public AccessControlDto getAccessControl() {
+  public AccessControlList getAcl() {
     return null;
   }
 
   @Override
-  public void setAccessControl(AccessControlDto accessControl) {
+  public void setAcl(AccessControlList acl) {
   }
 
   @Override

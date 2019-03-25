@@ -1,5 +1,6 @@
 package org.bremersee.peregrinus.tree.repository.adapter;
 
+import static org.bremersee.peregrinus.TestData.ANNA;
 import static org.bremersee.peregrinus.TestData.accessControlEntity;
 import static org.bremersee.peregrinus.TestData.rte;
 import static org.bremersee.peregrinus.TestData.rteLeaf;
@@ -23,17 +24,22 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
+import java.util.UUID;
+import org.bremersee.common.model.AccessControlList;
 import org.bremersee.peregrinus.TestConfig;
 import org.bremersee.peregrinus.content.model.Feature;
 import org.bremersee.peregrinus.content.repository.FeatureRepository;
-import org.bremersee.peregrinus.security.access.model.AccessControlDto;
 import org.bremersee.peregrinus.tree.model.FeatureLeaf;
 import org.bremersee.peregrinus.tree.model.FeatureLeafSettings;
 import org.bremersee.peregrinus.tree.repository.entity.FeatureLeafEntity;
 import org.bremersee.peregrinus.tree.repository.entity.FeatureLeafEntitySettings;
 import org.bremersee.peregrinus.tree.repository.entity.NodeEntity;
 import org.bremersee.peregrinus.tree.repository.entity.NodeEntitySettings;
+import org.bremersee.security.access.AclBuilder;
+import org.bremersee.security.access.PermissionConstants;
+import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import reactor.core.publisher.Mono;
@@ -51,11 +57,29 @@ public class FeatureLeafAdapterTest {
   @BeforeClass
   public static void setup() {
     FeatureRepository featureRepository = mock(FeatureRepository.class);
+    //noinspection unchecked
+    when(
+        featureRepository.updateName(
+            anyString(),
+            anyString(),
+            anyString(),
+            any(List.class),
+            any(List.class)))
+        .thenReturn(Mono.just(Boolean.TRUE));
+    //noinspection unchecked
+    when(
+        featureRepository.updateAccessControl(
+            anyString(),
+            any(AccessControlList.class),
+            anyString(),
+            any(List.class),
+            any(List.class)))
+        .thenReturn(Mono.just(Boolean.TRUE));
     when(
         featureRepository.updateNameAndAccessControl(
             anyString(),
             anyString(),
-            any(AccessControlDto.class)))
+            any(AccessControlList.class)))
         .thenReturn(Mono.just(Boolean.TRUE));
     when(
         featureRepository.findById(
@@ -102,8 +126,8 @@ public class FeatureLeafAdapterTest {
 
             FeatureLeafEntity featureLeafEntity = tuple.getT1();
             assertEquals(
-                accessControlEntity(featureLeaf.getAccessControl()),
-                featureLeafEntity.getAccessControl());
+                accessControlEntity(featureLeaf.getAcl()),
+                featureLeafEntity.getAcl());
             assertEquals(featureLeaf.getCreated(), featureLeafEntity.getCreated());
             assertEquals(featureLeaf.getCreatedBy(), featureLeafEntity.getCreatedBy());
             assertEquals(featureLeaf.getFeature().getId(), featureLeafEntity.getFeatureId());
@@ -193,8 +217,8 @@ public class FeatureLeafAdapterTest {
             final FeatureLeafEntity featureLeafEntity = (FeatureLeafEntity) tuple.getT1();
 
             assertEquals(
-                featureLeafEntity.getAccessControl(),
-                accessControlEntity(featureLeaf.getAccessControl()));
+                featureLeafEntity.getAcl(),
+                accessControlEntity(featureLeaf.getAcl()));
             assertEquals(
                 featureLeafEntity.getCreated(),
                 featureLeaf.getCreated());
@@ -231,14 +255,52 @@ public class FeatureLeafAdapterTest {
 
   @Test
   public void mapNodeEntitySettings() {
+    for (FeatureLeafEntitySettings entity : Arrays.asList(
+        wptLeafEntitySettings(), trkLeafEntitySettings(), rteLeafEntitySettings())) {
+      StepVerifier
+          .create(adapter.mapNodeEntitySettings(entity))
+          .assertNext(featureLeafSettings -> {
+            assertNotNull(featureLeafSettings);
+            assertEquals(entity.getDisplayedOnMap(), featureLeafSettings.getDisplayedOnMap());
+            assertEquals(entity.getId(), featureLeafSettings.getId());
+            assertEquals(entity.getNodeId(), featureLeafSettings.getNodeId());
+            assertEquals(entity.getUserId(), featureLeafSettings.getUserId());
+          })
+          .expectNextCount(0)
+          .verifyComplete();
+    }
   }
 
   @Test
   public void updateName() {
+    for (FeatureLeafEntity featureLeafEntity : Arrays.asList(
+        wptLeafEntity(), trkLeafEntity(), rteLeafEntity())) {
+      final String expectedNewName = UUID.randomUUID().toString();
+      StepVerifier
+          .create(adapter.updateName(featureLeafEntity, expectedNewName, ANNA,
+              Collections.emptyList(), Collections.emptyList()))
+          .assertNext(Assert::assertNotNull)
+          .expectNextCount(0)
+          .verifyComplete();
+    }
   }
 
   @Test
   public void updateAccessControl() {
+    for (FeatureLeafEntity featureLeafEntity : Arrays.asList(
+        wptLeafEntity(), trkLeafEntity(), rteLeafEntity())) {
+      final AccessControlList newAccessControl = AclBuilder
+          .builder()
+          .from(featureLeafEntity.getAcl())
+          .addUser("newuser", PermissionConstants.ALL)
+          .buildAccessControlList();
+      StepVerifier
+          .create(adapter.updateAccessControl(featureLeafEntity, newAccessControl, ANNA,
+              Collections.emptyList(), Collections.emptyList()))
+          .assertNext(Assert::assertNotNull)
+          .expectNextCount(0)
+          .verifyComplete();
+    }
   }
 
   @Test

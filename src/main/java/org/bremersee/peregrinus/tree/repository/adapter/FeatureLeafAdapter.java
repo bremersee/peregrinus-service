@@ -17,10 +17,9 @@
 package org.bremersee.peregrinus.tree.repository.adapter;
 
 import java.util.Collection;
+import org.bremersee.common.model.AccessControlList;
 import org.bremersee.peregrinus.content.model.FeatureProperties;
 import org.bremersee.peregrinus.content.repository.FeatureRepository;
-import org.bremersee.peregrinus.security.access.AccessControl;
-import org.bremersee.peregrinus.security.access.model.AccessControlDto;
 import org.bremersee.peregrinus.tree.model.FeatureLeaf;
 import org.bremersee.peregrinus.tree.model.FeatureLeafSettings;
 import org.bremersee.peregrinus.tree.model.Node;
@@ -88,10 +87,10 @@ public class FeatureLeafAdapter extends AbstractNodeAdapter implements NodeAdapt
     }
     final FeatureProperties properties = leaf.getFeature().getProperties();
     final String newName = leaf.getName().equals(properties.getName()) ? null : leaf.getName();
-    final AccessControlDto newAccessControl = leaf.getAccessControl()
-        .equals(properties.getAccessControl())
+    final AccessControlList newAccessControl = leaf.getAcl()
+        .equals(properties.getAcl())
         ? null
-        : leaf.getAccessControl();
+        : leaf.getAcl();
     if (newName == null && newAccessControl == null) {
       return Mono.just(Boolean.FALSE);
     }
@@ -159,7 +158,7 @@ public class FeatureLeafAdapter extends AbstractNodeAdapter implements NodeAdapt
   @Override
   public Mono<NodeEntity> updateAccessControl(
       final NodeEntity nodeEntity,
-      final AccessControl accessControl,
+      final AccessControlList acl,
       final String userId,
       final Collection<String> roles,
       final Collection<String> groups) {
@@ -169,7 +168,7 @@ public class FeatureLeafAdapter extends AbstractNodeAdapter implements NodeAdapt
       final FeatureLeafEntity featureLeafEntity = (FeatureLeafEntity) nodeEntity;
       return featureRepository
           .updateAccessControl(
-              featureLeafEntity.getFeatureId(), accessControl, userId, roles, groups)
+              featureLeafEntity.getFeatureId(), acl, userId, roles, groups)
           .flatMap(b -> Mono.just(nodeEntity))
           .switchIfEmpty(Mono.just(nodeEntity));
     }

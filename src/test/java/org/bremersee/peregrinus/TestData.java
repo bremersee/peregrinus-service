@@ -26,6 +26,7 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
+import org.bremersee.common.model.AccessControlList;
 import org.bremersee.common.model.Address;
 import org.bremersee.common.model.Link;
 import org.bremersee.common.model.PhoneNumber;
@@ -49,10 +50,7 @@ import org.bremersee.peregrinus.content.repository.entity.TrkEntity;
 import org.bremersee.peregrinus.content.repository.entity.TrkEntityProperties;
 import org.bremersee.peregrinus.content.repository.entity.WptEntity;
 import org.bremersee.peregrinus.content.repository.entity.WptEntityProperties;
-import org.bremersee.peregrinus.security.access.AccessControl;
-import org.bremersee.peregrinus.security.access.PermissionConstants;
-import org.bremersee.peregrinus.security.access.model.AccessControlDto;
-import org.bremersee.peregrinus.security.access.repository.entity.AccessControlEntity;
+import org.bremersee.peregrinus.security.access.AclEntity;
 import org.bremersee.peregrinus.tree.model.Branch;
 import org.bremersee.peregrinus.tree.model.BranchSettings;
 import org.bremersee.peregrinus.tree.model.FeatureLeaf;
@@ -61,6 +59,10 @@ import org.bremersee.peregrinus.tree.repository.entity.BranchEntity;
 import org.bremersee.peregrinus.tree.repository.entity.BranchEntitySettings;
 import org.bremersee.peregrinus.tree.repository.entity.FeatureLeafEntity;
 import org.bremersee.peregrinus.tree.repository.entity.FeatureLeafEntitySettings;
+import org.bremersee.security.access.Ace;
+import org.bremersee.security.access.Acl;
+import org.bremersee.security.access.AclBuilder;
+import org.bremersee.security.access.PermissionConstants;
 import org.locationtech.jts.geom.Coordinate;
 import org.locationtech.jts.geom.LineString;
 import org.locationtech.jts.geom.MultiLineString;
@@ -95,7 +97,7 @@ public abstract class TestData {
 
   public static Branch rootBranch() {
     return Branch.builder()
-        .accessControl(accessControlDto(ANNA))
+        .acl(accessControlDto(ANNA))
         .children(Arrays.asList(wptLeaf(), childBranch()))
         .createdBy(ANNAS_FRIEND)
         .id(rootBranchId)
@@ -112,7 +114,7 @@ public abstract class TestData {
   public static BranchEntity rootBranchEntity() {
     final Branch root = rootBranch();
     return BranchEntity.builder()
-        .accessControl(accessControlEntity(root.getAccessControl()))
+        .acl(accessControlEntity(root.getAcl()))
         .created(root.getCreated())
         .createdBy(root.getCreatedBy())
         .modified(root.getModified())
@@ -134,7 +136,7 @@ public abstract class TestData {
 
   public static Branch childBranch() {
     return Branch.builder()
-        .accessControl(accessControlDto(ANNA))
+        .acl(accessControlDto(ANNA))
         .createdBy(ANNA)
         .id(childBranchId)
         .modifiedBy(ANNA)
@@ -154,7 +156,7 @@ public abstract class TestData {
         .geometry(GeometryUtils.createPointWGS84(52.1, 10.2))
         .id(wptId)
         .properties(WptProperties.builder()
-            .accessControl(accessControlDto(ANNAS_FRIEND))
+            .acl(accessControlDto(ANNAS_FRIEND))
             .address(address())
             .ele(BigDecimal.valueOf(123.4))
             .internalComments("An internal comment")
@@ -178,7 +180,7 @@ public abstract class TestData {
         .geometry(wpt.getGeometry())
         .id(wpt.getId())
         .properties(WptEntityProperties.builder()
-            .accessControl(accessControlEntity(wpt.getProperties().getAccessControl()))
+            .acl(accessControlEntity(wpt.getProperties().getAcl()))
             .address(wpt.getProperties().getAddress())
             .created(wpt.getProperties().getCreated())
             .ele(wpt.getProperties().getEle())
@@ -196,7 +198,7 @@ public abstract class TestData {
   public static FeatureLeaf wptLeaf() {
     final Wpt wpt = wpt();
     return FeatureLeaf.builder()
-        .accessControl(wpt.getProperties().getAccessControl())
+        .acl(wpt.getProperties().getAcl())
         .createdBy(wpt.getProperties().getSettings().getUserId())
         .feature(wpt)
         .id(wptLeafId)
@@ -216,7 +218,7 @@ public abstract class TestData {
     final Wpt wpt = wpt();
     final FeatureLeaf featureLeaf = wptLeaf();
     return FeatureLeafEntity.builder()
-        .accessControl(accessControlEntity(featureLeaf.getAccessControl()))
+        .acl(accessControlEntity(featureLeaf.getAcl()))
         .createdBy(wpt.getProperties().getSettings().getUserId())
         .featureId(wpt.getId())
         .id(featureLeaf.getId())
@@ -241,7 +243,7 @@ public abstract class TestData {
         .geometry(trkMultiLineString())
         .id(trkId)
         .properties(TrkProperties.builder()
-            .accessControl(accessControlDto(ANNA))
+            .acl(accessControlDto(ANNA))
             .eleLines(trkEleLines())
             .internalComments("Try this track!")
             .name("My test track")
@@ -265,7 +267,7 @@ public abstract class TestData {
         .geometry(trk.getGeometry())
         .id(trk.getId())
         .properties(TrkEntityProperties.builder()
-            .accessControl(accessControlEntity(trk.getProperties().getAccessControl()))
+            .acl(accessControlEntity(trk.getProperties().getAcl()))
             .created(trk.getProperties().getCreated())
             .eleLines(trk.getProperties().getEleLines())
             .internalComments(trk.getProperties().getInternalComments())
@@ -284,7 +286,7 @@ public abstract class TestData {
   public static FeatureLeaf trkLeaf() {
     final Trk trk = trk();
     return FeatureLeaf.builder()
-        .accessControl(trk.getProperties().getAccessControl())
+        .acl(trk.getProperties().getAcl())
         .createdBy(trk.getProperties().getSettings().getUserId())
         .feature(trk)
         .id(trkLeafId)
@@ -304,7 +306,7 @@ public abstract class TestData {
     final Trk trk = trk();
     final FeatureLeaf featureLeaf = trkLeaf();
     return FeatureLeafEntity.builder()
-        .accessControl(accessControlEntity(featureLeaf.getAccessControl()))
+        .acl(accessControlEntity(featureLeaf.getAcl()))
         .createdBy(trk.getProperties().getSettings().getUserId())
         .featureId(trk.getId())
         .id(featureLeaf.getId())
@@ -329,7 +331,7 @@ public abstract class TestData {
         .geometry(rteMultiLineString())
         .id(rteId)
         .properties(RteProperties.builder()
-            .accessControl(accessControlDto(ANNA))
+            .acl(accessControlDto(ANNA))
             .name("My test route")
             .rtePts(rtePts())
             .settings(RteSettings.builder()
@@ -349,7 +351,7 @@ public abstract class TestData {
         .geometry(rte.getGeometry())
         .id(rte.getId())
         .properties(RteEntityProperties.builder()
-            .accessControl(accessControlEntity(rte.getProperties().getAccessControl()))
+            .acl(accessControlEntity(rte.getProperties().getAcl()))
             .created(rte.getProperties().getCreated())
             .internalComments(rte.getProperties().getInternalComments())
             .links(rte.getProperties().getLinks())
@@ -375,7 +377,7 @@ public abstract class TestData {
   public static FeatureLeaf rteLeaf() {
     final Rte rte = rte();
     return FeatureLeaf.builder()
-        .accessControl(rte.getProperties().getAccessControl())
+        .acl(rte.getProperties().getAcl())
         .createdBy(rte.getProperties().getSettings().getUserId())
         .feature(rte)
         .id(rteLeafId)
@@ -395,7 +397,7 @@ public abstract class TestData {
     final Rte rte = rte();
     final FeatureLeaf featureLeaf = rteLeaf();
     return FeatureLeafEntity.builder()
-        .accessControl(accessControlEntity(featureLeaf.getAccessControl()))
+        .acl(accessControlEntity(featureLeaf.getAcl()))
         .createdBy(rte.getProperties().getSettings().getUserId())
         .featureId(rte.getId())
         .id(featureLeaf.getId())
@@ -415,17 +417,30 @@ public abstract class TestData {
   }
 
 
-  public static AccessControlDto accessControlDto(String owner) {
-    AccessControlDto accessControl = new AccessControlDto();
-    accessControl.setOwner(owner);
-    accessControl.addUser(owner, PermissionConstants.ALL);
-    accessControl.addGroup("friends", PermissionConstants.READ, PermissionConstants.WRITE);
-    accessControl.addRole("ROLE_AUDIT", PermissionConstants.READ, PermissionConstants.DELETE);
-    return accessControl;
+  public static AccessControlList accessControlDto(String owner) {
+    return AclBuilder.builder()
+        .defaults(PermissionConstants.ALL)
+        .owner(owner)
+        .addUser(owner, PermissionConstants.ALL)
+        .addGroup("friends", PermissionConstants.READ, PermissionConstants.WRITE)
+        .addRole("ROLE_AUDIT", PermissionConstants.READ, PermissionConstants.DELETE)
+        .buildAccessControlList();
   }
 
-  public static AccessControlEntity accessControlEntity(AccessControl accessControl) {
-    return new AccessControlEntity(accessControl.ensureAdminAccess());
+  public static AccessControlList accessControlDto(Acl<? extends Ace> acl) {
+    return AclBuilder.builder()
+        .from(acl)
+        .defaults(PermissionConstants.ALL)
+        .removeAdminAccess()
+        .buildAccessControlList();
+  }
+
+  public static AclEntity accessControlEntity(AccessControlList acl) {
+    return AclBuilder.builder()
+        .from(acl)
+        .defaults(PermissionConstants.ALL)
+        .ensureAdminAccess()
+        .build(AclEntity::new);
   }
 
   public static Address address() {

@@ -24,10 +24,10 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
+import org.bremersee.common.model.AccessControlList;
 import org.bremersee.common.model.Address;
 import org.bremersee.common.model.Link;
 import org.bremersee.common.model.PhoneNumber;
-import org.bremersee.peregrinus.security.access.model.AccessControlDto;
 
 /**
  * @author Christian Bremer
@@ -44,7 +44,7 @@ public class WptProperties extends PtProperties<WptSettings> {
 
   @Builder
   public WptProperties(
-      AccessControlDto accessControl,
+      AccessControlList acl,
       OffsetDateTime created,
       OffsetDateTime modified,
       String name,
@@ -60,7 +60,7 @@ public class WptProperties extends PtProperties<WptSettings> {
       Address address,
       List<PhoneNumber> phoneNumbers) {
 
-    super(accessControl, created, modified, name, plainTextDescription, markdownDescription,
+    super(acl, created, modified, name, plainTextDescription, markdownDescription,
         internalComments, links, startTime, stopTime, settings, internalType, ele, address,
         phoneNumbers);
   }

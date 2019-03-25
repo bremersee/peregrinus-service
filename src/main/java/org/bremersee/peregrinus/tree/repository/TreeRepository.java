@@ -18,7 +18,7 @@ package org.bremersee.peregrinus.tree.repository;
 
 import java.util.Collection;
 import javax.validation.constraints.NotNull;
-import org.bremersee.peregrinus.security.access.AccessControl;
+import org.bremersee.common.model.AccessControlList;
 import org.bremersee.peregrinus.tree.model.Branch;
 import org.bremersee.peregrinus.tree.model.Node;
 import org.bremersee.peregrinus.tree.model.NodeSettings;
@@ -87,8 +87,7 @@ public interface TreeRepository {
 
   Mono<Boolean> updateAccessControl(
       @NotNull String id,
-      @NotNull AccessControl accessControl,
-      boolean recursive,
+      @NotNull AccessControlList acl,
       @NotNull String userId,
       @NotNull Collection<String> roles,
       @NotNull Collection<String> groups);

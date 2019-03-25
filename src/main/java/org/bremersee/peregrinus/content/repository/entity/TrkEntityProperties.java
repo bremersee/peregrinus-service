@@ -26,7 +26,7 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 import org.bremersee.common.model.Link;
-import org.bremersee.peregrinus.security.access.repository.entity.AccessControlEntity;
+import org.bremersee.peregrinus.security.access.AclEntity;
 import org.springframework.data.annotation.TypeAlias;
 
 /**
@@ -50,7 +50,7 @@ public class TrkEntityProperties extends FeatureEntityProperties {
 
   @Builder
   public TrkEntityProperties(
-      AccessControlEntity accessControl,
+      AclEntity acl,
       OffsetDateTime created,
       OffsetDateTime modified,
       String name,
@@ -63,7 +63,7 @@ public class TrkEntityProperties extends FeatureEntityProperties {
       List<List<BigDecimal>> eleLines,
       List<List<OffsetDateTime>> timeLines) {
 
-    super(accessControl, created, modified, name, plainTextDescription, markdownDescription,
+    super(acl, created, modified, name, plainTextDescription, markdownDescription,
         internalComments, links, startTime, stopTime);
     setEleLines(eleLines);
     setTimeLines(timeLines);

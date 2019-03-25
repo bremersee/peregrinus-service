@@ -25,7 +25,9 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 import org.bremersee.common.model.Link;
-import org.bremersee.peregrinus.security.access.repository.entity.AccessControlEntity;
+import org.bremersee.peregrinus.security.access.AclEntity;
+import org.bremersee.security.access.AclBuilder;
+import org.bremersee.security.access.PermissionConstants;
 import org.springframework.data.annotation.TypeAlias;
 import org.springframework.data.mongodb.core.index.Indexed;
 
@@ -39,7 +41,7 @@ import org.springframework.data.mongodb.core.index.Indexed;
 @ToString
 public abstract class FeatureEntityProperties {
 
-  private AccessControlEntity accessControl;
+  private AclEntity acl;
 
   private OffsetDateTime created;
 
@@ -73,12 +75,12 @@ public abstract class FeatureEntityProperties {
     final OffsetDateTime now = OffsetDateTime.now(Clock.systemUTC());
     created = now;
     modified = now;
-    accessControl = new AccessControlEntity();
+    acl = AclBuilder.builder().defaults(PermissionConstants.ALL).build(AclEntity::new);
     links = new ArrayList<>();
   }
 
   public FeatureEntityProperties(
-      AccessControlEntity accessControl,
+      AclEntity acl,
       OffsetDateTime created,
       OffsetDateTime modified,
       String name,
@@ -89,7 +91,7 @@ public abstract class FeatureEntityProperties {
       OffsetDateTime startTime,
       OffsetDateTime stopTime) {
 
-    setAccessControl(accessControl);
+    setAcl(acl);
     setCreated(created);
     setModified(modified);
     setName(name);
@@ -101,9 +103,9 @@ public abstract class FeatureEntityProperties {
     setStopTime(stopTime);
   }
 
-  public void setAccessControl(AccessControlEntity accessControl) {
-    if (accessControl != null) {
-      this.accessControl = accessControl;
+  public void setAcl(AclEntity acl) {
+    if (acl != null) {
+      this.acl = acl;
     }
   }
 

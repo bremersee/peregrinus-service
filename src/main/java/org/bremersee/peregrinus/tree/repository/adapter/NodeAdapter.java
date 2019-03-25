@@ -18,7 +18,7 @@ package org.bremersee.peregrinus.tree.repository.adapter;
 
 import java.util.Collection;
 import javax.validation.constraints.NotNull;
-import org.bremersee.peregrinus.security.access.AccessControl;
+import org.bremersee.common.model.AccessControlList;
 import org.bremersee.peregrinus.tree.model.Node;
 import org.bremersee.peregrinus.tree.model.NodeSettings;
 import org.bremersee.peregrinus.tree.repository.entity.NodeEntity;
@@ -64,7 +64,7 @@ public interface NodeAdapter {
 
   Mono<NodeEntity> updateAccessControl(
       @NotNull NodeEntity nodeEntity,
-      @NotNull AccessControl accessControl,
+      @NotNull AccessControlList acl,
       @NotNull String userId,
       @NotNull Collection<String> roles,
       @NotNull Collection<String> groups);

@@ -16,7 +16,7 @@
 
 package org.bremersee.peregrinus.tree.controller;
 
-import org.bremersee.peregrinus.security.access.model.AccessControlDto;
+import org.bremersee.common.model.AccessControlList;
 import org.bremersee.peregrinus.tree.model.Branch;
 import org.bremersee.peregrinus.tree.service.TreeService;
 import org.hibernate.validator.constraints.Length;
@@ -56,9 +56,8 @@ public class TreeController {
   public Mono<Branch> createBranch(
       @RequestParam(value = "name") @Length(min = 1) String name,
       @RequestParam(value = "parentId", required = false) String parentId,
-      @RequestBody(required = false) AccessControlDto accessControl,
       Authentication authentication) {
-    return treeService.createBranch(name, parentId, accessControl, authentication);
+    return treeService.createBranch(name, parentId, authentication);
   }
 
   @GetMapping(produces = {MediaType.APPLICATION_JSON_UTF8_VALUE})
@@ -80,10 +79,9 @@ public class TreeController {
   @PutMapping(path = "/{nodeId}/access-control")
   public Mono<Boolean> updateAccessControl(
       @PathVariable("nodeId") String nodeId,
-      @RequestParam(value = "recursive", defaultValue = "false") Boolean recursive,
-      @RequestBody AccessControlDto accessControl,
+      @RequestBody AccessControlList acl,
       Authentication authentication) {
-    return treeService.updateAccessControl(nodeId, accessControl, recursive, authentication);
+    return treeService.updateAccessControl(nodeId, acl, authentication);
   }
 
   @DeleteMapping(path = "/{nodeId}")

@@ -19,6 +19,8 @@ package org.bremersee.peregrinus;
 import java.util.ServiceLoader;
 import lombok.Getter;
 import org.bremersee.peregrinus.config.ModelMapperConfiguration;
+import org.bremersee.peregrinus.security.access.AclEntity;
+import org.bremersee.security.access.AclMapper;
 import org.bremersee.xml.JaxbContextBuilder;
 import org.bremersee.xml.JaxbContextDataProvider;
 import org.modelmapper.ModelMapper;
@@ -34,10 +36,15 @@ public abstract class TestConfig {
   @Getter
   private static final ModelMapper modelMapper;
 
+  @Getter
+  private static final AclMapper<AclEntity> aclMapper;
+
   static {
+    ModelMapperConfiguration modelMapperConfiguration = new ModelMapperConfiguration();
     jaxbContextBuilder = JaxbContextBuilder.builder().processAll(
         ServiceLoader.load(JaxbContextDataProvider.class));
-    modelMapper = new ModelMapperConfiguration().modelMapper();
+    modelMapper = modelMapperConfiguration.modelMapper();
+    aclMapper = modelMapperConfiguration.aclMapper();
   }
 
   private TestConfig() {

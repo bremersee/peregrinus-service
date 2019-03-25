@@ -20,16 +20,16 @@ import java.time.Clock;
 import java.time.OffsetDateTime;
 import java.util.Collection;
 import java.util.List;
+import org.bremersee.common.model.AccessControlList;
 import org.bremersee.peregrinus.content.model.Feature;
 import org.bremersee.peregrinus.content.model.FeatureSettings;
 import org.bremersee.peregrinus.content.repository.entity.FeatureEntity;
 import org.bremersee.peregrinus.content.repository.entity.FeatureEntitySettings;
 import org.bremersee.peregrinus.content.repository.mapper.FeatureMapper;
-import org.bremersee.peregrinus.security.access.AccessControl;
-import org.bremersee.peregrinus.security.access.PermissionConstants;
-import org.bremersee.peregrinus.security.access.model.AccessControlDto;
-import org.bremersee.peregrinus.security.access.repository.MongoRepositoryUtils;
-import org.bremersee.peregrinus.security.access.repository.entity.AccessControlEntity;
+import org.bremersee.peregrinus.security.access.AclEntity;
+import org.bremersee.peregrinus.security.access.MongoRepositoryUtils;
+import org.bremersee.security.access.AclMapper;
+import org.bremersee.security.access.PermissionConstants;
 import org.springframework.data.mongodb.core.ReactiveMongoOperations;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
@@ -48,12 +48,20 @@ public class FeatureRepositoryImpl implements FeatureRepository {
 
   private final ReactiveMongoOperations mongoOperations;
 
+  private final AclMapper<AclEntity> aclMapper;
+
   private final List<FeatureMapper> featureMappers;
 
   public FeatureRepositoryImpl(
       final ReactiveMongoOperations mongoOperations,
+      final AclMapper<AclEntity> aclMapper,
       final List<FeatureMapper> featureMappers) {
+
+    Assert.notNull(mongoOperations, "Mongo operations must not be null.");
+    Assert.notNull(aclMapper, "Acl mapper must not be null.");
+    Assert.notNull(featureMappers, "Feature mapper must not be null.");
     this.mongoOperations = mongoOperations;
+    this.aclMapper = aclMapper;
     this.featureMappers = featureMappers;
   }
 
@@ -99,13 +107,11 @@ public class FeatureRepositoryImpl implements FeatureRepository {
       final String userId,
       final Collection<String> roles,
       final Collection<String> groups) {
-    final List<Criteria> criteriaList = MongoRepositoryUtils.buildCriteriaList(
+    final Criteria criteria = MongoRepositoryUtils.buildCriteria(
+        Criteria.where("id").is(id),
         PermissionConstants.DELETE, true, userId, roles, groups);
-    final Criteria one = Criteria.where("id").is(id);
-    final Criteria two = new Criteria().orOperator(criteriaList.toArray(new Criteria[0]));
-    final Criteria oneAndTwo = new Criteria().andOperator(one, two);
     return mongoOperations
-        .remove(Query.query(oneAndTwo), FeatureEntity.class)
+        .remove(Query.query(criteria), FeatureEntity.class)
         .map(deleteResult -> deleteResult.getDeletedCount() > 0L)
         .zipWith(mongoOperations
             .remove(Query.query(featureSettingsCriteria(id, userId)), FeatureEntitySettings.class))
@@ -120,16 +126,13 @@ public class FeatureRepositoryImpl implements FeatureRepository {
       final Collection<String> roles,
       final Collection<String> groups) {
 
-    final List<Criteria> criteriaList = MongoRepositoryUtils.buildCriteriaList(
-        PermissionConstants.WRITE, true, userId, roles, groups);
-    final Criteria one = Criteria.where("id").is(id);
-    final Criteria two = new Criteria().orOperator(criteriaList.toArray(new Criteria[0]));
-    final Criteria oneAndTwo = new Criteria().andOperator(one, two);
     final Update update = new Update()
         .set("properties.modified", OffsetDateTime.now(Clock.systemUTC()))
         .set("properties.name", name);
     return mongoOperations.findAndModify(
-        Query.query(oneAndTwo),
+        Query.query(MongoRepositoryUtils.buildCriteria(
+            Criteria.where("id").is(id),
+            PermissionConstants.WRITE, true, userId, roles, groups)),
         update,
         FeatureEntity.class)
         .flatMap(entity -> Mono.just(Boolean.TRUE));
@@ -138,22 +141,23 @@ public class FeatureRepositoryImpl implements FeatureRepository {
   @Override
   public Mono<Boolean> updateAccessControl(
       final String id,
-      final AccessControl accessControl,
+      final AccessControlList acl,
       final String userId,
       final Collection<String> roles,
       final Collection<String> groups) {
 
-    final List<Criteria> criteriaList = MongoRepositoryUtils.buildCriteriaList(
-        PermissionConstants.ADMINISTRATION, true, userId, roles, groups);
-    final Criteria one = Criteria.where("id").is(id);
-    final Criteria two = new Criteria().orOperator(criteriaList.toArray(new Criteria[0]));
-    final Criteria oneAndTwo = new Criteria().andOperator(one, two);
+    final AclEntity aclEntity = aclMapper.map(acl);
     final Update update = new Update()
         .set("properties.modified", OffsetDateTime.now(Clock.systemUTC()))
-        .set("properties.accessControl",
-            new AccessControlEntity(accessControl.ensureAdminAccess()));
+        .set("properties.acl." + PermissionConstants.ADMINISTRATION, aclEntity.getAdministration())
+        .set("properties.acl." + PermissionConstants.CREATE, aclEntity.getCreate())
+        .set("properties.acl." + PermissionConstants.DELETE, aclEntity.getDelete())
+        .set("properties.acl." + PermissionConstants.READ, aclEntity.getRead())
+        .set("properties.acl." + PermissionConstants.WRITE, aclEntity.getWrite());
     return mongoOperations.findAndModify(
-        Query.query(oneAndTwo),
+        Query.query(MongoRepositoryUtils.buildCriteria(
+            Criteria.where("id").is(id),
+            PermissionConstants.ADMINISTRATION, true, userId, roles, groups)),
         update,
         FeatureEntity.class)
         .flatMap(entity -> Mono.just(Boolean.TRUE));
@@ -163,9 +167,9 @@ public class FeatureRepositoryImpl implements FeatureRepository {
   public Mono<Boolean> updateNameAndAccessControl(
       final String featureId,
       final String name,
-      final AccessControlDto accessControl) {
+      final AccessControlList acl) {
 
-    if (!StringUtils.hasText(featureId) || (!StringUtils.hasText(name) && accessControl == null)) {
+    if (!StringUtils.hasText(featureId) || (!StringUtils.hasText(name) && acl == null)) {
       return Mono.just(Boolean.FALSE);
     }
     Update update = new Update()
@@ -173,8 +177,15 @@ public class FeatureRepositoryImpl implements FeatureRepository {
     if (StringUtils.hasText(name)) {
       update = update.set("properties.name", name);
     }
-    if (accessControl != null) {
-      update = update.set("properties.accessControl", accessControl.ensureAdminAccess());
+    if (acl != null) {
+      final AclEntity aclEntity = aclMapper.map(acl);
+      update = update
+          .set("properties.acl." + PermissionConstants.ADMINISTRATION,
+              aclEntity.getAdministration())
+          .set("properties.acl." + PermissionConstants.CREATE, aclEntity.getCreate())
+          .set("properties.acl." + PermissionConstants.DELETE, aclEntity.getDelete())
+          .set("properties.acl." + PermissionConstants.READ, aclEntity.getRead())
+          .set("properties.acl." + PermissionConstants.WRITE, aclEntity.getWrite());
     }
     return mongoOperations.findAndModify(
         Query.query(Criteria.where("id").is(featureId)),

@@ -18,9 +18,8 @@ package org.bremersee.peregrinus.content.repository;
 
 import java.util.Collection;
 import javax.validation.constraints.NotNull;
+import org.bremersee.common.model.AccessControlList;
 import org.bremersee.peregrinus.content.model.Feature;
-import org.bremersee.peregrinus.security.access.AccessControl;
-import org.bremersee.peregrinus.security.access.model.AccessControlDto;
 import org.springframework.lang.Nullable;
 import org.springframework.validation.annotation.Validated;
 import reactor.core.publisher.Mono;
@@ -50,7 +49,7 @@ public interface FeatureRepository {
 
   Mono<Boolean> updateAccessControl(
       String id,
-      AccessControl accessControl,
+      AccessControlList accessControl,
       String userId,
       Collection<String> roles,
       Collection<String> groups);
@@ -58,7 +57,7 @@ public interface FeatureRepository {
   Mono<Boolean> updateNameAndAccessControl(
       @Nullable String featureId,
       @Nullable String name,
-      @Nullable AccessControlDto accessControl);
+      @Nullable AccessControlList accessControl);
 
   /*
   <F extends Feature<G, P>,

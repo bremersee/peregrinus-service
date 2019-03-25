@@ -16,7 +16,6 @@ import org.bremersee.peregrinus.TestConfig;
 import org.bremersee.peregrinus.content.model.DisplayColor;
 import org.bremersee.peregrinus.content.model.Trk;
 import org.bremersee.peregrinus.content.model.TrkProperties;
-import org.bremersee.peregrinus.security.access.model.AccessControlDto;
 import org.junit.Assert;
 import org.junit.Test;
 import org.locationtech.jts.geom.Coordinate;
@@ -102,7 +101,6 @@ public class TrkConverterTest {
     trk.setGeometry(multiLineString);
     trk.setBbox(GeometryUtils.getBoundingBox(multiLineString));
     trk.setProperties(new TrkProperties());
-    trk.getProperties().setAccessControl(new AccessControlDto());
     trk.getProperties().setEleLines(eleLines);
     trk.getProperties().setLinks(Arrays.asList(link0, link1, link2, link3));
     trk.getProperties().setName("Test TRK");

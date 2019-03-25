@@ -26,7 +26,7 @@ import lombok.Setter;
 import lombok.ToString;
 import org.bremersee.common.model.Link;
 import org.bremersee.peregrinus.content.model.RtePt;
-import org.bremersee.peregrinus.security.access.repository.entity.AccessControlEntity;
+import org.bremersee.peregrinus.security.access.AclEntity;
 import org.springframework.data.annotation.TypeAlias;
 
 /**
@@ -47,7 +47,7 @@ public class RteEntityProperties extends FeatureEntityProperties {
 
   @Builder
   public RteEntityProperties(
-      AccessControlEntity accessControl,
+      AclEntity acl,
       OffsetDateTime created,
       OffsetDateTime modified,
       String name,
@@ -59,7 +59,7 @@ public class RteEntityProperties extends FeatureEntityProperties {
       OffsetDateTime stopTime,
       List<RtePt> rtePts) {
 
-    super(accessControl, created, modified, name, plainTextDescription, markdownDescription,
+    super(acl, created, modified, name, plainTextDescription, markdownDescription,
         internalComments, links, startTime, stopTime);
     setRtePts(rtePts);
   }

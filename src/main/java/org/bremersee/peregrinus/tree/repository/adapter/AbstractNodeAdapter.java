@@ -17,10 +17,8 @@
 package org.bremersee.peregrinus.tree.repository.adapter;
 
 import java.util.function.Supplier;
-import javax.validation.constraints.NotNull;
 import lombok.AccessLevel;
 import lombok.Getter;
-import org.bremersee.peregrinus.security.access.model.AccessControlDto;
 import org.bremersee.peregrinus.tree.model.Node;
 import org.bremersee.peregrinus.tree.model.NodeSettings;
 import org.bremersee.peregrinus.tree.repository.entity.NodeEntity;
@@ -40,7 +38,8 @@ public abstract class AbstractNodeAdapter {
   @Getter(AccessLevel.PROTECTED)
   private ModelMapper modelMapper;
 
-  public AbstractNodeAdapter(final ModelMapper modelMapper) {
+  public AbstractNodeAdapter(
+      final ModelMapper modelMapper) {
     Assert.notNull(modelMapper, "Model mapper must not be null.");
     this.modelMapper = modelMapper;
   }
@@ -53,7 +52,6 @@ public abstract class AbstractNodeAdapter {
 
     final T1 t1 = nodeSupplier.get();
     modelMapper.map(node, t1);
-    t1.getAccessControl().ensureAdminAccess();
     final T2 t2 = mapNodeSettings(node.getSettings(), userId, nodeSettingsSupplier);
     return Tuples.of(t1, t2);
   }
@@ -68,14 +66,7 @@ public abstract class AbstractNodeAdapter {
     modelMapper.map(nodeEntitySettings, settings);
 
     final T node = nodeSupplier.get();
-    node.setAccessControl(new AccessControlDto(nodeEntity.getAccessControl()));
-    node.getAccessControl().removeAdminAccess();
-    node.setCreated(nodeEntity.getCreated());
-    node.setCreatedBy(nodeEntity.getCreatedBy());
-    node.setId(nodeEntity.getId());
-    node.setModified(nodeEntity.getModified());
-    node.setModifiedBy(nodeEntity.getModifiedBy());
-    node.setParentId(nodeEntity.getParentId());
+    modelMapper.map(nodeEntity, node);
     node.setSettings(settings);
     return node;
   }

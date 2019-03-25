@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.bremersee.peregrinus.security.access.repository;
+package org.bremersee.peregrinus.security.access;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -45,6 +45,36 @@ public abstract class MongoRepositoryUtils {
   }
 
   @NotNull
+  public static Criteria buildCriteria(
+      @NotNull final String permission,
+      final boolean includePublic,
+      @Nullable final String userId,
+      @Nullable final Collection<String> roles,
+      @Nullable final Collection<String> groups) {
+    return new Criteria().orOperator(buildCriteriaList(
+        permission,
+        includePublic,
+        userId,
+        roles,
+        groups,
+        null)
+        .toArray(new Criteria[0]));
+  }
+
+  @NotNull
+  public static Criteria buildCriteria(
+      @NotNull final Criteria criteria,
+      @NotNull final String permission,
+      final boolean includePublic,
+      @Nullable final String userId,
+      @Nullable final Collection<String> roles,
+      @Nullable final Collection<String> groups) {
+    return new Criteria().andOperator(
+        criteria,
+        buildCriteria(permission, includePublic, userId, roles, groups, null));
+  }
+
+  @NotNull
   public static List<Criteria> buildCriteriaList(
       @NotNull final String permission,
       final boolean includePublic,
@@ -55,7 +85,7 @@ public abstract class MongoRepositoryUtils {
 
     final String propName = StringUtils.hasText(accessControlPropertyName)
         ? accessControlPropertyName
-        : "accessControl";
+        : "acl";
     final String path = propName + "." + permission;
     final Set<String> roleSet = roles == null ? new HashSet<>() : new HashSet<>(roles);
     final Set<String> groupSet = groups == null ? new HashSet<>() : new HashSet<>(groups);
@@ -78,5 +108,35 @@ public abstract class MongoRepositoryUtils {
         .map(group -> Criteria.where(path + ".groups").all(group))
         .collect(Collectors.toList()));
     return criteriaList;
+  }
+
+  public static Criteria buildCriteria(
+      @NotNull final String permission,
+      final boolean includePublic,
+      @Nullable final String userId,
+      @Nullable final Collection<String> roles,
+      @Nullable final Collection<String> groups,
+      @Nullable final String accessControlPropertyName) {
+    return new Criteria().orOperator(buildCriteriaList(
+        permission,
+        includePublic,
+        userId,
+        roles,
+        groups,
+        accessControlPropertyName)
+        .toArray(new Criteria[0]));
+  }
+
+  public static Criteria buildCriteria(
+      @NotNull final Criteria criteria,
+      @NotNull final String permission,
+      final boolean includePublic,
+      @Nullable final String userId,
+      @Nullable final Collection<String> roles,
+      @Nullable final Collection<String> groups,
+      @Nullable final String accessControlPropertyName) {
+    return new Criteria().andOperator(
+        criteria,
+        buildCriteria(permission, includePublic, userId, roles, groups, accessControlPropertyName));
   }
 }
