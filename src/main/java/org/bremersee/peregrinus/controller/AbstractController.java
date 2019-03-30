@@ -14,69 +14,70 @@
  * limitations under the License.
  */
 
-package org.bremersee.peregrinus.service;
+package org.bremersee.peregrinus.controller;
 
+import java.util.Set;
 import java.util.function.Function;
-import lombok.Getter;
+import java.util.stream.Collectors;
 import org.bremersee.exception.ServiceException;
-import org.bremersee.peregrinus.entity.AclEntity;
-import org.bremersee.security.access.AclMapper;
+import org.bremersee.groupman.api.GroupControllerApi;
+import org.reactivestreams.Publisher;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.ReactiveSecurityContextHolder;
 import org.springframework.security.core.context.SecurityContext;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 /**
  * @author Christian Bremer
  */
-public abstract class AbstractServiceImpl {
+public abstract class AbstractController {
 
-  @Getter
-  private AclMapper<AclEntity> aclMapper;
+  private final GroupControllerApi groupService;
 
-  public AbstractServiceImpl(
-      AclMapper<AclEntity> aclMapper) {
-    this.aclMapper = aclMapper;
+  public AbstractController(GroupControllerApi groupService) {
+    this.groupService = groupService;
   }
 
-  <R> Mono<R> withUserId(Function<String, R> function) {
+  <R> Mono<R> oneWithUserId(Function<String, ? extends Mono<R>> function) {
     return ReactiveSecurityContextHolder.getContext()
         .map(SecurityContext::getAuthentication)
         .map(Authentication::getName)
         .switchIfEmpty(Mono.error(ServiceException.forbidden()))
-        .map(function);
-
+        .flatMap(function);
   }
 
-  Mono<String> userId() {
-    return ReactiveSecurityContextHolder.getContext()
-        .map(SecurityContext::getAuthentication)
-        .map(Authentication::getName)
-        .switchIfEmpty(Mono.error(ServiceException.forbidden()));
-  }
-
-/*
-  Mono<Set<String>> roles() {
-    return ReactiveSecurityContextHolder.getContext()
-        .map(SecurityContext::getAuthentication)
-        .map(this::toRoles)
-        .switchIfEmpty(Mono.just(Collections.emptySet()));
-  }
-
-  Mono<Set<String>> groups() {
-    return groupService.getMembershipIds()
-        .switchIfEmpty(Mono.just(Collections.emptySet()));
-  }
-
-  Mono<Tuple3<String, Set<String>, Set<String>>> authentication() {
+  <R> Mono<R> oneWithAuth(Function<Auth, ? extends Mono<R>> function) {
     return ReactiveSecurityContextHolder.getContext()
         .map(SecurityContext::getAuthentication)
         .zipWith(groupService.getMembershipIds())
-        .flatMap(tuple -> Mono.just(Tuples.of(
+        .map(tuple -> new Auth(
             tuple.getT1().getName(),
             toRoles(tuple.getT1()),
-            tuple.getT2())))
-        .switchIfEmpty(Mono.error(ServiceException.forbidden()));
+            tuple.getT2()))
+        .switchIfEmpty(Mono.error(ServiceException.forbidden()))
+        .flatMap(function);
+  }
+
+  <R> Flux<R> manyWithUserId(Function<String, ? extends Publisher<R>> function) {
+    return ReactiveSecurityContextHolder.getContext()
+        .map(SecurityContext::getAuthentication)
+        .map(Authentication::getName)
+        .switchIfEmpty(Mono.error(ServiceException.forbidden()))
+        .flatMapMany(function);
+  }
+
+  <R> Flux<R> manyWithAuth(Function<Auth, ? extends Publisher<R>> function) {
+    return ReactiveSecurityContextHolder.getContext()
+        .map(SecurityContext::getAuthentication)
+        .zipWith(groupService.getMembershipIds())
+        .map(tuple -> new Auth(
+            tuple.getT1().getName(),
+            toRoles(tuple.getT1()),
+            tuple.getT2()))
+        .switchIfEmpty(Mono.error(ServiceException.forbidden()))
+        .flatMapMany(function);
   }
 
   private Set<String> toRoles(Authentication authentication) {
@@ -85,8 +86,5 @@ public abstract class AbstractServiceImpl {
         .map(GrantedAuthority::getAuthority)
         .collect(Collectors.toSet());
   }
-  */
-
-
 
 }
