@@ -43,12 +43,14 @@ import org.bremersee.peregrinus.service.adapter.LeafAdapter;
 import org.bremersee.security.access.AclBuilder;
 import org.bremersee.security.access.AclMapper;
 import org.hibernate.validator.constraints.Length;
+import org.springframework.stereotype.Component;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 /**
  * @author Christian Bremer
  */
+@Component
 @Slf4j
 public class TreeServiceImpl extends AbstractServiceImpl implements TreeService {
 
@@ -93,12 +95,13 @@ public class TreeServiceImpl extends AbstractServiceImpl implements TreeService 
       @NotNull @Length(min = 1) final String name,
       @NotNull final String userId) {
 
-    return treeRepository.persistNode(BranchEntity.builder()
-        .acl(getAclMapper().defaultAcl(userId))
-        .createdBy(userId)
-        .modifiedBy(userId)
-        .name(name)
-        .build())
+    return treeRepository
+        .persistNode(BranchEntity.builder()
+            .acl(getAclMapper().defaultAcl(userId))
+            .createdBy(userId)
+            .modifiedBy(userId)
+            .name(name)
+            .build())
         .zipWhen(branchEntity -> treeRepository
             .persistNodeSettings(BranchEntitySettings.builder().build()))
         .map(tuple -> buildBranchWithoutChildren(tuple.getT1(), tuple.getT2()));

@@ -28,12 +28,14 @@ import org.bremersee.peregrinus.model.Leaf;
 import org.bremersee.peregrinus.service.FeatureService;
 import org.bremersee.security.access.AclMapper;
 import org.modelmapper.ModelMapper;
+import org.springframework.stereotype.Component;
 import org.springframework.util.Assert;
 import reactor.core.publisher.Mono;
 
 /**
  * @author Christian Bremer
  */
+@Component
 public class FeatureLeafAdapter extends AbstractAdapter implements LeafAdapter {
 
   private final FeatureService featureService;
