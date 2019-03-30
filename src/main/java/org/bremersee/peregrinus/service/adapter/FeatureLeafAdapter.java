@@ -103,6 +103,7 @@ public class FeatureLeafAdapter extends AbstractAdapter implements LeafAdapter {
       final String name,
       final String userId) {
     final FeatureLeafEntity featureLeafEntity = (FeatureLeafEntity) leafEntity;
-    return featureService.renameFeature(featureLeafEntity.getFeatureId(), name, userId);
+    return featureService.renameFeature(featureLeafEntity.getFeatureId(), name, userId)
+        .switchIfEmpty(Mono.just(false));
   }
 }

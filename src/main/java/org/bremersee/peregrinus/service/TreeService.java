@@ -66,14 +66,4 @@ public interface TreeService {
       @NotNull Set<String> roles,
       @NotNull Set<String> groups);
 
-  /*
-  Mono<Boolean> updateAccessControl(
-      @NotNull String nodeId,
-      @NotNull AccessControlList acl);
-
-  Mono<Boolean> removeNode(
-      @NotNull String nodeId);
-
-  */
-
 }
