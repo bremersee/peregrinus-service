@@ -41,6 +41,12 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @ToString
 public abstract class NodeEntity {
 
+  public static final String ID_PATH = "id";
+
+  public static final String ACL_PATH = "acl";
+
+  public static final String PARENT_ID_PATH = "parentId";
+
   @Id
   private String id;
 

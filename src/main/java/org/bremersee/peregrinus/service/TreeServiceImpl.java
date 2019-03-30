@@ -289,13 +289,13 @@ public class TreeServiceImpl extends AbstractServiceImpl implements TreeService 
     return treeRepository.findNodeById(nodeId, WRITE, true, userId, roles, groups)
         .switchIfEmpty(Mono.error(ServiceException.forbidden("Node", nodeId)))
         .flatMap(nodeEntity -> {
+          nodeEntity.setModified(OffsetDateTime.now(Clock.systemUTC()));
+          nodeEntity.setModifiedBy(userId);
           if (nodeEntity instanceof BranchEntity) {
-            nodeEntity.setModified(OffsetDateTime.now(Clock.systemUTC()));
-            nodeEntity.setModifiedBy(userId);
             ((BranchEntity) nodeEntity).setName(name);
             return treeRepository.persistNode(nodeEntity).map(e -> true);
           } else if (nodeEntity instanceof LeafEntity) {
-            return treeRepository.updateModified(userId)
+            return treeRepository.persistNode(nodeEntity)
                 .flatMap(updatedNodeEntity -> getLeafAdapter(updatedNodeEntity)
                     .renameLeaf((LeafEntity) updatedNodeEntity, name, userId));
           } else {

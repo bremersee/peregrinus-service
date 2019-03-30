@@ -66,6 +66,14 @@ public class FeatureRepositoryImpl extends AbstractMongoRepository implements Fe
     this.featureMappers = featureMappers;
   }
 
+  private ReactiveMongoOperations mongo() {
+    return getMongoOperations();
+  }
+
+  private AclMapper<AclEntity> aclMapper() {
+    return getAclMapper();
+  }
+
   @Override
   protected String aclPath() {
     return "properties.acl";
@@ -141,7 +149,7 @@ public class FeatureRepositoryImpl extends AbstractMongoRepository implements Fe
       final Collection<String> roles,
       final Collection<String> groups) {
 
-    final Update update = createUpdate(aclMapper().map(acl), userId);
+    final Update update = null; //createUpdate(aclMapper().map(acl), userId);
     final Query query = queryAnd(where("id").is(id), true, userId, roles, groups, ADMINISTRATION);
     return update(update, query);
   }
@@ -166,7 +174,7 @@ public class FeatureRepositoryImpl extends AbstractMongoRepository implements Fe
       update = update.set("properties.name", name);
     }
     if (acl != null) {
-      update = extendUpdate(aclMapper().map(acl), update);
+      update = null; //extendUpdate(aclMapper().map(acl), update);
     }
     return mongo()
         .findAndModify(query(where("id").is(featureId)), update, FeatureEntity.class)

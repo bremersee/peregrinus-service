@@ -34,6 +34,8 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @NoArgsConstructor
 public final class BranchEntitySettings extends NodeEntitySettings {
 
+  public static final String OPEN_PATH = "open";
+
   @Getter
   private Boolean open = true;
 

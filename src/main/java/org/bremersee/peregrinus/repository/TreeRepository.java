@@ -89,8 +89,6 @@ public interface TreeRepository {
 
   Mono<Void> closeBranch(@NotNull String branchId, @NotNull String userId);
 
-  Mono<NodeEntity> updateModified(@NotNull String userId);
-
 /*
   Mono<Boolean> updateName(
       @NotNull String id,

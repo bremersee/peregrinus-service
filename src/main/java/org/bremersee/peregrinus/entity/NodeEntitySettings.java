@@ -44,6 +44,10 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @NoArgsConstructor(access = AccessLevel.PACKAGE)
 public class NodeEntitySettings {
 
+  public static final String NODE_ID_PATH = "nodeId";
+
+  public static final String USER_ID_PATH = "userId";
+
   @Id
   private String id;
 

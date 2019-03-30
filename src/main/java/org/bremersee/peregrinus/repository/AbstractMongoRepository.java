@@ -28,6 +28,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
+import lombok.Getter;
 import org.bremersee.peregrinus.entity.AclEntity;
 import org.bremersee.security.access.AclMapper;
 import org.bremersee.security.access.PermissionConstants;
@@ -45,8 +46,10 @@ import org.springframework.validation.annotation.Validated;
 @Validated
 public abstract class AbstractMongoRepository {
 
+  @Getter
   private ReactiveMongoOperations mongoOperations;
 
+  @Getter
   private AclMapper<AclEntity> aclMapper;
 
   public AbstractMongoRepository(
@@ -56,14 +59,6 @@ public abstract class AbstractMongoRepository {
     notNull(aclMapper, "Acl mapper must not be null.");
     this.mongoOperations = mongoOperations;
     this.aclMapper = aclMapper;
-  }
-
-  protected ReactiveMongoOperations mongo() {
-    return mongoOperations;
-  }
-
-  protected AclMapper<AclEntity> aclMapper() {
-    return aclMapper;
   }
 
   /**
@@ -86,6 +81,7 @@ public abstract class AbstractMongoRepository {
     return aclPath(permission) + "." + entryProperty;
   }
 
+  /*
   protected @NotNull Update createUpdate(
       @NotNull final AclEntity acl,
       @NotNull final String userId) {
@@ -106,6 +102,8 @@ public abstract class AbstractMongoRepository {
         .set(aclPath(PermissionConstants.READ), acl.getRead())
         .set(aclPath(PermissionConstants.WRITE), acl.getWrite());
   }
+  */
+
 
   protected @NotNull Criteria orCriteria(@NotNull @NotEmpty final Criteria... criteria) {
     if (criteria.length == 1) {
