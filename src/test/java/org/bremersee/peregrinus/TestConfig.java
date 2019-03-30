@@ -19,7 +19,7 @@ package org.bremersee.peregrinus;
 import java.util.ServiceLoader;
 import lombok.Getter;
 import org.bremersee.peregrinus.config.ModelMapperConfiguration;
-import org.bremersee.peregrinus.security.access.AclEntity;
+import org.bremersee.peregrinus.entity.AclEntity;
 import org.bremersee.security.access.AclMapper;
 import org.bremersee.xml.JaxbContextBuilder;
 import org.bremersee.xml.JaxbContextDataProvider;

@@ -17,8 +17,8 @@
 package org.bremersee.peregrinus.config;
 
 import org.bremersee.common.model.AccessControlList;
-import org.bremersee.peregrinus.content.model.Feature;
-import org.bremersee.peregrinus.security.access.AclEntity;
+import org.bremersee.peregrinus.model.Feature;
+import org.bremersee.peregrinus.entity.AclEntity;
 import org.bremersee.security.access.AclMapper;
 import org.bremersee.security.access.AclMapperImpl;
 import org.bremersee.security.access.PermissionConstants;

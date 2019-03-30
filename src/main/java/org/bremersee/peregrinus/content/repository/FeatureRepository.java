@@ -19,7 +19,7 @@ package org.bremersee.peregrinus.content.repository;
 import java.util.Collection;
 import javax.validation.constraints.NotNull;
 import org.bremersee.common.model.AccessControlList;
-import org.bremersee.peregrinus.content.model.Feature;
+import org.bremersee.peregrinus.model.Feature;
 import org.springframework.lang.Nullable;
 import org.springframework.validation.annotation.Validated;
 import reactor.core.publisher.Mono;
@@ -58,31 +58,5 @@ public interface FeatureRepository {
       @Nullable String featureId,
       @Nullable String name,
       @Nullable AccessControlList accessControl);
-
-  /*
-  <F extends Feature<G, P>,
-      G extends Geometry, P extends FeatureProperties<S>,
-      S extends FeatureSettings> Mono<F> findById(
-      @NotNull String id, @NotNull Class<F> cls, @NotNull String userId);
-
-  <F extends Feature<G, P>,
-      G extends Geometry, P extends FeatureProperties<S>,
-      S extends FeatureSettings> Flux<F> findByIds(
-      @NotNull Collection<String> ids, @NotNull Class<F> cls, @NotNull String userId);
-
-  <F extends Feature<G, P>,
-      G extends Geometry, P extends FeatureProperties<S>,
-      S extends FeatureSettings> Mono<F> persistNodeSettings(
-      @NotNull F feature, @NotNull String userId);
-
-  <F extends Feature<G, P>,
-      G extends Geometry, P extends FeatureProperties<S>,
-      S extends FeatureSettings> Flux<F> persistAll(
-      @NotNull Collection<F> features, @NotNull String userId);
-
-  <F extends Feature<G, P>,
-      G extends Geometry, P extends FeatureProperties<S>,
-      S extends FeatureSettings> Mono<Boolean> delete(@NotNull F feature);
-      */
 
 }

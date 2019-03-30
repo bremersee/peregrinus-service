@@ -25,7 +25,7 @@ import org.bremersee.gpx.model.ExtensionsType;
 import org.bremersee.gpx.model.TrkType;
 import org.bremersee.gpx.model.TrksegType;
 import org.bremersee.gpx.model.WptType;
-import org.bremersee.peregrinus.content.model.Trk;
+import org.bremersee.peregrinus.model.Trk;
 import org.bremersee.peregrinus.converter.OffsetDateTimeToXmlGregorianCalendarConverter;
 import org.bremersee.xml.JaxbContextBuilder;
 import org.locationtech.jts.geom.Coordinate;

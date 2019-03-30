@@ -20,12 +20,12 @@ import java.util.function.Supplier;
 import lombok.AccessLevel;
 import lombok.Getter;
 import org.bremersee.geojson.utils.GeometryUtils;
-import org.bremersee.peregrinus.content.model.Feature;
-import org.bremersee.peregrinus.content.model.FeatureProperties;
-import org.bremersee.peregrinus.content.model.FeatureSettings;
-import org.bremersee.peregrinus.content.repository.entity.FeatureEntity;
-import org.bremersee.peregrinus.content.repository.entity.FeatureEntityProperties;
-import org.bremersee.peregrinus.content.repository.entity.FeatureEntitySettings;
+import org.bremersee.peregrinus.model.Feature;
+import org.bremersee.peregrinus.model.FeatureProperties;
+import org.bremersee.peregrinus.model.FeatureSettings;
+import org.bremersee.peregrinus.entity.FeatureEntity;
+import org.bremersee.peregrinus.entity.FeatureEntityProperties;
+import org.bremersee.peregrinus.entity.FeatureEntitySettings;
 import org.locationtech.jts.geom.Geometry;
 import org.modelmapper.ModelMapper;
 

@@ -16,16 +16,16 @@
 
 package org.bremersee.peregrinus.content.repository.mapper;
 
-import org.bremersee.peregrinus.content.model.Feature;
-import org.bremersee.peregrinus.content.model.FeatureSettings;
-import org.bremersee.peregrinus.content.model.Rte;
-import org.bremersee.peregrinus.content.model.RteProperties;
-import org.bremersee.peregrinus.content.model.RteSettings;
-import org.bremersee.peregrinus.content.repository.entity.FeatureEntity;
-import org.bremersee.peregrinus.content.repository.entity.FeatureEntitySettings;
-import org.bremersee.peregrinus.content.repository.entity.RteEntity;
-import org.bremersee.peregrinus.content.repository.entity.RteEntityProperties;
-import org.bremersee.peregrinus.content.repository.entity.RteEntitySettings;
+import org.bremersee.peregrinus.model.Feature;
+import org.bremersee.peregrinus.model.FeatureSettings;
+import org.bremersee.peregrinus.model.Rte;
+import org.bremersee.peregrinus.model.RteProperties;
+import org.bremersee.peregrinus.model.RteSettings;
+import org.bremersee.peregrinus.entity.FeatureEntity;
+import org.bremersee.peregrinus.entity.FeatureEntitySettings;
+import org.bremersee.peregrinus.entity.RteEntity;
+import org.bremersee.peregrinus.entity.RteEntityProperties;
+import org.bremersee.peregrinus.entity.RteEntitySettings;
 import org.springframework.stereotype.Component;
 import reactor.core.publisher.Mono;
 import reactor.util.function.Tuple2;

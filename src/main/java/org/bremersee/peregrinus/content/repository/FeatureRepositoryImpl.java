@@ -16,10 +16,6 @@
 
 package org.bremersee.peregrinus.content.repository;
 
-import static org.bremersee.peregrinus.security.access.AclHelper.FEATURE_ACL_JSON_PATH;
-import static org.bremersee.peregrinus.security.access.AclHelper.andQuery;
-import static org.bremersee.peregrinus.security.access.AclHelper.createUpdate;
-import static org.bremersee.peregrinus.security.access.AclHelper.extendUpdate;
 import static org.bremersee.security.access.PermissionConstants.ADMINISTRATION;
 import static org.bremersee.security.access.PermissionConstants.DELETE;
 import static org.bremersee.security.access.PermissionConstants.WRITE;
@@ -34,14 +30,14 @@ import java.time.OffsetDateTime;
 import java.util.Collection;
 import java.util.List;
 import org.bremersee.common.model.AccessControlList;
-import org.bremersee.peregrinus.content.model.Feature;
-import org.bremersee.peregrinus.content.model.FeatureProperties;
-import org.bremersee.peregrinus.content.model.FeatureSettings;
-import org.bremersee.peregrinus.content.repository.entity.FeatureEntity;
-import org.bremersee.peregrinus.content.repository.entity.FeatureEntitySettings;
+import org.bremersee.peregrinus.repository.AbstractMongoRepository;
+import org.bremersee.peregrinus.model.Feature;
+import org.bremersee.peregrinus.model.FeatureProperties;
+import org.bremersee.peregrinus.model.FeatureSettings;
+import org.bremersee.peregrinus.entity.FeatureEntity;
+import org.bremersee.peregrinus.entity.FeatureEntitySettings;
 import org.bremersee.peregrinus.content.repository.mapper.FeatureMapper;
-import org.bremersee.peregrinus.security.access.AclEntity;
-import org.bremersee.peregrinus.security.access.AclHelper;
+import org.bremersee.peregrinus.entity.AclEntity;
 import org.bremersee.security.access.AclMapper;
 import org.springframework.data.mongodb.core.ReactiveMongoOperations;
 import org.springframework.data.mongodb.core.query.Criteria;
@@ -56,11 +52,7 @@ import reactor.util.function.Tuple2;
  * @author Christian Bremer
  */
 @Repository
-public class FeatureRepositoryImpl implements FeatureRepository {
-
-  private final ReactiveMongoOperations mongoOperations;
-
-  private final AclMapper<AclEntity> aclMapper;
+public class FeatureRepositoryImpl extends AbstractMongoRepository implements FeatureRepository {
 
   private final List<FeatureMapper> featureMappers;
 
@@ -69,12 +61,14 @@ public class FeatureRepositoryImpl implements FeatureRepository {
       final AclMapper<AclEntity> aclMapper,
       final List<FeatureMapper> featureMappers) {
 
-    notNull(mongoOperations, "Mongo operations must not be null.");
-    notNull(aclMapper, "Acl mapper must not be null.");
+    super(mongoOperations, aclMapper);
     notNull(featureMappers, "Feature mapper must not be null.");
-    this.mongoOperations = mongoOperations;
-    this.aclMapper = aclMapper;
     this.featureMappers = featureMappers;
+  }
+
+  @Override
+  protected String aclPath() {
+    return "properties.acl";
   }
 
   @Override
@@ -91,11 +85,11 @@ public class FeatureRepositoryImpl implements FeatureRepository {
   private <F extends Feature> Mono<F> persist(
       final Tuple2<? extends FeatureEntity, ? extends FeatureEntitySettings> tuple) {
 
-    return mongoOperations
+    return mongo()
         .save(tuple.getT1())
         .flatMap(entity -> {
           tuple.getT2().setFeatureId(entity.getId());
-          return zip(just(entity), mongoOperations.save(tuple.getT2()));
+          return zip(just(entity), mongo().save(tuple.getT2()));
         })
         .flatMap(this::mapFeature);
   }
@@ -103,7 +97,7 @@ public class FeatureRepositoryImpl implements FeatureRepository {
   @Override
   public <F extends Feature> Mono<F> findById(final String id, final String userId) {
 
-    return mongoOperations
+    return mongo()
         .findOne(query(where("id").is(id)), FeatureEntity.class)
         .flatMap(featureEntity -> zip(just(featureEntity), findSettings(featureEntity, userId)))
         .flatMap(this::mapFeature);
@@ -116,11 +110,11 @@ public class FeatureRepositoryImpl implements FeatureRepository {
       final Collection<String> roles,
       final Collection<String> groups) {
 
-    final Query query = AclHelper.andQuery(where("id").is(id), DELETE, true, userId, roles, groups);
-    return mongoOperations
+    final Query query = queryAnd(where("id").is(id), true, userId, roles, groups, DELETE);
+    return mongo()
         .remove(query, FeatureEntity.class)
         .map(deleteResult -> deleteResult.getDeletedCount() > 0L)
-        .zipWith(mongoOperations
+        .zipWith(mongo()
             .remove(query(featureSettingsCriteria(id, userId)), FeatureEntitySettings.class))
         .map(Tuple2::getT1);
   }
@@ -135,7 +129,7 @@ public class FeatureRepositoryImpl implements FeatureRepository {
 
     final Update update = Update.update("properties.name", name)
         .set("properties.modified", OffsetDateTime.now(Clock.systemUTC()));
-    final Query query = AclHelper.andQuery(where("id").is(id), WRITE, true, userId, roles, groups);
+    final Query query = queryAnd(where("id").is(id), true, userId, roles, groups, WRITE);
     return update(update, query);
   }
 
@@ -147,14 +141,13 @@ public class FeatureRepositoryImpl implements FeatureRepository {
       final Collection<String> roles,
       final Collection<String> groups) {
 
-    final Update update = createUpdate(aclMapper.map(acl), FEATURE_ACL_JSON_PATH, userId);
-    final Query query = AclHelper
-        .andQuery(where("id").is(id), ADMINISTRATION, true, userId, roles, groups);
+    final Update update = createUpdate(aclMapper().map(acl), userId);
+    final Query query = queryAnd(where("id").is(id), true, userId, roles, groups, ADMINISTRATION);
     return update(update, query);
   }
 
   private Mono<Boolean> update(final Update update, final Query query) {
-    return mongoOperations
+    return mongo()
         .findAndModify(query, update, FeatureEntity.class)
         .flatMap(entity -> just(Boolean.TRUE));
   }
@@ -173,9 +166,9 @@ public class FeatureRepositoryImpl implements FeatureRepository {
       update = update.set("properties.name", name);
     }
     if (acl != null) {
-      update = extendUpdate(aclMapper.map(acl), FEATURE_ACL_JSON_PATH, update);
+      update = extendUpdate(aclMapper().map(acl), update);
     }
-    return mongoOperations
+    return mongo()
         .findAndModify(query(where("id").is(featureId)), update, FeatureEntity.class)
         .flatMap(entity -> just(Boolean.TRUE));
   }
@@ -184,7 +177,7 @@ public class FeatureRepositoryImpl implements FeatureRepository {
       final FeatureEntity featureEntity, final String userId) {
 
     final Query query = query(featureSettingsCriteria(featureEntity.getId(), userId));
-    return mongoOperations
+    return mongo()
         .findOne(query, FeatureEntitySettings.class)
         .switchIfEmpty(findFeatureMapper(featureEntity).defaultSettings(featureEntity, userId));
   }

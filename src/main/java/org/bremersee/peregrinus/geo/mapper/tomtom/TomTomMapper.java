@@ -19,7 +19,7 @@ package org.bremersee.peregrinus.geo.mapper.tomtom;
 import javax.validation.constraints.NotNull;
 import org.bremersee.peregrinus.geo.model.GeoCodingQueryRequest;
 import org.bremersee.peregrinus.geo.model.GeoCodingResult;
-import org.bremersee.peregrinus.content.model.Rte;
+import org.bremersee.peregrinus.model.Rte;
 import org.bremersee.peregrinus.geo.model.TomTomRteCalculationProperties;
 import org.bremersee.tomtom.model.GeocodeRequest;
 import org.bremersee.tomtom.model.GeocodeResponse;

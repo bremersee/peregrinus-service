@@ -17,8 +17,8 @@
 package org.bremersee.peregrinus.geo.service;
 
 import java.util.List;
-import org.bremersee.peregrinus.geo.model.AbstractRteCalculationProperties;
-import org.bremersee.peregrinus.content.model.Rte;
+import org.bremersee.peregrinus.model.RteCalculationProperties;
+import org.bremersee.peregrinus.model.Rte;
 import org.springframework.data.mongodb.core.geo.GeoJsonPoint;
 
 /**
@@ -26,6 +26,6 @@ import org.springframework.data.mongodb.core.geo.GeoJsonPoint;
  */
 public interface RteCalculator {
 
-  Rte calculateRoute(List<GeoJsonPoint> locations, AbstractRteCalculationProperties properties);
+  Rte calculateRoute(List<GeoJsonPoint> locations, RteCalculationProperties properties);
 
 }

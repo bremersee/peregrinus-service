@@ -16,15 +16,14 @@
 
 package org.bremersee.peregrinus.converter.gpx;
 
-import java.time.Instant;
 import java.time.OffsetDateTime;
 import java.util.Optional;
 import org.bremersee.garmin.trip.v1.model.ext.NamedRoadT;
 import org.bremersee.garmin.trip.v1.model.ext.ViaPoint;
 import org.bremersee.gpx.GpxJaxbContextHelper;
 import org.bremersee.gpx.model.WptType;
-import org.bremersee.peregrinus.content.model.RtePt;
-import org.bremersee.peregrinus.content.model.RtePtProperties;
+import org.bremersee.peregrinus.model.RtePt;
+import org.bremersee.peregrinus.model.RtePtProperties;
 import org.bremersee.peregrinus.converter.XmlDurationToMillisConverter;
 import org.bremersee.peregrinus.converter.XmlGregorianCalendarToOffsetDateTimeConverter;
 import org.bremersee.peregrinus.geo.model.GarminImportRteCalculationProperties;

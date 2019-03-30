@@ -18,7 +18,7 @@ package org.bremersee.peregrinus.tree.service;
 
 import javax.validation.constraints.NotNull;
 import org.bremersee.common.model.AccessControlList;
-import org.bremersee.peregrinus.tree.model.Branch;
+import org.bremersee.peregrinus.model.Branch;
 import org.hibernate.validator.constraints.Length;
 import org.springframework.lang.Nullable;
 import org.springframework.security.core.Authentication;

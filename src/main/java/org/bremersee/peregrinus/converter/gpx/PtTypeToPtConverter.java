@@ -30,9 +30,9 @@ import org.bremersee.garmin.gpx.v3.model.ext.WaypointExtension;
 import org.bremersee.geojson.utils.GeometryUtils;
 import org.bremersee.gpx.GpxJaxbContextHelper;
 import org.bremersee.gpx.model.WptType;
-import org.bremersee.peregrinus.content.model.Pt;
-import org.bremersee.peregrinus.content.model.PtProperties;
-import org.bremersee.peregrinus.content.model.PtSettings;
+import org.bremersee.peregrinus.model.Pt;
+import org.bremersee.peregrinus.model.PtProperties;
+import org.bremersee.peregrinus.model.PtSettings;
 import org.bremersee.xml.JaxbContextBuilder;
 
 /**

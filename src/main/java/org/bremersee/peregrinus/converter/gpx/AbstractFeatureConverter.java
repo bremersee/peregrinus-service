@@ -21,8 +21,8 @@ import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import org.bremersee.common.model.Link;
 import org.bremersee.gpx.model.CommonGpxType;
-import org.bremersee.peregrinus.content.model.FeatureProperties;
-import org.bremersee.peregrinus.content.model.FeatureSettings;
+import org.bremersee.peregrinus.model.FeatureProperties;
+import org.bremersee.peregrinus.model.FeatureSettings;
 import org.springframework.util.StringUtils;
 
 /**

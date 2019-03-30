@@ -28,7 +28,7 @@ import org.bremersee.geojson.utils.GeometryUtils;
 import org.bremersee.gpx.ExtensionsTypeBuilder;
 import org.bremersee.gpx.model.ExtensionsType;
 import org.bremersee.gpx.model.WptType;
-import org.bremersee.peregrinus.content.model.RtePt;
+import org.bremersee.peregrinus.model.RtePt;
 import org.bremersee.xml.JaxbContextBuilder;
 import org.locationtech.jts.geom.Coordinate;
 import org.locationtech.jts.geom.LineString;

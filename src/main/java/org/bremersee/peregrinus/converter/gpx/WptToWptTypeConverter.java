@@ -17,7 +17,7 @@
 package org.bremersee.peregrinus.converter.gpx;
 
 import org.bremersee.gpx.model.WptType;
-import org.bremersee.peregrinus.content.model.Wpt;
+import org.bremersee.peregrinus.model.Wpt;
 import org.bremersee.xml.JaxbContextBuilder;
 
 /**

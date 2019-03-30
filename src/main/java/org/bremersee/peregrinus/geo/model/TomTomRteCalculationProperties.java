@@ -17,12 +17,12 @@
 package org.bremersee.peregrinus.geo.model;
 
 import java.time.Instant;
-import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
+import org.bremersee.peregrinus.model.RteCalculationProperties;
 import org.bremersee.tomtom.model.Rectangle;
 import org.bremersee.tomtom.model.RoutingRequest.Avoid;
 import org.bremersee.tomtom.model.RoutingRequest.Hilliness;
@@ -38,7 +38,7 @@ import org.springframework.data.annotation.TypeAlias;
 @Setter
 @ToString
 @TypeAlias("TomTomRteCalculationProperties")
-public class TomTomRteCalculationProperties extends AbstractRteCalculationProperties {
+public class TomTomRteCalculationProperties extends RteCalculationProperties {
 
   /**
    * The mode of travel for the requested route.
