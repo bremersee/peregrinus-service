@@ -28,13 +28,23 @@ import reactor.core.publisher.Mono;
 @Validated
 public interface FeatureRepository {
 
+  Mono<FeatureEntity> findFeatureById(@NotNull String id);
+
+  Mono<FeatureEntitySettings> findFeatureEntitySettings(
+      @NotNull String featureId,
+      @NotNull String userId);
+
   <S extends FeatureEntitySettings> Mono<S> persistFeatureSettings(@NotNull S featureSettings);
 
-  <F extends FeatureEntity> Mono<F> persistFeature(@NotNull F feature);
+  Mono<Boolean> renameFeature(
+      @NotNull String id,
+      @NotNull String name,
+      @NotNull String userId);
 
-  FeatureEntity findFeature(String id);
 
-  FeatureEntitySettings findFeatureEntitySettings(String featureId, String userId);
+
+
+  //<F extends FeatureEntity> Mono<F> persistFeature(@NotNull F feature);
 
 
   /*

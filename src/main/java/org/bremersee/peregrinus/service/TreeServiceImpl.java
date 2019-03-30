@@ -18,7 +18,6 @@ package org.bremersee.peregrinus.service;
 
 import static org.bremersee.security.access.PermissionConstants.READ;
 import static org.bremersee.security.access.PermissionConstants.WRITE;
-import static org.springframework.util.Assert.notNull;
 
 import java.time.Clock;
 import java.time.OffsetDateTime;
@@ -72,22 +71,7 @@ public class TreeServiceImpl extends AbstractServiceImpl implements TreeService 
   }
 
   private LeafAdapter getLeafAdapter(final Object obj) {
-
-    notNull(obj, "Object must not be null.");
-    final Class<?> cls;
-    if (obj instanceof Class<?>) {
-      cls = (Class<?>) obj;
-    } else {
-      cls = obj.getClass();
-    }
-    final LeafAdapter leafAdapter = leafAdapterMap.get(cls);
-    if (leafAdapter == null) {
-      final ServiceException se = ServiceException.internalServerError(
-          "No leaf adapter found for " + cls.getName());
-      log.error("Getting leaf adapter failed.", se);
-      throw se;
-    }
-    return leafAdapter;
+    return getAdapter(leafAdapterMap, obj);
   }
 
   @Override

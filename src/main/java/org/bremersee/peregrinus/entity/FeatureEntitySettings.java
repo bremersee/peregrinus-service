@@ -43,6 +43,10 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @NoArgsConstructor
 public abstract class FeatureEntitySettings {
 
+  public static final String FEATURE_ID_PATH = "featureId";
+
+  public static final String USER_ID_PATH = "userId";
+
   @Id
   private String id;
 

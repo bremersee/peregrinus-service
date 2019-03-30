@@ -41,6 +41,16 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @NoArgsConstructor
 public abstract class FeatureEntity<G extends Geometry, P extends FeatureEntityProperties> {
 
+  public static final String ID_PATH = "id";
+
+  public static final String ACL_PATH = "properties.acl";
+
+  public static final String NAME_PATH = "properties.name";
+
+  public static final String MODIFIED_PATH = "properties.modified";
+
+  public static final String MODIFIED_BY_PATH = "properties.modifiedBy";
+
   @Id
   private String id;
 

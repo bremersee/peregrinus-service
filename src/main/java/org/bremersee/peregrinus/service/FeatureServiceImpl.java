@@ -16,9 +16,15 @@
 
 package org.bremersee.peregrinus.service;
 
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import javax.validation.constraints.NotNull;
+import lombok.extern.slf4j.Slf4j;
 import org.bremersee.peregrinus.entity.AclEntity;
 import org.bremersee.peregrinus.model.Feature;
+import org.bremersee.peregrinus.repository.FeatureRepository;
+import org.bremersee.peregrinus.service.adapter.FeatureAdapter;
 import org.bremersee.security.access.AclMapper;
 import org.springframework.stereotype.Component;
 import reactor.core.publisher.Mono;
@@ -27,20 +33,45 @@ import reactor.core.publisher.Mono;
  * @author Christian Bremer
  */
 @Component
+@Slf4j
 public class FeatureServiceImpl extends AbstractServiceImpl implements FeatureService {
 
+  private final Map<Class<?>, FeatureAdapter> featureAdapterMap = new HashMap<>();
+
+  private FeatureRepository featureRepository;
+
   public FeatureServiceImpl(
-      AclMapper<AclEntity> aclMapper) {
+      AclMapper<AclEntity> aclMapper,
+      FeatureRepository featureRepository,
+      List<FeatureAdapter> featureAdapters) {
     super(aclMapper);
+    this.featureRepository = featureRepository;
+    for (final FeatureAdapter featureAdapter : featureAdapters) {
+      for (final Class<?> cls : featureAdapter.getSupportedClasses()) {
+        featureAdapterMap.put(cls, featureAdapter);
+      }
+    }
+  }
+
+  private FeatureAdapter getFeatureAdapter(final Object obj) {
+    return getAdapter(featureAdapterMap, obj);
   }
 
   @Override
   public Mono<Feature> findFeatureById(String id, String userId) {
-    return null;
+
+    return featureRepository.findFeatureById(id)
+        .zipWhen(featureEntity -> featureRepository
+            .findFeatureEntitySettings(featureEntity.getId(), userId)
+            .switchIfEmpty(featureRepository
+                .persistFeatureSettings(getFeatureAdapter(featureEntity)
+                    .buildFeatureEntitySettings(featureEntity, userId))))
+        .flatMap(tuple -> getFeatureAdapter(tuple.getT1())
+            .buildFeature(tuple.getT1(), tuple.getT2()));
   }
 
   @Override
   public Mono<Boolean> renameFeature(String id, String name, @NotNull String userId) {
-    return null;
+    return featureRepository.renameFeature(id, name, userId);
   }
 }

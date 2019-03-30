@@ -14,26 +14,28 @@
  * limitations under the License.
  */
 
-package org.bremersee.peregrinus.service;
+package org.bremersee.peregrinus.service.adapter;
 
 import javax.validation.constraints.NotNull;
+import org.bremersee.peregrinus.entity.FeatureEntity;
+import org.bremersee.peregrinus.entity.FeatureEntitySettings;
 import org.bremersee.peregrinus.model.Feature;
-import org.springframework.validation.annotation.Validated;
 import reactor.core.publisher.Mono;
 
 /**
  * @author Christian Bremer
  */
-@Validated
-public interface FeatureService {
+public interface FeatureAdapter {
 
-  Mono<Feature> findFeatureById(
-      @NotNull String id,
+  @NotNull
+  Class<?>[] getSupportedClasses();
+
+  FeatureEntitySettings buildFeatureEntitySettings(
+      @NotNull FeatureEntity featureEntity,
       @NotNull String userId);
 
-  Mono<Boolean> renameFeature(
-      @NotNull String id,
-      @NotNull String name,
-      @NotNull String userId);
+  Mono<Feature> buildFeature(
+      @NotNull FeatureEntity featureEntity,
+      @NotNull FeatureEntitySettings featureEntitySettings);
 
 }

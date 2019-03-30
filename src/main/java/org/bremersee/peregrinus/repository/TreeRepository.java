@@ -84,40 +84,8 @@ public interface TreeRepository {
       @NotNull String nodeId,
       @NotNull String userId);
 
-  // Result is currently not used, can be update result
   Mono<Boolean> openBranch(@NotNull String settingsId);
 
   Mono<Void> closeBranch(@NotNull String branchId, @NotNull String userId);
-
-/*
-  Mono<Boolean> updateName(
-      @NotNull String id,
-      @NotNull String name,
-      @NotNull String userId,
-      @NotNull Collection<String> roles,
-      @NotNull Collection<String> groups);
-
-  Mono<Boolean> updateAccessControl(
-      @NotNull String id,
-      @NotNull AccessControlList acl,
-      @NotNull String userId,
-      @NotNull Collection<String> roles,
-      @NotNull Collection<String> groups);
-
-  Mono<Boolean> removeNode(
-      @NotNull String id,
-      @NotNull String userId,
-      @NotNull Collection<String> roles,
-      @NotNull Collection<String> groups);
-
-  <T extends NodeSettings> Mono<T> persistNodeSettings(
-      @NotNull T settings,
-      @NotNull String userId);
-
-  Mono<Boolean> closeBranch(
-      @NotNull String branchId,
-      @NotNull String userId);
-
- */
 
 }

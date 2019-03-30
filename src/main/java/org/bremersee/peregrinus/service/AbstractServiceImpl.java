@@ -16,20 +16,39 @@
 
 package org.bremersee.peregrinus.service;
 
-import java.util.function.Function;
+import static org.springframework.util.Assert.notNull;
+
+import java.util.Map;
 import lombok.Getter;
+import lombok.extern.slf4j.Slf4j;
 import org.bremersee.exception.ServiceException;
 import org.bremersee.peregrinus.entity.AclEntity;
 import org.bremersee.security.access.AclMapper;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.ReactiveSecurityContextHolder;
-import org.springframework.security.core.context.SecurityContext;
-import reactor.core.publisher.Mono;
 
 /**
  * @author Christian Bremer
  */
+@Slf4j
 public abstract class AbstractServiceImpl {
+
+  static <T> T getAdapter(final Map<Class<?>, T> adapterMap, final Object obj) {
+
+    notNull(obj, "Object must not be null.");
+    final Class<?> cls;
+    if (obj instanceof Class<?>) {
+      cls = (Class<?>) obj;
+    } else {
+      cls = obj.getClass();
+    }
+    final T adapter = adapterMap.get(cls);
+    if (adapter == null) {
+      final ServiceException se = ServiceException.internalServerError(
+          "No adapter found for " + cls.getName());
+      log.error("Getting leaf adapter failed.", se);
+      throw se;
+    }
+    return adapter;
+  }
 
   @Getter
   private AclMapper<AclEntity> aclMapper;
@@ -38,55 +57,5 @@ public abstract class AbstractServiceImpl {
       AclMapper<AclEntity> aclMapper) {
     this.aclMapper = aclMapper;
   }
-
-  <R> Mono<R> withUserId(Function<String, R> function) {
-    return ReactiveSecurityContextHolder.getContext()
-        .map(SecurityContext::getAuthentication)
-        .map(Authentication::getName)
-        .switchIfEmpty(Mono.error(ServiceException.forbidden()))
-        .map(function);
-
-  }
-
-  Mono<String> userId() {
-    return ReactiveSecurityContextHolder.getContext()
-        .map(SecurityContext::getAuthentication)
-        .map(Authentication::getName)
-        .switchIfEmpty(Mono.error(ServiceException.forbidden()));
-  }
-
-/*
-  Mono<Set<String>> roles() {
-    return ReactiveSecurityContextHolder.getContext()
-        .map(SecurityContext::getAuthentication)
-        .map(this::toRoles)
-        .switchIfEmpty(Mono.just(Collections.emptySet()));
-  }
-
-  Mono<Set<String>> groups() {
-    return groupService.getMembershipIds()
-        .switchIfEmpty(Mono.just(Collections.emptySet()));
-  }
-
-  Mono<Tuple3<String, Set<String>, Set<String>>> authentication() {
-    return ReactiveSecurityContextHolder.getContext()
-        .map(SecurityContext::getAuthentication)
-        .zipWith(groupService.getMembershipIds())
-        .flatMap(tuple -> Mono.just(Tuples.of(
-            tuple.getT1().getName(),
-            toRoles(tuple.getT1()),
-            tuple.getT2())))
-        .switchIfEmpty(Mono.error(ServiceException.forbidden()));
-  }
-
-  private Set<String> toRoles(Authentication authentication) {
-    return authentication.getAuthorities()
-        .stream()
-        .map(GrantedAuthority::getAuthority)
-        .collect(Collectors.toSet());
-  }
-  */
-
-
 
 }
