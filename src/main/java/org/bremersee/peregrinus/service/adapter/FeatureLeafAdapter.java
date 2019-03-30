@@ -76,7 +76,8 @@ public class FeatureLeafAdapter extends AbstractAdapter implements LeafAdapter {
     final FeatureLeafEntity featureLeafEntity = (FeatureLeafEntity) leafEntity;
     final FeatureLeafEntitySettings featureLeafEntitySettings
         = (FeatureLeafEntitySettings) leafEntitySettings;
-    return featureService.findFeatureById(featureLeafEntity.getFeatureId())
+    final String userId = leafEntitySettings.getUserId();
+    return featureService.findFeatureById(featureLeafEntity.getFeatureId(), userId)
         .map(feature -> FeatureLeaf.builder()
             .acl(getAclMapper().map(featureLeafEntity.getAcl()))
             .created(featureLeafEntity.getCreated())

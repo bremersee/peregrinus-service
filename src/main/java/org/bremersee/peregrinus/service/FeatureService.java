@@ -24,6 +24,6 @@ import reactor.core.publisher.Mono;
  */
 public interface FeatureService {
 
-  Mono<Feature> findFeatureById(String id);
+  Mono<Feature> findFeatureById(String id, String userId);
 
 }

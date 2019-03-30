@@ -32,6 +32,10 @@ public interface FeatureRepository {
 
   <F extends FeatureEntity> Mono<F> persistFeature(@NotNull F feature);
 
+  FeatureEntity findFeature(String id);
+
+  FeatureEntitySettings findFeatureEntitySettings(String featureId, String userId);
+
 
   /*
   <F extends Feature> Mono<F> findById(@NotNull String id, @NotNull String userId);
