@@ -20,6 +20,8 @@ import static org.bremersee.security.access.PermissionConstants.READ;
 import static org.bremersee.security.access.PermissionConstants.WRITE;
 import static org.springframework.util.Assert.notNull;
 
+import java.time.Clock;
+import java.time.OffsetDateTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -125,8 +127,9 @@ public class TreeServiceImpl extends AbstractServiceImpl implements TreeService 
   }
 
   private Branch buildBranchWithoutChildren(
-      BranchEntity branchEntity,
-      BranchEntitySettings branchEntitySettings) {
+      final BranchEntity branchEntity,
+      final BranchEntitySettings branchEntitySettings) {
+
     return Branch.builder()
         .acl(getAclMapper().map(branchEntity.getAcl()))
         .created(branchEntity.getCreated())
@@ -273,6 +276,32 @@ public class TreeServiceImpl extends AbstractServiceImpl implements TreeService 
 
     }
     return Mono.error(ServiceException.internalServerError("Node is not branch or leaf."));
+  }
+
+  @Override
+  public Mono<Boolean> renameNode(
+      final String nodeId,
+      final String name,
+      final String userId,
+      final Set<String> roles,
+      final Set<String> groups) {
+
+    return treeRepository.findNodeById(nodeId, WRITE, true, userId, roles, groups)
+        .switchIfEmpty(Mono.error(ServiceException.forbidden("Node", nodeId)))
+        .flatMap(nodeEntity -> {
+          if (nodeEntity instanceof BranchEntity) {
+            nodeEntity.setModified(OffsetDateTime.now(Clock.systemUTC()));
+            nodeEntity.setModifiedBy(userId);
+            ((BranchEntity) nodeEntity).setName(name);
+            return treeRepository.persistNode(nodeEntity).map(e -> true);
+          } else if (nodeEntity instanceof LeafEntity) {
+            return treeRepository.updateModified(userId)
+                .flatMap(updatedNodeEntity -> getLeafAdapter(updatedNodeEntity)
+                    .renameLeaf((LeafEntity) updatedNodeEntity, name, userId));
+          } else {
+            return Mono.error(ServiceException.internalServerError("Node is not branch or leaf."));
+          }
+        });
   }
 
 }

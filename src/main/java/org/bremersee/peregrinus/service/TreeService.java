@@ -59,24 +59,20 @@ public interface TreeService {
       @NotNull String branchId,
       @NotNull String userId);
 
-  /*
   Mono<Boolean> renameNode(
       @NotNull String nodeId,
-      @NotNull @Length(min = 1) String name);
+      @NotNull @Length(min = 1) String name,
+      @NotNull String userId,
+      @NotNull Set<String> roles,
+      @NotNull Set<String> groups);
 
+  /*
   Mono<Boolean> updateAccessControl(
       @NotNull String nodeId,
       @NotNull AccessControlList acl);
 
   Mono<Boolean> removeNode(
       @NotNull String nodeId);
-
-  Mono<Branch> openBranch(
-      @NotNull String branchId,
-      boolean openAll);
-
-  Mono<Void> closeBranch(
-      @NotNull String branchId);
 
   */
 

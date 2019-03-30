@@ -77,16 +77,19 @@ public interface TreeRepository {
       @NotNull Collection<String> groups);
 
 
-
   <T extends NodeEntitySettings> Mono<T> persistNodeSettings(
       @NotNull T nodeSettings);
 
-  Mono<NodeEntitySettings> findNodeSettings(String nodeId, String userId);
+  Mono<NodeEntitySettings> findNodeSettings(
+      @NotNull String nodeId,
+      @NotNull String userId);
 
   // Result is currently not used, can be update result
-  Mono<Boolean> openBranch(String settingsId);
+  Mono<Boolean> openBranch(@NotNull String settingsId);
 
-  Mono<Void> closeBranch(String branchId, String userId);
+  Mono<Void> closeBranch(@NotNull String branchId, @NotNull String userId);
+
+  Mono<NodeEntity> updateModified(@NotNull String userId);
 
 /*
   Mono<Boolean> updateName(

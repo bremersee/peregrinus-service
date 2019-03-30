@@ -33,9 +33,17 @@ public interface LeafAdapter {
   Class<?>[] getSupportedClasses();
 
   @NotNull
-  LeafEntitySettings buildLeafEntitySettings(@NotNull LeafEntity leafEntity, @NotNull String userId);
+  LeafEntitySettings buildLeafEntitySettings(
+      @NotNull LeafEntity leafEntity,
+      @NotNull String userId);
 
-  @NotNull
-  Mono<Leaf> buildLeaf(@NotNull LeafEntity leafEntity, @NotNull LeafEntitySettings leafEntitySettings);
+  Mono<Leaf> buildLeaf(
+      @NotNull LeafEntity leafEntity,
+      @NotNull LeafEntitySettings leafEntitySettings);
+
+  Mono<Boolean> renameLeaf(
+      @NotNull LeafEntity leafEntity,
+      @NotNull String name,
+      @NotNull String userId);
 
 }

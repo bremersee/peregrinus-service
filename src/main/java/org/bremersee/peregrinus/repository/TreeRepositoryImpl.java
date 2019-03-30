@@ -14,21 +14,21 @@
  * limitations under the License.
  */
 
-package org.bremersee.peregrinus.service;
+package org.bremersee.peregrinus.repository;
 
-import javax.validation.constraints.NotNull;
-import org.bremersee.peregrinus.model.Feature;
-import org.springframework.validation.annotation.Validated;
-import reactor.core.publisher.Mono;
+import lombok.Getter;
+import org.springframework.data.mongodb.core.ReactiveMongoOperations;
 
 /**
  * @author Christian Bremer
  */
-@Validated
-public interface FeatureService {
+public class TreeRepositoryImpl {
 
-  Mono<Feature> findFeatureById(String id, String userId);
+  @Getter
+  private ReactiveMongoOperations mongoOperations;
 
-  Mono<Boolean> renameFeature(String id, String name, @NotNull String userId);
-
+  public TreeRepositoryImpl(
+      ReactiveMongoOperations mongoOperations) {
+    this.mongoOperations = mongoOperations;
+  }
 }

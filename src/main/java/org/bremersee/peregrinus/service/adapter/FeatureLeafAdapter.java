@@ -96,4 +96,13 @@ public class FeatureLeafAdapter extends AbstractAdapter implements LeafAdapter {
                 .build())
             .build());
   }
+
+  @Override
+  public Mono<Boolean> renameLeaf(
+      final LeafEntity leafEntity,
+      final String name,
+      final String userId) {
+    final FeatureLeafEntity featureLeafEntity = (FeatureLeafEntity) leafEntity;
+    return featureService.renameFeature(featureLeafEntity.getFeatureId(), name, userId);
+  }
 }
