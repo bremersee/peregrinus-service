@@ -31,6 +31,14 @@ import org.bremersee.security.access.AclMapper;
 @Slf4j
 public abstract class AbstractServiceImpl {
 
+  @Getter
+  private AclMapper<AclEntity> aclMapper;
+
+  public AbstractServiceImpl(
+      AclMapper<AclEntity> aclMapper) {
+    this.aclMapper = aclMapper;
+  }
+
   static <T> T getAdapter(final Map<String, T> adapterMap, final Object obj) {
 
     notNull(obj, "Object must not be null.");
@@ -50,14 +58,6 @@ public abstract class AbstractServiceImpl {
       throw se;
     }
     return adapter;
-  }
-
-  @Getter
-  private AclMapper<AclEntity> aclMapper;
-
-  public AbstractServiceImpl(
-      AclMapper<AclEntity> aclMapper) {
-    this.aclMapper = aclMapper;
   }
 
 }

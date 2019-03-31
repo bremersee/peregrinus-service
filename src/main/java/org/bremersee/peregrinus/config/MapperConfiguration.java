@@ -31,7 +31,7 @@ import org.springframework.context.annotation.Configuration;
  */
 @Configuration
 @SuppressWarnings("Duplicates")
-public class ModelMapperConfiguration {
+public class MapperConfiguration {
 
   @Bean
   public AclMapper<AclEntity> aclMapper() {
