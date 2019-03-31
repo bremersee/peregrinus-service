@@ -25,8 +25,9 @@ import static org.bremersee.peregrinus.entity.FeatureEntitySettings.USER_ID_PATH
 import static org.springframework.data.mongodb.core.query.Criteria.where;
 import static org.springframework.data.mongodb.core.query.Query.query;
 
-import java.time.Clock;
-import java.time.OffsetDateTime;
+import java.util.Collection;
+import java.util.Date;
+import javax.validation.constraints.NotNull;
 import org.bremersee.peregrinus.entity.AclEntity;
 import org.bremersee.peregrinus.entity.FeatureEntity;
 import org.bremersee.peregrinus.entity.FeatureEntitySettings;
@@ -61,6 +62,21 @@ public class FeatureRepositoryImpl extends AbstractMongoRepository implements Fe
   }
 
   @Override
+  public Mono<FeatureEntity> findFeatureById(
+      @NotNull String id,
+      @NotNull String permission,
+      boolean includePublic,
+      @NotNull String userId,
+      @NotNull Collection<String> roles,
+      @NotNull Collection<String> groups) {
+
+    final Query query = queryAnd(
+        where(FeatureEntity.ID_PATH).is(id), includePublic, userId, roles, groups, permission);
+    return getMongoOperations()
+        .findOne(query, FeatureEntity.class);
+  }
+
+  @Override
   public Mono<FeatureEntitySettings> findFeatureEntitySettings(
       final String featureId,
       final String userId) {
@@ -75,6 +91,12 @@ public class FeatureRepositoryImpl extends AbstractMongoRepository implements Fe
   }
 
   @Override
+  public <F extends FeatureEntity> Mono<F> persistFeature(
+      final F feature) {
+    return getMongoOperations().save(feature);
+  }
+
+  @Override
   public Mono<Boolean> renameFeature(
       final String id,
       final String name,
@@ -82,7 +104,7 @@ public class FeatureRepositoryImpl extends AbstractMongoRepository implements Fe
 
     final Query query = query(where(ID_PATH).is(id));
     final Update update = Update.update(NAME_PATH, name)
-        .set(MODIFIED_PATH, OffsetDateTime.now(Clock.systemUTC()))
+        .set(MODIFIED_PATH, new Date())
         .set(MODIFIED_BY_PATH, userId);
     return getMongoOperations()
         .findAndModify(query, update, FeatureEntity.class)

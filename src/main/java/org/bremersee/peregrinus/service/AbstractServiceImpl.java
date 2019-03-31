@@ -31,19 +31,21 @@ import org.bremersee.security.access.AclMapper;
 @Slf4j
 public abstract class AbstractServiceImpl {
 
-  static <T> T getAdapter(final Map<Class<?>, T> adapterMap, final Object obj) {
+  static <T> T getAdapter(final Map<String, T> adapterMap, final Object obj) {
 
     notNull(obj, "Object must not be null.");
-    final Class<?> cls;
-    if (obj instanceof Class<?>) {
-      cls = (Class<?>) obj;
+    final String key;
+    if (obj instanceof String) {
+      key = (String) obj;
+    } else if (obj instanceof Class<?>) {
+      key = ((Class<?>) obj).getName();
     } else {
-      cls = obj.getClass();
+      key = obj.getClass().getName();
     }
-    final T adapter = adapterMap.get(cls);
+    final T adapter = adapterMap.get(key);
     if (adapter == null) {
       final ServiceException se = ServiceException.internalServerError(
-          "No adapter found for " + cls.getName());
+          "No adapter found for " + key);
       log.error("Getting leaf adapter failed.", se);
       throw se;
     }

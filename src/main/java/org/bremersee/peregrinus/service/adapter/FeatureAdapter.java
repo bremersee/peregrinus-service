@@ -20,22 +20,35 @@ import javax.validation.constraints.NotNull;
 import org.bremersee.peregrinus.entity.FeatureEntity;
 import org.bremersee.peregrinus.entity.FeatureEntitySettings;
 import org.bremersee.peregrinus.model.Feature;
+import org.bremersee.peregrinus.model.FeatureSettings;
+import org.springframework.lang.Nullable;
+import org.springframework.validation.annotation.Validated;
 import reactor.core.publisher.Mono;
 
 /**
  * @author Christian Bremer
  */
+@Validated
 public interface FeatureAdapter {
 
   @NotNull
-  Class<?>[] getSupportedClasses();
+  String[] getSupportedKeys();
 
   FeatureEntitySettings buildFeatureEntitySettings(
       @NotNull FeatureEntity featureEntity,
       @NotNull String userId);
 
+  FeatureEntitySettings updateFeatureEntitySettings(
+      @NotNull FeatureEntitySettings featureEntitySettings,
+      @Nullable FeatureSettings featureSettings);
+
   Mono<Feature> buildFeature(
       @NotNull FeatureEntity featureEntity,
       @NotNull FeatureEntitySettings featureEntitySettings);
+
+ FeatureEntity buildFeatureEntity(
+      @NotNull Feature feature,
+      @NotNull String userId,
+      @Nullable FeatureEntity featureEntity);
 
 }

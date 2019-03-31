@@ -18,6 +18,9 @@ package org.bremersee.peregrinus.controller;
 
 import org.bremersee.groupman.api.GroupControllerApi;
 import org.bremersee.peregrinus.model.Branch;
+import org.bremersee.peregrinus.model.Feature;
+import org.bremersee.peregrinus.model.FeatureCollection;
+import org.bremersee.peregrinus.model.FeatureLeaf;
 import org.bremersee.peregrinus.service.TreeService;
 import org.hibernate.validator.constraints.Length;
 import org.springframework.http.MediaType;
@@ -27,6 +30,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -103,6 +107,30 @@ public class TreeController extends AbstractController {
   public Mono<Void> closeBranch(
       @PathVariable("branchId") String branchId) {
     return oneWithUserId(userId -> treeService.closeBranch(branchId, userId));
+  }
+
+  @PostMapping(
+      path = "/{branchId}/feature",
+      consumes = {MediaType.APPLICATION_JSON_UTF8_VALUE},
+      produces = {MediaType.APPLICATION_JSON_UTF8_VALUE})
+  public Mono<FeatureLeaf> createFeatureLeaf(
+      @PathVariable("branchId") String branchId,
+      @RequestBody Feature feature) {
+    return oneWithAuth(auth -> treeService
+        .createFeatureLeaf(
+            branchId, feature, auth.getUserId(), auth.getRoles(), auth.getGroups()));
+  }
+
+  @PostMapping(
+      path = "/{branchId}/features",
+      consumes = {MediaType.APPLICATION_JSON_UTF8_VALUE},
+      produces = {MediaType.APPLICATION_JSON_UTF8_VALUE})
+  public Flux<FeatureLeaf> createFeatureLeafs(
+      @PathVariable("branchId") String branchId,
+      @RequestBody FeatureCollection featureCollection) {
+    return manyWithAuth(auth -> treeService
+        .createFeatureLeafs(
+            branchId, featureCollection, auth.getUserId(), auth.getRoles(), auth.getGroups()));
   }
 
 }

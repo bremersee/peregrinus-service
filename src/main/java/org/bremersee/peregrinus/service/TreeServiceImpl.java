@@ -25,22 +25,30 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
 import javax.validation.constraints.NotNull;
 import lombok.extern.slf4j.Slf4j;
+import org.bremersee.common.model.AccessControlList;
 import org.bremersee.exception.ServiceException;
 import org.bremersee.peregrinus.entity.AclEntity;
 import org.bremersee.peregrinus.entity.BranchEntity;
 import org.bremersee.peregrinus.entity.BranchEntitySettings;
+import org.bremersee.peregrinus.entity.FeatureLeafEntity;
+import org.bremersee.peregrinus.entity.FeatureLeafEntitySettings;
 import org.bremersee.peregrinus.entity.LeafEntity;
 import org.bremersee.peregrinus.entity.LeafEntitySettings;
 import org.bremersee.peregrinus.entity.NodeEntity;
 import org.bremersee.peregrinus.model.Branch;
 import org.bremersee.peregrinus.model.BranchSettings;
+import org.bremersee.peregrinus.model.Feature;
+import org.bremersee.peregrinus.model.FeatureCollection;
+import org.bremersee.peregrinus.model.FeatureLeaf;
 import org.bremersee.peregrinus.model.Node;
 import org.bremersee.peregrinus.repository.TreeRepository;
 import org.bremersee.peregrinus.service.adapter.LeafAdapter;
 import org.bremersee.security.access.AclBuilder;
 import org.bremersee.security.access.AclMapper;
+import org.bremersee.security.access.PermissionConstants;
 import org.hibernate.validator.constraints.Length;
 import org.springframework.stereotype.Component;
 import reactor.core.publisher.Flux;
@@ -53,19 +61,23 @@ import reactor.core.publisher.Mono;
 @Slf4j
 public class TreeServiceImpl extends AbstractServiceImpl implements TreeService {
 
-  private final Map<Class<?>, LeafAdapter> leafAdapterMap = new HashMap<>();
+  private final Map<String, LeafAdapter> leafAdapterMap = new HashMap<>();
 
   private TreeRepository treeRepository;
+
+  private FeatureService featureService;
 
   public TreeServiceImpl(
       AclMapper<AclEntity> aclMapper,
       TreeRepository treeRepository,
-      List<LeafAdapter> leafAdapters) {
+      List<LeafAdapter> leafAdapters,
+      FeatureService featureService) {
     super(aclMapper);
     this.treeRepository = treeRepository;
+    this.featureService = featureService;
     for (final LeafAdapter leafAdapter : leafAdapters) {
-      for (final Class<?> cls : leafAdapter.getSupportedClasses()) {
-        leafAdapterMap.put(cls, leafAdapter);
+      for (final String key : leafAdapter.getSupportedKeys()) {
+        leafAdapterMap.put(key, leafAdapter);
       }
     }
   }
@@ -133,6 +145,71 @@ public class TreeServiceImpl extends AbstractServiceImpl implements TreeService 
             .userId(branchEntitySettings.getUserId())
             .build())
         .build();
+  }
+
+  @Override
+  public Flux<FeatureLeaf> createFeatureLeafs(
+      @NotNull final String parentId,
+      @NotNull final FeatureCollection featureCollection,
+      @NotNull final String userId,
+      @NotNull final Set<String> roles,
+      @NotNull final Set<String> groups) {
+
+    return treeRepository.findBranchById(parentId, WRITE, true, userId, roles, groups)
+        .switchIfEmpty(Mono.error(ServiceException.forbidden("Branch", parentId)))
+        .flatMapMany(branchEntity -> createFeatureLeafs(
+            branchEntity, featureCollection, userId, roles, groups));
+  }
+
+  private Flux<FeatureLeaf> createFeatureLeafs(
+      final BranchEntity branchEntity,
+      final FeatureCollection featureCollection,
+      final String userId,
+      final Set<String> roles,
+      final Set<String> groups) {
+
+    if (featureCollection.getFeatures() == null || featureCollection.getFeatures().isEmpty()) {
+      return Flux.empty();
+    }
+    return Flux.concat(featureCollection
+        .getFeatures()
+        .stream()
+        .map(feature -> createFeatureLeaf(branchEntity, feature, userId, roles, groups))
+        .collect(Collectors.toList()));
+  }
+
+  private Mono<FeatureLeaf> createFeatureLeaf(
+      final BranchEntity branchEntity,
+      final Feature feature,
+      final String userId,
+      final Set<String> roles,
+      final Set<String> groups) {
+
+    feature.setId(null);
+    final AccessControlList acl = AclBuilder.builder()
+        .from(getAclMapper().map(branchEntity.getAcl()))
+        .owner(userId)
+        .addUser(userId, PermissionConstants.ALL)
+        .buildAccessControlList();
+    feature.getProperties().setAcl(acl);
+    final LeafAdapter adapter = getLeafAdapter(FeatureLeafEntity.class);
+    return featureService.persistFeature(feature, userId, roles, groups)
+        .map(persistedFeature -> FeatureLeafEntity.builder()
+            .acl(getAclMapper().map(acl))
+            .createdBy(userId)
+            .featureId(persistedFeature.getId())
+            .modifiedBy(userId)
+            .parentId(branchEntity.getId())
+            .build())
+        .flatMap(treeRepository::persistNode)
+        .zipWhen(featureLeafEntity -> {
+          final FeatureLeafEntitySettings settings = (FeatureLeafEntitySettings) adapter
+              .buildLeafEntitySettings(featureLeafEntity, userId);
+          settings.setDisplayedOnMap(true);
+          return treeRepository.persistNodeSettings(settings);
+        })
+        .flatMap(tuple -> getLeafAdapter(tuple.getT1()).buildLeaf(tuple.getT1(), tuple.getT2()))
+        .cast(FeatureLeaf.class);
   }
 
   @Override

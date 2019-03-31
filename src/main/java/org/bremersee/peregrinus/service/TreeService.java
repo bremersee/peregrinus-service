@@ -16,9 +16,13 @@
 
 package org.bremersee.peregrinus.service;
 
+import java.util.Collections;
 import java.util.Set;
 import javax.validation.constraints.NotNull;
 import org.bremersee.peregrinus.model.Branch;
+import org.bremersee.peregrinus.model.Feature;
+import org.bremersee.peregrinus.model.FeatureCollection;
+import org.bremersee.peregrinus.model.FeatureLeaf;
 import org.hibernate.validator.constraints.Length;
 import org.springframework.validation.annotation.Validated;
 import reactor.core.publisher.Flux;
@@ -37,6 +41,24 @@ public interface TreeService {
   Mono<Branch> createBranch(
       @NotNull @Length(min = 1) String name,
       @NotNull String parentId,
+      @NotNull String userId,
+      @NotNull Set<String> roles,
+      @NotNull Set<String> groups);
+
+  default Mono<FeatureLeaf> createFeatureLeaf(
+      @NotNull String parentId,
+      @NotNull Feature feature,
+      @NotNull String userId,
+      @NotNull Set<String> roles,
+      @NotNull Set<String> groups) {
+    final FeatureCollection col = new FeatureCollection(Collections.singletonList(feature), null);
+    return createFeatureLeafs(parentId, col, userId, roles, groups)
+        .single();
+  }
+
+  Flux<FeatureLeaf> createFeatureLeafs(
+      @NotNull String parentId,
+      @NotNull FeatureCollection featureCollection,
       @NotNull String userId,
       @NotNull Set<String> roles,
       @NotNull Set<String> groups);

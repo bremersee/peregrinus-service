@@ -16,17 +16,25 @@
 
 package org.bremersee.peregrinus.service;
 
+import static org.bremersee.security.access.PermissionConstants.WRITE;
+
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import javax.validation.constraints.NotNull;
 import lombok.extern.slf4j.Slf4j;
+import org.bremersee.exception.ServiceException;
 import org.bremersee.peregrinus.entity.AclEntity;
+import org.bremersee.peregrinus.entity.FeatureEntity;
+import org.bremersee.peregrinus.entity.FeatureEntitySettings;
 import org.bremersee.peregrinus.model.Feature;
+import org.bremersee.peregrinus.model.FeatureSettings;
 import org.bremersee.peregrinus.repository.FeatureRepository;
 import org.bremersee.peregrinus.service.adapter.FeatureAdapter;
 import org.bremersee.security.access.AclMapper;
 import org.springframework.stereotype.Component;
+import org.springframework.util.StringUtils;
 import reactor.core.publisher.Mono;
 
 /**
@@ -36,7 +44,7 @@ import reactor.core.publisher.Mono;
 @Slf4j
 public class FeatureServiceImpl extends AbstractServiceImpl implements FeatureService {
 
-  private final Map<Class<?>, FeatureAdapter> featureAdapterMap = new HashMap<>();
+  private final Map<String, FeatureAdapter> featureAdapterMap = new HashMap<>();
 
   private FeatureRepository featureRepository;
 
@@ -47,14 +55,59 @@ public class FeatureServiceImpl extends AbstractServiceImpl implements FeatureSe
     super(aclMapper);
     this.featureRepository = featureRepository;
     for (final FeatureAdapter featureAdapter : featureAdapters) {
-      for (final Class<?> cls : featureAdapter.getSupportedClasses()) {
-        featureAdapterMap.put(cls, featureAdapter);
+      for (final String key : featureAdapter.getSupportedKeys()) {
+        featureAdapterMap.put(key, featureAdapter);
       }
     }
   }
 
   private FeatureAdapter getFeatureAdapter(final Object obj) {
     return getAdapter(featureAdapterMap, obj);
+  }
+
+  @Override
+  public Mono<Feature> persistFeature(
+      final Feature feature,
+      final String userId,
+      final Set<String> roles,
+      final Set<String> groups) {
+
+    if (StringUtils.hasText(feature.getId())) {
+      return featureRepository
+          .findFeatureById(feature.getId(), WRITE, true, userId, roles, groups)
+          .switchIfEmpty(Mono.error(ServiceException.forbidden("Feature", feature.getId())))
+          .flatMap(featureEntity -> persistFeature(feature, userId, featureEntity));
+    }
+    return persistFeature(feature, userId, null);
+  }
+
+  private Mono<Feature> persistFeature(
+      final Feature feature,
+      final String userId,
+      final FeatureEntity featureEntity) {
+
+    final FeatureAdapter adapter = getFeatureAdapter(feature);
+    final FeatureEntity newFeatureEntity = adapter
+        .buildFeatureEntity(feature, userId, featureEntity);
+    return featureRepository
+        .persistFeature(newFeatureEntity)
+        .zipWhen(persistedFeatureEntity -> persistFeatureSettings(
+            feature.getProperties().getSettings(), userId, persistedFeatureEntity))
+        .flatMap(tuple -> adapter.buildFeature(tuple.getT1(), tuple.getT2()));
+  }
+
+  private Mono<FeatureEntitySettings> persistFeatureSettings(
+      final FeatureSettings featureSettings,
+      final String userId,
+      final FeatureEntity featureEntity) {
+
+    final FeatureAdapter adapter = getFeatureAdapter(featureEntity);
+    return featureRepository
+        .findFeatureEntitySettings(featureEntity.getId(), userId)
+        .switchIfEmpty(Mono.just(adapter.buildFeatureEntitySettings(featureEntity, userId)))
+        .map(featureEntitySettings -> adapter.updateFeatureEntitySettings(
+            featureEntitySettings, featureSettings))
+        .flatMap(featureRepository::persistFeatureSettings);
   }
 
   @Override

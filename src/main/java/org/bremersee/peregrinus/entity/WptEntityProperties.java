@@ -45,7 +45,9 @@ public class WptEntityProperties extends PtEntityProperties {
   public WptEntityProperties(
       AclEntity acl,
       OffsetDateTime created,
+      String createdBy,
       OffsetDateTime modified,
+      String modifiedBy,
       String name,
       String plainTextDescription,
       String markdownDescription,
@@ -58,7 +60,8 @@ public class WptEntityProperties extends PtEntityProperties {
       Address address,
       List<PhoneNumber> phoneNumbers) {
 
-    super(acl, created, modified, name, plainTextDescription, markdownDescription,
-        internalComments, links, startTime, stopTime, internalType, ele, address, phoneNumbers);
+    super(acl, created, createdBy, modified, modifiedBy, name, plainTextDescription,
+        markdownDescription, internalComments, links, startTime, stopTime, internalType, ele,
+        address, phoneNumbers);
   }
 }

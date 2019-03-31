@@ -48,7 +48,9 @@ public class RteEntityProperties extends FeatureEntityProperties {
   public RteEntityProperties(
       AclEntity acl,
       OffsetDateTime created,
+      String createdBy,
       OffsetDateTime modified,
+      String modifiedBy,
       String name,
       String plainTextDescription,
       String markdownDescription,
@@ -58,8 +60,8 @@ public class RteEntityProperties extends FeatureEntityProperties {
       OffsetDateTime stopTime,
       List<RtePt> rtePts) {
 
-    super(acl, created, modified, name, plainTextDescription, markdownDescription,
-        internalComments, links, startTime, stopTime);
+    super(acl, created, createdBy, modified, modifiedBy, name, plainTextDescription,
+        markdownDescription, internalComments, links, startTime, stopTime);
     setRtePts(rtePts);
   }
 

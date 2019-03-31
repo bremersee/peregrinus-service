@@ -45,8 +45,12 @@ public abstract class FeatureEntityProperties {
 
   private OffsetDateTime created;
 
+  private String createdBy;
+
   @Indexed
   private OffsetDateTime modified;
+
+  private String modifiedBy;
 
   @Indexed
   private String name;
@@ -82,7 +86,9 @@ public abstract class FeatureEntityProperties {
   public FeatureEntityProperties(
       AclEntity acl,
       OffsetDateTime created,
+      String createdBy,
       OffsetDateTime modified,
+      String modifiedBy,
       String name,
       String plainTextDescription,
       String markdownDescription,
@@ -93,7 +99,9 @@ public abstract class FeatureEntityProperties {
 
     setAcl(acl);
     setCreated(created);
+    setCreatedBy(createdBy);
     setModified(modified);
+    setModifiedBy(modifiedBy);
     setName(name);
     setPlainTextDescription(plainTextDescription);
     setMarkdownDescription(markdownDescription);

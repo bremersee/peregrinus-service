@@ -61,7 +61,9 @@ public abstract class PtEntityProperties extends FeatureEntityProperties {
   public PtEntityProperties(
       AclEntity acl,
       OffsetDateTime created,
+      String createdBy,
       OffsetDateTime modified,
+      String modifiedBy,
       String name,
       String plainTextDescription,
       String markdownDescription,
@@ -73,11 +75,20 @@ public abstract class PtEntityProperties extends FeatureEntityProperties {
       BigDecimal ele,
       Address address,
       List<PhoneNumber> phoneNumbers) {
-    super(acl, created, modified, name, plainTextDescription, markdownDescription,
-        internalComments, links, startTime, stopTime);
-    this.internalType = internalType;
-    this.ele = ele;
-    this.address = address;
-    this.phoneNumbers = phoneNumbers;
+    super(acl, created, createdBy, modified, modifiedBy, name, plainTextDescription,
+        markdownDescription, internalComments, links, startTime, stopTime);
+    setInternalType(internalType);
+    setEle(ele);
+    setAddress(address);
+    setPhoneNumbers(phoneNumbers);
   }
+
+  public void setPhoneNumbers(List<PhoneNumber> phoneNumbers) {
+    if (phoneNumbers == null) {
+      this.phoneNumbers = new ArrayList<>();
+    } else {
+      this.phoneNumbers = phoneNumbers;
+    }
+  }
+
 }

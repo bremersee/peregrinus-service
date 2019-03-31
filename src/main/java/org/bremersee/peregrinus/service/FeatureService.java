@@ -16,9 +16,13 @@
 
 package org.bremersee.peregrinus.service;
 
+import java.util.Collection;
+import java.util.Set;
+import java.util.stream.Collectors;
 import javax.validation.constraints.NotNull;
 import org.bremersee.peregrinus.model.Feature;
 import org.springframework.validation.annotation.Validated;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 /**
@@ -26,6 +30,28 @@ import reactor.core.publisher.Mono;
  */
 @Validated
 public interface FeatureService {
+
+  default Flux<Feature> persistFeatures(
+      @NotNull Collection<? extends Feature> features,
+      @NotNull String userId,
+      @NotNull Set<String> roles,
+      @NotNull Set<String> groups) {
+
+    if (!features.isEmpty()) {
+      return Flux.concat(
+          features
+              .stream()
+              .map(feature -> persistFeature(feature, userId, roles, groups))
+              .collect(Collectors.toList()));
+    }
+    return Flux.empty();
+  }
+
+  Mono<Feature> persistFeature(
+      @NotNull Feature feature,
+      @NotNull String userId,
+      @NotNull Set<String> roles,
+      @NotNull Set<String> groups);
 
   Mono<Feature> findFeatureById(
       @NotNull String id,

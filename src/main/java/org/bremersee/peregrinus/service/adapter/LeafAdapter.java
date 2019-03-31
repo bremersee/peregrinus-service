@@ -30,7 +30,7 @@ import reactor.core.publisher.Mono;
 public interface LeafAdapter {
 
   @NotNull
-  Class<?>[] getSupportedClasses();
+  String[] getSupportedKeys();
 
   @NotNull
   LeafEntitySettings buildLeafEntitySettings(

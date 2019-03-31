@@ -50,12 +50,12 @@ public class FeatureLeafAdapter extends AbstractAdapter implements LeafAdapter {
   }
 
   @Override
-  public @NotNull Class<?>[] getSupportedClasses() {
-    return new Class[]{
-        FeatureLeafEntity.class,
-        FeatureLeafEntitySettings.class,
-        FeatureLeaf.class,
-        FeatureLeafSettings.class
+  public @NotNull String[] getSupportedKeys() {
+    return new String[]{
+        FeatureLeafEntity.class.getName(),
+        FeatureLeafEntitySettings.class.getName(),
+        FeatureLeaf.class.getName(),
+        FeatureLeafSettings.class.getName()
     };
   }
 

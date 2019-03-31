@@ -16,6 +16,7 @@
 
 package org.bremersee.peregrinus.repository;
 
+import java.util.Collection;
 import javax.validation.constraints.NotNull;
 import org.bremersee.peregrinus.entity.FeatureEntity;
 import org.bremersee.peregrinus.entity.FeatureEntitySettings;
@@ -30,22 +31,26 @@ public interface FeatureRepository {
 
   Mono<FeatureEntity> findFeatureById(@NotNull String id);
 
+  Mono<FeatureEntity> findFeatureById(
+      @NotNull String id,
+      @NotNull String permission,
+      boolean includePublic,
+      @NotNull String userId,
+      @NotNull Collection<String> roles,
+      @NotNull Collection<String> groups);
+
   Mono<FeatureEntitySettings> findFeatureEntitySettings(
       @NotNull String featureId,
       @NotNull String userId);
 
   <S extends FeatureEntitySettings> Mono<S> persistFeatureSettings(@NotNull S featureSettings);
 
+  <F extends FeatureEntity> Mono<F> persistFeature(@NotNull F feature);
+
   Mono<Boolean> renameFeature(
       @NotNull String id,
       @NotNull String name,
       @NotNull String userId);
-
-
-
-
-  //<F extends FeatureEntity> Mono<F> persistFeature(@NotNull F feature);
-
 
   /*
   <F extends Feature> Mono<F> findById(@NotNull String id, @NotNull String userId);
