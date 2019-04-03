@@ -1,0 +1,37 @@
+{
+  "type" : "FeatureCollection",
+  "bbox" : [ 10.186463641002774, 52.3488590028137, 10.186508651822805, 52.34888372942805 ],
+  "features" : [ {
+    "type" : "Feature",
+    "id" : null,
+    "bbox" : [ 10.186463641002774, 52.3488590028137, 10.186508651822805, 52.34888372942805 ],
+    "geometry" : {
+      "type" : "MultiLineString",
+      "coordinates" : [ [ [ 10.186466742, 52.348859003 ], [ 10.186463641, 52.348883729 ], [ 10.186508652, 52.348867049 ] ] ]
+    },
+    "properties" : {
+      "_type" : "Trk",
+      "acl" : {
+        "owner" : null,
+        "entries" : null
+      },
+      "created" : "2019-04-03T16:18:58.295Z",
+      "createdBy" : null,
+      "modified" : "2019-04-03T16:18:58.295Z",
+      "modifiedBy" : null,
+      "name" : "2013-04-28_14-44-49_T",
+      "plainTextDescription" : null,
+      "markdownDescription" : null,
+      "internalComments" : null,
+      "links" : [ ],
+      "startTime" : "2013-04-28T12:44:49Z",
+      "stopTime" : "2013-04-28T12:45:12Z",
+      "settings" : {
+        "_type" : "Trk",
+        "displayColor" : "DARK_RED"
+      },
+      "eleLines" : [ [ 79.450000000000003, 82.329999999999998, 85.689999999999998 ] ],
+      "timeLines" : [ [ "2013-04-28T12:44:49Z", "2013-04-28T12:44:58Z", "2013-04-28T12:45:12Z" ] ]
+    }
+  } ]
+}

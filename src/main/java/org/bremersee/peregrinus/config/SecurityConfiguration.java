@@ -28,7 +28,7 @@ import org.springframework.core.annotation.Order;
 import org.springframework.security.config.annotation.web.reactive.EnableWebFluxSecurity;
 import org.springframework.security.config.web.server.ServerHttpSecurity;
 import org.springframework.security.web.server.SecurityWebFilterChain;
-import org.springframework.security.web.server.util.matcher.NegatedServerWebExchangeMatcher;
+import org.springframework.security.web.server.util.matcher.ServerWebExchangeMatchers;
 
 /**
  * @author Christian Bremer
@@ -75,13 +75,18 @@ public class SecurityConfiguration {
       ServerHttpSecurity http) {
 
     http
-        .securityMatcher(new NegatedServerWebExchangeMatcher(EndpointRequest.toAnyEndpoint()))
+        //.securityMatcher(new NegatedServerWebExchangeMatcher(EndpointRequest.toAnyEndpoint()))
+        .securityMatcher(ServerWebExchangeMatchers.pathMatchers("/api/**"))
+        .cors().disable()
+        .csrf().disable()
         .oauth2ResourceServer()
         .jwt()
         .jwtAuthenticationConverter(keycloakJwtConverter);
 
     http
         .authorizeExchange()
+        .matchers(ServerWebExchangeMatchers.pathMatchers("/api/public/**"))
+        .permitAll()
         .anyExchange().authenticated();
 
     return http.build();

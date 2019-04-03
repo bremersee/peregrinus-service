@@ -5,44 +5,31 @@
     <link href="http://www.garmin.com">
       <text>Garmin International</text>
     </link>
-    <time>2018-10-27T14:41:33Z</time>
-    <bounds maxlat="49.628034979104996" maxlon="10.949617400765419" minlat="49.628034979104996" minlon="10.949617400765419"/>
+    <time>2018-11-20T14:46:16Z</time>
+    <bounds maxlat="52.349810851737857" maxlon="10.552120478823781" minlat="51.623464543372393" minlon="10.184500934556127"/>
   </metadata>
 
-  <wpt lat="49.628034979104996" lon="10.949617400765419">
-    <time>2016-04-21T17:40:53Z</time>
-    <name>Anna Livia</name>
-    <cmt>Seerosenweg 5
-91056, Erlangen - Dechsendorf, Erlangen, DEU</cmt>
-    <desc>Seerosenweg 5
-91056, Erlangen - Dechsendorf, Erlangen, DEU</desc>
-    <sym>Residence</sym>
-    <type>user</type>
+  <trk>
+    <name>2013-04-28_14-44-49_T</name>
     <extensions>
-      <gpxx:WaypointExtension>
-        <gpxx:DisplayMode>SymbolAndName</gpxx:DisplayMode>
-        <gpxx:Address>
-          <gpxx:StreetAddress>Seerosenweg 4</gpxx:StreetAddress>
-          <gpxx:City>Erlangen - Dechsendorf</gpxx:City>
-          <gpxx:State>Erlangen</gpxx:State>
-          <gpxx:Country>DEU</gpxx:Country>
-          <gpxx:PostalCode>91056</gpxx:PostalCode>
-        </gpxx:Address>
-      </gpxx:WaypointExtension>
-      <wptx1:WaypointExtension>
-        <wptx1:DisplayMode>SymbolAndName</wptx1:DisplayMode>
-        <wptx1:Address>
-          <wptx1:StreetAddress>Seerosenweg 4</wptx1:StreetAddress>
-          <wptx1:City>Erlangen - Dechsendorf</wptx1:City>
-          <wptx1:State>Erlangen</wptx1:State>
-          <wptx1:Country>DEU</wptx1:Country>
-          <wptx1:PostalCode>91056</wptx1:PostalCode>
-        </wptx1:Address>
-      </wptx1:WaypointExtension>
-      <ctx:CreationTimeExtension>
-        <ctx:CreationTime>2016-04-21T17:40:53Z</ctx:CreationTime>
-      </ctx:CreationTimeExtension>
+      <gpxx:TrackExtension>
+        <gpxx:DisplayColor>DarkRed</gpxx:DisplayColor>
+      </gpxx:TrackExtension>
     </extensions>
-  </wpt>
+    <trkseg>
+      <trkpt lat="52.348859002813697" lon="10.186466742306948">
+        <ele>79.450000000000003</ele>
+        <time>2013-04-28T12:44:49Z</time>
+      </trkpt>
+      <trkpt lat="52.348883729428053" lon="10.186463641002774">
+        <ele>82.329999999999998</ele>
+        <time>2013-04-28T12:44:58Z</time>
+      </trkpt>
+      <trkpt lat="52.348867049440742" lon="10.186508651822805">
+        <ele>85.689999999999998</ele>
+        <time>2013-04-28T12:45:12Z</time>
+      </trkpt>
+    </trkseg>
+  </trk>
 
 </gpx>

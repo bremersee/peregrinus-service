@@ -17,9 +17,10 @@
 package org.bremersee.peregrinus.config;
 
 import lombok.extern.slf4j.Slf4j;
-import org.bremersee.xml.JaxbContextBuilder;
+import org.bremersee.garmin.GarminJaxbContextDataProvider;
 import org.bremersee.http.codec.xml.ReactiveJaxbDecoder;
 import org.bremersee.http.codec.xml.ReactiveJaxbEncoder;
+import org.bremersee.xml.JaxbContextBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.codec.DecoderHttpMessageReader;
@@ -27,6 +28,9 @@ import org.springframework.http.codec.EncoderHttpMessageWriter;
 import org.springframework.http.codec.HttpMessageReader;
 import org.springframework.http.codec.HttpMessageWriter;
 import org.springframework.http.codec.ServerCodecConfigurer;
+import org.springframework.http.codec.json.Jackson2JsonDecoder;
+import org.springframework.http.codec.json.Jackson2JsonEncoder;
+import org.springframework.http.converter.json.Jackson2ObjectMapperBuilder;
 import org.springframework.web.reactive.config.EnableWebFlux;
 import org.springframework.web.reactive.config.WebFluxConfigurer;
 
@@ -40,19 +44,32 @@ public class WebConfiguration implements WebFluxConfigurer {
 
   private final JaxbContextBuilder jaxbContextBuilder;
 
+  private final Jackson2ObjectMapperBuilder objectMapperBuilder;
+
   @Autowired
-  public WebConfiguration(JaxbContextBuilder jaxbContextBuilder) {
+  public WebConfiguration(
+      JaxbContextBuilder jaxbContextBuilder,
+      Jackson2ObjectMapperBuilder objectMapperBuilder) {
     this.jaxbContextBuilder = jaxbContextBuilder;
+    this.objectMapperBuilder = objectMapperBuilder;
   }
 
   @Override
   public void configureHttpMessageCodecs(ServerCodecConfigurer configurer) {
     configurer
+        .defaultCodecs()
+        .jackson2JsonDecoder(new Jackson2JsonDecoder(objectMapperBuilder.build()));
+    configurer
+        .defaultCodecs()
+        .jackson2JsonEncoder(new Jackson2JsonEncoder(objectMapperBuilder.build()));
+
+    configurer
         .customCodecs()
         .reader(new DecoderHttpMessageReader<>(new ReactiveJaxbDecoder(jaxbContextBuilder)));
     configurer
         .customCodecs()
-        .writer(new EncoderHttpMessageWriter<>(new ReactiveJaxbEncoder(jaxbContextBuilder)));
+        .writer(new EncoderHttpMessageWriter<>(new ReactiveJaxbEncoder(
+            jaxbContextBuilder, GarminJaxbContextDataProvider.GPX_NAMESPACES)));
 
     for (HttpMessageReader reader : configurer.getReaders()) {
       log.info("Reader = {} : {}", reader.getClass().getName(), reader.getReadableMediaTypes());

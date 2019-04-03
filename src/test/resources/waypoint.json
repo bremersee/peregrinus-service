@@ -1,0 +1,49 @@
+{
+  "type" : "FeatureCollection",
+  "bbox" : [ 10.949617400765419, 49.628034979104996, 10.949617400765419, 49.628034979104996 ],
+  "features" : [ {
+    "type" : "Feature",
+    "id" : null,
+    "bbox" : [ 10.949617400765419, 49.628034979104996, 10.949617400765419, 49.628034979104996 ],
+    "geometry" : {
+      "type" : "Point",
+      "coordinates" : [ 10.949617401, 49.628034979 ]
+    },
+    "properties" : {
+      "_type" : "Wpt",
+      "acl" : {
+        "owner" : null,
+        "entries" : null
+      },
+      "created" : "2019-04-03T16:26:10.825Z",
+      "createdBy" : null,
+      "modified" : "2019-04-03T16:26:10.825Z",
+      "modifiedBy" : null,
+      "name" : "Anna Livia",
+      "plainTextDescription" : "Seerosenweg 5\n91056, Erlangen - Dechsendorf, Erlangen, DEU",
+      "markdownDescription" : "Seerosenweg 5\n91056, Erlangen - Dechsendorf, Erlangen, DEU",
+      "internalComments" : null,
+      "links" : [ ],
+      "startTime" : null,
+      "stopTime" : null,
+      "settings" : {
+        "_type" : "Wpt"
+      },
+      "internalType" : null,
+      "ele" : null,
+      "address" : {
+        "streetNumber" : null,
+        "street" : "Seerosenweg 4",
+        "postalCode" : "91056",
+        "postbox" : null,
+        "city" : "Erlangen - Dechsendorf",
+        "suburb" : null,
+        "state" : "Erlangen",
+        "country" : "DEU",
+        "countryCode" : null,
+        "formattedAddress" : null
+      },
+      "phoneNumbers" : [ ]
+    }
+  } ]
+}

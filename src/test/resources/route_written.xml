@@ -1,0 +1,353 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<ns5:gpx xmlns="http://www.garmin.com/xmlschemas/AdventuresExtensions/v1" xmlns:ns2="http://www.garmin.com/xmlschemas/ViaPointTransportationModeExtensions/v1" xmlns:ns3="http://www.garmin.com/xmlschemas/AccelerationExtension/v1" xmlns:ns4="http://www.garmin.com/xmlschemas/TripMetaDataExtensions/v1" xmlns:ns5="http://www.topografix.com/GPX/1/1" xmlns:ns6="http://www.garmin.com/xmlschemas/GpxExtensions/v3" xmlns:ns7="http://www.garmin.com/xmlschemas/CreationTimeExtension/v1" xmlns:ns8="http://www.garmin.com/xmlschemas/WaypointExtension/v1" xmlns:ns9="http://www.garmin.com/xmlschemas/PressureExtension/v1" xmlns:ns10="http://www.garmin.com/xmlschemas/TrackPointExtension/v1" xmlns:ns11="http://www.garmin.com/xmlschemas/TripExtensions/v1" xmlns:ns12="http://www.garmin.com/xmlschemas/VideoExtension/v1" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.1" creator="peregrinus-gpx" xsi:schemaLocation="http://www.garmin.com/xmlschemas/AdventuresExtensions/v1 http://bremersee.github.io/xmlschemas/garmin/AdventuresExtensionv1.xsd http://www.garmin.com/xmlschemas/ViaPointTransportationModeExtensions/v1 http://bremersee.github.io/xmlschemas/garmin/ViaPointTransportationModeExtensionsv1.xsd http://www.garmin.com/xmlschemas/AccelerationExtension/v1 http://bremersee.github.io/xmlschemas/garmin/AccelerationExtensionv1.xsd http://www.garmin.com/xmlschemas/TripMetaDataExtensions/v1 http://bremersee.github.io/xmlschemas/garmin/TripMetaDataExtensionsv1.xsd http://www.topografix.com/GPX/1/1 http://www.topografix.com/GPX/1/1/gpx.xsd http://www.garmin.com/xmlschemas/GpxExtensions/v3 http://bremersee.github.io/xmlschemas/garmin/GpxExtensionsv3.xsd http://www.garmin.com/xmlschemas/CreationTimeExtension/v1 http://bremersee.github.io/xmlschemas/garmin/CreationTimeExtensionv1.xsd http://www.garmin.com/xmlschemas/WaypointExtension/v1 http://bremersee.github.io/xmlschemas/garmin/WaypointExtensionv1.xsd http://www.garmin.com/xmlschemas/PressureExtension/v1 http://bremersee.github.io/xmlschemas/garmin/PressureExtensionv1.xsd http://www.garmin.com/xmlschemas/TrackPointExtension/v1 http://bremersee.github.io/xmlschemas/garmin/TrackPointExtensionv1.xsd http://www.garmin.com/xmlschemas/TripExtensions/v1 http://bremersee.github.io/xmlschemas/garmin/TripExtensionsv1.xsd http://www.garmin.com/xmlschemas/VideoExtension/v1 http://bremersee.github.io/xmlschemas/garmin/VideoExtensionv1.xsd">
+  <ns5:metadata>
+    <ns5:name>Route</ns5:name>
+    <ns5:desc>A route from A to B</ns5:desc>
+    <ns5:author>
+      <ns5:name>Anna Livia Plurabelle</ns5:name>
+    </ns5:author>
+    <ns5:link href="http://example.com"/>
+    <ns5:time>2019-04-02T12:25:39.402Z</ns5:time>
+    <ns5:keywords>Erlangen</ns5:keywords>
+    <ns5:bounds minlat="49.627561569" minlon="10.933618946" maxlat="49.633101085" maxlon="10.953154564"/>
+  </ns5:metadata>
+  <ns5:wpt lat="49.628505707" lon="10.93963623">
+    <ns5:time>2019-04-02T11:57:59.199Z</ns5:time>
+    <ns5:name>Post-Naturbadstrasse</ns5:name>
+    <ns5:cmt>Post-Naturbadstrasse
+      Naturbadstrasse 3
+      Erlangen - Dechsendorf, Erlangen, 91056, DEU
+      0228 55005900</ns5:cmt>
+    <ns5:desc>Post-Naturbadstrasse
+      Naturbadstrasse 3
+      Erlangen - Dechsendorf, Erlangen, 91056, DEU
+      0228 55005900</ns5:desc>
+    <ns5:sym>Flag, Blue</ns5:sym>
+    <ns5:extensions>
+      <ns6:WaypointExtension xsi:schemaLocation="http://www.garmin.com/xmlschemas/AdventuresExtensions/v1 http://bremersee.github.io/xmlschemas/garmin/AdventuresExtensionv1.xsd http://www.garmin.com/xmlschemas/ViaPointTransportationModeExtensions/v1 http://bremersee.github.io/xmlschemas/garmin/ViaPointTransportationModeExtensionsv1.xsd http://www.garmin.com/xmlschemas/AccelerationExtension/v1 http://bremersee.github.io/xmlschemas/garmin/AccelerationExtensionv1.xsd http://www.garmin.com/xmlschemas/TripMetaDataExtensions/v1 http://bremersee.github.io/xmlschemas/garmin/TripMetaDataExtensionsv1.xsd http://www.topografix.com/GPX/1/1 http://www.topografix.com/GPX/1/1/gpx.xsd http://www.garmin.com/xmlschemas/GpxExtensions/v3 http://bremersee.github.io/xmlschemas/garmin/GpxExtensionsv3.xsd http://www.garmin.com/xmlschemas/CreationTimeExtension/v1 http://bremersee.github.io/xmlschemas/garmin/CreationTimeExtensionv1.xsd http://www.garmin.com/xmlschemas/WaypointExtension/v1 http://bremersee.github.io/xmlschemas/garmin/WaypointExtensionv1.xsd http://www.garmin.com/xmlschemas/PressureExtension/v1 http://bremersee.github.io/xmlschemas/garmin/PressureExtensionv1.xsd http://www.garmin.com/xmlschemas/TrackPointExtension/v1 http://bremersee.github.io/xmlschemas/garmin/TrackPointExtensionv1.xsd http://www.garmin.com/xmlschemas/TripExtensions/v1 http://bremersee.github.io/xmlschemas/garmin/TripExtensionsv1.xsd http://www.garmin.com/xmlschemas/VideoExtension/v1 http://bremersee.github.io/xmlschemas/garmin/VideoExtensionv1.xsd">
+        <ns6:Address>
+          <ns6:StreetAddress>Naturbadstrasse 3</ns6:StreetAddress>
+          <ns6:City>Erlangen - Dechsendorf</ns6:City>
+          <ns6:State>Erlangen</ns6:State>
+          <ns6:Country>DEU</ns6:Country>
+          <ns6:PostalCode>91056</ns6:PostalCode>
+        </ns6:Address>
+        <ns6:PhoneNumber>0228 55005900</ns6:PhoneNumber>
+      </ns6:WaypointExtension>
+      <ns8:WaypointExtension xsi:schemaLocation="http://www.garmin.com/xmlschemas/AdventuresExtensions/v1 http://bremersee.github.io/xmlschemas/garmin/AdventuresExtensionv1.xsd http://www.garmin.com/xmlschemas/ViaPointTransportationModeExtensions/v1 http://bremersee.github.io/xmlschemas/garmin/ViaPointTransportationModeExtensionsv1.xsd http://www.garmin.com/xmlschemas/AccelerationExtension/v1 http://bremersee.github.io/xmlschemas/garmin/AccelerationExtensionv1.xsd http://www.garmin.com/xmlschemas/TripMetaDataExtensions/v1 http://bremersee.github.io/xmlschemas/garmin/TripMetaDataExtensionsv1.xsd http://www.topografix.com/GPX/1/1 http://www.topografix.com/GPX/1/1/gpx.xsd http://www.garmin.com/xmlschemas/GpxExtensions/v3 http://bremersee.github.io/xmlschemas/garmin/GpxExtensionsv3.xsd http://www.garmin.com/xmlschemas/CreationTimeExtension/v1 http://bremersee.github.io/xmlschemas/garmin/CreationTimeExtensionv1.xsd http://www.garmin.com/xmlschemas/WaypointExtension/v1 http://bremersee.github.io/xmlschemas/garmin/WaypointExtensionv1.xsd http://www.garmin.com/xmlschemas/PressureExtension/v1 http://bremersee.github.io/xmlschemas/garmin/PressureExtensionv1.xsd http://www.garmin.com/xmlschemas/TrackPointExtension/v1 http://bremersee.github.io/xmlschemas/garmin/TrackPointExtensionv1.xsd http://www.garmin.com/xmlschemas/TripExtensions/v1 http://bremersee.github.io/xmlschemas/garmin/TripExtensionsv1.xsd http://www.garmin.com/xmlschemas/VideoExtension/v1 http://bremersee.github.io/xmlschemas/garmin/VideoExtensionv1.xsd">
+        <ns8:Address>
+          <ns8:StreetAddress>Naturbadstrasse 3</ns8:StreetAddress>
+          <ns8:City>Erlangen - Dechsendorf</ns8:City>
+          <ns8:State>Erlangen</ns8:State>
+          <ns8:Country>DEU</ns8:Country>
+          <ns8:PostalCode>91056</ns8:PostalCode>
+        </ns8:Address>
+        <ns8:PhoneNumber>0228 55005900</ns8:PhoneNumber>
+      </ns8:WaypointExtension>
+      <ns7:CreationTimeExtension xsi:schemaLocation="http://www.garmin.com/xmlschemas/AdventuresExtensions/v1 http://bremersee.github.io/xmlschemas/garmin/AdventuresExtensionv1.xsd http://www.garmin.com/xmlschemas/ViaPointTransportationModeExtensions/v1 http://bremersee.github.io/xmlschemas/garmin/ViaPointTransportationModeExtensionsv1.xsd http://www.garmin.com/xmlschemas/AccelerationExtension/v1 http://bremersee.github.io/xmlschemas/garmin/AccelerationExtensionv1.xsd http://www.garmin.com/xmlschemas/TripMetaDataExtensions/v1 http://bremersee.github.io/xmlschemas/garmin/TripMetaDataExtensionsv1.xsd http://www.topografix.com/GPX/1/1 http://www.topografix.com/GPX/1/1/gpx.xsd http://www.garmin.com/xmlschemas/GpxExtensions/v3 http://bremersee.github.io/xmlschemas/garmin/GpxExtensionsv3.xsd http://www.garmin.com/xmlschemas/CreationTimeExtension/v1 http://bremersee.github.io/xmlschemas/garmin/CreationTimeExtensionv1.xsd http://www.garmin.com/xmlschemas/WaypointExtension/v1 http://bremersee.github.io/xmlschemas/garmin/WaypointExtensionv1.xsd http://www.garmin.com/xmlschemas/PressureExtension/v1 http://bremersee.github.io/xmlschemas/garmin/PressureExtensionv1.xsd http://www.garmin.com/xmlschemas/TrackPointExtension/v1 http://bremersee.github.io/xmlschemas/garmin/TrackPointExtensionv1.xsd http://www.garmin.com/xmlschemas/TripExtensions/v1 http://bremersee.github.io/xmlschemas/garmin/TripExtensionsv1.xsd http://www.garmin.com/xmlschemas/VideoExtension/v1 http://bremersee.github.io/xmlschemas/garmin/VideoExtensionv1.xsd">
+        <ns7:CreationTime>2019-04-02T11:57:59.199Z</ns7:CreationTime>
+      </ns7:CreationTimeExtension>
+    </ns5:extensions>
+  </ns5:wpt>
+  <ns5:wpt lat="49.633101085" lon="10.933618946">
+    <ns5:time>2019-04-02T11:57:59.200Z</ns5:time>
+    <ns5:name>S01</ns5:name>
+    <ns5:cmt>Pfad</ns5:cmt>
+    <ns5:desc>Pfad</ns5:desc>
+    <ns5:sym>Flag, Blue</ns5:sym>
+  </ns5:wpt>
+  <ns5:wpt lat="49.631681442" lon="10.934529305">
+    <ns5:time>2019-04-02T11:57:59.201Z</ns5:time>
+    <ns5:name>S04</ns5:name>
+    <ns5:cmt>Kleiberstrasse und Faust-Von-Stromberg-Strasse</ns5:cmt>
+    <ns5:desc>Kleiberstrasse und Faust-Von-Stromberg-Strasse</ns5:desc>
+    <ns5:sym>Flag, Blue</ns5:sym>
+  </ns5:wpt>
+  <ns5:wpt lat="49.630093575" lon="10.938692093">
+    <ns5:time>2019-04-02T11:57:59.201Z</ns5:time>
+    <ns5:name>S05</ns5:name>
+    <ns5:cmt>Faust-Von-Stromberg-Strasse</ns5:cmt>
+    <ns5:desc>Faust-Von-Stromberg-Strasse</ns5:desc>
+    <ns5:sym>Flag, Blue</ns5:sym>
+  </ns5:wpt>
+  <ns5:wpt lat="49.631940359" lon="10.942898635">
+    <ns5:time>2019-04-02T11:57:59.202Z</ns5:time>
+    <ns5:name>S06</ns5:name>
+    <ns5:cmt>Campingstrasse 22
+      Erlangen - Dechsendorf, Erlangen, 91056, DEU</ns5:cmt>
+    <ns5:desc>Campingstrasse 22
+      Erlangen - Dechsendorf, Erlangen, 91056, DEU</ns5:desc>
+    <ns5:sym>Flag, Blue</ns5:sym>
+    <ns5:extensions>
+      <ns6:WaypointExtension xsi:schemaLocation="http://www.garmin.com/xmlschemas/AdventuresExtensions/v1 http://bremersee.github.io/xmlschemas/garmin/AdventuresExtensionv1.xsd http://www.garmin.com/xmlschemas/ViaPointTransportationModeExtensions/v1 http://bremersee.github.io/xmlschemas/garmin/ViaPointTransportationModeExtensionsv1.xsd http://www.garmin.com/xmlschemas/AccelerationExtension/v1 http://bremersee.github.io/xmlschemas/garmin/AccelerationExtensionv1.xsd http://www.garmin.com/xmlschemas/TripMetaDataExtensions/v1 http://bremersee.github.io/xmlschemas/garmin/TripMetaDataExtensionsv1.xsd http://www.topografix.com/GPX/1/1 http://www.topografix.com/GPX/1/1/gpx.xsd http://www.garmin.com/xmlschemas/GpxExtensions/v3 http://bremersee.github.io/xmlschemas/garmin/GpxExtensionsv3.xsd http://www.garmin.com/xmlschemas/CreationTimeExtension/v1 http://bremersee.github.io/xmlschemas/garmin/CreationTimeExtensionv1.xsd http://www.garmin.com/xmlschemas/WaypointExtension/v1 http://bremersee.github.io/xmlschemas/garmin/WaypointExtensionv1.xsd http://www.garmin.com/xmlschemas/PressureExtension/v1 http://bremersee.github.io/xmlschemas/garmin/PressureExtensionv1.xsd http://www.garmin.com/xmlschemas/TrackPointExtension/v1 http://bremersee.github.io/xmlschemas/garmin/TrackPointExtensionv1.xsd http://www.garmin.com/xmlschemas/TripExtensions/v1 http://bremersee.github.io/xmlschemas/garmin/TripExtensionsv1.xsd http://www.garmin.com/xmlschemas/VideoExtension/v1 http://bremersee.github.io/xmlschemas/garmin/VideoExtensionv1.xsd">
+        <ns6:Address>
+          <ns6:StreetAddress>Campingstrasse 22</ns6:StreetAddress>
+          <ns6:City>Erlangen - Dechsendorf</ns6:City>
+          <ns6:State>Erlangen</ns6:State>
+          <ns6:Country>DEU</ns6:Country>
+          <ns6:PostalCode>91056</ns6:PostalCode>
+        </ns6:Address>
+      </ns6:WaypointExtension>
+      <ns8:WaypointExtension xsi:schemaLocation="http://www.garmin.com/xmlschemas/AdventuresExtensions/v1 http://bremersee.github.io/xmlschemas/garmin/AdventuresExtensionv1.xsd http://www.garmin.com/xmlschemas/ViaPointTransportationModeExtensions/v1 http://bremersee.github.io/xmlschemas/garmin/ViaPointTransportationModeExtensionsv1.xsd http://www.garmin.com/xmlschemas/AccelerationExtension/v1 http://bremersee.github.io/xmlschemas/garmin/AccelerationExtensionv1.xsd http://www.garmin.com/xmlschemas/TripMetaDataExtensions/v1 http://bremersee.github.io/xmlschemas/garmin/TripMetaDataExtensionsv1.xsd http://www.topografix.com/GPX/1/1 http://www.topografix.com/GPX/1/1/gpx.xsd http://www.garmin.com/xmlschemas/GpxExtensions/v3 http://bremersee.github.io/xmlschemas/garmin/GpxExtensionsv3.xsd http://www.garmin.com/xmlschemas/CreationTimeExtension/v1 http://bremersee.github.io/xmlschemas/garmin/CreationTimeExtensionv1.xsd http://www.garmin.com/xmlschemas/WaypointExtension/v1 http://bremersee.github.io/xmlschemas/garmin/WaypointExtensionv1.xsd http://www.garmin.com/xmlschemas/PressureExtension/v1 http://bremersee.github.io/xmlschemas/garmin/PressureExtensionv1.xsd http://www.garmin.com/xmlschemas/TrackPointExtension/v1 http://bremersee.github.io/xmlschemas/garmin/TrackPointExtensionv1.xsd http://www.garmin.com/xmlschemas/TripExtensions/v1 http://bremersee.github.io/xmlschemas/garmin/TripExtensionsv1.xsd http://www.garmin.com/xmlschemas/VideoExtension/v1 http://bremersee.github.io/xmlschemas/garmin/VideoExtensionv1.xsd">
+        <ns8:Address>
+          <ns8:StreetAddress>Campingstrasse 22</ns8:StreetAddress>
+          <ns8:City>Erlangen - Dechsendorf</ns8:City>
+          <ns8:State>Erlangen</ns8:State>
+          <ns8:Country>DEU</ns8:Country>
+          <ns8:PostalCode>91056</ns8:PostalCode>
+        </ns8:Address>
+      </ns8:WaypointExtension>
+      <ns7:CreationTimeExtension xsi:schemaLocation="http://www.garmin.com/xmlschemas/AdventuresExtensions/v1 http://bremersee.github.io/xmlschemas/garmin/AdventuresExtensionv1.xsd http://www.garmin.com/xmlschemas/ViaPointTransportationModeExtensions/v1 http://bremersee.github.io/xmlschemas/garmin/ViaPointTransportationModeExtensionsv1.xsd http://www.garmin.com/xmlschemas/AccelerationExtension/v1 http://bremersee.github.io/xmlschemas/garmin/AccelerationExtensionv1.xsd http://www.garmin.com/xmlschemas/TripMetaDataExtensions/v1 http://bremersee.github.io/xmlschemas/garmin/TripMetaDataExtensionsv1.xsd http://www.topografix.com/GPX/1/1 http://www.topografix.com/GPX/1/1/gpx.xsd http://www.garmin.com/xmlschemas/GpxExtensions/v3 http://bremersee.github.io/xmlschemas/garmin/GpxExtensionsv3.xsd http://www.garmin.com/xmlschemas/CreationTimeExtension/v1 http://bremersee.github.io/xmlschemas/garmin/CreationTimeExtensionv1.xsd http://www.garmin.com/xmlschemas/WaypointExtension/v1 http://bremersee.github.io/xmlschemas/garmin/WaypointExtensionv1.xsd http://www.garmin.com/xmlschemas/PressureExtension/v1 http://bremersee.github.io/xmlschemas/garmin/PressureExtensionv1.xsd http://www.garmin.com/xmlschemas/TrackPointExtension/v1 http://bremersee.github.io/xmlschemas/garmin/TrackPointExtensionv1.xsd http://www.garmin.com/xmlschemas/TripExtensions/v1 http://bremersee.github.io/xmlschemas/garmin/TripExtensionsv1.xsd http://www.garmin.com/xmlschemas/VideoExtension/v1 http://bremersee.github.io/xmlschemas/garmin/VideoExtensionv1.xsd">
+        <ns7:CreationTime>2019-04-02T11:57:59.202Z</ns7:CreationTime>
+      </ns7:CreationTimeExtension>
+    </ns5:extensions>
+  </ns5:wpt>
+  <ns5:wpt lat="49.628743753" lon="10.952726752">
+    <ns5:time>2019-04-02T11:57:59.202Z</ns5:time>
+    <ns5:name>S07</ns5:name>
+    <ns5:cmt>Campingstrasse 78
+      Erlangen - Dechsendorf, Erlangen, 91056, DEU</ns5:cmt>
+    <ns5:desc>Campingstrasse 78
+      Erlangen - Dechsendorf, Erlangen, 91056, DEU</ns5:desc>
+    <ns5:sym>Flag, Blue</ns5:sym>
+    <ns5:extensions>
+      <ns6:WaypointExtension xsi:schemaLocation="http://www.garmin.com/xmlschemas/AdventuresExtensions/v1 http://bremersee.github.io/xmlschemas/garmin/AdventuresExtensionv1.xsd http://www.garmin.com/xmlschemas/ViaPointTransportationModeExtensions/v1 http://bremersee.github.io/xmlschemas/garmin/ViaPointTransportationModeExtensionsv1.xsd http://www.garmin.com/xmlschemas/AccelerationExtension/v1 http://bremersee.github.io/xmlschemas/garmin/AccelerationExtensionv1.xsd http://www.garmin.com/xmlschemas/TripMetaDataExtensions/v1 http://bremersee.github.io/xmlschemas/garmin/TripMetaDataExtensionsv1.xsd http://www.topografix.com/GPX/1/1 http://www.topografix.com/GPX/1/1/gpx.xsd http://www.garmin.com/xmlschemas/GpxExtensions/v3 http://bremersee.github.io/xmlschemas/garmin/GpxExtensionsv3.xsd http://www.garmin.com/xmlschemas/CreationTimeExtension/v1 http://bremersee.github.io/xmlschemas/garmin/CreationTimeExtensionv1.xsd http://www.garmin.com/xmlschemas/WaypointExtension/v1 http://bremersee.github.io/xmlschemas/garmin/WaypointExtensionv1.xsd http://www.garmin.com/xmlschemas/PressureExtension/v1 http://bremersee.github.io/xmlschemas/garmin/PressureExtensionv1.xsd http://www.garmin.com/xmlschemas/TrackPointExtension/v1 http://bremersee.github.io/xmlschemas/garmin/TrackPointExtensionv1.xsd http://www.garmin.com/xmlschemas/TripExtensions/v1 http://bremersee.github.io/xmlschemas/garmin/TripExtensionsv1.xsd http://www.garmin.com/xmlschemas/VideoExtension/v1 http://bremersee.github.io/xmlschemas/garmin/VideoExtensionv1.xsd">
+        <ns6:Address>
+          <ns6:StreetAddress>Campingstrasse 78</ns6:StreetAddress>
+          <ns6:City>Erlangen - Dechsendorf</ns6:City>
+          <ns6:State>Erlangen</ns6:State>
+          <ns6:Country>DEU</ns6:Country>
+          <ns6:PostalCode>91056</ns6:PostalCode>
+        </ns6:Address>
+      </ns6:WaypointExtension>
+      <ns8:WaypointExtension xsi:schemaLocation="http://www.garmin.com/xmlschemas/AdventuresExtensions/v1 http://bremersee.github.io/xmlschemas/garmin/AdventuresExtensionv1.xsd http://www.garmin.com/xmlschemas/ViaPointTransportationModeExtensions/v1 http://bremersee.github.io/xmlschemas/garmin/ViaPointTransportationModeExtensionsv1.xsd http://www.garmin.com/xmlschemas/AccelerationExtension/v1 http://bremersee.github.io/xmlschemas/garmin/AccelerationExtensionv1.xsd http://www.garmin.com/xmlschemas/TripMetaDataExtensions/v1 http://bremersee.github.io/xmlschemas/garmin/TripMetaDataExtensionsv1.xsd http://www.topografix.com/GPX/1/1 http://www.topografix.com/GPX/1/1/gpx.xsd http://www.garmin.com/xmlschemas/GpxExtensions/v3 http://bremersee.github.io/xmlschemas/garmin/GpxExtensionsv3.xsd http://www.garmin.com/xmlschemas/CreationTimeExtension/v1 http://bremersee.github.io/xmlschemas/garmin/CreationTimeExtensionv1.xsd http://www.garmin.com/xmlschemas/WaypointExtension/v1 http://bremersee.github.io/xmlschemas/garmin/WaypointExtensionv1.xsd http://www.garmin.com/xmlschemas/PressureExtension/v1 http://bremersee.github.io/xmlschemas/garmin/PressureExtensionv1.xsd http://www.garmin.com/xmlschemas/TrackPointExtension/v1 http://bremersee.github.io/xmlschemas/garmin/TrackPointExtensionv1.xsd http://www.garmin.com/xmlschemas/TripExtensions/v1 http://bremersee.github.io/xmlschemas/garmin/TripExtensionsv1.xsd http://www.garmin.com/xmlschemas/VideoExtension/v1 http://bremersee.github.io/xmlschemas/garmin/VideoExtensionv1.xsd">
+        <ns8:Address>
+          <ns8:StreetAddress>Campingstrasse 78</ns8:StreetAddress>
+          <ns8:City>Erlangen - Dechsendorf</ns8:City>
+          <ns8:State>Erlangen</ns8:State>
+          <ns8:Country>DEU</ns8:Country>
+          <ns8:PostalCode>91056</ns8:PostalCode>
+        </ns8:Address>
+      </ns8:WaypointExtension>
+      <ns7:CreationTimeExtension xsi:schemaLocation="http://www.garmin.com/xmlschemas/AdventuresExtensions/v1 http://bremersee.github.io/xmlschemas/garmin/AdventuresExtensionv1.xsd http://www.garmin.com/xmlschemas/ViaPointTransportationModeExtensions/v1 http://bremersee.github.io/xmlschemas/garmin/ViaPointTransportationModeExtensionsv1.xsd http://www.garmin.com/xmlschemas/AccelerationExtension/v1 http://bremersee.github.io/xmlschemas/garmin/AccelerationExtensionv1.xsd http://www.garmin.com/xmlschemas/TripMetaDataExtensions/v1 http://bremersee.github.io/xmlschemas/garmin/TripMetaDataExtensionsv1.xsd http://www.topografix.com/GPX/1/1 http://www.topografix.com/GPX/1/1/gpx.xsd http://www.garmin.com/xmlschemas/GpxExtensions/v3 http://bremersee.github.io/xmlschemas/garmin/GpxExtensionsv3.xsd http://www.garmin.com/xmlschemas/CreationTimeExtension/v1 http://bremersee.github.io/xmlschemas/garmin/CreationTimeExtensionv1.xsd http://www.garmin.com/xmlschemas/WaypointExtension/v1 http://bremersee.github.io/xmlschemas/garmin/WaypointExtensionv1.xsd http://www.garmin.com/xmlschemas/PressureExtension/v1 http://bremersee.github.io/xmlschemas/garmin/PressureExtensionv1.xsd http://www.garmin.com/xmlschemas/TrackPointExtension/v1 http://bremersee.github.io/xmlschemas/garmin/TrackPointExtensionv1.xsd http://www.garmin.com/xmlschemas/TripExtensions/v1 http://bremersee.github.io/xmlschemas/garmin/TripExtensionsv1.xsd http://www.garmin.com/xmlschemas/VideoExtension/v1 http://bremersee.github.io/xmlschemas/garmin/VideoExtensionv1.xsd">
+        <ns7:CreationTime>2019-04-02T11:57:59.202Z</ns7:CreationTime>
+      </ns7:CreationTimeExtension>
+    </ns5:extensions>
+  </ns5:wpt>
+  <ns5:wpt lat="49.627604485" lon="10.950035993">
+    <ns5:time>2019-04-02T11:57:59.203Z</ns5:time>
+    <ns5:name>S08</ns5:name>
+    <ns5:cmt>Naturbadstrasse 60
+      Erlangen - Dechsendorf, Erlangen, 91056, DEU</ns5:cmt>
+    <ns5:desc>Naturbadstrasse 60
+      Erlangen - Dechsendorf, Erlangen, 91056, DEU</ns5:desc>
+    <ns5:sym>Flag, Blue</ns5:sym>
+    <ns5:extensions>
+      <ns6:WaypointExtension xsi:schemaLocation="http://www.garmin.com/xmlschemas/AdventuresExtensions/v1 http://bremersee.github.io/xmlschemas/garmin/AdventuresExtensionv1.xsd http://www.garmin.com/xmlschemas/ViaPointTransportationModeExtensions/v1 http://bremersee.github.io/xmlschemas/garmin/ViaPointTransportationModeExtensionsv1.xsd http://www.garmin.com/xmlschemas/AccelerationExtension/v1 http://bremersee.github.io/xmlschemas/garmin/AccelerationExtensionv1.xsd http://www.garmin.com/xmlschemas/TripMetaDataExtensions/v1 http://bremersee.github.io/xmlschemas/garmin/TripMetaDataExtensionsv1.xsd http://www.topografix.com/GPX/1/1 http://www.topografix.com/GPX/1/1/gpx.xsd http://www.garmin.com/xmlschemas/GpxExtensions/v3 http://bremersee.github.io/xmlschemas/garmin/GpxExtensionsv3.xsd http://www.garmin.com/xmlschemas/CreationTimeExtension/v1 http://bremersee.github.io/xmlschemas/garmin/CreationTimeExtensionv1.xsd http://www.garmin.com/xmlschemas/WaypointExtension/v1 http://bremersee.github.io/xmlschemas/garmin/WaypointExtensionv1.xsd http://www.garmin.com/xmlschemas/PressureExtension/v1 http://bremersee.github.io/xmlschemas/garmin/PressureExtensionv1.xsd http://www.garmin.com/xmlschemas/TrackPointExtension/v1 http://bremersee.github.io/xmlschemas/garmin/TrackPointExtensionv1.xsd http://www.garmin.com/xmlschemas/TripExtensions/v1 http://bremersee.github.io/xmlschemas/garmin/TripExtensionsv1.xsd http://www.garmin.com/xmlschemas/VideoExtension/v1 http://bremersee.github.io/xmlschemas/garmin/VideoExtensionv1.xsd">
+        <ns6:Address>
+          <ns6:StreetAddress>Naturbadstrasse 60</ns6:StreetAddress>
+          <ns6:City>Erlangen - Dechsendorf</ns6:City>
+          <ns6:State>Erlangen</ns6:State>
+          <ns6:Country>DEU</ns6:Country>
+          <ns6:PostalCode>91056</ns6:PostalCode>
+        </ns6:Address>
+      </ns6:WaypointExtension>
+      <ns8:WaypointExtension xsi:schemaLocation="http://www.garmin.com/xmlschemas/AdventuresExtensions/v1 http://bremersee.github.io/xmlschemas/garmin/AdventuresExtensionv1.xsd http://www.garmin.com/xmlschemas/ViaPointTransportationModeExtensions/v1 http://bremersee.github.io/xmlschemas/garmin/ViaPointTransportationModeExtensionsv1.xsd http://www.garmin.com/xmlschemas/AccelerationExtension/v1 http://bremersee.github.io/xmlschemas/garmin/AccelerationExtensionv1.xsd http://www.garmin.com/xmlschemas/TripMetaDataExtensions/v1 http://bremersee.github.io/xmlschemas/garmin/TripMetaDataExtensionsv1.xsd http://www.topografix.com/GPX/1/1 http://www.topografix.com/GPX/1/1/gpx.xsd http://www.garmin.com/xmlschemas/GpxExtensions/v3 http://bremersee.github.io/xmlschemas/garmin/GpxExtensionsv3.xsd http://www.garmin.com/xmlschemas/CreationTimeExtension/v1 http://bremersee.github.io/xmlschemas/garmin/CreationTimeExtensionv1.xsd http://www.garmin.com/xmlschemas/WaypointExtension/v1 http://bremersee.github.io/xmlschemas/garmin/WaypointExtensionv1.xsd http://www.garmin.com/xmlschemas/PressureExtension/v1 http://bremersee.github.io/xmlschemas/garmin/PressureExtensionv1.xsd http://www.garmin.com/xmlschemas/TrackPointExtension/v1 http://bremersee.github.io/xmlschemas/garmin/TrackPointExtensionv1.xsd http://www.garmin.com/xmlschemas/TripExtensions/v1 http://bremersee.github.io/xmlschemas/garmin/TripExtensionsv1.xsd http://www.garmin.com/xmlschemas/VideoExtension/v1 http://bremersee.github.io/xmlschemas/garmin/VideoExtensionv1.xsd">
+        <ns8:Address>
+          <ns8:StreetAddress>Naturbadstrasse 60</ns8:StreetAddress>
+          <ns8:City>Erlangen - Dechsendorf</ns8:City>
+          <ns8:State>Erlangen</ns8:State>
+          <ns8:Country>DEU</ns8:Country>
+          <ns8:PostalCode>91056</ns8:PostalCode>
+        </ns8:Address>
+      </ns8:WaypointExtension>
+      <ns7:CreationTimeExtension xsi:schemaLocation="http://www.garmin.com/xmlschemas/AdventuresExtensions/v1 http://bremersee.github.io/xmlschemas/garmin/AdventuresExtensionv1.xsd http://www.garmin.com/xmlschemas/ViaPointTransportationModeExtensions/v1 http://bremersee.github.io/xmlschemas/garmin/ViaPointTransportationModeExtensionsv1.xsd http://www.garmin.com/xmlschemas/AccelerationExtension/v1 http://bremersee.github.io/xmlschemas/garmin/AccelerationExtensionv1.xsd http://www.garmin.com/xmlschemas/TripMetaDataExtensions/v1 http://bremersee.github.io/xmlschemas/garmin/TripMetaDataExtensionsv1.xsd http://www.topografix.com/GPX/1/1 http://www.topografix.com/GPX/1/1/gpx.xsd http://www.garmin.com/xmlschemas/GpxExtensions/v3 http://bremersee.github.io/xmlschemas/garmin/GpxExtensionsv3.xsd http://www.garmin.com/xmlschemas/CreationTimeExtension/v1 http://bremersee.github.io/xmlschemas/garmin/CreationTimeExtensionv1.xsd http://www.garmin.com/xmlschemas/WaypointExtension/v1 http://bremersee.github.io/xmlschemas/garmin/WaypointExtensionv1.xsd http://www.garmin.com/xmlschemas/PressureExtension/v1 http://bremersee.github.io/xmlschemas/garmin/PressureExtensionv1.xsd http://www.garmin.com/xmlschemas/TrackPointExtension/v1 http://bremersee.github.io/xmlschemas/garmin/TrackPointExtensionv1.xsd http://www.garmin.com/xmlschemas/TripExtensions/v1 http://bremersee.github.io/xmlschemas/garmin/TripExtensionsv1.xsd http://www.garmin.com/xmlschemas/VideoExtension/v1 http://bremersee.github.io/xmlschemas/garmin/VideoExtensionv1.xsd">
+        <ns7:CreationTime>2019-04-02T11:57:59.203Z</ns7:CreationTime>
+      </ns7:CreationTimeExtension>
+    </ns5:extensions>
+  </ns5:wpt>
+  <ns5:rte>
+    <ns5:name>S01 bis Post-Naturbadstrasse</ns5:name>
+    <ns5:cmt>Eine Notiz von mir</ns5:cmt>
+    <ns5:desc>Eine Notiz von mir</ns5:desc>
+    <ns5:link href="/Users/cbr/Pictures/fendt_200v.jpg"/>
+    <ns5:extensions>
+      <ns6:RouteExtension xsi:schemaLocation="http://www.garmin.com/xmlschemas/AdventuresExtensions/v1 http://bremersee.github.io/xmlschemas/garmin/AdventuresExtensionv1.xsd http://www.garmin.com/xmlschemas/ViaPointTransportationModeExtensions/v1 http://bremersee.github.io/xmlschemas/garmin/ViaPointTransportationModeExtensionsv1.xsd http://www.garmin.com/xmlschemas/AccelerationExtension/v1 http://bremersee.github.io/xmlschemas/garmin/AccelerationExtensionv1.xsd http://www.garmin.com/xmlschemas/TripMetaDataExtensions/v1 http://bremersee.github.io/xmlschemas/garmin/TripMetaDataExtensionsv1.xsd http://www.topografix.com/GPX/1/1 http://www.topografix.com/GPX/1/1/gpx.xsd http://www.garmin.com/xmlschemas/GpxExtensions/v3 http://bremersee.github.io/xmlschemas/garmin/GpxExtensionsv3.xsd http://www.garmin.com/xmlschemas/CreationTimeExtension/v1 http://bremersee.github.io/xmlschemas/garmin/CreationTimeExtensionv1.xsd http://www.garmin.com/xmlschemas/WaypointExtension/v1 http://bremersee.github.io/xmlschemas/garmin/WaypointExtensionv1.xsd http://www.garmin.com/xmlschemas/PressureExtension/v1 http://bremersee.github.io/xmlschemas/garmin/PressureExtensionv1.xsd http://www.garmin.com/xmlschemas/TrackPointExtension/v1 http://bremersee.github.io/xmlschemas/garmin/TrackPointExtensionv1.xsd http://www.garmin.com/xmlschemas/TripExtensions/v1 http://bremersee.github.io/xmlschemas/garmin/TripExtensionsv1.xsd http://www.garmin.com/xmlschemas/VideoExtension/v1 http://bremersee.github.io/xmlschemas/garmin/VideoExtensionv1.xsd">
+        <ns6:IsAutoNamed>true</ns6:IsAutoNamed>
+        <ns6:DisplayColor>Cyan</ns6:DisplayColor>
+      </ns6:RouteExtension>
+      <ns11:Trip xsi:schemaLocation="http://www.garmin.com/xmlschemas/AdventuresExtensions/v1 http://bremersee.github.io/xmlschemas/garmin/AdventuresExtensionv1.xsd http://www.garmin.com/xmlschemas/ViaPointTransportationModeExtensions/v1 http://bremersee.github.io/xmlschemas/garmin/ViaPointTransportationModeExtensionsv1.xsd http://www.garmin.com/xmlschemas/AccelerationExtension/v1 http://bremersee.github.io/xmlschemas/garmin/AccelerationExtensionv1.xsd http://www.garmin.com/xmlschemas/TripMetaDataExtensions/v1 http://bremersee.github.io/xmlschemas/garmin/TripMetaDataExtensionsv1.xsd http://www.topografix.com/GPX/1/1 http://www.topografix.com/GPX/1/1/gpx.xsd http://www.garmin.com/xmlschemas/GpxExtensions/v3 http://bremersee.github.io/xmlschemas/garmin/GpxExtensionsv3.xsd http://www.garmin.com/xmlschemas/CreationTimeExtension/v1 http://bremersee.github.io/xmlschemas/garmin/CreationTimeExtensionv1.xsd http://www.garmin.com/xmlschemas/WaypointExtension/v1 http://bremersee.github.io/xmlschemas/garmin/WaypointExtensionv1.xsd http://www.garmin.com/xmlschemas/PressureExtension/v1 http://bremersee.github.io/xmlschemas/garmin/PressureExtensionv1.xsd http://www.garmin.com/xmlschemas/TrackPointExtension/v1 http://bremersee.github.io/xmlschemas/garmin/TrackPointExtensionv1.xsd http://www.garmin.com/xmlschemas/TripExtensions/v1 http://bremersee.github.io/xmlschemas/garmin/TripExtensionsv1.xsd http://www.garmin.com/xmlschemas/VideoExtension/v1 http://bremersee.github.io/xmlschemas/garmin/VideoExtensionv1.xsd">
+        <ns11:TransportationMode>Automotive</ns11:TransportationMode>
+      </ns11:Trip>
+    </ns5:extensions>
+    <ns5:rtept lat="49.633101085" lon="10.933618946">
+      <ns5:time>2019-04-02T11:57:59.111Z</ns5:time>
+      <ns5:name>S01</ns5:name>
+      <ns5:cmt>Pfad</ns5:cmt>
+      <ns5:desc>Pfad</ns5:desc>
+      <ns5:sym>Flag, Blue</ns5:sym>
+      <ns5:extensions>
+        <ns11:ViaPoint xsi:schemaLocation="http://www.garmin.com/xmlschemas/AdventuresExtensions/v1 http://bremersee.github.io/xmlschemas/garmin/AdventuresExtensionv1.xsd http://www.garmin.com/xmlschemas/ViaPointTransportationModeExtensions/v1 http://bremersee.github.io/xmlschemas/garmin/ViaPointTransportationModeExtensionsv1.xsd http://www.garmin.com/xmlschemas/AccelerationExtension/v1 http://bremersee.github.io/xmlschemas/garmin/AccelerationExtensionv1.xsd http://www.garmin.com/xmlschemas/TripMetaDataExtensions/v1 http://bremersee.github.io/xmlschemas/garmin/TripMetaDataExtensionsv1.xsd http://www.topografix.com/GPX/1/1 http://www.topografix.com/GPX/1/1/gpx.xsd http://www.garmin.com/xmlschemas/GpxExtensions/v3 http://bremersee.github.io/xmlschemas/garmin/GpxExtensionsv3.xsd http://www.garmin.com/xmlschemas/CreationTimeExtension/v1 http://bremersee.github.io/xmlschemas/garmin/CreationTimeExtensionv1.xsd http://www.garmin.com/xmlschemas/WaypointExtension/v1 http://bremersee.github.io/xmlschemas/garmin/WaypointExtensionv1.xsd http://www.garmin.com/xmlschemas/PressureExtension/v1 http://bremersee.github.io/xmlschemas/garmin/PressureExtensionv1.xsd http://www.garmin.com/xmlschemas/TrackPointExtension/v1 http://bremersee.github.io/xmlschemas/garmin/TrackPointExtensionv1.xsd http://www.garmin.com/xmlschemas/TripExtensions/v1 http://bremersee.github.io/xmlschemas/garmin/TripExtensionsv1.xsd http://www.garmin.com/xmlschemas/VideoExtension/v1 http://bremersee.github.io/xmlschemas/garmin/VideoExtensionv1.xsd">
+          <ns11:CalculationMode>FasterTime</ns11:CalculationMode>
+          <ns11:ElevationMode>Standard</ns11:ElevationMode>
+        </ns11:ViaPoint>
+        <ns6:RoutePointExtension xsi:schemaLocation="http://www.garmin.com/xmlschemas/AdventuresExtensions/v1 http://bremersee.github.io/xmlschemas/garmin/AdventuresExtensionv1.xsd http://www.garmin.com/xmlschemas/ViaPointTransportationModeExtensions/v1 http://bremersee.github.io/xmlschemas/garmin/ViaPointTransportationModeExtensionsv1.xsd http://www.garmin.com/xmlschemas/AccelerationExtension/v1 http://bremersee.github.io/xmlschemas/garmin/AccelerationExtensionv1.xsd http://www.garmin.com/xmlschemas/TripMetaDataExtensions/v1 http://bremersee.github.io/xmlschemas/garmin/TripMetaDataExtensionsv1.xsd http://www.topografix.com/GPX/1/1 http://www.topografix.com/GPX/1/1/gpx.xsd http://www.garmin.com/xmlschemas/GpxExtensions/v3 http://bremersee.github.io/xmlschemas/garmin/GpxExtensionsv3.xsd http://www.garmin.com/xmlschemas/CreationTimeExtension/v1 http://bremersee.github.io/xmlschemas/garmin/CreationTimeExtensionv1.xsd http://www.garmin.com/xmlschemas/WaypointExtension/v1 http://bremersee.github.io/xmlschemas/garmin/WaypointExtensionv1.xsd http://www.garmin.com/xmlschemas/PressureExtension/v1 http://bremersee.github.io/xmlschemas/garmin/PressureExtensionv1.xsd http://www.garmin.com/xmlschemas/TrackPointExtension/v1 http://bremersee.github.io/xmlschemas/garmin/TrackPointExtensionv1.xsd http://www.garmin.com/xmlschemas/TripExtensions/v1 http://bremersee.github.io/xmlschemas/garmin/TripExtensionsv1.xsd http://www.garmin.com/xmlschemas/VideoExtension/v1 http://bremersee.github.io/xmlschemas/garmin/VideoExtensionv1.xsd">
+          <ns6:rpt lat="49.633054733" lon="10.933628082"/>
+          <ns6:rpt lat="49.633011818" lon="10.934615135"/>
+          <ns6:rpt lat="49.632668495" lon="10.93457222"/>
+          <ns6:rpt lat="49.632496834" lon="10.93457222"/>
+          <ns6:rpt lat="49.632282257" lon="10.93457222"/>
+          <ns6:rpt lat="49.631681442" lon="10.934529305"/>
+        </ns6:RoutePointExtension>
+      </ns5:extensions>
+    </ns5:rtept>
+    <ns5:rtept lat="49.631681442" lon="10.934529305">
+      <ns5:time>2019-04-02T11:57:59.124Z</ns5:time>
+      <ns5:name>S04</ns5:name>
+      <ns5:cmt>Kleiberstrasse und Faust-Von-Stromberg-Strasse</ns5:cmt>
+      <ns5:desc>Kleiberstrasse und Faust-Von-Stromberg-Strasse</ns5:desc>
+      <ns5:sym>Flag, Blue</ns5:sym>
+      <ns5:extensions>
+        <ns11:ViaPoint xsi:schemaLocation="http://www.garmin.com/xmlschemas/AdventuresExtensions/v1 http://bremersee.github.io/xmlschemas/garmin/AdventuresExtensionv1.xsd http://www.garmin.com/xmlschemas/ViaPointTransportationModeExtensions/v1 http://bremersee.github.io/xmlschemas/garmin/ViaPointTransportationModeExtensionsv1.xsd http://www.garmin.com/xmlschemas/AccelerationExtension/v1 http://bremersee.github.io/xmlschemas/garmin/AccelerationExtensionv1.xsd http://www.garmin.com/xmlschemas/TripMetaDataExtensions/v1 http://bremersee.github.io/xmlschemas/garmin/TripMetaDataExtensionsv1.xsd http://www.topografix.com/GPX/1/1 http://www.topografix.com/GPX/1/1/gpx.xsd http://www.garmin.com/xmlschemas/GpxExtensions/v3 http://bremersee.github.io/xmlschemas/garmin/GpxExtensionsv3.xsd http://www.garmin.com/xmlschemas/CreationTimeExtension/v1 http://bremersee.github.io/xmlschemas/garmin/CreationTimeExtensionv1.xsd http://www.garmin.com/xmlschemas/WaypointExtension/v1 http://bremersee.github.io/xmlschemas/garmin/WaypointExtensionv1.xsd http://www.garmin.com/xmlschemas/PressureExtension/v1 http://bremersee.github.io/xmlschemas/garmin/PressureExtensionv1.xsd http://www.garmin.com/xmlschemas/TrackPointExtension/v1 http://bremersee.github.io/xmlschemas/garmin/TrackPointExtensionv1.xsd http://www.garmin.com/xmlschemas/TripExtensions/v1 http://bremersee.github.io/xmlschemas/garmin/TripExtensionsv1.xsd http://www.garmin.com/xmlschemas/VideoExtension/v1 http://bremersee.github.io/xmlschemas/garmin/VideoExtensionv1.xsd">
+          <ns11:CalculationMode>FasterTime</ns11:CalculationMode>
+          <ns11:ElevationMode>Standard</ns11:ElevationMode>
+        </ns11:ViaPoint>
+        <ns6:RoutePointExtension xsi:schemaLocation="http://www.garmin.com/xmlschemas/AdventuresExtensions/v1 http://bremersee.github.io/xmlschemas/garmin/AdventuresExtensionv1.xsd http://www.garmin.com/xmlschemas/ViaPointTransportationModeExtensions/v1 http://bremersee.github.io/xmlschemas/garmin/ViaPointTransportationModeExtensionsv1.xsd http://www.garmin.com/xmlschemas/AccelerationExtension/v1 http://bremersee.github.io/xmlschemas/garmin/AccelerationExtensionv1.xsd http://www.garmin.com/xmlschemas/TripMetaDataExtensions/v1 http://bremersee.github.io/xmlschemas/garmin/TripMetaDataExtensionsv1.xsd http://www.topografix.com/GPX/1/1 http://www.topografix.com/GPX/1/1/gpx.xsd http://www.garmin.com/xmlschemas/GpxExtensions/v3 http://bremersee.github.io/xmlschemas/garmin/GpxExtensionsv3.xsd http://www.garmin.com/xmlschemas/CreationTimeExtension/v1 http://bremersee.github.io/xmlschemas/garmin/CreationTimeExtensionv1.xsd http://www.garmin.com/xmlschemas/WaypointExtension/v1 http://bremersee.github.io/xmlschemas/garmin/WaypointExtensionv1.xsd http://www.garmin.com/xmlschemas/PressureExtension/v1 http://bremersee.github.io/xmlschemas/garmin/PressureExtensionv1.xsd http://www.garmin.com/xmlschemas/TrackPointExtension/v1 http://bremersee.github.io/xmlschemas/garmin/TrackPointExtensionv1.xsd http://www.garmin.com/xmlschemas/TripExtensions/v1 http://bremersee.github.io/xmlschemas/garmin/TripExtensionsv1.xsd http://www.garmin.com/xmlschemas/VideoExtension/v1 http://bremersee.github.io/xmlschemas/garmin/VideoExtensionv1.xsd">
+          <ns6:rpt lat="49.631123543" lon="10.935816765"/>
+          <ns6:rpt lat="49.630522728" lon="10.937232971"/>
+          <ns6:rpt lat="49.630393982" lon="10.937619209"/>
+          <ns6:rpt lat="49.630179405" lon="10.938262939"/>
+          <ns6:rpt lat="49.630093575" lon="10.938692093"/>
+        </ns6:RoutePointExtension>
+      </ns5:extensions>
+    </ns5:rtept>
+    <ns5:rtept lat="49.630093575" lon="10.938692093">
+      <ns5:time>2019-04-02T11:57:59.135Z</ns5:time>
+      <ns5:name>S05</ns5:name>
+      <ns5:cmt>Faust-Von-Stromberg-Strasse</ns5:cmt>
+      <ns5:desc>Faust-Von-Stromberg-Strasse</ns5:desc>
+      <ns5:sym>Flag, Blue</ns5:sym>
+      <ns5:extensions>
+        <ns11:ViaPoint xsi:schemaLocation="http://www.garmin.com/xmlschemas/AdventuresExtensions/v1 http://bremersee.github.io/xmlschemas/garmin/AdventuresExtensionv1.xsd http://www.garmin.com/xmlschemas/ViaPointTransportationModeExtensions/v1 http://bremersee.github.io/xmlschemas/garmin/ViaPointTransportationModeExtensionsv1.xsd http://www.garmin.com/xmlschemas/AccelerationExtension/v1 http://bremersee.github.io/xmlschemas/garmin/AccelerationExtensionv1.xsd http://www.garmin.com/xmlschemas/TripMetaDataExtensions/v1 http://bremersee.github.io/xmlschemas/garmin/TripMetaDataExtensionsv1.xsd http://www.topografix.com/GPX/1/1 http://www.topografix.com/GPX/1/1/gpx.xsd http://www.garmin.com/xmlschemas/GpxExtensions/v3 http://bremersee.github.io/xmlschemas/garmin/GpxExtensionsv3.xsd http://www.garmin.com/xmlschemas/CreationTimeExtension/v1 http://bremersee.github.io/xmlschemas/garmin/CreationTimeExtensionv1.xsd http://www.garmin.com/xmlschemas/WaypointExtension/v1 http://bremersee.github.io/xmlschemas/garmin/WaypointExtensionv1.xsd http://www.garmin.com/xmlschemas/PressureExtension/v1 http://bremersee.github.io/xmlschemas/garmin/PressureExtensionv1.xsd http://www.garmin.com/xmlschemas/TrackPointExtension/v1 http://bremersee.github.io/xmlschemas/garmin/TrackPointExtensionv1.xsd http://www.garmin.com/xmlschemas/TripExtensions/v1 http://bremersee.github.io/xmlschemas/garmin/TripExtensionsv1.xsd http://www.garmin.com/xmlschemas/VideoExtension/v1 http://bremersee.github.io/xmlschemas/garmin/VideoExtensionv1.xsd">
+          <ns11:CalculationMode>FasterTime</ns11:CalculationMode>
+          <ns11:ElevationMode>Standard</ns11:ElevationMode>
+        </ns11:ViaPoint>
+        <ns6:RoutePointExtension xsi:schemaLocation="http://www.garmin.com/xmlschemas/AdventuresExtensions/v1 http://bremersee.github.io/xmlschemas/garmin/AdventuresExtensionv1.xsd http://www.garmin.com/xmlschemas/ViaPointTransportationModeExtensions/v1 http://bremersee.github.io/xmlschemas/garmin/ViaPointTransportationModeExtensionsv1.xsd http://www.garmin.com/xmlschemas/AccelerationExtension/v1 http://bremersee.github.io/xmlschemas/garmin/AccelerationExtensionv1.xsd http://www.garmin.com/xmlschemas/TripMetaDataExtensions/v1 http://bremersee.github.io/xmlschemas/garmin/TripMetaDataExtensionsv1.xsd http://www.topografix.com/GPX/1/1 http://www.topografix.com/GPX/1/1/gpx.xsd http://www.garmin.com/xmlschemas/GpxExtensions/v3 http://bremersee.github.io/xmlschemas/garmin/GpxExtensionsv3.xsd http://www.garmin.com/xmlschemas/CreationTimeExtension/v1 http://bremersee.github.io/xmlschemas/garmin/CreationTimeExtensionv1.xsd http://www.garmin.com/xmlschemas/WaypointExtension/v1 http://bremersee.github.io/xmlschemas/garmin/WaypointExtensionv1.xsd http://www.garmin.com/xmlschemas/PressureExtension/v1 http://bremersee.github.io/xmlschemas/garmin/PressureExtensionv1.xsd http://www.garmin.com/xmlschemas/TrackPointExtension/v1 http://bremersee.github.io/xmlschemas/garmin/TrackPointExtensionv1.xsd http://www.garmin.com/xmlschemas/TripExtensions/v1 http://bremersee.github.io/xmlschemas/garmin/TripExtensionsv1.xsd http://www.garmin.com/xmlschemas/VideoExtension/v1 http://bremersee.github.io/xmlschemas/garmin/VideoExtensionv1.xsd">
+          <ns6:rpt lat="49.630050659" lon="10.939249992"/>
+          <ns6:rpt lat="49.629836082" lon="10.939807892"/>
+          <ns6:rpt lat="49.629535675" lon="10.940108299"/>
+          <ns6:rpt lat="49.629535675" lon="10.940666199"/>
+          <ns6:rpt lat="49.629621506" lon="10.941095352"/>
+          <ns6:rpt lat="49.629793167" lon="10.94148159"/>
+          <ns6:rpt lat="49.629921913" lon="10.941567421"/>
+          <ns6:rpt lat="49.630265236" lon="10.941824913"/>
+          <ns6:rpt lat="49.63078022" lon="10.942211151"/>
+          <ns6:rpt lat="49.631123543" lon="10.942382813"/>
+          <ns6:rpt lat="49.63142395" lon="10.942554474"/>
+          <ns6:rpt lat="49.631940275" lon="10.942898551"/>
+          <ns6:rpt lat="49.631940359" lon="10.942898635"/>
+        </ns6:RoutePointExtension>
+      </ns5:extensions>
+    </ns5:rtept>
+    <ns5:rtept lat="49.631940359" lon="10.942898635">
+      <ns5:time>2019-04-02T11:57:59.145Z</ns5:time>
+      <ns5:name>S06</ns5:name>
+      <ns5:cmt>Campingstrasse 22
+        Erlangen - Dechsendorf, Erlangen, 91056, DEU</ns5:cmt>
+      <ns5:desc>Campingstrasse 22
+        Erlangen - Dechsendorf, Erlangen, 91056, DEU</ns5:desc>
+      <ns5:sym>Flag, Blue</ns5:sym>
+      <ns5:extensions>
+        <ns11:ViaPoint xsi:schemaLocation="http://www.garmin.com/xmlschemas/AdventuresExtensions/v1 http://bremersee.github.io/xmlschemas/garmin/AdventuresExtensionv1.xsd http://www.garmin.com/xmlschemas/ViaPointTransportationModeExtensions/v1 http://bremersee.github.io/xmlschemas/garmin/ViaPointTransportationModeExtensionsv1.xsd http://www.garmin.com/xmlschemas/AccelerationExtension/v1 http://bremersee.github.io/xmlschemas/garmin/AccelerationExtensionv1.xsd http://www.garmin.com/xmlschemas/TripMetaDataExtensions/v1 http://bremersee.github.io/xmlschemas/garmin/TripMetaDataExtensionsv1.xsd http://www.topografix.com/GPX/1/1 http://www.topografix.com/GPX/1/1/gpx.xsd http://www.garmin.com/xmlschemas/GpxExtensions/v3 http://bremersee.github.io/xmlschemas/garmin/GpxExtensionsv3.xsd http://www.garmin.com/xmlschemas/CreationTimeExtension/v1 http://bremersee.github.io/xmlschemas/garmin/CreationTimeExtensionv1.xsd http://www.garmin.com/xmlschemas/WaypointExtension/v1 http://bremersee.github.io/xmlschemas/garmin/WaypointExtensionv1.xsd http://www.garmin.com/xmlschemas/PressureExtension/v1 http://bremersee.github.io/xmlschemas/garmin/PressureExtensionv1.xsd http://www.garmin.com/xmlschemas/TrackPointExtension/v1 http://bremersee.github.io/xmlschemas/garmin/TrackPointExtensionv1.xsd http://www.garmin.com/xmlschemas/TripExtensions/v1 http://bremersee.github.io/xmlschemas/garmin/TripExtensionsv1.xsd http://www.garmin.com/xmlschemas/VideoExtension/v1 http://bremersee.github.io/xmlschemas/garmin/VideoExtensionv1.xsd">
+          <ns11:CalculationMode>FasterTime</ns11:CalculationMode>
+          <ns11:ElevationMode>Standard</ns11:ElevationMode>
+        </ns11:ViaPoint>
+        <ns6:RoutePointExtension xsi:schemaLocation="http://www.garmin.com/xmlschemas/AdventuresExtensions/v1 http://bremersee.github.io/xmlschemas/garmin/AdventuresExtensionv1.xsd http://www.garmin.com/xmlschemas/ViaPointTransportationModeExtensions/v1 http://bremersee.github.io/xmlschemas/garmin/ViaPointTransportationModeExtensionsv1.xsd http://www.garmin.com/xmlschemas/AccelerationExtension/v1 http://bremersee.github.io/xmlschemas/garmin/AccelerationExtensionv1.xsd http://www.garmin.com/xmlschemas/TripMetaDataExtensions/v1 http://bremersee.github.io/xmlschemas/garmin/TripMetaDataExtensionsv1.xsd http://www.topografix.com/GPX/1/1 http://www.topografix.com/GPX/1/1/gpx.xsd http://www.garmin.com/xmlschemas/GpxExtensions/v3 http://bremersee.github.io/xmlschemas/garmin/GpxExtensionsv3.xsd http://www.garmin.com/xmlschemas/CreationTimeExtension/v1 http://bremersee.github.io/xmlschemas/garmin/CreationTimeExtensionv1.xsd http://www.garmin.com/xmlschemas/WaypointExtension/v1 http://bremersee.github.io/xmlschemas/garmin/WaypointExtensionv1.xsd http://www.garmin.com/xmlschemas/PressureExtension/v1 http://bremersee.github.io/xmlschemas/garmin/PressureExtensionv1.xsd http://www.garmin.com/xmlschemas/TrackPointExtension/v1 http://bremersee.github.io/xmlschemas/garmin/TrackPointExtensionv1.xsd http://www.garmin.com/xmlschemas/TripExtensions/v1 http://bremersee.github.io/xmlschemas/garmin/TripExtensionsv1.xsd http://www.garmin.com/xmlschemas/VideoExtension/v1 http://bremersee.github.io/xmlschemas/garmin/VideoExtensionv1.xsd">
+          <ns6:rpt lat="49.631940275" lon="10.942898551"/>
+          <ns6:rpt lat="49.632325172" lon="10.943155289"/>
+          <ns6:rpt lat="49.632754326" lon="10.943369865"/>
+          <ns6:rpt lat="49.632968903" lon="10.943541527"/>
+          <ns6:rpt lat="49.632840157" lon="10.944099426"/>
+          <ns6:rpt lat="49.632153511" lon="10.945301056"/>
+          <ns6:rpt lat="49.63133812" lon="10.947704315"/>
+          <ns6:rpt lat="49.630479813" lon="10.94950676"/>
+          <ns6:rpt lat="49.630308151" lon="10.949807167"/>
+          <ns6:rpt lat="49.630093575" lon="10.950279236"/>
+          <ns6:rpt lat="49.629664421" lon="10.951695442"/>
+          <ns6:rpt lat="49.629449844" lon="10.95208168"/>
+          <ns6:rpt lat="49.628891945" lon="10.95263958"/>
+          <ns6:rpt lat="49.628743669" lon="10.952726919"/>
+          <ns6:rpt lat="49.628743753" lon="10.952726752"/>
+        </ns6:RoutePointExtension>
+      </ns5:extensions>
+    </ns5:rtept>
+    <ns5:rtept lat="49.628743753" lon="10.952726752">
+      <ns5:time>2019-04-02T11:57:59.159Z</ns5:time>
+      <ns5:name>S07</ns5:name>
+      <ns5:cmt>Campingstrasse 78
+        Erlangen - Dechsendorf, Erlangen, 91056, DEU</ns5:cmt>
+      <ns5:desc>Campingstrasse 78
+        Erlangen - Dechsendorf, Erlangen, 91056, DEU</ns5:desc>
+      <ns5:sym>Flag, Blue</ns5:sym>
+      <ns5:extensions>
+        <ns11:ViaPoint xsi:schemaLocation="http://www.garmin.com/xmlschemas/AdventuresExtensions/v1 http://bremersee.github.io/xmlschemas/garmin/AdventuresExtensionv1.xsd http://www.garmin.com/xmlschemas/ViaPointTransportationModeExtensions/v1 http://bremersee.github.io/xmlschemas/garmin/ViaPointTransportationModeExtensionsv1.xsd http://www.garmin.com/xmlschemas/AccelerationExtension/v1 http://bremersee.github.io/xmlschemas/garmin/AccelerationExtensionv1.xsd http://www.garmin.com/xmlschemas/TripMetaDataExtensions/v1 http://bremersee.github.io/xmlschemas/garmin/TripMetaDataExtensionsv1.xsd http://www.topografix.com/GPX/1/1 http://www.topografix.com/GPX/1/1/gpx.xsd http://www.garmin.com/xmlschemas/GpxExtensions/v3 http://bremersee.github.io/xmlschemas/garmin/GpxExtensionsv3.xsd http://www.garmin.com/xmlschemas/CreationTimeExtension/v1 http://bremersee.github.io/xmlschemas/garmin/CreationTimeExtensionv1.xsd http://www.garmin.com/xmlschemas/WaypointExtension/v1 http://bremersee.github.io/xmlschemas/garmin/WaypointExtensionv1.xsd http://www.garmin.com/xmlschemas/PressureExtension/v1 http://bremersee.github.io/xmlschemas/garmin/PressureExtensionv1.xsd http://www.garmin.com/xmlschemas/TrackPointExtension/v1 http://bremersee.github.io/xmlschemas/garmin/TrackPointExtensionv1.xsd http://www.garmin.com/xmlschemas/TripExtensions/v1 http://bremersee.github.io/xmlschemas/garmin/TripExtensionsv1.xsd http://www.garmin.com/xmlschemas/VideoExtension/v1 http://bremersee.github.io/xmlschemas/garmin/VideoExtensionv1.xsd">
+          <ns11:CalculationMode>FasterTime</ns11:CalculationMode>
+          <ns11:ElevationMode>Standard</ns11:ElevationMode>
+        </ns11:ViaPoint>
+        <ns6:RoutePointExtension xsi:schemaLocation="http://www.garmin.com/xmlschemas/AdventuresExtensions/v1 http://bremersee.github.io/xmlschemas/garmin/AdventuresExtensionv1.xsd http://www.garmin.com/xmlschemas/ViaPointTransportationModeExtensions/v1 http://bremersee.github.io/xmlschemas/garmin/ViaPointTransportationModeExtensionsv1.xsd http://www.garmin.com/xmlschemas/AccelerationExtension/v1 http://bremersee.github.io/xmlschemas/garmin/AccelerationExtensionv1.xsd http://www.garmin.com/xmlschemas/TripMetaDataExtensions/v1 http://bremersee.github.io/xmlschemas/garmin/TripMetaDataExtensionsv1.xsd http://www.topografix.com/GPX/1/1 http://www.topografix.com/GPX/1/1/gpx.xsd http://www.garmin.com/xmlschemas/GpxExtensions/v3 http://bremersee.github.io/xmlschemas/garmin/GpxExtensionsv3.xsd http://www.garmin.com/xmlschemas/CreationTimeExtension/v1 http://bremersee.github.io/xmlschemas/garmin/CreationTimeExtensionv1.xsd http://www.garmin.com/xmlschemas/WaypointExtension/v1 http://bremersee.github.io/xmlschemas/garmin/WaypointExtensionv1.xsd http://www.garmin.com/xmlschemas/PressureExtension/v1 http://bremersee.github.io/xmlschemas/garmin/PressureExtensionv1.xsd http://www.garmin.com/xmlschemas/TrackPointExtension/v1 http://bremersee.github.io/xmlschemas/garmin/TrackPointExtensionv1.xsd http://www.garmin.com/xmlschemas/TripExtensions/v1 http://bremersee.github.io/xmlschemas/garmin/TripExtensionsv1.xsd http://www.garmin.com/xmlschemas/VideoExtension/v1 http://bremersee.github.io/xmlschemas/garmin/VideoExtensionv1.xsd">
+          <ns6:rpt lat="49.628743669" lon="10.952726919"/>
+          <ns6:rpt lat="49.628162384" lon="10.953068733"/>
+          <ns6:rpt lat="49.627947807" lon="10.953154564"/>
+          <ns6:rpt lat="49.627861977" lon="10.952467918"/>
+          <ns6:rpt lat="49.627776146" lon="10.952038765"/>
+          <ns6:rpt lat="49.627733231" lon="10.951910019"/>
+          <ns6:rpt lat="49.6276474" lon="10.951395035"/>
+          <ns6:rpt lat="49.627604485" lon="10.950751305"/>
+          <ns6:rpt lat="49.627604485" lon="10.950035993"/>
+        </ns6:RoutePointExtension>
+      </ns5:extensions>
+    </ns5:rtept>
+    <ns5:rtept lat="49.627604485" lon="10.950035993">
+      <ns5:time>2019-04-02T11:57:59.166Z</ns5:time>
+      <ns5:name>S08</ns5:name>
+      <ns5:cmt>Naturbadstrasse 60
+        Erlangen - Dechsendorf, Erlangen, 91056, DEU</ns5:cmt>
+      <ns5:desc>Naturbadstrasse 60
+        Erlangen - Dechsendorf, Erlangen, 91056, DEU</ns5:desc>
+      <ns5:sym>Flag, Blue</ns5:sym>
+      <ns5:extensions>
+        <ns11:ViaPoint xsi:schemaLocation="http://www.garmin.com/xmlschemas/AdventuresExtensions/v1 http://bremersee.github.io/xmlschemas/garmin/AdventuresExtensionv1.xsd http://www.garmin.com/xmlschemas/ViaPointTransportationModeExtensions/v1 http://bremersee.github.io/xmlschemas/garmin/ViaPointTransportationModeExtensionsv1.xsd http://www.garmin.com/xmlschemas/AccelerationExtension/v1 http://bremersee.github.io/xmlschemas/garmin/AccelerationExtensionv1.xsd http://www.garmin.com/xmlschemas/TripMetaDataExtensions/v1 http://bremersee.github.io/xmlschemas/garmin/TripMetaDataExtensionsv1.xsd http://www.topografix.com/GPX/1/1 http://www.topografix.com/GPX/1/1/gpx.xsd http://www.garmin.com/xmlschemas/GpxExtensions/v3 http://bremersee.github.io/xmlschemas/garmin/GpxExtensionsv3.xsd http://www.garmin.com/xmlschemas/CreationTimeExtension/v1 http://bremersee.github.io/xmlschemas/garmin/CreationTimeExtensionv1.xsd http://www.garmin.com/xmlschemas/WaypointExtension/v1 http://bremersee.github.io/xmlschemas/garmin/WaypointExtensionv1.xsd http://www.garmin.com/xmlschemas/PressureExtension/v1 http://bremersee.github.io/xmlschemas/garmin/PressureExtensionv1.xsd http://www.garmin.com/xmlschemas/TrackPointExtension/v1 http://bremersee.github.io/xmlschemas/garmin/TrackPointExtensionv1.xsd http://www.garmin.com/xmlschemas/TripExtensions/v1 http://bremersee.github.io/xmlschemas/garmin/TripExtensionsv1.xsd http://www.garmin.com/xmlschemas/VideoExtension/v1 http://bremersee.github.io/xmlschemas/garmin/VideoExtensionv1.xsd">
+          <ns11:CalculationMode>FasterTime</ns11:CalculationMode>
+          <ns11:ElevationMode>Standard</ns11:ElevationMode>
+        </ns11:ViaPoint>
+        <ns6:RoutePointExtension xsi:schemaLocation="http://www.garmin.com/xmlschemas/AdventuresExtensions/v1 http://bremersee.github.io/xmlschemas/garmin/AdventuresExtensionv1.xsd http://www.garmin.com/xmlschemas/ViaPointTransportationModeExtensions/v1 http://bremersee.github.io/xmlschemas/garmin/ViaPointTransportationModeExtensionsv1.xsd http://www.garmin.com/xmlschemas/AccelerationExtension/v1 http://bremersee.github.io/xmlschemas/garmin/AccelerationExtensionv1.xsd http://www.garmin.com/xmlschemas/TripMetaDataExtensions/v1 http://bremersee.github.io/xmlschemas/garmin/TripMetaDataExtensionsv1.xsd http://www.topografix.com/GPX/1/1 http://www.topografix.com/GPX/1/1/gpx.xsd http://www.garmin.com/xmlschemas/GpxExtensions/v3 http://bremersee.github.io/xmlschemas/garmin/GpxExtensionsv3.xsd http://www.garmin.com/xmlschemas/CreationTimeExtension/v1 http://bremersee.github.io/xmlschemas/garmin/CreationTimeExtensionv1.xsd http://www.garmin.com/xmlschemas/WaypointExtension/v1 http://bremersee.github.io/xmlschemas/garmin/WaypointExtensionv1.xsd http://www.garmin.com/xmlschemas/PressureExtension/v1 http://bremersee.github.io/xmlschemas/garmin/PressureExtensionv1.xsd http://www.garmin.com/xmlschemas/TrackPointExtension/v1 http://bremersee.github.io/xmlschemas/garmin/TrackPointExtensionv1.xsd http://www.garmin.com/xmlschemas/TripExtensions/v1 http://bremersee.github.io/xmlschemas/garmin/TripExtensionsv1.xsd http://www.garmin.com/xmlschemas/VideoExtension/v1 http://bremersee.github.io/xmlschemas/garmin/VideoExtensionv1.xsd">
+          <ns6:rpt lat="49.627604485" lon="10.949549675"/>
+          <ns6:rpt lat="49.6276474" lon="10.948433876"/>
+          <ns6:rpt lat="49.627604485" lon="10.94701767"/>
+          <ns6:rpt lat="49.627561569" lon="10.946331024"/>
+          <ns6:rpt lat="49.627561569" lon="10.945987701"/>
+          <ns6:rpt lat="49.627561569" lon="10.945515633"/>
+          <ns6:rpt lat="49.627776146" lon="10.944013596"/>
+          <ns6:rpt lat="49.627861977" lon="10.943241119"/>
+          <ns6:rpt lat="49.628119469" lon="10.941524506"/>
+          <ns6:rpt lat="49.628462791" lon="10.940065384"/>
+          <ns6:rpt lat="49.628538145" lon="10.939650396"/>
+          <ns6:rpt lat="49.628505707" lon="10.93963623"/>
+        </ns6:RoutePointExtension>
+      </ns5:extensions>
+    </ns5:rtept>
+    <ns5:rtept lat="49.628505707" lon="10.93963623">
+      <ns5:time>2019-04-02T11:57:59.176Z</ns5:time>
+      <ns5:name>Post-Naturbadstrasse</ns5:name>
+      <ns5:cmt>Post-Naturbadstrasse
+        Naturbadstrasse 3
+        Erlangen - Dechsendorf, Erlangen, 91056, DEU
+        0228 55005900</ns5:cmt>
+      <ns5:desc>Post-Naturbadstrasse
+        Naturbadstrasse 3
+        Erlangen - Dechsendorf, Erlangen, 91056, DEU
+        0228 55005900</ns5:desc>
+      <ns5:sym>Flag, Blue</ns5:sym>
+    </ns5:rtept>
+  </ns5:rte>
+</ns5:gpx>

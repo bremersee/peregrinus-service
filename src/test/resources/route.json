@@ -1,0 +1,1056 @@
+{
+  "type": "FeatureCollection",
+  "bbox": [
+    10.933618946000934,
+    49.62756156921387,
+    10.953154563903809,
+    49.633101085200906
+  ],
+  "features": [
+    {
+      "type": "Feature",
+      "id": null,
+      "bbox": [
+        10.93963623046875,
+        49.62850570678711,
+        10.93963623046875,
+        49.62850570678711
+      ],
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          10.93963623,
+          49.628505707
+        ]
+      },
+      "properties": {
+        "_type": "Wpt",
+        "acl": {
+          "owner": null,
+          "entries": null
+        },
+        "created": "2019-04-02T11:57:59.199Z",
+        "createdBy": null,
+        "modified": "2019-04-02T11:57:59.199Z",
+        "modifiedBy": null,
+        "name": "Post-Naturbadstrasse",
+        "plainTextDescription": "Post-Naturbadstrasse\nNaturbadstrasse 3\nErlangen - Dechsendorf, Erlangen, 91056, DEU\n0228 55005900",
+        "markdownDescription": "Post-Naturbadstrasse\nNaturbadstrasse 3\nErlangen - Dechsendorf, Erlangen, 91056, DEU\n0228 55005900",
+        "internalComments": null,
+        "links": [],
+        "startTime": null,
+        "stopTime": null,
+        "settings": {
+          "_type": "Wpt"
+        },
+        "internalType": null,
+        "ele": null,
+        "address": {
+          "streetNumber": null,
+          "street": "Naturbadstrasse 3",
+          "postalCode": "91056",
+          "postbox": null,
+          "city": "Erlangen - Dechsendorf",
+          "suburb": null,
+          "state": "Erlangen",
+          "country": "DEU",
+          "countryCode": null,
+          "formattedAddress": null
+        },
+        "phoneNumbers": [
+          {
+            "value": "0228 55005900",
+            "category": null
+          }
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": null,
+      "bbox": [
+        10.933618946000934,
+        49.633101085200906,
+        10.933618946000934,
+        49.633101085200906
+      ],
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          10.933618946,
+          49.633101085
+        ]
+      },
+      "properties": {
+        "_type": "Wpt",
+        "acl": {
+          "owner": null,
+          "entries": null
+        },
+        "created": "2019-04-02T11:57:59.2Z",
+        "createdBy": null,
+        "modified": "2019-04-02T11:57:59.2Z",
+        "modifiedBy": null,
+        "name": "S01",
+        "plainTextDescription": "Pfad",
+        "markdownDescription": "Pfad",
+        "internalComments": null,
+        "links": [],
+        "startTime": null,
+        "stopTime": null,
+        "settings": {
+          "_type": "Wpt"
+        },
+        "internalType": null,
+        "ele": null,
+        "address": null,
+        "phoneNumbers": []
+      }
+    },
+    {
+      "type": "Feature",
+      "id": null,
+      "bbox": [
+        10.934529304504395,
+        49.63168144226074,
+        10.934529304504395,
+        49.63168144226074
+      ],
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          10.934529305,
+          49.631681442
+        ]
+      },
+      "properties": {
+        "_type": "Wpt",
+        "acl": {
+          "owner": null,
+          "entries": null
+        },
+        "created": "2019-04-02T11:57:59.201Z",
+        "createdBy": null,
+        "modified": "2019-04-02T11:57:59.201Z",
+        "modifiedBy": null,
+        "name": "S04",
+        "plainTextDescription": "Kleiberstrasse und Faust-Von-Stromberg-Strasse",
+        "markdownDescription": "Kleiberstrasse und Faust-Von-Stromberg-Strasse",
+        "internalComments": null,
+        "links": [],
+        "startTime": null,
+        "stopTime": null,
+        "settings": {
+          "_type": "Wpt"
+        },
+        "internalType": null,
+        "ele": null,
+        "address": null,
+        "phoneNumbers": []
+      }
+    },
+    {
+      "type": "Feature",
+      "id": null,
+      "bbox": [
+        10.938692092895508,
+        49.630093574523926,
+        10.938692092895508,
+        49.630093574523926
+      ],
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          10.938692093,
+          49.630093575
+        ]
+      },
+      "properties": {
+        "_type": "Wpt",
+        "acl": {
+          "owner": null,
+          "entries": null
+        },
+        "created": "2019-04-02T11:57:59.201Z",
+        "createdBy": null,
+        "modified": "2019-04-02T11:57:59.201Z",
+        "modifiedBy": null,
+        "name": "S05",
+        "plainTextDescription": "Faust-Von-Stromberg-Strasse",
+        "markdownDescription": "Faust-Von-Stromberg-Strasse",
+        "internalComments": null,
+        "links": [],
+        "startTime": null,
+        "stopTime": null,
+        "settings": {
+          "_type": "Wpt"
+        },
+        "internalType": null,
+        "ele": null,
+        "address": null,
+        "phoneNumbers": []
+      }
+    },
+    {
+      "type": "Feature",
+      "id": null,
+      "bbox": [
+        10.942898634821177,
+        49.63194035924971,
+        10.942898634821177,
+        49.63194035924971
+      ],
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          10.942898635,
+          49.631940359
+        ]
+      },
+      "properties": {
+        "_type": "Wpt",
+        "acl": {
+          "owner": null,
+          "entries": null
+        },
+        "created": "2019-04-02T11:57:59.202Z",
+        "createdBy": null,
+        "modified": "2019-04-02T11:57:59.202Z",
+        "modifiedBy": null,
+        "name": "S06",
+        "plainTextDescription": "Campingstrasse 22\nErlangen - Dechsendorf, Erlangen, 91056, DEU",
+        "markdownDescription": "Campingstrasse 22\nErlangen - Dechsendorf, Erlangen, 91056, DEU",
+        "internalComments": null,
+        "links": [],
+        "startTime": null,
+        "stopTime": null,
+        "settings": {
+          "_type": "Wpt"
+        },
+        "internalType": null,
+        "ele": null,
+        "address": {
+          "streetNumber": null,
+          "street": "Campingstrasse 22",
+          "postalCode": "91056",
+          "postbox": null,
+          "city": "Erlangen - Dechsendorf",
+          "suburb": null,
+          "state": "Erlangen",
+          "country": "DEU",
+          "countryCode": null,
+          "formattedAddress": null
+        },
+        "phoneNumbers": []
+      }
+    },
+    {
+      "type": "Feature",
+      "id": null,
+      "bbox": [
+        10.952726751565933,
+        49.62874375283718,
+        10.952726751565933,
+        49.62874375283718
+      ],
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          10.952726752,
+          49.628743753
+        ]
+      },
+      "properties": {
+        "_type": "Wpt",
+        "acl": {
+          "owner": null,
+          "entries": null
+        },
+        "created": "2019-04-02T11:57:59.202Z",
+        "createdBy": null,
+        "modified": "2019-04-02T11:57:59.202Z",
+        "modifiedBy": null,
+        "name": "S07",
+        "plainTextDescription": "Campingstrasse 78\nErlangen - Dechsendorf, Erlangen, 91056, DEU",
+        "markdownDescription": "Campingstrasse 78\nErlangen - Dechsendorf, Erlangen, 91056, DEU",
+        "internalComments": null,
+        "links": [],
+        "startTime": null,
+        "stopTime": null,
+        "settings": {
+          "_type": "Wpt"
+        },
+        "internalType": null,
+        "ele": null,
+        "address": {
+          "streetNumber": null,
+          "street": "Campingstrasse 78",
+          "postalCode": "91056",
+          "postbox": null,
+          "city": "Erlangen - Dechsendorf",
+          "suburb": null,
+          "state": "Erlangen",
+          "country": "DEU",
+          "countryCode": null,
+          "formattedAddress": null
+        },
+        "phoneNumbers": []
+      }
+    },
+    {
+      "type": "Feature",
+      "id": null,
+      "bbox": [
+        10.950035993009806,
+        49.627604484558105,
+        10.950035993009806,
+        49.627604484558105
+      ],
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          10.950035993,
+          49.627604485
+        ]
+      },
+      "properties": {
+        "_type": "Wpt",
+        "acl": {
+          "owner": null,
+          "entries": null
+        },
+        "created": "2019-04-02T11:57:59.203Z",
+        "createdBy": null,
+        "modified": "2019-04-02T11:57:59.203Z",
+        "modifiedBy": null,
+        "name": "S08",
+        "plainTextDescription": "Naturbadstrasse 60\nErlangen - Dechsendorf, Erlangen, 91056, DEU",
+        "markdownDescription": "Naturbadstrasse 60\nErlangen - Dechsendorf, Erlangen, 91056, DEU",
+        "internalComments": null,
+        "links": [],
+        "startTime": null,
+        "stopTime": null,
+        "settings": {
+          "_type": "Wpt"
+        },
+        "internalType": null,
+        "ele": null,
+        "address": {
+          "streetNumber": null,
+          "street": "Naturbadstrasse 60",
+          "postalCode": "91056",
+          "postbox": null,
+          "city": "Erlangen - Dechsendorf",
+          "suburb": null,
+          "state": "Erlangen",
+          "country": "DEU",
+          "countryCode": null,
+          "formattedAddress": null
+        },
+        "phoneNumbers": []
+      }
+    },
+    {
+      "type": "Feature",
+      "id": null,
+      "bbox": null,
+      "geometry": {
+        "type": "MultiLineString",
+        "coordinates": [
+          [
+            [
+              10.933618946,
+              49.633101085
+            ],
+            [
+              10.933628082,
+              49.633054733
+            ],
+            [
+              10.934615135,
+              49.633011818
+            ],
+            [
+              10.93457222,
+              49.632668495
+            ],
+            [
+              10.93457222,
+              49.632496834
+            ],
+            [
+              10.93457222,
+              49.632282257
+            ],
+            [
+              10.934529305,
+              49.631681442
+            ]
+          ],
+          [
+            [
+              10.934529305,
+              49.631681442
+            ],
+            [
+              10.935816765,
+              49.631123543
+            ],
+            [
+              10.937232971,
+              49.630522728
+            ],
+            [
+              10.937619209,
+              49.630393982
+            ],
+            [
+              10.938262939,
+              49.630179405
+            ],
+            [
+              10.938692093,
+              49.630093575
+            ]
+          ],
+          [
+            [
+              10.938692093,
+              49.630093575
+            ],
+            [
+              10.939249992,
+              49.630050659
+            ],
+            [
+              10.939807892,
+              49.629836082
+            ],
+            [
+              10.940108299,
+              49.629535675
+            ],
+            [
+              10.940666199,
+              49.629535675
+            ],
+            [
+              10.941095352,
+              49.629621506
+            ],
+            [
+              10.94148159,
+              49.629793167
+            ],
+            [
+              10.941567421,
+              49.629921913
+            ],
+            [
+              10.941824913,
+              49.630265236
+            ],
+            [
+              10.942211151,
+              49.63078022
+            ],
+            [
+              10.942382813,
+              49.631123543
+            ],
+            [
+              10.942554474,
+              49.63142395
+            ],
+            [
+              10.942898551,
+              49.631940275
+            ],
+            [
+              10.942898635,
+              49.631940359
+            ]
+          ],
+          [
+            [
+              10.942898635,
+              49.631940359
+            ],
+            [
+              10.942898551,
+              49.631940275
+            ],
+            [
+              10.943155289,
+              49.632325172
+            ],
+            [
+              10.943369865,
+              49.632754326
+            ],
+            [
+              10.943541527,
+              49.632968903
+            ],
+            [
+              10.944099426,
+              49.632840157
+            ],
+            [
+              10.945301056,
+              49.632153511
+            ],
+            [
+              10.947704315,
+              49.63133812
+            ],
+            [
+              10.94950676,
+              49.630479813
+            ],
+            [
+              10.949807167,
+              49.630308151
+            ],
+            [
+              10.950279236,
+              49.630093575
+            ],
+            [
+              10.951695442,
+              49.629664421
+            ],
+            [
+              10.95208168,
+              49.629449844
+            ],
+            [
+              10.95263958,
+              49.628891945
+            ],
+            [
+              10.952726919,
+              49.628743669
+            ],
+            [
+              10.952726752,
+              49.628743753
+            ]
+          ],
+          [
+            [
+              10.952726752,
+              49.628743753
+            ],
+            [
+              10.952726919,
+              49.628743669
+            ],
+            [
+              10.953068733,
+              49.628162384
+            ],
+            [
+              10.953154564,
+              49.627947807
+            ],
+            [
+              10.952467918,
+              49.627861977
+            ],
+            [
+              10.952038765,
+              49.627776146
+            ],
+            [
+              10.951910019,
+              49.627733231
+            ],
+            [
+              10.951395035,
+              49.6276474
+            ],
+            [
+              10.950751305,
+              49.627604485
+            ],
+            [
+              10.950035993,
+              49.627604485
+            ]
+          ],
+          [
+            [
+              10.950035993,
+              49.627604485
+            ],
+            [
+              10.949549675,
+              49.627604485
+            ],
+            [
+              10.948433876,
+              49.6276474
+            ],
+            [
+              10.94701767,
+              49.627604485
+            ],
+            [
+              10.946331024,
+              49.627561569
+            ],
+            [
+              10.945987701,
+              49.627561569
+            ],
+            [
+              10.945515633,
+              49.627561569
+            ],
+            [
+              10.944013596,
+              49.627776146
+            ],
+            [
+              10.943241119,
+              49.627861977
+            ],
+            [
+              10.941524506,
+              49.628119469
+            ],
+            [
+              10.940065384,
+              49.628462791
+            ],
+            [
+              10.939650396,
+              49.628538145
+            ],
+            [
+              10.93963623,
+              49.628505707
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "_type": "Rte",
+        "acl": {
+          "owner": null,
+          "entries": null
+        },
+        "created": "2019-04-02T11:57:59.183Z",
+        "createdBy": null,
+        "modified": "2019-04-02T11:57:59.183Z",
+        "modifiedBy": null,
+        "name": "S01 bis Post-Naturbadstrasse",
+        "plainTextDescription": "Eine Notiz von mir",
+        "markdownDescription": "Eine Notiz von mir",
+        "internalComments": null,
+        "links": [
+          {
+            "href": "/Users/cbr/Pictures/fendt_200v.jpg",
+            "type": null,
+            "text": null,
+            "description": null
+          }
+        ],
+        "startTime": null,
+        "stopTime": null,
+        "settings": {
+          "_type": "Rte",
+          "displayColor": "CYAN"
+        },
+        "rtePts": [
+          {
+            "type": "Feature",
+            "id": null,
+            "bbox": [
+              10.933618946000934,
+              49.633101085200906,
+              10.933618946000934,
+              49.633101085200906
+            ],
+            "geometry": {
+              "type": "Point",
+              "coordinates": [
+                10.933618946,
+                49.633101085
+              ]
+            },
+            "properties": {
+              "_type": "RtePt",
+              "acl": null,
+              "created": "2019-04-02T11:57:59.111Z",
+              "createdBy": null,
+              "modified": "2019-04-02T11:57:59.111Z",
+              "modifiedBy": null,
+              "name": "S01",
+              "plainTextDescription": "Pfad",
+              "markdownDescription": "Pfad",
+              "internalComments": null,
+              "links": [],
+              "startTime": null,
+              "stopTime": null,
+              "settings": null,
+              "internalType": null,
+              "ele": null,
+              "address": null,
+              "phoneNumbers": [],
+              "calculationProperties": {
+                "_type": "GarminImportRteCalculationProperties",
+                "transportationMode": "Automotive",
+                "departureTime": null,
+                "stopDurationMillis": null,
+                "arrivalTime": null,
+                "calculationMode": null,
+                "elevationMode": null,
+                "namedRoad": null,
+                "calculationSupported": false,
+                "provider": "GarminImport"
+              },
+              "lengthInMeters": null,
+              "travelTimeInSeconds": null,
+              "trafficDelayInSeconds": null,
+              "noTrafficTravelTimeInSeconds": null,
+              "historicTrafficTravelTimeInSeconds": null,
+              "liveTrafficIncidentsTravelTimeInSeconds": null
+            }
+          },
+          {
+            "type": "Feature",
+            "id": null,
+            "bbox": [
+              10.934529304504395,
+              49.63168144226074,
+              10.934529304504395,
+              49.63168144226074
+            ],
+            "geometry": {
+              "type": "Point",
+              "coordinates": [
+                10.934529305,
+                49.631681442
+              ]
+            },
+            "properties": {
+              "_type": "RtePt",
+              "acl": null,
+              "created": "2019-04-02T11:57:59.124Z",
+              "createdBy": null,
+              "modified": "2019-04-02T11:57:59.124Z",
+              "modifiedBy": null,
+              "name": "S04",
+              "plainTextDescription": "Kleiberstrasse und Faust-Von-Stromberg-Strasse",
+              "markdownDescription": "Kleiberstrasse und Faust-Von-Stromberg-Strasse",
+              "internalComments": null,
+              "links": [],
+              "startTime": null,
+              "stopTime": null,
+              "settings": null,
+              "internalType": null,
+              "ele": null,
+              "address": null,
+              "phoneNumbers": [],
+              "calculationProperties": {
+                "_type": "GarminImportRteCalculationProperties",
+                "transportationMode": "Automotive",
+                "departureTime": null,
+                "stopDurationMillis": null,
+                "arrivalTime": null,
+                "calculationMode": null,
+                "elevationMode": null,
+                "namedRoad": null,
+                "calculationSupported": false,
+                "provider": "GarminImport"
+              },
+              "lengthInMeters": null,
+              "travelTimeInSeconds": null,
+              "trafficDelayInSeconds": null,
+              "noTrafficTravelTimeInSeconds": null,
+              "historicTrafficTravelTimeInSeconds": null,
+              "liveTrafficIncidentsTravelTimeInSeconds": null
+            }
+          },
+          {
+            "type": "Feature",
+            "id": null,
+            "bbox": [
+              10.938692092895508,
+              49.630093574523926,
+              10.938692092895508,
+              49.630093574523926
+            ],
+            "geometry": {
+              "type": "Point",
+              "coordinates": [
+                10.938692093,
+                49.630093575
+              ]
+            },
+            "properties": {
+              "_type": "RtePt",
+              "acl": null,
+              "created": "2019-04-02T11:57:59.135Z",
+              "createdBy": null,
+              "modified": "2019-04-02T11:57:59.135Z",
+              "modifiedBy": null,
+              "name": "S05",
+              "plainTextDescription": "Faust-Von-Stromberg-Strasse",
+              "markdownDescription": "Faust-Von-Stromberg-Strasse",
+              "internalComments": null,
+              "links": [],
+              "startTime": null,
+              "stopTime": null,
+              "settings": null,
+              "internalType": null,
+              "ele": null,
+              "address": null,
+              "phoneNumbers": [],
+              "calculationProperties": {
+                "_type": "GarminImportRteCalculationProperties",
+                "transportationMode": "Automotive",
+                "departureTime": null,
+                "stopDurationMillis": null,
+                "arrivalTime": null,
+                "calculationMode": null,
+                "elevationMode": null,
+                "namedRoad": null,
+                "calculationSupported": false,
+                "provider": "GarminImport"
+              },
+              "lengthInMeters": null,
+              "travelTimeInSeconds": null,
+              "trafficDelayInSeconds": null,
+              "noTrafficTravelTimeInSeconds": null,
+              "historicTrafficTravelTimeInSeconds": null,
+              "liveTrafficIncidentsTravelTimeInSeconds": null
+            }
+          },
+          {
+            "type": "Feature",
+            "id": null,
+            "bbox": [
+              10.942898634821177,
+              49.63194035924971,
+              10.942898634821177,
+              49.63194035924971
+            ],
+            "geometry": {
+              "type": "Point",
+              "coordinates": [
+                10.942898635,
+                49.631940359
+              ]
+            },
+            "properties": {
+              "_type": "RtePt",
+              "acl": null,
+              "created": "2019-04-02T11:57:59.145Z",
+              "createdBy": null,
+              "modified": "2019-04-02T11:57:59.145Z",
+              "modifiedBy": null,
+              "name": "S06",
+              "plainTextDescription": "Campingstrasse 22\nErlangen - Dechsendorf, Erlangen, 91056, DEU",
+              "markdownDescription": "Campingstrasse 22\nErlangen - Dechsendorf, Erlangen, 91056, DEU",
+              "internalComments": null,
+              "links": [],
+              "startTime": null,
+              "stopTime": null,
+              "settings": null,
+              "internalType": null,
+              "ele": null,
+              "address": null,
+              "phoneNumbers": [],
+              "calculationProperties": {
+                "_type": "GarminImportRteCalculationProperties",
+                "transportationMode": "Automotive",
+                "departureTime": null,
+                "stopDurationMillis": null,
+                "arrivalTime": null,
+                "calculationMode": null,
+                "elevationMode": null,
+                "namedRoad": null,
+                "calculationSupported": false,
+                "provider": "GarminImport"
+              },
+              "lengthInMeters": null,
+              "travelTimeInSeconds": null,
+              "trafficDelayInSeconds": null,
+              "noTrafficTravelTimeInSeconds": null,
+              "historicTrafficTravelTimeInSeconds": null,
+              "liveTrafficIncidentsTravelTimeInSeconds": null
+            }
+          },
+          {
+            "type": "Feature",
+            "id": null,
+            "bbox": [
+              10.952726751565933,
+              49.62874375283718,
+              10.952726751565933,
+              49.62874375283718
+            ],
+            "geometry": {
+              "type": "Point",
+              "coordinates": [
+                10.952726752,
+                49.628743753
+              ]
+            },
+            "properties": {
+              "_type": "RtePt",
+              "acl": null,
+              "created": "2019-04-02T11:57:59.159Z",
+              "createdBy": null,
+              "modified": "2019-04-02T11:57:59.159Z",
+              "modifiedBy": null,
+              "name": "S07",
+              "plainTextDescription": "Campingstrasse 78\nErlangen - Dechsendorf, Erlangen, 91056, DEU",
+              "markdownDescription": "Campingstrasse 78\nErlangen - Dechsendorf, Erlangen, 91056, DEU",
+              "internalComments": null,
+              "links": [],
+              "startTime": null,
+              "stopTime": null,
+              "settings": null,
+              "internalType": null,
+              "ele": null,
+              "address": null,
+              "phoneNumbers": [],
+              "calculationProperties": {
+                "_type": "GarminImportRteCalculationProperties",
+                "transportationMode": "Automotive",
+                "departureTime": null,
+                "stopDurationMillis": null,
+                "arrivalTime": null,
+                "calculationMode": null,
+                "elevationMode": null,
+                "namedRoad": null,
+                "calculationSupported": false,
+                "provider": "GarminImport"
+              },
+              "lengthInMeters": null,
+              "travelTimeInSeconds": null,
+              "trafficDelayInSeconds": null,
+              "noTrafficTravelTimeInSeconds": null,
+              "historicTrafficTravelTimeInSeconds": null,
+              "liveTrafficIncidentsTravelTimeInSeconds": null
+            }
+          },
+          {
+            "type": "Feature",
+            "id": null,
+            "bbox": [
+              10.950035993009806,
+              49.627604484558105,
+              10.950035993009806,
+              49.627604484558105
+            ],
+            "geometry": {
+              "type": "Point",
+              "coordinates": [
+                10.950035993,
+                49.627604485
+              ]
+            },
+            "properties": {
+              "_type": "RtePt",
+              "acl": null,
+              "created": "2019-04-02T11:57:59.166Z",
+              "createdBy": null,
+              "modified": "2019-04-02T11:57:59.166Z",
+              "modifiedBy": null,
+              "name": "S08",
+              "plainTextDescription": "Naturbadstrasse 60\nErlangen - Dechsendorf, Erlangen, 91056, DEU",
+              "markdownDescription": "Naturbadstrasse 60\nErlangen - Dechsendorf, Erlangen, 91056, DEU",
+              "internalComments": null,
+              "links": [],
+              "startTime": null,
+              "stopTime": null,
+              "settings": null,
+              "internalType": null,
+              "ele": null,
+              "address": null,
+              "phoneNumbers": [],
+              "calculationProperties": {
+                "_type": "GarminImportRteCalculationProperties",
+                "transportationMode": "Automotive",
+                "departureTime": null,
+                "stopDurationMillis": null,
+                "arrivalTime": null,
+                "calculationMode": null,
+                "elevationMode": null,
+                "namedRoad": null,
+                "calculationSupported": false,
+                "provider": "GarminImport"
+              },
+              "lengthInMeters": null,
+              "travelTimeInSeconds": null,
+              "trafficDelayInSeconds": null,
+              "noTrafficTravelTimeInSeconds": null,
+              "historicTrafficTravelTimeInSeconds": null,
+              "liveTrafficIncidentsTravelTimeInSeconds": null
+            }
+          },
+          {
+            "type": "Feature",
+            "id": null,
+            "bbox": [
+              10.93963623046875,
+              49.62850570678711,
+              10.93963623046875,
+              49.62850570678711
+            ],
+            "geometry": {
+              "type": "Point",
+              "coordinates": [
+                10.93963623,
+                49.628505707
+              ]
+            },
+            "properties": {
+              "_type": "RtePt",
+              "acl": null,
+              "created": "2019-04-02T11:57:59.176Z",
+              "createdBy": null,
+              "modified": "2019-04-02T11:57:59.176Z",
+              "modifiedBy": null,
+              "name": "Post-Naturbadstrasse",
+              "plainTextDescription": "Post-Naturbadstrasse\nNaturbadstrasse 3\nErlangen - Dechsendorf, Erlangen, 91056, DEU\n0228 55005900",
+              "markdownDescription": "Post-Naturbadstrasse\nNaturbadstrasse 3\nErlangen - Dechsendorf, Erlangen, 91056, DEU\n0228 55005900",
+              "internalComments": null,
+              "links": [],
+              "startTime": null,
+              "stopTime": null,
+              "settings": null,
+              "internalType": null,
+              "ele": null,
+              "address": null,
+              "phoneNumbers": [],
+              "calculationProperties": {
+                "_type": "GarminImportRteCalculationProperties",
+                "transportationMode": "Automotive",
+                "departureTime": null,
+                "stopDurationMillis": null,
+                "arrivalTime": null,
+                "calculationMode": null,
+                "elevationMode": null,
+                "namedRoad": null,
+                "calculationSupported": false,
+                "provider": "GarminImport"
+              },
+              "lengthInMeters": null,
+              "travelTimeInSeconds": null,
+              "trafficDelayInSeconds": null,
+              "noTrafficTravelTimeInSeconds": null,
+              "historicTrafficTravelTimeInSeconds": null,
+              "liveTrafficIncidentsTravelTimeInSeconds": null
+            }
+          }
+        ]
+      }
+    }
+  ]
+}
