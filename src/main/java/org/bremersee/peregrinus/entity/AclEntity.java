@@ -56,35 +56,31 @@ public class AclEntity implements Acl<AceEntity> {
   public AclEntity(final String owner, final Map<String, ? extends Ace> entries) {
     this.owner = owner;
     if (entries != null) {
-      entries
-          .entrySet()
-          .stream()
-          .filter(Objects::nonNull)
-          .filter(entry -> entry.getKey() != null)
-          .filter(entry -> entry.getValue() != null)
-          .forEach(entry -> {
-            final String permission = entry.getKey().toLowerCase();
-            final AceEntity ace = new AceEntity(entry.getValue());
-            switch (permission) {
-              case PermissionConstants.ADMINISTRATION:
-                administration = ace;
-                break;
-              case PermissionConstants.CREATE:
-                create = ace;
-                break;
-              case PermissionConstants.DELETE:
-                delete = ace;
-                break;
-              case PermissionConstants.READ:
-                read = ace;
-                break;
-              case PermissionConstants.WRITE:
-                write = ace;
-                break;
-              default:
-                break;
-            }
-          });
+      for (Map.Entry<String, ? extends Ace> entry : entries.entrySet()) {
+        if (entry != null && entry.getKey() != null && entry.getValue() != null) {
+          final String permission = entry.getKey().toLowerCase();
+          final AceEntity ace = new AceEntity(entry.getValue());
+          switch (permission) {
+            case PermissionConstants.ADMINISTRATION:
+              administration = ace;
+              break;
+            case PermissionConstants.CREATE:
+              create = ace;
+              break;
+            case PermissionConstants.DELETE:
+              delete = ace;
+              break;
+            case PermissionConstants.READ:
+              read = ace;
+              break;
+            case PermissionConstants.WRITE:
+              write = ace;
+              break;
+            default:
+              break;
+          }
+        }
+      }
     }
   }
 

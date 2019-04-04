@@ -24,7 +24,6 @@ import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
 import org.bremersee.garmin.gpx.v3.model.ext.DisplayColorT;
 import org.bremersee.garmin.gpx.v3.model.ext.TrackExtension;
@@ -129,15 +128,12 @@ class TrkTypeToTrkConverter extends AbstractGpxConverter {
     final List<LineString> lineList = new ArrayList<>();
     final List<List<BigDecimal>> eleList = new ArrayList<>();
     final List<List<OffsetDateTime>> timeList = new ArrayList<>();
-    trkSegments
-        .stream()
-        .filter(Objects::nonNull)
-        .map(this::convert)
-        .forEach(tuple -> {
-          lineList.add(tuple.getT1());
-          eleList.add(tuple.getT2());
-          timeList.add(tuple.getT3());
-        });
+    for (final TrksegType trksegType : trkSegments) {
+      final Tuple3<LineString, List<BigDecimal>, List<OffsetDateTime>> tuple = convert(trksegType);
+      lineList.add(tuple.getT1());
+      eleList.add(tuple.getT2());
+      timeList.add(tuple.getT3());
+    }
     return Tuples.of(GeometryUtils.createMultiLineString(lineList), eleList, timeList);
   }
 
@@ -147,15 +143,12 @@ class TrkTypeToTrkConverter extends AbstractGpxConverter {
     final List<Coordinate> coordinates = new ArrayList<>();
     final List<BigDecimal> eleList = new ArrayList<>();
     final List<OffsetDateTime> timeList = new ArrayList<>();
-    trkSegment.getTrkpts()
-        .stream()
-        .filter(Objects::nonNull)
-        .map(this::convert)
-        .forEach(tuple -> {
-          coordinates.add(tuple.getT1());
-          eleList.add(tuple.getT2());
-          timeList.add(tuple.getT3());
-        });
+    for (final WptType wptType : trkSegment.getTrkpts()) {
+      final Tuple3<Coordinate, BigDecimal, OffsetDateTime> tuple = convert(wptType);
+      coordinates.add(tuple.getT1());
+      eleList.add(tuple.getT2());
+      timeList.add(tuple.getT3());
+    }
     return Tuples.of(GeometryUtils.createLineString(coordinates), eleList, timeList);
   }
 
