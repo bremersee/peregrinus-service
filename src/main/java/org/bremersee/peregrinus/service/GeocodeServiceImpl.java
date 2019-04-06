@@ -22,8 +22,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
+import org.bremersee.geojson.utils.GeometryUtils;
 import org.bremersee.peregrinus.model.FeatureCollection;
 import org.bremersee.peregrinus.model.GeocodeQueryRequest;
+import org.bremersee.peregrinus.model.Wpt;
 import org.bremersee.peregrinus.service.adapter.GeocodeAdapter;
 import org.springframework.stereotype.Component;
 import reactor.core.publisher.Mono;
@@ -54,10 +57,13 @@ public class GeocodeServiceImpl implements GeocodeService {
       Set<String> roles,
       Set<String> groups) {
 
-    getAdapter(adapterMap, request).queryGeocode(request, userId, roles, groups)
+    return getAdapter(adapterMap, request)
+        .queryGeocode(request, userId, roles, groups)
         .collectList()
-        .map(wpts -> new FeatureCollection()); // TODO
-
-    return null;
+        .map(wpts -> new FeatureCollection(
+            wpts,
+            GeometryUtils.getBoundingBox(
+                wpts.stream().map(Wpt::getGeometry).collect(Collectors.toList()))));
   }
+
 }
