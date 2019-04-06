@@ -85,7 +85,7 @@ public class NominatimMapperImpl implements NominatimMapper {
     destination.setSuburb(source.getAddress().getSuburb());
     destination.setStreetNumber(source.getAddress().getState());
     destination.setCountry(source.getAddress().getCountry());
-    destination.setCountryCode(source.getAddress().getCountryCode());
+    //destination.setCountryCode(source.getAddress().getCountryCode());
     destination.setFormattedAddress(source.getAddress().getFormattedAddress());
     return destination;
   }

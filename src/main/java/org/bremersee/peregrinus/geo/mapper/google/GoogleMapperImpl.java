@@ -118,7 +118,7 @@ public class GoogleMapperImpl implements GoogleMapper {
       } else if (addressComponent.getTypes().contains(AddressComponentType.COUNTRY)) {
         hasValue = hasValue || StringUtils.hasText(addressComponent.getLongName());
         destination.setCountry(addressComponent.getLongName());
-        destination.setCountryCode(addressComponent.getShortName());
+        //destination.setCountryCode(addressComponent.getShortName());
       } else if (addressComponent.getTypes().contains(AddressComponentType.POSTAL_CODE)) {
         hasValue = hasValue || StringUtils.hasText(addressComponent.getLongName());
         destination.setPostalCode(addressComponent.getLongName());

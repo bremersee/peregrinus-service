@@ -9,6 +9,7 @@ import java.util.ServiceLoader;
 import org.bremersee.common.model.Address;
 import org.bremersee.common.model.Link;
 import org.bremersee.common.model.PhoneNumber;
+import org.bremersee.common.model.TwoLetterCountryCode;
 import org.bremersee.garmin.creationtime.v1.model.ext.CreationTimeExtension;
 import org.bremersee.garmin.gpx.v3.model.ext.WaypointExtension;
 import org.bremersee.geojson.utils.GeometryUtils;
@@ -56,7 +57,7 @@ public class WptConverterTest {
     address.setCity("Lübeck");
     address.setCountry(Locale.GERMANY.getDisplayCountry(Locale.GERMANY));
     address.setPostalCode("23552");
-    address.setCountryCode(Locale.GERMANY.getCountry());
+    address.setCountryCode(TwoLetterCountryCode.DE);
     address.setStreet("Mengstraße");
     address.setStreetNumber("4");
     address.setFormattedAddress("Mengstraße 4, 23552 Lübeck");

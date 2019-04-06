@@ -2,6 +2,7 @@ package org.bremersee.peregrinus.garmin;
 
 import java.util.Locale;
 import org.bremersee.common.model.Address;
+import org.bremersee.common.model.TwoLetterCountryCode;
 import org.bremersee.garmin.gpx.v3.model.ext.AddressT;
 import org.junit.Assert;
 import org.junit.Test;
@@ -27,7 +28,7 @@ public class AddressToAddressTypeConverterTest {
     address.setCity("Lübeck");
     address.setCountry(Locale.GERMANY.getDisplayCountry(Locale.GERMANY));
     address.setPostalCode("23552");
-    address.setCountryCode(Locale.GERMANY.getCountry());
+    address.setCountryCode(TwoLetterCountryCode.DE);
     address.setStreet("Mengstraße");
     address.setStreetNumber("4");
     address.setFormattedAddress("Mengstraße 4, 23552 Lübeck");

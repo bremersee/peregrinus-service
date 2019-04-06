@@ -22,6 +22,7 @@ import org.bremersee.exception.RestApiExceptionMapperProperties;
 import org.bremersee.exception.RestApiExceptionParser;
 import org.bremersee.exception.RestApiExceptionParserImpl;
 import org.bremersee.web.reactive.ApiExceptionHandler;
+import org.bremersee.web.reactive.function.client.DefaultWebClientErrorDecoder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.web.ResourceProperties;
@@ -30,6 +31,7 @@ import org.springframework.boot.web.reactive.error.ErrorAttributes;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Primary;
 import org.springframework.core.annotation.Order;
 import org.springframework.http.codec.ServerCodecConfigurer;
 import org.springframework.http.converter.json.Jackson2ObjectMapperBuilder;
@@ -54,14 +56,21 @@ public class ExceptionConfiguration {
   }
 
   @Bean
-  public RestApiExceptionParser restApiExceptionParser(
-      final Jackson2ObjectMapperBuilder objectMapperBuilder) {
-    return new RestApiExceptionParserImpl(objectMapperBuilder);
+  public RestApiExceptionMapper restApiExceptionMapper() {
+    return new RestApiExceptionMapperImpl(apiExceptionMapperProperties, applicationName);
   }
 
   @Bean
-  public RestApiExceptionMapper restApiExceptionMapper() {
-    return new RestApiExceptionMapperImpl(apiExceptionMapperProperties, applicationName);
+  public RestApiExceptionParser restApiExceptionParser(
+      Jackson2ObjectMapperBuilder objectMapperBuilder) {
+    return new RestApiExceptionParserImpl(objectMapperBuilder);
+  }
+
+  @Primary
+  @Bean("defaultWebClientErrorDecoder")
+  public DefaultWebClientErrorDecoder defaultWebClientErrorDecoder(
+      RestApiExceptionParser parser) {
+    return new DefaultWebClientErrorDecoder(parser);
   }
 
   @Bean

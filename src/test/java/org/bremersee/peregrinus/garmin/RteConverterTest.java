@@ -8,6 +8,7 @@ import java.util.Locale;
 import java.util.ServiceLoader;
 import org.bremersee.common.model.Address;
 import org.bremersee.common.model.PhoneNumber;
+import org.bremersee.common.model.TwoLetterCountryCode;
 import org.bremersee.geojson.utils.GeometryUtils;
 import org.bremersee.gpx.model.Gpx;
 import org.bremersee.gpx.model.RteType;
@@ -56,7 +57,7 @@ public class RteConverterTest {
     address.setCity("Lübeck");
     address.setCountry(Locale.GERMANY.getDisplayCountry(Locale.GERMANY));
     address.setPostalCode("23552");
-    address.setCountryCode(Locale.GERMANY.getCountry());
+    address.setCountryCode(TwoLetterCountryCode.DE);
     address.setStreet("Mengstraße");
     address.setStreetNumber("4");
     address.setFormattedAddress("Mengstraße 4, 23552 Lübeck");

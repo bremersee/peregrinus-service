@@ -123,7 +123,7 @@ public class TomTomMapperImpl implements TomTomMapper {
     destination.setSuburb(source.getAddress().getMunicipalitySubdivision());
     destination.setStreetNumber(source.getAddress().getCountrySubdivision());
     destination.setCountry(source.getAddress().getCountry());
-    destination.setCountryCode(source.getAddress().getCountryCode());
+    //destination.setCountryCode(source.getAddress().getCountryCode());
     destination.setFormattedAddress(source.getAddress().getFreeformAddress());
     return destination;
   }

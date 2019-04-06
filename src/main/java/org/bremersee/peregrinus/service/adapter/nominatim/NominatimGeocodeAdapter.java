@@ -1,0 +1,131 @@
+/*
+ * Copyright 2019 the original author or authors.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+package org.bremersee.peregrinus.service.adapter.nominatim;
+
+import java.util.Set;
+import javax.validation.constraints.NotNull;
+import org.bremersee.common.model.Address;
+import org.bremersee.common.model.TwoLetterCountryCode;
+import org.bremersee.geojson.utils.GeometryUtils;
+import org.bremersee.peregrinus.config.NominatimProperties;
+import org.bremersee.peregrinus.model.GeocodeQueryRequest;
+import org.bremersee.peregrinus.model.NominatimGeocodeQueryRequest;
+import org.bremersee.peregrinus.model.Wpt;
+import org.bremersee.peregrinus.model.WptProperties;
+import org.bremersee.peregrinus.service.adapter.GeocodeAdapter;
+import org.bremersee.peregrinus.service.adapter.nominatim.model.GeocodeResult;
+import org.bremersee.web.ErrorDetectors;
+import org.bremersee.web.reactive.function.client.DefaultWebClientErrorDecoder;
+import org.bremersee.web.reactive.function.client.WebClientErrorDecoder;
+import org.locationtech.jts.geom.Polygon;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.http.HttpHeaders;
+import org.springframework.stereotype.Component;
+import org.springframework.util.MultiValueMap;
+import org.springframework.web.reactive.function.client.WebClient;
+import org.springframework.web.reactive.function.client.WebClient.Builder;
+import reactor.core.publisher.Flux;
+
+/**
+ * @author Christian Bremer
+ */
+@Component
+public class NominatimGeocodeAdapter implements GeocodeAdapter {
+
+  private NominatimProperties properties;
+
+  private WebClient.Builder webClientBuilder;
+
+  private WebClientErrorDecoder<? extends Throwable> webClientErrorDecoder;
+
+  public NominatimGeocodeAdapter(
+      final NominatimProperties properties,
+      final Builder webClientBuilder) {
+    this.properties = properties;
+    this.webClientBuilder = webClientBuilder;
+    this.webClientErrorDecoder = new DefaultWebClientErrorDecoder();
+  }
+
+  @Qualifier("defaultWebClientErrorDecoder")
+  @Autowired(required = false)
+  public void setWebClientErrorDecoder(WebClientErrorDecoder<? extends Throwable> decoder) {
+    if (decoder != null) {
+      this.webClientErrorDecoder = decoder;
+    }
+  }
+
+  @Override
+  public @NotNull Class<? extends GeocodeQueryRequest>[] getSupportedRequestClasses() {
+    //noinspection unchecked
+    return new Class[]{NominatimGeocodeQueryRequest.class};
+  }
+
+  @Override
+  public Flux<Wpt> queryGeocode(
+      GeocodeQueryRequest request,
+      String userId,
+      Set<String> roles,
+      Set<String> groups) {
+
+    final NominatimGeocodeQueryRequest nominatimRequest = (NominatimGeocodeQueryRequest) request;
+    final MultiValueMap<String, String> params = nominatimRequest.buildParameters(true);
+    return webClientBuilder
+        .uriBuilderFactory(null)
+        .baseUrl(properties.getSearchUri())
+        .build()
+        .get()
+        .uri(uriBuilder -> uriBuilder.queryParams(params).build())
+        .header(HttpHeaders.USER_AGENT, properties.getUserAgent())
+        .retrieve()
+        .onStatus(ErrorDetectors.DEFAULT, webClientErrorDecoder)
+        .bodyToFlux(GeocodeResult.class)
+        .filter(GeocodeResult::hasLatLon)
+        .map(this::map);
+  }
+
+  private Wpt map(GeocodeResult result) {
+    return Wpt.builder()
+        .geometry(GeometryUtils.createPoint(result.lonToDouble(), result.latToDouble()))
+        .properties(WptProperties.builder()
+            .address(map(result.getAddress()))
+            .area(result.getGeoJson() instanceof Polygon ? (Polygon) result.getGeoJson() : null)
+            .name(result.getDisplayName())
+            .osmCategory(result.getCategory())
+            .osmId(result.getOsmId())
+            .osmPlaceId(result.getPlaceId())
+            .osmType(result.getOsmType())
+            .build())
+        .build();
+  }
+
+  private Address map(org.bremersee.peregrinus.service.adapter.nominatim.model.Address source) {
+    if (source == null) {
+      return null;
+    }
+    final String countryCode = source.getCountryCode() != null
+        ? source.getCountryCode().toUpperCase()
+        : null;
+    return new Address()
+        .city(source.getCity())
+        .country(source.getCountry())
+        .countryCode(TwoLetterCountryCode.fromValue(countryCode))
+        .postalCode(source.getPostcode())
+        .state(source.getState())
+        .suburb(source.getSuburb());
+  }
+}

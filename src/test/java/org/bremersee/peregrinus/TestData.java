@@ -30,6 +30,7 @@ import org.bremersee.common.model.AccessControlList;
 import org.bremersee.common.model.Address;
 import org.bremersee.common.model.Link;
 import org.bremersee.common.model.PhoneNumber;
+import org.bremersee.common.model.TwoLetterCountryCode;
 import org.bremersee.geojson.utils.GeometryUtils;
 import org.bremersee.peregrinus.model.DisplayColor;
 import org.bremersee.peregrinus.model.Rte;
@@ -448,7 +449,7 @@ public abstract class TestData {
     address.setCity("Lübeck");
     address.setCountry(Locale.GERMANY.getDisplayCountry(Locale.GERMANY));
     address.setPostalCode("23552");
-    address.setCountryCode(Locale.GERMANY.getCountry());
+    address.setCountryCode(TwoLetterCountryCode.DE);
     address.setStreet("Mengstraße");
     address.setStreetNumber("4");
     address.setFormattedAddress("Mengstraße 4, 23552 Lübeck");
