@@ -62,7 +62,7 @@ public class FeatureServiceImpl extends AbstractServiceImpl implements FeatureSe
   }
 
   private FeatureAdapter getFeatureAdapter(final Object obj) {
-    return getAdapter(featureAdapterMap, obj);
+    return AdapterHelper.getAdapter(featureAdapterMap, obj);
   }
 
   @Override

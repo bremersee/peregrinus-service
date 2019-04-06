@@ -16,14 +16,18 @@
 
 package org.bremersee.peregrinus.service.adapter.tomtom;
 
+import java.math.BigDecimal;
+import java.nio.charset.StandardCharsets;
 import java.util.Objects;
 import java.util.Set;
+import java.util.stream.Collectors;
 import javax.validation.constraints.NotNull;
 import lombok.extern.slf4j.Slf4j;
 import org.bremersee.common.model.Address;
 import org.bremersee.common.model.LocaleHelper;
 import org.bremersee.common.model.ThreeLetterCountryCode;
 import org.bremersee.common.model.TwoLetterCountryCode;
+import org.bremersee.geojson.utils.GeometryUtils;
 import org.bremersee.peregrinus.config.TomTomProperties;
 import org.bremersee.peregrinus.model.GeocodeQueryRequest;
 import org.bremersee.peregrinus.model.TomTomGeocodeQueryRequest;
@@ -34,10 +38,14 @@ import org.bremersee.peregrinus.service.adapter.tomtom.model.GeocodeResponse;
 import org.bremersee.peregrinus.service.adapter.tomtom.model.GeocodeResult;
 import org.bremersee.web.ErrorDetectors;
 import org.bremersee.web.reactive.function.client.WebClientErrorDecoder;
+import org.locationtech.jts.geom.Coordinate;
 import org.springframework.stereotype.Component;
+import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
+import org.springframework.util.StringUtils;
 import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.reactive.function.client.WebClient.Builder;
+import org.springframework.web.util.UriUtils;
 import reactor.core.publisher.Flux;
 
 /**
@@ -76,8 +84,8 @@ public class TomTomGeocodeAdapter implements GeocodeAdapter {
       Set<String> groups) {
 
     final TomTomGeocodeQueryRequest tomTomRequest = (TomTomGeocodeQueryRequest) request;
-    final String baseUri = properties.getGeocodeUri() + tomTomRequest.buildPath();
-    final MultiValueMap<String, String> params = tomTomRequest.buildParameters();
+    final String baseUri = properties.getGeocodeUri() + buildPath(tomTomRequest);
+    final MultiValueMap<String, String> params = buildParameters(tomTomRequest);
     params.set("key", properties.getKey());
 
     return webClientBuilder
@@ -91,6 +99,45 @@ public class TomTomGeocodeAdapter implements GeocodeAdapter {
         .bodyToMono(GeocodeResponse.class)
         .filter(GeocodeResponse::hasResults)
         .flatMapMany(this::map);
+  }
+
+  private String buildPath(GeocodeQueryRequest request) {
+    return "/geocode/" + UriUtils.encodePath(request.getQuery(), StandardCharsets.UTF_8) + ".json";
+  }
+
+  private MultiValueMap<String, String> buildParameters(TomTomGeocodeQueryRequest request) {
+    final MultiValueMap<String, String> map = new LinkedMultiValueMap<>();
+    if (request.getLimit() != null) {
+      map.set("limit", request.getLimit().toString());
+    }
+    if (request.getOffset() != null) {
+      map.set("ofs", request.getOffset().toString());
+    }
+    if (request.getLanguage() != null) {
+      map.set("language", request.getLanguage().toString());
+    }
+    if (request.getCountryCodes() != null && !request.getCountryCodes().isEmpty()) {
+      map.set("countrySet", StringUtils.collectionToCommaDelimitedString(
+          request.getCountryCodes()
+              .stream()
+              .filter(Objects::nonNull)
+              .map(TwoLetterCountryCode::toString)
+              .collect(Collectors.toSet())));
+    }
+    if (request.getRadius() != null && request.getCenter() != null) {
+      map.set("lat", BigDecimal.valueOf(request.getCenter().getY()).toPlainString());
+      map.set("lon", BigDecimal.valueOf(request.getCenter().getX()).toPlainString());
+      map.set("radius", request.getRadius().toString());
+    }
+    if (request.getBoundingBox() != null && request.getBoundingBox().length == 4) {
+      final Coordinate topLeft = GeometryUtils.getNorthWest(request.getBoundingBox());
+      final Coordinate bottomRight = GeometryUtils.getSouthEast(request.getBoundingBox());
+      map.set("topLeft", BigDecimal.valueOf(topLeft.getY()).toPlainString()
+          + "," + BigDecimal.valueOf(topLeft.getX()).toPlainString());
+      map.set("btmRight", BigDecimal.valueOf(bottomRight.getY()).toPlainString()
+          + "," + BigDecimal.valueOf(bottomRight.getX()).toPlainString());
+    }
+    return map;
   }
 
   private Flux<Wpt> map(GeocodeResponse geocodeResponse) {

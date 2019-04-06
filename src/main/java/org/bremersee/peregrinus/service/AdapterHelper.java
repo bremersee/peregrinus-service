@@ -19,24 +19,36 @@ package org.bremersee.peregrinus.service;
 import static org.springframework.util.Assert.notNull;
 
 import java.util.Map;
-import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.bremersee.exception.ServiceException;
-import org.bremersee.peregrinus.entity.AclEntity;
-import org.bremersee.security.access.AclMapper;
 
 /**
  * @author Christian Bremer
  */
 @Slf4j
-public abstract class AbstractServiceImpl {
+abstract class AdapterHelper {
 
-  @Getter
-  private AclMapper<AclEntity> aclMapper;
-
-  public AbstractServiceImpl(
-      AclMapper<AclEntity> aclMapper) {
-    this.aclMapper = aclMapper;
+  private AdapterHelper() {
   }
 
+  static <T> T getAdapter(final Map<String, T> adapterMap, final Object obj) {
+
+    notNull(obj, "Object must not be null.");
+    final String key;
+    if (obj instanceof String) {
+      key = (String) obj;
+    } else if (obj instanceof Class<?>) {
+      key = ((Class<?>) obj).getName();
+    } else {
+      key = obj.getClass().getName();
+    }
+    final T adapter = adapterMap.get(key);
+    if (adapter == null) {
+      final ServiceException se = ServiceException.internalServerError(
+          "No adapter found for " + key);
+      log.error("Getting leaf adapter failed.", se);
+      throw se;
+    }
+    return adapter;
+  }
 }

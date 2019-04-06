@@ -83,7 +83,7 @@ public class TreeServiceImpl extends AbstractServiceImpl implements TreeService 
   }
 
   private LeafAdapter getLeafAdapter(final Object obj) {
-    return getAdapter(leafAdapterMap, obj);
+    return AdapterHelper.getAdapter(leafAdapterMap, obj);
   }
 
   @Override

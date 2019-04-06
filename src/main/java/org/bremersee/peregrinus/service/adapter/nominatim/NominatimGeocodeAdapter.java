@@ -16,7 +16,11 @@
 
 package org.bremersee.peregrinus.service.adapter.nominatim;
 
+import java.math.BigDecimal;
+import java.nio.charset.StandardCharsets;
+import java.util.Objects;
 import java.util.Set;
+import java.util.stream.Collectors;
 import javax.validation.constraints.NotNull;
 import org.bremersee.common.model.Address;
 import org.bremersee.common.model.TwoLetterCountryCode;
@@ -29,16 +33,16 @@ import org.bremersee.peregrinus.model.WptProperties;
 import org.bremersee.peregrinus.service.adapter.GeocodeAdapter;
 import org.bremersee.peregrinus.service.adapter.nominatim.model.GeocodeResult;
 import org.bremersee.web.ErrorDetectors;
-import org.bremersee.web.reactive.function.client.DefaultWebClientErrorDecoder;
 import org.bremersee.web.reactive.function.client.WebClientErrorDecoder;
 import org.locationtech.jts.geom.Polygon;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Component;
+import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
+import org.springframework.util.StringUtils;
 import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.reactive.function.client.WebClient.Builder;
+import org.springframework.web.util.UriUtils;
 import reactor.core.publisher.Flux;
 
 /**
@@ -54,19 +58,12 @@ public class NominatimGeocodeAdapter implements GeocodeAdapter {
   private WebClientErrorDecoder<? extends Throwable> webClientErrorDecoder;
 
   public NominatimGeocodeAdapter(
-      final NominatimProperties properties,
-      final Builder webClientBuilder) {
+      NominatimProperties properties,
+      Builder webClientBuilder,
+      WebClientErrorDecoder<? extends Throwable> webClientErrorDecoder) {
     this.properties = properties;
     this.webClientBuilder = webClientBuilder;
-    this.webClientErrorDecoder = new DefaultWebClientErrorDecoder();
-  }
-
-  @Qualifier("defaultWebClientErrorDecoder")
-  @Autowired(required = false)
-  public void setWebClientErrorDecoder(WebClientErrorDecoder<? extends Throwable> decoder) {
-    if (decoder != null) {
-      this.webClientErrorDecoder = decoder;
-    }
+    this.webClientErrorDecoder = webClientErrorDecoder;
   }
 
   @Override
@@ -83,7 +80,7 @@ public class NominatimGeocodeAdapter implements GeocodeAdapter {
       Set<String> groups) {
 
     final NominatimGeocodeQueryRequest nominatimRequest = (NominatimGeocodeQueryRequest) request;
-    final MultiValueMap<String, String> params = nominatimRequest.buildParameters(true);
+    final MultiValueMap<String, String> params = buildParameters(nominatimRequest);
     return webClientBuilder
         .uriBuilderFactory(null)
         .baseUrl(properties.getSearchUri())
@@ -96,6 +93,65 @@ public class NominatimGeocodeAdapter implements GeocodeAdapter {
         .bodyToFlux(GeocodeResult.class)
         .filter(GeocodeResult::hasLatLon)
         .map(this::map);
+  }
+
+  /**
+   * Build parameters multi value map.
+   *
+   * @return the multi value map
+   */
+  private MultiValueMap<String, String> buildParameters(NominatimGeocodeQueryRequest request) {
+
+    final MultiValueMap<String, String> map = new LinkedMultiValueMap<>();
+    map.set("format", "jsonv2");
+    if (request.getLanguage() != null) {
+      map.set("accept-language", request.getLanguage().toString());
+    } else {
+      map.set("accept-language", "en");
+    }
+    if (request.getBoundingBox() != null && request.getBoundingBox().length == 4) {
+      map.set(
+          "viewbox",
+          BigDecimal.valueOf(request.getBoundingBox()[0]).toPlainString()
+              + "," + BigDecimal.valueOf(request.getBoundingBox()[1]).toPlainString()
+              + "," + BigDecimal.valueOf(request.getBoundingBox()[2]).toPlainString()
+              + "," + BigDecimal.valueOf(request.getBoundingBox()[3]).toPlainString());
+    }
+    if (request.getCountryCodes() != null && !request.getCountryCodes().isEmpty()) {
+      map.set("countrycodes", StringUtils.collectionToCommaDelimitedString(
+          request.getCountryCodes()
+              .stream()
+              .filter(Objects::nonNull)
+              .map(TwoLetterCountryCode::toString)
+              .collect(Collectors.toSet())));
+    }
+    map.set("limit", String.valueOf(request.getLimit()));
+
+    map.set("bounded", Boolean.TRUE.equals(request.getBounded()) ? "1" : "0");
+    if (request.getExcludePlaceIds() != null && !request.getExcludePlaceIds().isEmpty()) {
+      map.set(
+          "exclude_place_ids",
+          StringUtils.collectionToCommaDelimitedString(request.getExcludePlaceIds()));
+    }
+    map.set("dedupe", Boolean.FALSE.equals(request.getDedupe()) ? "0" : "1");
+    map.set("debug", Boolean.TRUE.equals(request.getDebug()) ? "1" : "0");
+
+    map.set("addressdetails", Boolean.FALSE.equals(request.getAddressDetails()) ? "0" : "1");
+    if (StringUtils.hasText(request.getEmail())) {
+      map.set(
+          "email",
+          UriUtils.encodeQueryParam(request.getEmail(), StandardCharsets.UTF_8));
+    }
+    if (request.getPolygon() == null || Boolean.TRUE.equals(request.getPolygon())) {
+      map.set("polygon_geojson", "1");
+    }
+    map.set("extratags", Boolean.FALSE.equals(request.getExtraTags()) ? "0" : "1");
+    map.set("namedetails", Boolean.FALSE.equals(request.getNameDetails()) ? "0" : "1");
+
+    map.set(
+        "q",
+        UriUtils.encodeQueryParam(request.getQuery(), StandardCharsets.UTF_8));
+    return map;
   }
 
   private Wpt map(GeocodeResult result) {
