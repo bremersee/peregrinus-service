@@ -80,7 +80,8 @@ public class RteConverterTest {
     pt0.getProperties().setName("RtePt0");
     pt0.getProperties().setAddress(address);
     pt0.getProperties().setEle(BigDecimal.valueOf(123.45));
-    pt0.getProperties().setPhoneNumbers(Collections.singletonList(new PhoneNumber().value("4711")));
+    pt0.getProperties().setPhoneNumbers(Collections.singletonList(
+        PhoneNumber.builder().value("4711").build()));
     pt0.getProperties().setPlainTextDescription("Plain Test Description");
 
     RtePt pt1 = new RtePt();

@@ -176,12 +176,13 @@ public class NominatimGeocodeAdapter implements GeocodeAdapter {
     final String countryCode = source.getCountryCode() != null
         ? source.getCountryCode().toUpperCase()
         : null;
-    return new Address()
+    return Address.builder()
         .city(source.getCity())
         .country(source.getCountry())
         .countryCode(TwoLetterCountryCode.fromValue(countryCode))
         .postalCode(source.getPostcode())
         .state(source.getState())
-        .suburb(source.getSuburb());
+        .suburb(source.getSuburb())
+        .build();
   }
 }

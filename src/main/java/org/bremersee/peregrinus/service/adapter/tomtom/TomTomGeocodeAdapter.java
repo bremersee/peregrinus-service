@@ -24,15 +24,14 @@ import java.util.stream.Collectors;
 import javax.validation.constraints.NotNull;
 import lombok.extern.slf4j.Slf4j;
 import org.bremersee.common.model.Address;
-import org.bremersee.common.model.LocaleHelper;
 import org.bremersee.common.model.ThreeLetterCountryCode;
 import org.bremersee.common.model.TwoLetterCountryCode;
 import org.bremersee.geojson.utils.GeometryUtils;
 import org.bremersee.peregrinus.config.TomTomProperties;
 import org.bremersee.peregrinus.model.GeocodeQueryRequest;
-import org.bremersee.peregrinus.model.tomtom.TomTomGeocodeQueryRequest;
 import org.bremersee.peregrinus.model.Wpt;
 import org.bremersee.peregrinus.model.WptProperties;
+import org.bremersee.peregrinus.model.tomtom.TomTomGeocodeQueryRequest;
 import org.bremersee.peregrinus.service.adapter.GeocodeAdapter;
 import org.bremersee.peregrinus.service.adapter.tomtom.model.GeocodeResponse;
 import org.bremersee.peregrinus.service.adapter.tomtom.model.GeocodeResult;
@@ -174,7 +173,7 @@ public class TomTomGeocodeAdapter implements GeocodeAdapter {
     if (source == null) {
       return null;
     }
-    return new Address()
+    return Address.builder()
         .city(findCity(source))
         .country(source.getCountry())
         .countryCode(findCountryCode(source))
@@ -183,7 +182,8 @@ public class TomTomGeocodeAdapter implements GeocodeAdapter {
         .state(source.getCountrySubdivision())
         .street(source.getStreetName())
         .streetNumber(source.getStreetNumber())
-        .suburb(source.getMunicipalitySubdivision());
+        .suburb(source.getMunicipalitySubdivision())
+        .build();
   }
 
   private String findCity(org.bremersee.peregrinus.service.adapter.tomtom.model.Address source) {
@@ -200,7 +200,7 @@ public class TomTomGeocodeAdapter implements GeocodeAdapter {
     if (countryCode == null) {
       ThreeLetterCountryCode tmp = ThreeLetterCountryCode.fromValue(source.getCountryCodeISO3());
       if (tmp != null) {
-        return LocaleHelper.toTwoLetterCountryCode(LocaleHelper.toLocale(tmp));
+        return TwoLetterCountryCode.fromLocale(tmp.toLocale());
       }
     }
     return countryCode;

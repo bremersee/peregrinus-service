@@ -566,7 +566,8 @@ public abstract class TestData {
                 //.lengthInMeters(500)
                 .links(links())
                 .name("RtePt0")
-                .phoneNumbers(Collections.singletonList(new PhoneNumber().value("4711")))
+                .phoneNumbers(Collections.singletonList(
+                    PhoneNumber.builder().value("4711").build()))
                 .build())
             .build(),
         RtePt.builder()

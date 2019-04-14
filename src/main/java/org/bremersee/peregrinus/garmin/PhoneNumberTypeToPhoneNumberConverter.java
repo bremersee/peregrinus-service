@@ -40,8 +40,9 @@ class PhoneNumberTypeToPhoneNumberConverter {
     if (phoneNumberType == null || !StringUtils.hasText(phoneNumberType.getValue())) {
       return null;
     }
-    return new PhoneNumber()
+    return PhoneNumber.builder()
         .value(phoneNumberType.getValue())
-        .category(phoneNumberType.getCategory());
+        .category(phoneNumberType.getCategory())
+        .build();
   }
 }

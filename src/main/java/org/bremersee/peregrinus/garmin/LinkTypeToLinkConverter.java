@@ -40,9 +40,10 @@ class LinkTypeToLinkConverter {
     if (linkType == null || !StringUtils.hasText(linkType.getHref())) {
       return null;
     }
-    return new Link()
+    return Link.builder()
         .href(linkType.getHref())
         .type(linkType.getType())
-        .text(linkType.getText());
+        .text(linkType.getText())
+        .build();
   }
 }
