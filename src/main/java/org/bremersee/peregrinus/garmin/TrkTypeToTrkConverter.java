@@ -78,16 +78,16 @@ class TrkTypeToTrkConverter extends AbstractGpxConverter {
     trk.getProperties().setEleLines(tuple.getT2());
     trk.getProperties().setTimeLines(tuple.getT3());
     trk.getProperties().getSettings().setDisplayColor(getDisplayColor(trkType));
-    trk.getProperties().setStartTime(getStartTime(trk.getProperties().getTimeLines()));
-    trk.getProperties().setStopTime(getStopTime(trk.getProperties().getTimeLines()));
+    trk.getProperties().setDepartureTime(getDepartureTime(trk.getProperties().getTimeLines()));
+    trk.getProperties().setArrivalTime(getArrivalTime(trk.getProperties().getTimeLines()));
     return trk;
   }
 
-  private OffsetDateTime getStartTime(final List<List<OffsetDateTime>> timeList) {
+  private OffsetDateTime getDepartureTime(final List<List<OffsetDateTime>> timeList) {
     return getTime(timeList, false);
   }
 
-  private OffsetDateTime getStopTime(final List<List<OffsetDateTime>> timeList) {
+  private OffsetDateTime getArrivalTime(final List<List<OffsetDateTime>> timeList) {
     return getTime(timeList, true);
   }
 

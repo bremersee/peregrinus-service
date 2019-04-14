@@ -69,14 +69,14 @@ public abstract class PtEntityProperties extends FeatureEntityProperties {
       String markdownDescription,
       String internalComments,
       List<Link> links,
-      OffsetDateTime startTime,
-      OffsetDateTime stopTime,
+      OffsetDateTime departureTime,
+      OffsetDateTime arrivalTime,
       String internalType,
       BigDecimal ele,
       Address address,
       List<PhoneNumber> phoneNumbers) {
     super(acl, created, createdBy, modified, modifiedBy, name, plainTextDescription,
-        markdownDescription, internalComments, links, startTime, stopTime);
+        markdownDescription, internalComments, links, departureTime, arrivalTime);
     setInternalType(internalType);
     setEle(ele);
     setAddress(address);

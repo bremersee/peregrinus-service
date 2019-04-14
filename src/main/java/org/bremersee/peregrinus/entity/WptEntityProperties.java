@@ -53,15 +53,15 @@ public class WptEntityProperties extends PtEntityProperties {
       String markdownDescription,
       String internalComments,
       List<Link> links,
-      OffsetDateTime startTime,
-      OffsetDateTime stopTime,
+      OffsetDateTime departureTime,
+      OffsetDateTime arrivalTime,
       String internalType,
       BigDecimal ele,
       Address address,
       List<PhoneNumber> phoneNumbers) {
 
     super(acl, created, createdBy, modified, modifiedBy, name, plainTextDescription,
-        markdownDescription, internalComments, links, startTime, stopTime, internalType, ele,
+        markdownDescription, internalComments, links, departureTime, arrivalTime, internalType, ele,
         address, phoneNumbers);
   }
 }

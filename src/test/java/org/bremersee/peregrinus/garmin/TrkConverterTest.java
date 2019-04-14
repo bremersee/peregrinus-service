@@ -116,8 +116,8 @@ public class TrkConverterTest {
     trk.getProperties().setLinks(Arrays.asList(link0, link1, link2, link3));
     trk.getProperties().setName("Test TRK");
     trk.getProperties().setPlainTextDescription("One\n---\nTwo");
-    trk.getProperties().setStartTime(start);
-    trk.getProperties().setStopTime(stop);
+    trk.getProperties().setDepartureTime(start);
+    trk.getProperties().setArrivalTime(stop);
     trk.getProperties().setTimeLines(timeLines);
     trk.getProperties().getSettings().setDisplayColor(DisplayColor.BLUE);
 
@@ -140,8 +140,8 @@ public class TrkConverterTest {
     Assert.assertEquals(
         trk.getProperties().getPlainTextDescription(),
         actual.getProperties().getPlainTextDescription());
-    Assert.assertEquals(trk.getProperties().getStartTime(), actual.getProperties().getStartTime());
-    Assert.assertEquals(trk.getProperties().getStopTime(), actual.getProperties().getStopTime());
+    Assert.assertEquals(trk.getProperties().getDepartureTime(), actual.getProperties().getDepartureTime());
+    Assert.assertEquals(trk.getProperties().getArrivalTime(), actual.getProperties().getArrivalTime());
     Assert.assertEquals(trk.getProperties().getTimeLines(), actual.getProperties().getTimeLines());
   }
 }

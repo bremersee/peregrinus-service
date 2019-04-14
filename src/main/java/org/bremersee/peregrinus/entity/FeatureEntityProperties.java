@@ -67,13 +67,13 @@ public abstract class FeatureEntityProperties {
    * Start time of tracks.
    */
   @Indexed
-  private OffsetDateTime startTime;
+  private OffsetDateTime departureTime;
 
   /**
    * Stop time of tracks.
    */
   @Indexed
-  private OffsetDateTime stopTime;
+  private OffsetDateTime arrivalTime;
 
   public FeatureEntityProperties() {
     final OffsetDateTime now = OffsetDateTime.now(Clock.systemUTC());
@@ -94,8 +94,8 @@ public abstract class FeatureEntityProperties {
       String markdownDescription,
       String internalComments,
       List<Link> links,
-      OffsetDateTime startTime,
-      OffsetDateTime stopTime) {
+      OffsetDateTime departureTime,
+      OffsetDateTime arrivalTime) {
 
     setAcl(acl);
     setCreated(created);
@@ -107,8 +107,8 @@ public abstract class FeatureEntityProperties {
     setMarkdownDescription(markdownDescription);
     setInternalComments(internalComments);
     setLinks(links);
-    setStartTime(startTime);
-    setStopTime(stopTime);
+    setDepartureTime(departureTime);
+    setArrivalTime(arrivalTime);
   }
 
   public void setAcl(AclEntity acl) {

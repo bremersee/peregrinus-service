@@ -117,8 +117,8 @@ public class TrkAdapter extends AbstractAdapter implements FeatureAdapter {
                 .id(trkEntitySettings.getId())
                 .userId(trkEntitySettings.getUserId())
                 .build())
-            .startTime(trkEntity.getProperties().getStartTime())
-            .stopTime(trkEntity.getProperties().getStopTime())
+            .departureTime(trkEntity.getProperties().getDepartureTime())
+            .arrivalTime(trkEntity.getProperties().getArrivalTime())
             .timeLines(trkEntity.getProperties().getTimeLines())
             .build())
         .build());
@@ -159,8 +159,8 @@ public class TrkAdapter extends AbstractAdapter implements FeatureAdapter {
             .modifiedBy(userId)
             .name(trkProperties.getName())
             .plainTextDescription(trkProperties.getPlainTextDescription())
-            .startTime(trkProperties.getStartTime())
-            .stopTime(trkProperties.getStopTime())
+            .departureTime(trkProperties.getDepartureTime())
+            .arrivalTime(trkProperties.getArrivalTime())
             .build())
         .build();
   }

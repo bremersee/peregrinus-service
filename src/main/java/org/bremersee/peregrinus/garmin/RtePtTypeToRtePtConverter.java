@@ -22,9 +22,9 @@ import org.bremersee.garmin.trip.v1.model.ext.NamedRoadT;
 import org.bremersee.garmin.trip.v1.model.ext.ViaPoint;
 import org.bremersee.gpx.GpxJaxbContextHelper;
 import org.bremersee.gpx.model.WptType;
-import org.bremersee.peregrinus.model.GarminImportRteCalculationProperties;
 import org.bremersee.peregrinus.model.RtePt;
 import org.bremersee.peregrinus.model.RtePtProperties;
+import org.bremersee.peregrinus.model.garmin.GarminRtePtCalculationProperties;
 import org.bremersee.xml.ConverterUtils;
 import org.bremersee.xml.JaxbContextBuilder;
 import reactor.util.function.Tuple2;
@@ -61,12 +61,12 @@ class RtePtTypeToRtePtConverter extends PtTypeToPtConverter {
     return rtePt;
   }
 
-  private GarminImportRteCalculationProperties getCalculationProperties(
+  private GarminRtePtCalculationProperties getCalculationProperties(
       final WptType wptType,
       final String transportationMode) {
 
-    final GarminImportRteCalculationProperties calculationProperties
-        = new GarminImportRteCalculationProperties();
+    final GarminRtePtCalculationProperties calculationProperties
+        = new GarminRtePtCalculationProperties();
     calculationProperties.setArrivalTime(getArrivalTime(wptType));
     calculationProperties.setCalculationMode(getCalculationMode(wptType));
     calculationProperties.setDepartureTime(getDepartureTime(wptType));

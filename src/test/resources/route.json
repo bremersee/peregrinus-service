@@ -38,8 +38,8 @@
         "markdownDescription": "Post-Naturbadstrasse\nNaturbadstrasse 3\nErlangen - Dechsendorf, Erlangen, 91056, DEU\n0228 55005900",
         "internalComments": null,
         "links": [],
-        "startTime": null,
-        "stopTime": null,
+        "departureTime": null,
+        "arrivalTime": null,
         "settings": {
           "_type": "Wpt"
         },
@@ -96,8 +96,8 @@
         "markdownDescription": "Pfad",
         "internalComments": null,
         "links": [],
-        "startTime": null,
-        "stopTime": null,
+        "departureTime": null,
+        "arrivalTime": null,
         "settings": {
           "_type": "Wpt"
         },
@@ -138,8 +138,8 @@
         "markdownDescription": "Kleiberstrasse und Faust-Von-Stromberg-Strasse",
         "internalComments": null,
         "links": [],
-        "startTime": null,
-        "stopTime": null,
+        "departureTime": null,
+        "arrivalTime": null,
         "settings": {
           "_type": "Wpt"
         },
@@ -180,8 +180,8 @@
         "markdownDescription": "Faust-Von-Stromberg-Strasse",
         "internalComments": null,
         "links": [],
-        "startTime": null,
-        "stopTime": null,
+        "departureTime": null,
+        "arrivalTime": null,
         "settings": {
           "_type": "Wpt"
         },
@@ -222,8 +222,8 @@
         "markdownDescription": "Campingstrasse 22\nErlangen - Dechsendorf, Erlangen, 91056, DEU",
         "internalComments": null,
         "links": [],
-        "startTime": null,
-        "stopTime": null,
+        "departureTime": null,
+        "arrivalTime": null,
         "settings": {
           "_type": "Wpt"
         },
@@ -275,8 +275,8 @@
         "markdownDescription": "Campingstrasse 78\nErlangen - Dechsendorf, Erlangen, 91056, DEU",
         "internalComments": null,
         "links": [],
-        "startTime": null,
-        "stopTime": null,
+        "departureTime": null,
+        "arrivalTime": null,
         "settings": {
           "_type": "Wpt"
         },
@@ -328,8 +328,8 @@
         "markdownDescription": "Naturbadstrasse 60\nErlangen - Dechsendorf, Erlangen, 91056, DEU",
         "internalComments": null,
         "links": [],
-        "startTime": null,
-        "stopTime": null,
+        "departureTime": null,
+        "arrivalTime": null,
         "settings": {
           "_type": "Wpt"
         },
@@ -657,8 +657,8 @@
             "description": null
           }
         ],
-        "startTime": null,
-        "stopTime": null,
+        "departureTime": null,
+        "arrivalTime": null,
         "settings": {
           "_type": "Rte",
           "displayColor": "CYAN"
@@ -692,8 +692,8 @@
               "markdownDescription": "Pfad",
               "internalComments": null,
               "links": [],
-              "startTime": null,
-              "stopTime": null,
+              "departureTime": null,
+              "arrivalTime": null,
               "settings": null,
               "internalType": null,
               "ele": null,
@@ -747,8 +747,8 @@
               "markdownDescription": "Kleiberstrasse und Faust-Von-Stromberg-Strasse",
               "internalComments": null,
               "links": [],
-              "startTime": null,
-              "stopTime": null,
+              "departureTime": null,
+              "arrivalTime": null,
               "settings": null,
               "internalType": null,
               "ele": null,
@@ -802,8 +802,8 @@
               "markdownDescription": "Faust-Von-Stromberg-Strasse",
               "internalComments": null,
               "links": [],
-              "startTime": null,
-              "stopTime": null,
+              "departureTime": null,
+              "arrivalTime": null,
               "settings": null,
               "internalType": null,
               "ele": null,
@@ -857,8 +857,8 @@
               "markdownDescription": "Campingstrasse 22\nErlangen - Dechsendorf, Erlangen, 91056, DEU",
               "internalComments": null,
               "links": [],
-              "startTime": null,
-              "stopTime": null,
+              "departureTime": null,
+              "arrivalTime": null,
               "settings": null,
               "internalType": null,
               "ele": null,
@@ -912,8 +912,8 @@
               "markdownDescription": "Campingstrasse 78\nErlangen - Dechsendorf, Erlangen, 91056, DEU",
               "internalComments": null,
               "links": [],
-              "startTime": null,
-              "stopTime": null,
+              "departureTime": null,
+              "arrivalTime": null,
               "settings": null,
               "internalType": null,
               "ele": null,
@@ -967,8 +967,8 @@
               "markdownDescription": "Naturbadstrasse 60\nErlangen - Dechsendorf, Erlangen, 91056, DEU",
               "internalComments": null,
               "links": [],
-              "startTime": null,
-              "stopTime": null,
+              "departureTime": null,
+              "arrivalTime": null,
               "settings": null,
               "internalType": null,
               "ele": null,
@@ -1022,8 +1022,8 @@
               "markdownDescription": "Post-Naturbadstrasse\nNaturbadstrasse 3\nErlangen - Dechsendorf, Erlangen, 91056, DEU\n0228 55005900",
               "internalComments": null,
               "links": [],
-              "startTime": null,
-              "stopTime": null,
+              "departureTime": null,
+              "arrivalTime": null,
               "settings": null,
               "internalType": null,
               "ele": null,

@@ -120,8 +120,8 @@ public class WptAdapter extends AbstractAdapter implements FeatureAdapter {
                 .id(wptEntitySettings.getId())
                 .userId(wptEntitySettings.getUserId())
                 .build())
-            .startTime(wptEntity.getProperties().getStartTime())
-            .stopTime(wptEntity.getProperties().getStopTime())
+            .departureTime(wptEntity.getProperties().getDepartureTime())
+            .arrivalTime(wptEntity.getProperties().getArrivalTime())
             .build())
         .build());
   }
@@ -164,8 +164,8 @@ public class WptAdapter extends AbstractAdapter implements FeatureAdapter {
             .name(wptProperties.getName())
             .phoneNumbers(wptProperties.getPhoneNumbers())
             .plainTextDescription(wptProperties.getPlainTextDescription())
-            .startTime(wpt.getProperties().getStartTime())
-            .stopTime(wpt.getProperties().getStopTime())
+            .departureTime(wpt.getProperties().getDepartureTime())
+            .arrivalTime(wpt.getProperties().getArrivalTime())
             .build())
         .build();
   }

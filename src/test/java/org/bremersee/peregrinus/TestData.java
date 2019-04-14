@@ -254,8 +254,8 @@ public abstract class TestData {
                 .id(trkSettingsId)
                 .userId(ANNA)
                 .build())
-            .startTime(trkStartTime())
-            .stopTime(trkStopTime())
+            .departureTime(trkDepartureTime())
+            .arrivalTime(trkArrivalTime())
             .timeLines(trkTimeLines())
             .build())
         .build();
@@ -277,8 +277,8 @@ public abstract class TestData {
             .modified(trk.getProperties().getModified())
             .name(trk.getProperties().getName())
             .plainTextDescription(trk.getProperties().getPlainTextDescription())
-            .startTime(trk.getProperties().getStartTime())
-            .stopTime(trk.getProperties().getStopTime())
+            .departureTime(trk.getProperties().getDepartureTime())
+            .arrivalTime(trk.getProperties().getArrivalTime())
             .timeLines(trk.getProperties().getTimeLines())
             .build())
         .build();
@@ -532,12 +532,12 @@ public abstract class TestData {
     return timeLines;
   }
 
-  public static OffsetDateTime trkStartTime() {
+  public static OffsetDateTime trkDepartureTime() {
     final List<List<OffsetDateTime>> timeLines = trkTimeLines();
     return timeLines.get(0).get(0);
   }
 
-  public static OffsetDateTime trkStopTime() {
+  public static OffsetDateTime trkArrivalTime() {
     final List<List<OffsetDateTime>> timeLines = trkTimeLines();
     final List<OffsetDateTime> last = timeLines.get(timeLines.size() - 1);
     return last.get(last.size() - 1);
@@ -563,7 +563,7 @@ public abstract class TestData {
             .properties(RtePtProperties.builder()
                 .address(address())
                 .ele(BigDecimal.valueOf(123.45))
-                .lengthInMeters(500)
+                //.lengthInMeters(500)
                 .links(links())
                 .name("RtePt0")
                 .phoneNumbers(Collections.singletonList(new PhoneNumber().value("4711")))

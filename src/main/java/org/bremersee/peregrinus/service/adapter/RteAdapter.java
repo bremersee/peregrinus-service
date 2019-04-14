@@ -117,8 +117,8 @@ public class RteAdapter extends AbstractAdapter implements FeatureAdapter {
                 .id(rteEntitySettings.getId())
                 .userId(rteEntitySettings.getUserId())
                 .build())
-            .startTime(rteEntity.getProperties().getStartTime())
-            .stopTime(rteEntity.getProperties().getStopTime())
+            .departureTime(rteEntity.getProperties().getDepartureTime())
+            .arrivalTime(rteEntity.getProperties().getArrivalTime())
             .build())
         .build());
   }
@@ -158,8 +158,8 @@ public class RteAdapter extends AbstractAdapter implements FeatureAdapter {
             .name(rteProperties.getName())
             .plainTextDescription(rteProperties.getPlainTextDescription())
             .rtePts(rteProperties.getRtePts())
-            .startTime(null)
-            .stopTime(null)
+            .departureTime(null)
+            .arrivalTime(null)
             .build())
         .build();
   }

@@ -24,8 +24,8 @@
       "markdownDescription" : "Seerosenweg 5\n91056, Erlangen - Dechsendorf, Erlangen, DEU",
       "internalComments" : null,
       "links" : [ ],
-      "startTime" : null,
-      "stopTime" : null,
+      "departureTime" : null,
+      "arrivalTime" : null,
       "settings" : {
         "_type" : "Wpt"
       },

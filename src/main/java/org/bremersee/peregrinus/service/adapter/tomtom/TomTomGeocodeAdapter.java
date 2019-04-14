@@ -30,7 +30,7 @@ import org.bremersee.common.model.TwoLetterCountryCode;
 import org.bremersee.geojson.utils.GeometryUtils;
 import org.bremersee.peregrinus.config.TomTomProperties;
 import org.bremersee.peregrinus.model.GeocodeQueryRequest;
-import org.bremersee.peregrinus.model.TomTomGeocodeQueryRequest;
+import org.bremersee.peregrinus.model.tomtom.TomTomGeocodeQueryRequest;
 import org.bremersee.peregrinus.model.Wpt;
 import org.bremersee.peregrinus.model.WptProperties;
 import org.bremersee.peregrinus.service.adapter.GeocodeAdapter;
@@ -86,6 +86,7 @@ public class TomTomGeocodeAdapter implements GeocodeAdapter {
     final TomTomGeocodeQueryRequest tomTomRequest = (TomTomGeocodeQueryRequest) request;
     final String baseUri = properties.getGeocodeUri() + buildPath(tomTomRequest);
     final MultiValueMap<String, String> params = buildParameters(tomTomRequest);
+    // TODO can we use the key of the customer?
     params.set("key", properties.getKey());
 
     return webClientBuilder

@@ -59,13 +59,13 @@ public class TrkEntityProperties extends FeatureEntityProperties {
       String markdownDescription,
       String internalComments,
       List<Link> links,
-      OffsetDateTime startTime,
-      OffsetDateTime stopTime,
+      OffsetDateTime departureTime,
+      OffsetDateTime arrivalTime,
       List<List<BigDecimal>> eleLines,
       List<List<OffsetDateTime>> timeLines) {
 
     super(acl, created, createdBy, modified, modifiedBy, name, plainTextDescription,
-        markdownDescription, internalComments, links, startTime, stopTime);
+        markdownDescription, internalComments, links, departureTime, arrivalTime);
     setEleLines(eleLines);
     setTimeLines(timeLines);
   }

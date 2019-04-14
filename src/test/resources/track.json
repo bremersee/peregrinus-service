@@ -24,8 +24,8 @@
       "markdownDescription" : null,
       "internalComments" : null,
       "links" : [ ],
-      "startTime" : "2013-04-28T12:44:49Z",
-      "stopTime" : "2013-04-28T12:45:12Z",
+      "departureTime" : "2013-04-28T12:44:49Z",
+      "arrivalTime" : "2013-04-28T12:45:12Z",
       "settings" : {
         "_type" : "Trk",
         "displayColor" : "DARK_RED"
