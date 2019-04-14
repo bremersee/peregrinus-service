@@ -29,9 +29,9 @@ import org.bremersee.common.model.HttpLanguageTag;
 @EqualsAndHashCode
 @ToString
 @NoArgsConstructor
-public class RteCalculationProperties {
+public class RteCalculationProperties { // delete
 
-  private HttpLanguageTag language = HttpLanguageTag.EN_GB;
+  private HttpLanguageTag language = HttpLanguageTag.EN_GB; // request param?
 
   private OffsetDateTime time = OffsetDateTime.now(Clock.systemUTC());
 

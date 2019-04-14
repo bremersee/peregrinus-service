@@ -23,6 +23,7 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 import org.bremersee.common.model.HttpLanguageTag;
+import org.locationtech.jts.geom.MultiPoint;
 
 /**
  * @author Christian Bremer
@@ -30,9 +31,11 @@ import org.bremersee.common.model.HttpLanguageTag;
 @EqualsAndHashCode(callSuper = true)
 @ToString(callSuper = true)
 @NoArgsConstructor
-public class RteCalculationRequest extends RteCalculationProperties {
+public abstract class RteCalculationRequest extends RteCalculationProperties {
 
-  private List<Pt> rtePts;
+  private List<Pt> rtePts; // genügen coordinaten? ->
+
+  //private MultiPoint rtePts;
 
   public RteCalculationRequest(
       HttpLanguageTag language,
@@ -42,6 +45,9 @@ public class RteCalculationRequest extends RteCalculationProperties {
     super(language, time, timeIsDepartureTime);
     this.rtePts = rtePts;
   }
+
+  // TODO
+  //public abstract RtePtCalculationProperties buildRtePtCalculationProperties();
 
   public List<Pt> getRtePts() {
     if (rtePts == null) {

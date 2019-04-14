@@ -32,8 +32,11 @@ import reactor.core.publisher.Mono;
  */
 public interface RouteService {
 
-  Flux<Rte> calculateRoute(RteCalculationRequest request, String userId, Set<String> roles);
+  Flux<Rte> calculateRoutes(RteCalculationRequest request, String userId, Set<String> roles);
 
+  Mono<Rte> calculateRoute(RteCalculationRequest request, String userId, Set<String> roles);
+
+  /*
   Mono<Rte> addRtePt(RteAddRtePtRequest request, String userId, Set<String> roles);
 
   Mono<Rte> changeRtePtCalculationProperties(RteChangeRtePtCalculationPropertiesRequest request, String userId, Set<String> roles);
@@ -43,6 +46,7 @@ public interface RouteService {
   Mono<Rte> changeRtePtLocation(RteChangeRtePtLocationRequest request, String userId, Set<String> roles);
 
   Mono<Rte> removeRtePt(RteRemoveRtePtRequest request, String userId, Set<String> roles);
+  */
 
   // recalculate?
 

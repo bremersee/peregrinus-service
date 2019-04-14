@@ -53,7 +53,7 @@ public class RtePtProperties extends PtProperties<RtePtSettings> {
 
   //private Integer lengthInMeters;
 
-  //private Integer travelTimeInSeconds;
+  //private Integer travelTimeInSeconds; !!!
 
   //private Integer trafficDelayInSeconds;
 

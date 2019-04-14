@@ -16,6 +16,7 @@
 
 package org.bremersee.peregrinus.model;
 
+import java.math.BigInteger;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -31,5 +32,9 @@ import lombok.ToString;
 @EqualsAndHashCode
 @NoArgsConstructor
 public class RtePtCalculationResults {
+
+  //private BigInteger travelTimeInSeconds;
+
+  //private BigInteger lengthInMeters;
 
 }

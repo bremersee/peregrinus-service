@@ -96,7 +96,7 @@ public class TomTomRouteAdapter implements RouteAdapter {
   }
 
   @Override
-  public Flux<Rte> calculateRoute(
+  public Mono<Rte> calculateRoute(
       final RteCalculationRequest request,
       final String userId,
       final Set<String> roles) {
@@ -116,35 +116,7 @@ public class TomTomRouteAdapter implements RouteAdapter {
         .onStatus(ErrorDetectors.DEFAULT, webClientErrorDecoder)
         .bodyToMono(RouteResponse.class)
         .filter(Objects::nonNull)
-        .flatMapMany(routeResponse -> map(request, routeResponse));
-  }
-
-  @Override
-  public Mono<Rte> addRtePt(RteAddRtePtRequest request, String userId, Set<String> roles) {
-    return null;
-  }
-
-  @Override
-  public Mono<Rte> changeRtePtCalculationProperties(
-      RteChangeRtePtCalculationPropertiesRequest request, String userId, Set<String> roles) {
-    return null;
-  }
-
-  @Override
-  public Mono<Rte> changeRtePtIndex(RteChangeRtePtIndexRequest request, String userId,
-      Set<String> roles) {
-    return null;
-  }
-
-  @Override
-  public Mono<Rte> changeRtePtLocation(RteChangeRtePtLocationRequest request, String userId,
-      Set<String> roles) {
-    return null;
-  }
-
-  @Override
-  public Mono<Rte> removeRtePt(RteRemoveRtePtRequest request, String userId, Set<String> roles) {
-    return null;
+        .flatMap(routeResponse -> mapFirst(request, routeResponse));
   }
 
   private String buildPath(Collection<? extends Pt> locations) {
@@ -212,7 +184,7 @@ public class TomTomRouteAdapter implements RouteAdapter {
     return map;
   }
 
-  private Flux<Rte> map(
+  private Flux<Rte> mapMany(
       final RteCalculationRequest request,
       final RouteResponse response) {
     if (response.getRoutes() == null || response.getRoutes().isEmpty()) {
@@ -223,6 +195,21 @@ public class TomTomRouteAdapter implements RouteAdapter {
         .getRoutes()
         .stream()
         .filter(Objects::nonNull)
+        .map(route -> map(request, route)));
+  }
+
+  private Mono<Rte> mapFirst(
+      final RteCalculationRequest request,
+      final RouteResponse response) {
+    if (response.getRoutes() == null || response.getRoutes().isEmpty()) {
+
+      return Mono.empty();
+    }
+    return Mono.justOrEmpty(response
+        .getRoutes()
+        .stream()
+        .filter(Objects::nonNull)
+        .findFirst()
         .map(route -> map(request, route)));
   }
 

@@ -58,7 +58,7 @@ public class PtProperties<S extends PtSettings> extends FeatureProperties<S> {
   /**
    * Address
    */
-  private Address address; // index, db ref?
+  private Address address;
 
   /**
    * Phone numbers

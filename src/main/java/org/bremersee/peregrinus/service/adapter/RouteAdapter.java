@@ -37,16 +37,6 @@ public interface RouteAdapter {
   @NotNull
   Class<? extends GeocodeQueryRequest>[] getSupportedRequestClasses();
 
-  Flux<Rte> calculateRoute(RteCalculationRequest request, String userId, Set<String> roles);
-
-  Mono<Rte> addRtePt(RteAddRtePtRequest request, String userId, Set<String> roles);
-
-  Mono<Rte> changeRtePtCalculationProperties(RteChangeRtePtCalculationPropertiesRequest request, String userId, Set<String> roles);
-
-  Mono<Rte> changeRtePtIndex(RteChangeRtePtIndexRequest request, String userId, Set<String> roles);
-
-  Mono<Rte> changeRtePtLocation(RteChangeRtePtLocationRequest request, String userId, Set<String> roles);
-
-  Mono<Rte> removeRtePt(RteRemoveRtePtRequest request, String userId, Set<String> roles);
+  Mono<Rte> calculateRoute(RteCalculationRequest request, String userId, Set<String> roles);
 
 }
