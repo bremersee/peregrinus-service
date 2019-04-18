@@ -90,13 +90,15 @@ public class RteToRteTypeConverter extends AbstractFeatureConverter {
     final List<WptType> rtePtTypes = new ArrayList<>();
     final List<WptType> wptTypes = new ArrayList<>();
     final MultiLineString routes = rte.getGeometry();
-    final List<RtePt> rtePts = rte.getProperties().getRtePts();
+    // TODO
+    final List<RtePt> rtePts = null; // rte.getProperties().getRtePts();
     final int size = routes.getNumGeometries();
     for (int n = 0; n <= size; n++) {
       final LineString line = n < size ? (LineString) routes.getGeometryN(n) : null;
       final RtePt rtePt = rtePts.get(n);
       final WptType rtePtType = rtePtConverter.convert(Tuples.of(rtePt, Optional.ofNullable(line)));
-      final WptType wptType = rtePtConverter.convert(rtePt);
+      // TODO
+      final WptType wptType = null; //rtePtConverter.convert(rtePt);
       rtePtTypes.add(rtePtType);
       wptTypes.add(wptType);
     }

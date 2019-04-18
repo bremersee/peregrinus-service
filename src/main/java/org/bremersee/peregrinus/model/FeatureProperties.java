@@ -50,8 +50,7 @@ import org.bremersee.common.model.Link;
 @JsonSubTypes({
     @Type(value = WptProperties.class, name = Feature.WPT_TYPE),
     @Type(value = TrkProperties.class, name = Feature.TRK_TYPE),
-    @Type(value = RteProperties.class, name = Feature.RTE_TYPE),
-    @Type(value = RtePtProperties.class, name = Feature.RTE_PT_TYPE)
+    @Type(value = RteProperties.class, name = Feature.RTE_TYPE)
 })
 @Getter
 @Setter

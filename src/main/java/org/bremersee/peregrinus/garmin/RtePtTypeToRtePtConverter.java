@@ -23,7 +23,6 @@ import org.bremersee.garmin.trip.v1.model.ext.ViaPoint;
 import org.bremersee.gpx.GpxJaxbContextHelper;
 import org.bremersee.gpx.model.WptType;
 import org.bremersee.peregrinus.model.RtePt;
-import org.bremersee.peregrinus.model.RtePtProperties;
 import org.bremersee.peregrinus.model.garmin.GarminRtePtCalculationProperties;
 import org.bremersee.xml.ConverterUtils;
 import org.bremersee.xml.JaxbContextBuilder;
@@ -54,11 +53,12 @@ class RtePtTypeToRtePtConverter extends PtTypeToPtConverter {
   RtePt convert(final Tuple2<WptType, String> wptTypeAndTransportationMode) {
     final WptType wptType = wptTypeAndTransportationMode.getT1();
     final String transportationMode = wptTypeAndTransportationMode.getT2();
-    final RtePt rtePt = convert(wptType, RtePt::new, RtePtProperties::new);
-    rtePt
-        .getProperties()
-        .setCalculationProperties(getCalculationProperties(wptType, transportationMode));
-    return rtePt;
+//    final RtePt rtePt = convert(wptType, RtePt::new, RtePtProperties::new);
+//    rtePt
+//        .getProperties()
+//        .setCalculationProperties(getCalculationProperties(wptType, transportationMode));
+//    return rtePt;
+    return null;
   }
 
   private GarminRtePtCalculationProperties getCalculationProperties(

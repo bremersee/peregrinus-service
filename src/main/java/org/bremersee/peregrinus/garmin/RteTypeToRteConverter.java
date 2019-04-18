@@ -61,27 +61,28 @@ class RteTypeToRteConverter extends AbstractGpxConverter {
   Rte convert(final RteType rteType, final List<WptType> wptTypes) {
 
     final String transportationMode = getTransportationMode(rteType);
-    final List<Tuple2<RtePt, List<Coordinate>>> rtePtsWithCoordinates = getRtePtsWithCoordinates(
-        rteType.getRtepts(),
-        transportationMode,
-        wptTypes);
+//    final List<Tuple2<RtePt, List<Coordinate>>> rtePtsWithCoordinates = getRtePtsWithCoordinates(
+//        rteType.getRtepts(),
+//        transportationMode,
+//        wptTypes);
 
     final Rte rte = new Rte();
     rte.setProperties(convertCommonGpxType(rteType, RteProperties::new));
     rte.getProperties().getSettings().setDisplayColor(getDisplayColor(rteType));
-    rte.getProperties().setRtePts(
-        rtePtsWithCoordinates
-            .stream()
-            .map(Tuple2::getT1)
-            .collect(Collectors.toList()));
-    rte.setGeometry(
-        GeometryUtils.createMultiLineString(
-            rtePtsWithCoordinates
-                .stream()
-                .map(Tuple2::getT2)
-                .filter(list -> list.size() > 1)
-                .map(GeometryUtils::createLineString)
-                .collect(Collectors.toList())));
+    rte.getProperties().setRteSegments(null); // TODO
+//    rte.getProperties().setRtePts(
+//        rtePtsWithCoordinates
+//            .stream()
+//            .map(Tuple2::getT1)
+//            .collect(Collectors.toList()));
+//    rte.setGeometry(
+//        GeometryUtils.createMultiLineString(
+//            rtePtsWithCoordinates
+//                .stream()
+//                .map(Tuple2::getT2)
+//                .filter(list -> list.size() > 1)
+//                .map(GeometryUtils::createLineString)
+//                .collect(Collectors.toList())));
     return rte;
   }
 
@@ -122,10 +123,11 @@ class RteTypeToRteConverter extends AbstractGpxConverter {
         .collect(Collectors.toList());
     for (int i = 0; i < tuples.size() - 1; i++) {
       List<Coordinate> coordinates = tuples.get(i).getT2();
-      Coordinate endPt = tuples.get(i + 1).getT1().getGeometry().getCoordinate();
-      if (!endPt.equals2D(coordinates.get(coordinates.size() - 1))) {
-        coordinates.add(endPt);
-      }
+      // TODO
+//      Coordinate endPt = tuples.get(i + 1).getT1().getGeometry().getCoordinate();
+//      if (!endPt.equals2D(coordinates.get(coordinates.size() - 1))) {
+//        coordinates.add(endPt);
+//      }
     }
     return tuples;
   }
@@ -139,19 +141,21 @@ class RteTypeToRteConverter extends AbstractGpxConverter {
         .map(wptType -> Tuples.of(wptType, transportationMode))
         .map(rtePtTypeToRtePtConverter::convert)
         .orElse(new RtePt());
-    final RtePt rtePt = rtePtTypeToRtePtConverter
-        .convert(rtePtType, () -> tmpRtePt, tmpRtePt::getProperties);
-    final List<Coordinate> coordinates = new ArrayList<>();
-    coordinates.add(rtePt.getGeometry().getCoordinate());
-    int i = 0;
-    for (Coordinate coordinate : getCoordinates(rtePtType)) {
-      Coordinate previous = coordinates.get(i);
-      if (!previous.equals2D(coordinate)) {
-        coordinates.add(coordinate);
-        i++;
-      }
-    }
-    return Tuples.of(rtePt, coordinates);
+    // TODO
+//    final RtePt rtePt = rtePtTypeToRtePtConverter
+//        .convert(rtePtType, () -> tmpRtePt, tmpRtePt::getProperties);
+//    final List<Coordinate> coordinates = new ArrayList<>();
+//    coordinates.add(rtePt.getGeometry().getCoordinate());
+//    int i = 0;
+//    for (Coordinate coordinate : getCoordinates(rtePtType)) {
+//      Coordinate previous = coordinates.get(i);
+//      if (!previous.equals2D(coordinate)) {
+//        coordinates.add(coordinate);
+//        i++;
+//      }
+//    }
+//    return Tuples.of(rtePt, coordinates);
+    return  null;
   }
 
   private Optional<WptType> findWptType(final List<WptType> wptTypes, final WptType rtePtType) {

@@ -109,11 +109,13 @@ public class GpxToFeaturesConverter {
       final WptType wptType,
       final List<Feature> rtes) {
 
-    return removeRteWpts && rtes
-        .stream()
-        .filter(f -> f instanceof Rte)
-        .map(f -> ((Rte) f).getProperties().getRtePts())
-        .anyMatch(rtePts -> contains(rtePts, wptType));
+    // TODO
+    return false;
+//    return removeRteWpts && rtes
+//        .stream()
+//        .filter(f -> f instanceof Rte)
+//        .map(f -> ((Rte) f).getProperties().getRtePts())
+//        .anyMatch(rtePts -> contains(rtePts, wptType));
   }
 
   private boolean contains(final Collection<RtePt> rtePts, final WptType wptType) {
@@ -121,11 +123,12 @@ public class GpxToFeaturesConverter {
   }
 
   private boolean areEqual(final RtePt rtePt, final WptType wptType) {
-    String an = rtePt.getProperties().getName() != null ? rtePt.getProperties().getName() : "";
-    String bn = wptType.getName() != null ? wptType.getName() : "";
-    Coordinate ap = rtePt.getGeometry().getCoordinate();
-    Coordinate bp = GeometryUtils.createCoordinateWGS84(wptType.getLat(), wptType.getLon());
-    return an.equals(bn) && ap.equals2D(bp, 0.000000000000001);
+//    String an = rtePt.getProperties().getName() != null ? rtePt.getProperties().getName() : "";
+//    String bn = wptType.getName() != null ? wptType.getName() : "";
+//    Coordinate ap = rtePt.getGeometry().getCoordinate();
+//    Coordinate bp = GeometryUtils.createCoordinateWGS84(wptType.getLat(), wptType.getLon());
+//    return an.equals(bn) && ap.equals2D(bp, 0.000000000000001);
+    return false;
   }
 
 }

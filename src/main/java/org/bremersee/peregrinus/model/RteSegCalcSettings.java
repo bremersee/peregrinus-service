@@ -16,25 +16,29 @@
 
 package org.bremersee.peregrinus.model;
 
-import lombok.Builder;
+import com.fasterxml.jackson.annotation.JsonSubTypes;
+import com.fasterxml.jackson.annotation.JsonSubTypes.Type;
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
+import com.fasterxml.jackson.annotation.JsonTypeInfo.Id;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
+import org.bremersee.peregrinus.model.garmin.GarminRtePtCalculationProperties;
 
 /**
  * @author Christian Bremer
  */
+@JsonTypeInfo(use = Id.NAME, property = "provider")
+@JsonSubTypes({
+    @Type(
+        value = GarminRtePtCalculationProperties.class,
+        name = "Garmin")
+})
 @Getter
 @Setter
-@ToString(callSuper = true)
-@EqualsAndHashCode(callSuper = true)
-@NoArgsConstructor
-public class RtePtSettings extends PtSettings {
+@ToString
+@EqualsAndHashCode
+public abstract class RteSegCalcSettings {
 
-  @Builder
-  public RtePtSettings(String id, String featureId, String userId) {
-    super(id, featureId, userId);
-  }
 }

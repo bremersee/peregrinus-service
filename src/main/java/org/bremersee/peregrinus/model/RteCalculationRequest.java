@@ -16,47 +16,45 @@
 
 package org.bremersee.peregrinus.model;
 
-import java.time.OffsetDateTime;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import lombok.EqualsAndHashCode;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import lombok.ToString;
 import org.bremersee.common.model.HttpLanguageTag;
-import org.locationtech.jts.geom.MultiPoint;
+import org.locationtech.jts.geom.Point;
 
 /**
  * @author Christian Bremer
  */
-@EqualsAndHashCode(callSuper = true)
-@ToString(callSuper = true)
+@Getter
+@Setter
+@EqualsAndHashCode
+@ToString
 @NoArgsConstructor
-public abstract class RteCalculationRequest extends RteCalculationProperties {
+public abstract class RteCalculationRequest {
 
-  private List<Pt> rtePts; // genügen coordinaten? ->
+  private List<Point> rtePts;
 
-  //private MultiPoint rtePts;
+  private HttpLanguageTag language;
 
-  public RteCalculationRequest(
-      HttpLanguageTag language,
-      OffsetDateTime time,
-      Boolean timeIsDepartureTime,
-      List<Pt> rtePts) {
-    super(language, time, timeIsDepartureTime);
-    this.rtePts = rtePts;
+  public RteCalculationRequest(Collection<? extends Point> rtePts, HttpLanguageTag language) {
+    if (rtePts != null) {
+      this.rtePts = new ArrayList<>(rtePts);
+    }
+    this.language = language;
   }
 
-  // TODO
-  //public abstract RtePtCalculationProperties buildRtePtCalculationProperties();
-
-  public List<Pt> getRtePts() {
+  public List<Point> getRtePts() {
     if (rtePts == null) {
       rtePts = new ArrayList<>();
     }
     return rtePts;
   }
 
-  public void setRtePts(List<Pt> rtePts) {
-    this.rtePts = rtePts;
-  }
+  public abstract RteSegCalcSettings buildRteSegCalcSettings();
+
 }

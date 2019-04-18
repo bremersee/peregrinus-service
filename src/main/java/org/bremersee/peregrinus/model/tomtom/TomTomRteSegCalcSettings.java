@@ -19,10 +19,11 @@ package org.bremersee.peregrinus.model.tomtom;
 import java.util.List;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 import org.bremersee.common.model.ThreeLetterCountryCode;
-import org.bremersee.peregrinus.model.RtePtCalculationProperties;
+import org.bremersee.peregrinus.model.RteSegCalcSettings;
 import org.locationtech.jts.geom.MultiPolygon;
 
 /**
@@ -32,7 +33,8 @@ import org.locationtech.jts.geom.MultiPolygon;
 @Setter
 @ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
-public class TomTomRtePtCalculationProperties extends RtePtCalculationProperties {
+@NoArgsConstructor
+public class TomTomRteSegCalcSettings extends RteSegCalcSettings {
 
   private TravelMode travelMode;
 

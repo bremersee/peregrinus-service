@@ -16,18 +16,29 @@
 
 package org.bremersee.peregrinus.model.tomtom;
 
+import java.util.Collection;
 import java.util.List;
+import lombok.Builder;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.ToString;
+import org.bremersee.common.model.HttpLanguageTag;
 import org.bremersee.common.model.ThreeLetterCountryCode;
 import org.bremersee.peregrinus.model.RteCalculationRequest;
+import org.bremersee.peregrinus.model.RteSegCalcSettings;
 import org.locationtech.jts.geom.MultiPolygon;
+import org.locationtech.jts.geom.Point;
 
 /**
  * @author Christian Bremer
  */
 @Getter
 @Setter
+@EqualsAndHashCode(callSuper = true)
+@ToString(callSuper = true)
+@NoArgsConstructor
 public class TomTomRteCalculationRequest extends RteCalculationRequest {
 
   private TravelMode travelMode;
@@ -44,4 +55,38 @@ public class TomTomRteCalculationRequest extends RteCalculationRequest {
 
   private MultiPolygon avoidAreas;
 
+  @Builder
+  public TomTomRteCalculationRequest(
+      Collection<? extends Point> rtePts,
+      HttpLanguageTag language,
+      TravelMode travelMode,
+      RouteType routeType,
+      Windingness windingness,
+      Hilliness hilliness,
+      List<Avoid> avoid,
+      List<ThreeLetterCountryCode> avoidVignette,
+      MultiPolygon avoidAreas) {
+    
+    super(rtePts, language);
+    this.travelMode = travelMode;
+    this.routeType = routeType;
+    this.windingness = windingness;
+    this.hilliness = hilliness;
+    this.avoid = avoid;
+    this.avoidVignette = avoidVignette;
+    this.avoidAreas = avoidAreas;
+  }
+
+  @Override
+  public TomTomRteSegCalcSettings buildRteSegCalcSettings() {
+    TomTomRteSegCalcSettings properties = new TomTomRteSegCalcSettings();
+    properties.setAvoid(avoid);
+    properties.setAvoidAreas(avoidAreas);
+    properties.setAvoidVignette(avoidVignette);
+    properties.setHilliness(hilliness);
+    properties.setRouteType(routeType);
+    properties.setTravelMode(travelMode);
+    properties.setWindingness(windingness);
+    return properties;
+  }
 }

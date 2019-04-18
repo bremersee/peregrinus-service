@@ -39,7 +39,7 @@ import reactor.util.function.Tuple2;
  *
  * @author Christian Bremer
  */
-class RtePtToRtePtTypeConverter extends PtToPtTypeConverter<RtePt> {
+class RtePtToRtePtTypeConverter { // extends PtToPtTypeConverter<RtePt> {
 
   /**
    * Instantiates a new rte pt to rte pt type converter.
@@ -47,7 +47,7 @@ class RtePtToRtePtTypeConverter extends PtToPtTypeConverter<RtePt> {
    * @param jaxbContextBuilder the jaxb context builder
    */
   RtePtToRtePtTypeConverter(final JaxbContextBuilder jaxbContextBuilder, String... gpxNameSpaces) {
-    super(jaxbContextBuilder, gpxNameSpaces);
+    //super(jaxbContextBuilder, gpxNameSpaces);
   }
 
   /**
@@ -57,7 +57,7 @@ class RtePtToRtePtTypeConverter extends PtToPtTypeConverter<RtePt> {
    * @return the wpt type
    */
   WptType convert(final Tuple2<RtePt, Optional<LineString>> rtePtWithPoints) {
-    final WptType wpt = super.convert(rtePtWithPoints.getT1());
+    final WptType wpt = null; //super.convert(rtePtWithPoints.getT1());
     wpt.setType(null);
     wpt.setEle(null);
     if (rtePtWithPoints.getT2().isPresent()) {
@@ -80,12 +80,13 @@ class RtePtToRtePtTypeConverter extends PtToPtTypeConverter<RtePt> {
     routePointExtension.getRpts().addAll(getRoutePoints(lineString));
     routePointExtension.setSubclass(null); // TODO
 
-    return ExtensionsTypeBuilder
-        .builder()
-        .addElement(viaPoint, getJaxbContextBuilder().buildJaxbContext(getGpxNameSpaces()))
-        .addElement(
-            routePointExtension, getJaxbContextBuilder().buildJaxbContext(getGpxNameSpaces()))
-        .build(true);
+    return null;
+//    return ExtensionsTypeBuilder
+//        .builder()
+//        .addElement(viaPoint, getJaxbContextBuilder().buildJaxbContext(getGpxNameSpaces()))
+//        .addElement(
+//            routePointExtension, getJaxbContextBuilder().buildJaxbContext(getGpxNameSpaces()))
+//        .build(true);
   }
 
   private List<AutoroutePointT> getRoutePoints(LineString lineString) {

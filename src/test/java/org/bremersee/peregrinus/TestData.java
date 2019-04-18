@@ -36,7 +36,6 @@ import org.bremersee.peregrinus.model.DisplayColor;
 import org.bremersee.peregrinus.model.Rte;
 import org.bremersee.peregrinus.model.RteProperties;
 import org.bremersee.peregrinus.model.RtePt;
-import org.bremersee.peregrinus.model.RtePtProperties;
 import org.bremersee.peregrinus.model.RteSettings;
 import org.bremersee.peregrinus.model.Trk;
 import org.bremersee.peregrinus.model.TrkProperties;
@@ -334,7 +333,7 @@ public abstract class TestData {
         .properties(RteProperties.builder()
             .acl(accessControlDto(ANNA))
             .name("My test route")
-            .rtePts(rtePts())
+//            .rtePts(rtePts())
             .settings(RteSettings.builder()
                 .displayColor(DisplayColor.LIGHT_GRAY)
                 .featureId(rteId)
@@ -360,7 +359,7 @@ public abstract class TestData {
             .modified(rte.getProperties().getModified())
             .name(rte.getProperties().getName())
             .plainTextDescription(rte.getProperties().getPlainTextDescription())
-            .rtePts(rte.getProperties().getRtePts())
+//            .rtePts(rte.getProperties().getRtePts())
             .build())
         .build();
   }
@@ -557,31 +556,33 @@ public abstract class TestData {
   }
 
   public static List<RtePt> rtePts() {
-    return Arrays.asList(
-        RtePt.builder()
-            .geometry((Point) GeometryUtils.fromWKT("POINT (0.000222 -1.0333)"))
-            .properties(RtePtProperties.builder()
-                .address(address())
-                .ele(BigDecimal.valueOf(123.45))
-                //.lengthInMeters(500)
-                .links(links())
-                .name("RtePt0")
-                .phoneNumbers(Collections.singletonList(
-                    PhoneNumber.builder().value("4711").build()))
-                .build())
-            .build(),
-        RtePt.builder()
-            .geometry((Point) GeometryUtils.fromWKT("POINT (1.659999 -31.500006)"))
-            .properties(RtePtProperties.builder()
-                .name("RtePt1")
-                .build())
-            .build(),
-        RtePt.builder()
-            .geometry((Point) GeometryUtils.fromWKT("POINT (0.000003 0.000032)"))
-            .properties(RtePtProperties.builder()
-                .name("RtePt2")
-                .build())
-            .build());
+    // TODO
+    return null;
+//    return Arrays.asList(
+//        RtePt.builder()
+//            .geometry((Point) GeometryUtils.fromWKT("POINT (0.000222 -1.0333)"))
+//            .properties(RtePtProperties.builder()
+//                .address(address())
+//                .ele(BigDecimal.valueOf(123.45))
+//                //.lengthInMeters(500)
+//                .links(links())
+//                .name("RtePt0")
+//                .phoneNumbers(Collections.singletonList(
+//                    PhoneNumber.builder().value("4711").build()))
+//                .build())
+//            .build(),
+//        RtePt.builder()
+//            .geometry((Point) GeometryUtils.fromWKT("POINT (1.659999 -31.500006)"))
+//            .properties(RtePtProperties.builder()
+//                .name("RtePt1")
+//                .build())
+//            .build(),
+//        RtePt.builder()
+//            .geometry((Point) GeometryUtils.fromWKT("POINT (0.000003 0.000032)"))
+//            .properties(RtePtProperties.builder()
+//                .name("RtePt2")
+//                .build())
+//            .build());
   }
 
   private TestData() {

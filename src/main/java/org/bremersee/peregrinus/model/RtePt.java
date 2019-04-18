@@ -16,39 +16,37 @@
 
 package org.bremersee.peregrinus.model;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+import java.math.BigInteger;
+import java.util.List;
 import lombok.Builder;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
+import org.bremersee.common.model.TwoLetterCountryCode;
 import org.locationtech.jts.geom.Point;
 
 /**
  * @author Christian Bremer
  */
-public class RtePt extends Pt {
+@Getter
+@Setter
+@EqualsAndHashCode
+@ToString
+@NoArgsConstructor
+public class RtePt {
 
-  public RtePt() {
-    setProperties(new RtePtProperties());
-  }
+  @JsonProperty(value = "position", required = true)
+  private Point position;
+
+  private String name;
 
   @Builder
-  public RtePt(
-      String id,
-      Point geometry,
-      double[] bbox,
-      RtePtProperties properties) {
-    super(id, geometry, bbox, properties);
-  }
-
-  @Override
-  public RtePtProperties getProperties() {
-    return (RtePtProperties) super.getProperties();
-  }
-
-  @Override
-  public void setProperties(FeatureProperties<? extends FeatureSettings> properties) {
-    if (properties == null || properties instanceof RtePtProperties) {
-      super.setProperties(properties != null ? properties : new RtePtProperties());
-    } else {
-      throw new IllegalArgumentException("Properties must be of type 'RtePtProperties'.");
-    }
+  public RtePt(Point position, String name) {
+    this.position = position;
+    this.name = name;
   }
 
 }

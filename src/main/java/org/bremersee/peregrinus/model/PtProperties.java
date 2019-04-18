@@ -39,8 +39,7 @@ import org.locationtech.jts.geom.Polygon;
     description = "Common properties of a point.",
     parent = FeatureProperties.class,
     subTypes = {
-        WptProperties.class,
-        RtePtProperties.class
+        WptProperties.class
     })
 @Getter
 @Setter

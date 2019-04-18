@@ -37,7 +37,6 @@ public class PeregrinusObjectMapperModule extends SimpleModule {
     HashMap<Class<?>, JsonDeserializer<?>> map = new HashMap<>();
     map.put(Feature.class, new FeatureDeserializer());
     map.put(Rte.class, new FeatureDeserializer());
-    map.put(RtePt.class, new FeatureDeserializer());
     map.put(Trk.class, new FeatureDeserializer());
     map.put(Wpt.class, new FeatureDeserializer());
     return map;

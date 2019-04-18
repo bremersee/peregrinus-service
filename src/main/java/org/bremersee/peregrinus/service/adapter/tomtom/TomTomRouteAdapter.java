@@ -17,6 +17,7 @@
 package org.bremersee.peregrinus.service.adapter.tomtom;
 
 import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeFormatterBuilder;
 import java.util.ArrayList;
@@ -26,20 +27,15 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 import javax.validation.constraints.NotNull;
+import org.bremersee.geojson.model.LatitudeLongitude;
 import org.bremersee.geojson.utils.GeometryUtils;
 import org.bremersee.peregrinus.config.TomTomProperties;
 import org.bremersee.peregrinus.model.GeocodeQueryRequest;
-import org.bremersee.peregrinus.model.Pt;
 import org.bremersee.peregrinus.model.Rte;
-import org.bremersee.peregrinus.model.RteAddRtePtRequest;
-import org.bremersee.peregrinus.model.RteCalculationProperties;
 import org.bremersee.peregrinus.model.RteCalculationRequest;
-import org.bremersee.peregrinus.model.RteChangeRtePtCalculationPropertiesRequest;
-import org.bremersee.peregrinus.model.RteChangeRtePtIndexRequest;
-import org.bremersee.peregrinus.model.RteChangeRtePtLocationRequest;
 import org.bremersee.peregrinus.model.RteProperties;
 import org.bremersee.peregrinus.model.RtePt;
-import org.bremersee.peregrinus.model.RteRemoveRtePtRequest;
+import org.bremersee.peregrinus.model.RteSeg;
 import org.bremersee.peregrinus.model.RteSettings;
 import org.bremersee.peregrinus.model.tomtom.Avoid;
 import org.bremersee.peregrinus.model.tomtom.RouteType;
@@ -47,22 +43,23 @@ import org.bremersee.peregrinus.model.tomtom.TomTomRteCalculationRequest;
 import org.bremersee.peregrinus.service.adapter.RouteAdapter;
 import org.bremersee.peregrinus.service.adapter.tomtom.exception.RoutingExceptionMessageParser;
 import org.bremersee.peregrinus.service.adapter.tomtom.model.Route;
+import org.bremersee.peregrinus.service.adapter.tomtom.model.RouteInstruction;
+import org.bremersee.peregrinus.service.adapter.tomtom.model.RouteInstruction.InstructionType;
 import org.bremersee.peregrinus.service.adapter.tomtom.model.RouteLeg;
 import org.bremersee.peregrinus.service.adapter.tomtom.model.RouteResponse;
 import org.bremersee.web.ErrorDetectors;
 import org.bremersee.web.reactive.function.client.MessageAwareWebClientErrorDecoder;
 import org.bremersee.web.reactive.function.client.WebClientErrorDecoder;
 import org.locationtech.jts.geom.LineString;
-import org.locationtech.jts.geom.MultiLineString;
+import org.locationtech.jts.geom.Point;
 import org.springframework.http.HttpMethod;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
+import org.springframework.util.StringUtils;
 import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.reactive.function.client.WebClient.Builder;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
-import reactor.util.function.Tuple2;
-import reactor.util.function.Tuples;
 
 /**
  * @author Christian Bremer
@@ -116,22 +113,20 @@ public class TomTomRouteAdapter implements RouteAdapter {
         .onStatus(ErrorDetectors.DEFAULT, webClientErrorDecoder)
         .bodyToMono(RouteResponse.class)
         .filter(Objects::nonNull)
-        .flatMap(routeResponse -> mapFirst(request, routeResponse));
+        .flatMap(routeResponse -> mapFirst(request, routeResponse, userId));
   }
 
-  private String buildPath(Collection<? extends Pt> locations) {
+  private String buildPath(final Collection<? extends Point> locations) {
     final String locationsStr = locations
         .stream()
         .filter(Objects::nonNull)
-        .filter(pt -> pt.getGeometry() != null)
-        .map(Pt::getGeometry)
         .map(point -> BigDecimal.valueOf(point.getY()).toPlainString()
             + "," + BigDecimal.valueOf(point.getX()).toPlainString())
         .collect(Collectors.joining(":"));
     return "/" + locationsStr + "/json";
   }
 
-  private HttpMethod getHttpMethod(TomTomRteCalculationRequest request) {
+  private HttpMethod getHttpMethod(final TomTomRteCalculationRequest request) {
     if (request.getAvoidAreas() != null
         || (request.getAvoidVignette() != null && !request.getAvoidVignette().isEmpty())) {
       return HttpMethod.POST;
@@ -139,27 +134,16 @@ public class TomTomRouteAdapter implements RouteAdapter {
     return HttpMethod.GET;
   }
 
-  private MultiValueMap<String, String> buildParameters(TomTomRteCalculationRequest request) {
+  private MultiValueMap<String, String> buildParameters(final TomTomRteCalculationRequest request) {
     final MultiValueMap<String, String> map = new LinkedMultiValueMap<>();
-
+    map.set("routeRepresentation", "polyline");
+    map.set("instructionsType", "text");
     if (request.getLanguage() != null) {
       map.set("language", request.getLanguage().toString());
     }
-    if (request.getTime() != null) {
-      if (request.getTimeIsDepartureTime() == null || request.getTimeIsDepartureTime()) {
-        map.set("departAt", request.getTime().format(dtf));
-      } else {
-        map.set("arriveAt", request.getTime().format(dtf));
-      }
-    }
-
-    map.set("routeRepresentation", "polyline");
-    map.set("instructionsType", "text"); // use positions for garmin route export
-
     if (request.getTravelMode() != null) {
       map.set("travelMode", request.getTravelMode().getValue()); // car, bicycle
     }
-
     if (request.getRouteType() != null) {
       map.set("routeType", request.getRouteType().getValue()); // fastest, shortest, eco, thrilling
       if (RouteType.THRILLING.equals(request.getRouteType())) {
@@ -171,7 +155,6 @@ public class TomTomRouteAdapter implements RouteAdapter {
         }
       }
     }
-
     if (request.getAvoid() != null && !request.getAvoid().isEmpty()) {
       map.set("avoid", request.getAvoid()
           .stream()
@@ -180,13 +163,13 @@ public class TomTomRouteAdapter implements RouteAdapter {
     }
     // avoidVignette -> post
     // avoidAreas -> post
-
     return map;
   }
 
   private Flux<Rte> mapMany(
       final RteCalculationRequest request,
-      final RouteResponse response) {
+      final RouteResponse response,
+      final String userId) {
     if (response.getRoutes() == null || response.getRoutes().isEmpty()) {
 
       return Flux.empty();
@@ -195,85 +178,118 @@ public class TomTomRouteAdapter implements RouteAdapter {
         .getRoutes()
         .stream()
         .filter(Objects::nonNull)
-        .map(route -> map(request, route)));
+        .map(route -> mapRoute(request, route, userId)));
   }
 
   private Mono<Rte> mapFirst(
       final RteCalculationRequest request,
-      final RouteResponse response) {
-    if (response.getRoutes() == null || response.getRoutes().isEmpty()) {
+      final RouteResponse response,
+      final String userId) {
 
+    if (response.getRoutes() == null || response.getRoutes().isEmpty()) {
       return Mono.empty();
     }
     return Mono.justOrEmpty(response
         .getRoutes()
         .stream()
-        .filter(Objects::nonNull)
+        .filter(this::isValidRoute)
         .findFirst()
-        .map(route -> map(request, route)));
+        .map(route -> mapRoute(request, route, userId)));
   }
 
-  private Rte map(
-      final RteCalculationRequest request,
-      final Route route) {
-
-    route.getGuidance();
-
-    RteCalculationProperties calcProps = new RteCalculationProperties();
-    calcProps.setLanguage(request.getLanguage());
-    calcProps.setTime(request.getTime());
-    calcProps.setTimeIsDepartureTime(request.getTimeIsDepartureTime());
-
-    Rte.builder()
-        .geometry(null)
-        .properties(RteProperties.builder()
-            .arrivalTime(route.getSummary().getArrivalTime())
-            .calculationProperties(calcProps)
-            .createdBy(null) // TODO
-            .departureTime(route.getSummary().getDepartureTime())
-            .modifiedBy(null) // TODO
-            .name(null) // TODO
-            .rtePts(null) // TODO
-            .settings(RteSettings.builder().build())
-            .build());
-
-    return null;
+  private boolean isValidRoute(final Route route) {
+    return route != null
+        && areValidLegs(route.getLegs())
+        && route.getGuidance() != null
+        && areValidInstructions(route.getGuidance().getInstructions())
+        ;
   }
 
-  private Tuple2<List<RtePt>, MultiLineString> getRtePts(
-      final RteCalculationRequest request,
-      final Route route) {
-
-    final List<RtePt> rtePts = new ArrayList<>();
-    final List<LineString> lineStrings = new ArrayList<>();
-    for (RouteLeg routeLeg : route.getLegs()) {
-      final Tuple2<RtePt, LineString> tuple = getRtePt(request, routeLeg);
-      rtePts.add(tuple.getT1());
-      lineStrings.add(tuple.getT2());
-    }
-    final MultiLineString multiLineString = GeometryUtils.createMultiLineString(lineStrings);
-
-    // TODO add last RtePt
-
-    return Tuples.of(rtePts, multiLineString);
+  private boolean areValidLegs(final List<RouteLeg> legs) {
+    return legs != null && !legs.isEmpty();
   }
 
-  private Tuple2<RtePt, LineString> getRtePt(
+  private boolean areValidInstructions(final List<RouteInstruction> instructions) {
+    return instructions != null
+        && instructions.get(0).getInstructionType() == InstructionType.LOCATION_DEPARTURE
+        && instructions.get(instructions.size() - 1).getInstructionType()
+        == InstructionType.LOCATION_ARRIVAL;
+  }
+
+  private Rte mapRoute(
       final RteCalculationRequest request,
-      final RouteLeg route) {
+      final Route route,
+      final String userId) {
 
-    final RtePt rtePt = RtePt.builder()
-        .build();
-
-    final LineString lineString = GeometryUtils.createLineString(
-        route.getPoints()
+    final List<LineString> lineStrings = route
+        .getLegs()
+        .stream()
+        .map(RouteLeg::getPoints)
+        .map(latLngList -> latLngList
             .stream()
-            .map(latLon -> GeometryUtils
-                .createCoordinateWGS84(latLon.getLatitude(), latLon.getLongitude()))
-            .collect(Collectors.toList()));
+            .map(LatitudeLongitude::toCoordinate)
+            .collect(Collectors.toList()))
+        .map(GeometryUtils::createLineString)
+        .collect(Collectors.toList());
 
-    return Tuples.of(rtePt, lineString);
+    final List<RteSeg> rteSegments = new ArrayList<>();
+    String departureName = null;
+    String arrivalName = null;
+    BigInteger routeOffsetInMeters = BigInteger.valueOf(0);
+    BigInteger travelTimeInSeconds = BigInteger.valueOf(0);
+    RteSeg rteSeg = new RteSeg();
+    rteSeg.setCalculationSettings(request.buildRteSegCalcSettings());
+    for (final RouteInstruction routeInstruction : route.getGuidance().getInstructions()) {
+      final RtePt rtePt = RtePt
+          .builder()
+          .position(routeInstruction.getPoint().toPoint())
+          .name(StringUtils.hasText(
+              routeInstruction.getStreet())
+              ? routeInstruction.getStreet()
+              : routeInstruction.getPoint().toLatLonString())
+          .build();
+      rteSeg.getRtePts().add(rtePt);
+      arrivalName = rtePt.getName();
+      if (departureName == null) {
+        departureName = rtePt.getName();
+      }
+
+      final InstructionType instructionType = routeInstruction.getInstructionType();
+      if (InstructionType.LOCATION_WAYPOINT == instructionType
+          || InstructionType.LOCATION_ARRIVAL == instructionType) {
+
+        if (routeInstruction.getRouteOffsetInMeters() != null) {
+          rteSeg.setLengthInMeters(
+              routeInstruction.getRouteOffsetInMeters().subtract(routeOffsetInMeters));
+        }
+        if (routeInstruction.getTravelTimeInSeconds() != null) {
+          rteSeg.setTravelTimeInSeconds(
+              routeInstruction.getTravelTimeInSeconds().subtract(travelTimeInSeconds));
+        }
+        rteSegments.add(rteSeg);
+
+        routeOffsetInMeters = routeInstruction.getRouteOffsetInMeters();
+        travelTimeInSeconds = routeInstruction.getTravelTimeInSeconds();
+        rteSeg = new RteSeg();
+        rteSeg.setCalculationSettings(request.buildRteSegCalcSettings());
+      }
+    }
+
+    return Rte
+        .builder()
+        .geometry(GeometryUtils.createMultiLineString(lineStrings))
+        .properties(RteProperties
+            .builder()
+            .arrivalTime(route.getSummary() != null ? route.getSummary().getArrivalTime() : null)
+            .createdBy(userId)
+            .departureTime(
+                route.getSummary() != null ? route.getSummary().getDepartureTime() : null)
+            .modifiedBy(userId)
+            .name(departureName + " -> " + arrivalName)
+            .settings(RteSettings.builder().build())
+            .rteSegments(rteSegments)
+            .build())
+        .build();
   }
-
 
 }

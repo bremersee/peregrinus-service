@@ -34,7 +34,6 @@ import org.bremersee.plain.model.UnknownAware;
 @Setter
 @ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = false)
-@SuppressWarnings("WeakerAccess")
 public class RouteLeg extends UnknownAware {
 
   private RouteSummary summary;

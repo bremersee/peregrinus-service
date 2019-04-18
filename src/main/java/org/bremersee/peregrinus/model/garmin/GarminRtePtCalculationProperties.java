@@ -22,7 +22,7 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 import org.bremersee.garmin.trip.v1.model.ext.NamedRoadT;
-import org.bremersee.peregrinus.model.RtePtCalculationProperties;
+import org.bremersee.peregrinus.model.RteSegCalcSettings;
 
 /**
  * @author Christian Bremer
@@ -31,7 +31,7 @@ import org.bremersee.peregrinus.model.RtePtCalculationProperties;
 @Setter
 @ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
-public class GarminRtePtCalculationProperties extends RtePtCalculationProperties {
+public class GarminRtePtCalculationProperties extends RteSegCalcSettings { // delete
 
   private String transportationMode;
 

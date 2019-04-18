@@ -16,6 +16,7 @@
 
 package org.bremersee.peregrinus.service.adapter.tomtom.model;
 
+import java.math.BigInteger;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
@@ -34,8 +35,8 @@ import org.bremersee.plain.model.UnknownAware;
 @SuppressWarnings("WeakerAccess")
 public class OptimizedWaypoint extends UnknownAware {
 
-  private Integer providedIndex;
+  private BigInteger providedIndex;
 
-  private Integer optimizedIndex;
+  private BigInteger optimizedIndex;
 
 }

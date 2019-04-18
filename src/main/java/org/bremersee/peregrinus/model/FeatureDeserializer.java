@@ -120,11 +120,6 @@ public class FeatureDeserializer extends StdDeserializer<Feature> {
         throw new FeatureParserException("Geometry must be of type 'MultiLineString'.");
       }
       feature = new Rte();
-    } else if (properties instanceof RtePtProperties) {
-      if (!(geometry instanceof Point)) {
-        throw new FeatureParserException("Geometry must be of type 'Point'.");
-      }
-      feature = new RtePt();
     } else if (properties instanceof TrkProperties) {
       if (!(geometry instanceof MultiLineString)) {
         throw new FeatureParserException("Geometry must be of type 'MultiLineString'.");

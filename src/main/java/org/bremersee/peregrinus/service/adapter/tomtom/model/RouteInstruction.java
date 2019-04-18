@@ -16,6 +16,9 @@
 
 package org.bremersee.peregrinus.service.adapter.tomtom.model;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonValue;
+import java.math.BigInteger;
 import java.util.List;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -34,18 +37,17 @@ import org.bremersee.plain.model.UnknownAware;
 @Setter
 @ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = false)
-@SuppressWarnings("WeakerAccess")
 public class RouteInstruction extends UnknownAware {
 
   /**
    * Distance from the start of the route to the point of the instruction.
    */
-  private Integer routeOffsetInMeters;
+  private BigInteger routeOffsetInMeters;
 
   /**
    * Estimated travel time up to the point corresponding to routeOffsetInMeters.
    */
-  private Integer travelTimeInSeconds;
+  private BigInteger travelTimeInSeconds;
 
   /**
    * A location of the maneuver defined as a latitude longitude pair.
@@ -55,7 +57,7 @@ public class RouteInstruction extends UnknownAware {
   /**
    * Type of the instruction, e.g., turn or change of road form.
    */
-  private String instructionType;
+  private InstructionType instructionType;
 
   /**
    * An aggregate for roadNumber elements.
@@ -121,12 +123,12 @@ public class RouteInstruction extends UnknownAware {
    * <li> {@literal >0} - keep right
    * </ul>
    */
-  private Integer turnAngleInDecimalDegrees;
+  private BigInteger turnAngleInDecimalDegrees;
 
   /**
    * Indicates which exit to take at a roundabout.
    */
-  private Integer roundaboutExitNumber;
+  private BigInteger roundaboutExitNumber;
 
   /**
    * It is possible to optionally combine the instruction with the next one. This can be used to
@@ -171,7 +173,6 @@ public class RouteInstruction extends UnknownAware {
   /**
    * The instruction type.
    */
-  @SuppressWarnings("unused")
   public enum InstructionType {
 
     /**
@@ -209,58 +210,23 @@ public class RouteInstruction extends UnknownAware {
      */
     LOCATION_WAYPOINT;
 
+    @JsonValue
+    @Override
+    public String toString() {
+      return name();
+    }
+
     /**
      * From value instruction type.
      *
      * @param value the value
      * @return the instruction type
      */
+    @JsonCreator
     public static InstructionType fromValue(String value) {
       for (InstructionType instructionType : InstructionType.values()) {
         if (instructionType.name().equalsIgnoreCase(value)) {
           return instructionType;
-        }
-      }
-      return UNKNOWN;
-    }
-  }
-
-  /**
-   * The junction type.
-   */
-  @SuppressWarnings("unused")
-  public enum JunctionType {
-
-    /**
-     * Unknown junction type.
-     */
-    UNKNOWN,
-
-    /**
-     * Regular junction type.
-     */
-    REGULAR,
-
-    /**
-     * Roundabout junction type.
-     */
-    ROUNDABOUT,
-
-    /**
-     * Bifurcation junction type.
-     */
-    BIFURCATION;
-
-    /**
-     * From value junction type.
-     *
-     * @param value the value
-     * @return the junction type
-     */
-    public static JunctionType fromValue(String value) {
-      for (JunctionType junctionType : JunctionType.values()) {
-        if (junctionType.name().equalsIgnoreCase(value)) {
-          return junctionType;
         }
       }
       return UNKNOWN;

@@ -16,6 +16,7 @@
 
 package org.bremersee.peregrinus.service.adapter.tomtom.model;
 
+import java.math.BigInteger;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
@@ -46,13 +47,13 @@ public class RouteSection extends UnknownAware {
    * Index of the first point (offset 0) in the route this section applies to (only included for
    * routeRepresentation polyline).
    */
-  private Integer startPointIndex;
+  private BigInteger startPointIndex;
 
   /**
    * Index of the last point (offset 0) in the route this section applies to (only included for
    * routeRepresentation polyline).
    */
-  private Integer endPointIndex;
+  private BigInteger endPointIndex;
 
   /**
    * Contains the response section type.

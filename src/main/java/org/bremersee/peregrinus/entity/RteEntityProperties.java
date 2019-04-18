@@ -25,7 +25,7 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 import org.bremersee.common.model.Link;
-import org.bremersee.peregrinus.model.RtePt;
+import org.bremersee.peregrinus.model.RteSeg;
 import org.springframework.data.annotation.TypeAlias;
 
 /**
@@ -38,10 +38,10 @@ import org.springframework.data.annotation.TypeAlias;
 @EqualsAndHashCode(callSuper = true)
 public class RteEntityProperties extends FeatureEntityProperties {
 
-  private List<RtePt> rtePts;
+  private List<RteSeg> rteSegments;
 
   public RteEntityProperties() {
-    rtePts = new ArrayList<>();
+    rteSegments = new ArrayList<>();
   }
 
   @Builder
@@ -58,18 +58,18 @@ public class RteEntityProperties extends FeatureEntityProperties {
       List<Link> links,
       OffsetDateTime departureTime,
       OffsetDateTime arrivalTime,
-      List<RtePt> rtePts) {
+      List<RteSeg> rteSegments) {
 
     super(acl, created, createdBy, modified, modifiedBy, name, plainTextDescription,
         markdownDescription, internalComments, links, departureTime, arrivalTime);
-    setRtePts(rtePts);
+    setRteSegments(rteSegments);
   }
 
-  public void setRtePts(List<RtePt> rtePts) {
-    if (rtePts == null) {
-      this.rtePts = new ArrayList<>();
+  public void setRteSegments(List<RteSeg> rteSegments) {
+    if (rteSegments == null) {
+      this.rteSegments = new ArrayList<>();
     } else {
-      this.rtePts = rtePts;
+      this.rteSegments = rteSegments;
     }
   }
 }

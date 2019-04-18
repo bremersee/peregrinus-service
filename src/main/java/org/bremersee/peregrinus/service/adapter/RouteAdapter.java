@@ -20,13 +20,7 @@ import java.util.Set;
 import javax.validation.constraints.NotNull;
 import org.bremersee.peregrinus.model.GeocodeQueryRequest;
 import org.bremersee.peregrinus.model.Rte;
-import org.bremersee.peregrinus.model.RteAddRtePtRequest;
 import org.bremersee.peregrinus.model.RteCalculationRequest;
-import org.bremersee.peregrinus.model.RteChangeRtePtCalculationPropertiesRequest;
-import org.bremersee.peregrinus.model.RteChangeRtePtIndexRequest;
-import org.bremersee.peregrinus.model.RteChangeRtePtLocationRequest;
-import org.bremersee.peregrinus.model.RteRemoveRtePtRequest;
-import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 /**

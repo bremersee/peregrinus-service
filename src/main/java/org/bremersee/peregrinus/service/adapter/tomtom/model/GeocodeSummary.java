@@ -16,6 +16,7 @@
 
 package org.bremersee.peregrinus.service.adapter.tomtom.model;
 
+import java.math.BigInteger;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
@@ -41,13 +42,13 @@ public class GeocodeSummary extends UnknownAware {
 
   private String queryTime;
 
-  private Integer numResults;
+  private BigInteger numResults;
 
-  private Integer offset;
+  private BigInteger offset;
 
-  private Integer totalResults;
+  private BigInteger totalResults;
 
-  private Integer fuzzyLevel;
+  private BigInteger fuzzyLevel;
 
   private LatLon geoBias;
 

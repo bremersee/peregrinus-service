@@ -20,7 +20,7 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
-import org.bremersee.peregrinus.model.RtePtCalculationProperties;
+import org.bremersee.peregrinus.model.RteSegCalcSettings;
 
 /**
  * @author Christian Bremer
@@ -29,6 +29,6 @@ import org.bremersee.peregrinus.model.RtePtCalculationProperties;
 @Setter
 @ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
-public class GoogleRtePtCalculationProperties extends RtePtCalculationProperties {
+public class GoogleRtePtCalculationProperties extends RteSegCalcSettings {
 
 }

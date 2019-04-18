@@ -57,7 +57,7 @@ public class Rte extends Feature {
   @Override
   public void setProperties(FeatureProperties<? extends FeatureSettings> properties) {
     if (properties == null || properties instanceof RteProperties) {
-      super.setProperties(properties != null ? properties : new RtePtProperties());
+      super.setProperties(properties != null ? properties : new RteProperties());
     } else {
       throw new IllegalArgumentException("Properties must be of type 'RteProperties'.");
     }

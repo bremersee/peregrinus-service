@@ -17,6 +17,7 @@
 package org.bremersee.peregrinus.service.adapter.tomtom.model;
 
 import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.time.OffsetDateTime;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -37,11 +38,11 @@ import org.bremersee.plain.model.UnknownAware;
 @SuppressWarnings("WeakerAccess")
 public class RouteSummary extends UnknownAware {
 
-  private Integer lengthInMeters;
+  private BigInteger lengthInMeters;
 
-  private Integer travelTimeInSeconds;
+  private BigInteger travelTimeInSeconds;
 
-  private Integer trafficDelayInSeconds;
+  private BigInteger trafficDelayInSeconds;
 
   /**
    * The estimated departure time for the route or leg.
@@ -53,19 +54,19 @@ public class RouteSummary extends UnknownAware {
    */
   private OffsetDateTime arrivalTime;
 
-  private Integer noTrafficTravelTimeInSeconds;
+  private BigInteger noTrafficTravelTimeInSeconds;
 
-  private Integer historicTrafficTravelTimeInSeconds;
+  private BigInteger historicTrafficTravelTimeInSeconds;
 
-  private Integer liveTrafficIncidentsTravelTimeInSeconds;
+  private BigInteger liveTrafficIncidentsTravelTimeInSeconds;
 
   private BigDecimal fuelConsumptionInLiters;
 
   private BigDecimal batteryConsumptionInkWh;
 
-  private Integer deviationDistance;
+  private BigInteger deviationDistance;
 
-  private Integer deviationTime;
+  private BigInteger deviationTime;
 
   private LatitudeLongitude deviationPoint;
 

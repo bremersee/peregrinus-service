@@ -41,13 +41,11 @@ import org.bremersee.common.model.Link;
 @EqualsAndHashCode(callSuper = true)
 public class RteProperties extends FeatureProperties<RteSettings> {
 
-  private RteCalculationProperties calculationProperties;
-
-  private List<RtePt> rtePts;
+  private List<RteSeg> rteSegments;
 
   public RteProperties() {
     setSettings(new RteSettings());
-    rtePts = new ArrayList<>();
+    rteSegments = new ArrayList<>();
   }
 
   @Builder
@@ -65,20 +63,18 @@ public class RteProperties extends FeatureProperties<RteSettings> {
       OffsetDateTime departureTime,
       OffsetDateTime arrivalTime,
       RteSettings settings,
-      RteCalculationProperties calculationProperties,
-      List<RtePt> rtePts) {
+      List<RteSeg> rteSegments) {
 
     super(acl, created, createdBy, modified, modifiedBy, name, plainTextDescription,
         markdownDescription, internalComments, links, departureTime, arrivalTime, settings);
-    setCalculationProperties(calculationProperties);
-    setRtePts(rtePts);
+    setRteSegments(rteSegments);
   }
 
-  public void setRtePts(List<RtePt> rtePts) {
-    if (rtePts == null) {
-      this.rtePts = new ArrayList<>();
+  public void setRteSegments(List<RteSeg> rteSegments) {
+    if (rteSegments == null) {
+      this.rteSegments = new ArrayList<>();
     } else {
-      this.rtePts = rtePts;
+      this.rteSegments = rteSegments;
     }
   }
 }

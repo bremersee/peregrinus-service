@@ -43,8 +43,7 @@ import lombok.ToString;
 @JsonSubTypes({
     @Type(value = WptSettings.class, name = Feature.WPT_TYPE),
     @Type(value = TrkSettings.class, name = Feature.TRK_TYPE),
-    @Type(value = RteSettings.class, name = Feature.RTE_TYPE),
-    @Type(value = RtePtSettings.class, name = Feature.RTE_PT_TYPE)
+    @Type(value = RteSettings.class, name = Feature.RTE_TYPE)
 })
 @Getter
 @Setter

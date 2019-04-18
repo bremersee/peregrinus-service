@@ -16,6 +16,7 @@
 
 package org.bremersee.peregrinus.service.adapter.tomtom.model;
 
+import java.math.BigInteger;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
@@ -37,12 +38,12 @@ import org.bremersee.plain.model.UnknownAware;
 @SuppressWarnings("WeakerAccess")
 public class RouteInstructionGroup extends UnknownAware {
 
-  private Integer firstInstructionIndex;
+  private BigInteger firstInstructionIndex;
 
-  private Integer lastInstructionIndex;
+  private BigInteger lastInstructionIndex;
 
   private String groupMessage;
 
-  private Integer groupLengthInMeters;
+  private BigInteger groupLengthInMeters;
 
 }
