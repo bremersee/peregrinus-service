@@ -236,8 +236,7 @@ public class TomTomRouteAdapter implements RouteAdapter {
     return route != null
         && areValidLegs(route.getLegs())
         && route.getGuidance() != null
-        && areValidInstructions(route.getGuidance().getInstructions())
-        ;
+        && areValidInstructions(route.getGuidance().getInstructions());
   }
 
   private boolean areValidLegs(final List<RouteLeg> legs) {
@@ -278,10 +277,7 @@ public class TomTomRouteAdapter implements RouteAdapter {
       final RtePt rtePt = RtePt
           .builder()
           .position(routeInstruction.getPoint().toPoint())
-          .name(StringUtils.hasText(
-              routeInstruction.getStreet())
-              ? routeInstruction.getStreet()
-              : routeInstruction.getPoint().toLatLonString())
+          .name(routeInstruction.findName())
           .build();
       rteSeg.getRtePts().add(rtePt);
       arrivalName = rtePt.getName();

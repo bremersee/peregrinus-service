@@ -17,6 +17,7 @@
 package org.bremersee.peregrinus.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.List;
 import lombok.Builder;
@@ -27,6 +28,7 @@ import lombok.Setter;
 import lombok.ToString;
 import org.bremersee.common.model.TwoLetterCountryCode;
 import org.locationtech.jts.geom.Point;
+import org.springframework.util.StringUtils;
 
 /**
  * @author Christian Bremer
@@ -47,6 +49,16 @@ public class RtePt {
   public RtePt(Point position, String name) {
     this.position = position;
     this.name = name;
+  }
+
+  @JsonProperty("name")
+  public String getName() {
+    if (!StringUtils.hasText(name) && position != null) {
+      return BigDecimal.valueOf(position.getY()).toPlainString()
+          + ","
+          + BigDecimal.valueOf(position.getX()).toPlainString();
+    }
+    return name;
   }
 
 }

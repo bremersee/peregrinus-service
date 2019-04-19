@@ -24,8 +24,10 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
+import org.bremersee.common.model.ThreeLetterCountryCode;
 import org.bremersee.geojson.model.LatitudeLongitude;
 import org.bremersee.plain.model.UnknownAware;
+import org.springframework.util.StringUtils;
 
 /**
  * A set of attributes describing a maneuver, e.g. 'Turn right', 'Keep left', 'Take the ferry',
@@ -91,7 +93,7 @@ public class RouteInstruction extends UnknownAware {
   /**
    * 3-character ISO 3166-1 alpha-3 country code.
    */
-  private String countryCode; // 3-letters
+  private ThreeLetterCountryCode countryCode;
 
   /**
    * Subdivision (e.g. state) of the country, represented by the second part of an ISO 3166-2 code.
@@ -171,8 +173,24 @@ public class RouteInstruction extends UnknownAware {
   private String combinedMessage;
 
   /**
+   * Find the name of this point.
+   *
+   * @return the name of this point
+   */
+  public String findName() {
+    if (StringUtils.hasText(street)) {
+      return street;
+    }
+    if (point != null) {
+      return point.toLatLonString();
+    }
+    return null;
+  }
+
+  /**
    * The instruction type.
    */
+  @SuppressWarnings("unused")
   public enum InstructionType {
 
     /**
