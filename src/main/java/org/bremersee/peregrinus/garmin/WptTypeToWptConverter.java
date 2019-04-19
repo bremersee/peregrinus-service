@@ -16,6 +16,18 @@
 
 package org.bremersee.peregrinus.garmin;
 
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
+import lombok.AccessLevel;
+import lombok.Getter;
+import org.bremersee.common.model.Address;
+import org.bremersee.common.model.PhoneNumber;
+import org.bremersee.garmin.creationtime.v1.model.ext.CreationTimeExtension;
+import org.bremersee.garmin.gpx.v3.model.ext.PhoneNumberT;
+import org.bremersee.garmin.gpx.v3.model.ext.WaypointExtension;
+import org.bremersee.geojson.utils.GeometryUtils;
+import org.bremersee.gpx.GpxJaxbContextHelper;
 import org.bremersee.gpx.model.WptType;
 import org.bremersee.peregrinus.model.Wpt;
 import org.bremersee.peregrinus.model.WptProperties;
@@ -26,15 +38,19 @@ import org.bremersee.xml.JaxbContextBuilder;
  *
  * @author Christian Bremer
  */
-class WptTypeToWptConverter extends PtTypeToPtConverter {
+class WptTypeToWptConverter extends AbstractGpxConverter {
 
-  /**
-   * Instantiates a new garmin wpt type to wpt converter.
-   *
-   * @param jaxbContextBuilder the jaxb context builder
-   */
+  private static final AddressTypeToAddressConverter addressConverter
+      = new AddressTypeToAddressConverter();
+
+  private static final PhoneNumberTypeToPhoneNumberConverter phoneNumberConverter
+      = new PhoneNumberTypeToPhoneNumberConverter();
+
+  @Getter(AccessLevel.PROTECTED)
+  private final JaxbContextBuilder jaxbContextBuilder;
+
   WptTypeToWptConverter(final JaxbContextBuilder jaxbContextBuilder) {
-    super(jaxbContextBuilder);
+    this.jaxbContextBuilder = jaxbContextBuilder;
   }
 
   /**
@@ -44,7 +60,57 @@ class WptTypeToWptConverter extends PtTypeToPtConverter {
    * @return the wpt
    */
   Wpt convert(final WptType wptType) {
-    return null; //convert(wptType, Wpt::new, WptProperties::new);
+    Wpt wpt = new Wpt();
+    wpt.setProperties(convertCommonGpxType(wptType, WptProperties::new));
+    wpt.setGeometry(GeometryUtils.createPointWGS84(wptType.getLat(), wptType.getLon()));
+    wpt.setBbox(GeometryUtils.getBoundingBox(wpt.getGeometry()));
+    wpt.getProperties().setAddress(getAddress(wptType));
+    wpt.getProperties().setEle(wptType.getEle());
+    wpt.getProperties().setPhoneNumbers(getPhoneNumbers(wptType));
+    //wpt.getProperties().setTime(getTime(wptType));
+
+    if (GarminType.PHOTO.equals(wptType.getType())) {
+      // TODO wanted images
+    }
+
+    return wpt;
+  }
+
+  private Optional<CreationTimeExtension> getCreationTimeExtension(WptType wptType) {
+    return GpxJaxbContextHelper.findFirstExtension(
+        CreationTimeExtension.class,
+        true,
+        wptType.getExtensions(),
+        jaxbContextBuilder.buildUnmarshaller());
+  }
+
+  private Optional<WaypointExtension> getWaypointExtension(WptType wptType) {
+    return GpxJaxbContextHelper.findFirstExtension(
+        WaypointExtension.class,
+        true,
+        wptType.getExtensions(),
+        jaxbContextBuilder.buildUnmarshaller());
+  }
+
+  private Address getAddress(WptType wptType) {
+    return getWaypointExtension(wptType)
+        .map(WaypointExtension::getAddress)
+        .map(addressConverter::convert)
+        .orElse(null);
+  }
+
+  private List<PhoneNumber> getPhoneNumbers(WptType wptType) {
+    return getWaypointExtension(wptType)
+        .map(WaypointExtension::getPhoneNumbers)
+        .map(this::getPhoneNumbers)
+        .orElse(null);
+  }
+
+  private List<PhoneNumber> getPhoneNumbers(List<PhoneNumberT> phoneNumbers) {
+    return phoneNumbers
+        .stream()
+        .map(phoneNumberConverter::convert)
+        .collect(Collectors.toList());
   }
 
 }
