@@ -87,7 +87,7 @@ public class TomTomRouteAdapter implements RouteAdapter {
       WebClient.Builder webClientBuilder) {
 
     this.properties = properties;
-    this.webClientBuilder = webClientBuilder;
+    this.webClientBuilder = webClientBuilder.clone();
     this.webClientErrorDecoder = new MessageAwareWebClientErrorDecoder(
         new RoutingExceptionMessageParser());
   }

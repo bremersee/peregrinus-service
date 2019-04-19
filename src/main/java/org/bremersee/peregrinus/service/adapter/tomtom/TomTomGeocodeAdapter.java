@@ -65,7 +65,7 @@ public class TomTomGeocodeAdapter implements GeocodeAdapter {
       Builder webClientBuilder,
       WebClientErrorDecoder<? extends Throwable> webClientErrorDecoder) {
     this.properties = properties;
-    this.webClientBuilder = webClientBuilder;
+    this.webClientBuilder = webClientBuilder.clone();
     this.webClientErrorDecoder = webClientErrorDecoder;
   }
 
