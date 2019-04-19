@@ -34,7 +34,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @Setter
 @ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
-public class WptEntity extends PtEntity<WptEntityProperties> {
+public class WptEntity extends FeatureEntity<Point, WptEntityProperties> {
 
   public WptEntity() {
     setProperties(new WptEntityProperties());

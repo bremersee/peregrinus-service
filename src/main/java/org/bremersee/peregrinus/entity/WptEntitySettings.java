@@ -35,7 +35,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
 @NoArgsConstructor
-public class WptEntitySettings extends PtEntitySettings {
+public class WptEntitySettings extends FeatureEntitySettings {
 
   @Builder
   public WptEntitySettings(String id, String featureId, String userId) {

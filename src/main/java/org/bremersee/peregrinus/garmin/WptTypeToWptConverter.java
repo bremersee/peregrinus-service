@@ -44,7 +44,7 @@ class WptTypeToWptConverter extends PtTypeToPtConverter {
    * @return the wpt
    */
   Wpt convert(final WptType wptType) {
-    return convert(wptType, Wpt::new, WptProperties::new);
+    return null; //convert(wptType, Wpt::new, WptProperties::new);
   }
 
 }

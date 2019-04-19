@@ -31,7 +31,7 @@ import lombok.ToString;
 @ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
 @NoArgsConstructor
-public class WptSettings extends PtSettings {
+public class WptSettings extends FeatureSettings {
 
   @Builder
   public WptSettings(String id, String featureId, String userId) {

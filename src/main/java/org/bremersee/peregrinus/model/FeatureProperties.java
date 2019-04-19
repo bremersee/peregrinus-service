@@ -42,7 +42,7 @@ import org.bremersee.common.model.Link;
     description = "Common properties of a GeoJSON feature.",
     discriminator = "_type",
     subTypes = {
-        PtProperties.class,
+        WptProperties.class,
         TrkProperties.class,
         RteProperties.class
     })

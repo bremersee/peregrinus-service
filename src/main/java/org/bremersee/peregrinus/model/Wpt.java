@@ -17,12 +17,13 @@
 package org.bremersee.peregrinus.model;
 
 import lombok.Builder;
+import org.locationtech.jts.geom.Geometry;
 import org.locationtech.jts.geom.Point;
 
 /**
  * @author Christian Bremer
  */
-public class Wpt extends Pt {
+public class Wpt extends Feature {
 
   public Wpt() {
     setProperties(new WptProperties());
@@ -32,6 +33,20 @@ public class Wpt extends Pt {
   public Wpt(String id, Point geometry, double[] bbox,
       WptProperties properties) {
     super(id, geometry, bbox, properties);
+  }
+
+  @Override
+  public Point getGeometry() {
+    return (Point) super.getGeometry();
+  }
+
+  @Override
+  public void setGeometry(Geometry geometry) {
+    if (geometry == null || geometry instanceof Point) {
+      super.setGeometry(geometry);
+    } else {
+      throw new IllegalArgumentException("Geometry must be of type 'Point'.");
+    }
   }
 
   @Override

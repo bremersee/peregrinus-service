@@ -32,7 +32,7 @@ import org.bremersee.geojson.utils.GeometryUtils;
 import org.bremersee.gpx.ExtensionsTypeBuilder;
 import org.bremersee.gpx.model.ExtensionsType;
 import org.bremersee.gpx.model.WptType;
-import org.bremersee.peregrinus.model.Pt;
+import org.bremersee.peregrinus.model.Wpt;
 import org.bremersee.xml.JaxbContextBuilder;
 
 /**
@@ -41,7 +41,7 @@ import org.bremersee.xml.JaxbContextBuilder;
  * @param <T> the point type parameter
  * @author Christian Bremer
  */
-abstract class PtToPtTypeConverter<T extends Pt>
+abstract class PtToPtTypeConverter<T extends Wpt>
     extends AbstractFeatureConverter {
 
   private static final AddressToAddressTypeConverter addressConverter
@@ -70,58 +70,59 @@ abstract class PtToPtTypeConverter<T extends Pt>
    * @return the wpt type
    */
   WptType convert(final T pt) {
-    final WptType wptType = super.convertFeatureProperties(pt.getProperties(), WptType::new);
-    wptType.setTime(offsetDateTimeToXmlCalendarUtc(pt.getProperties().getModified()));
-    wptType.setSym("Flag, Blue");
-    wptType.setLat(BigDecimal.valueOf(
-        GeometryUtils.getLatitudeWGS84(pt.getGeometry().getCoordinate())));
-    wptType.setLon(BigDecimal.valueOf(
-        GeometryUtils.getLongitudeWGS84(pt.getGeometry().getCoordinate())));
-    wptType.setEle(pt.getProperties().getEle());
-    wptType.setExtensions(getWptTypeExtensions(wptType, pt));
-    return wptType;
+    return null;
+//    final WptType wptType = super.convertFeatureProperties(pt.getProperties(), WptType::new);
+//    wptType.setTime(offsetDateTimeToXmlCalendarUtc(pt.getProperties().getModified()));
+//    wptType.setSym("Flag, Blue");
+//    wptType.setLat(BigDecimal.valueOf(
+//        GeometryUtils.getLatitudeWGS84(pt.getGeometry().getCoordinate())));
+//    wptType.setLon(BigDecimal.valueOf(
+//        GeometryUtils.getLongitudeWGS84(pt.getGeometry().getCoordinate())));
+//    wptType.setEle(pt.getProperties().getEle());
+//    wptType.setExtensions(getWptTypeExtensions(wptType, pt));
+//    return wptType;
   }
 
-  private ExtensionsType getWptTypeExtensions(final WptType wptType, final T pt) {
-    if (pt.getProperties().getAddress() == null
-        && (pt.getProperties().getPhoneNumbers() == null
-        || pt.getProperties().getPhoneNumbers().isEmpty())) {
-      return wptType.getExtensions();
-    }
-    final WaypointExtension waypointExtension3 = new WaypointExtension();
-    waypointExtension3.setAddress(addressConverter.convert(
-        pt.getProperties().getAddress(), AddressT::new));
-    waypointExtension3.getPhoneNumbers().addAll(
-        pt.getProperties().getPhoneNumbers()
-            .stream()
-            .filter(Objects::nonNull)
-            .map(number -> phoneNumberConverter.convert(
-                number, PhoneNumberT::new))
-            .collect(Collectors.toList()));
-
-    final org.bremersee.garmin.waypoint.v1.model.ext.WaypointExtension waypointExtension1
-        = new org.bremersee.garmin.waypoint.v1.model.ext.WaypointExtension();
-    waypointExtension1.setAddress(addressConverter.convert(
-        pt.getProperties().getAddress(),
-        org.bremersee.garmin.waypoint.v1.model.ext.AddressT::new));
-    waypointExtension1.getPhoneNumbers().addAll(
-        pt.getProperties().getPhoneNumbers()
-            .stream()
-            .filter(Objects::nonNull)
-            .map(
-                number -> phoneNumberConverter.convert(
-                    number,
-                    org.bremersee.garmin.waypoint.v1.model.ext.PhoneNumberT::new))
-            .collect(Collectors.toList()));
-
-    final CreationTimeExtension timeExtension = new CreationTimeExtension();
-    timeExtension.setCreationTime(offsetDateTimeToXmlCalendarUtc(pt.getProperties().getCreated()));
-
-    return ExtensionsTypeBuilder.builder(wptType.getExtensions())
-        .addElement(waypointExtension3, jaxbContextBuilder.buildJaxbContext(gpxNameSpaces))
-        .addElement(waypointExtension1, jaxbContextBuilder.buildJaxbContext(gpxNameSpaces))
-        .addElement(timeExtension, jaxbContextBuilder.buildJaxbContext(gpxNameSpaces))
-        .build(true);
-  }
+//  private ExtensionsType getWptTypeExtensions(final WptType wptType, final T pt) {
+//    if (pt.getProperties().getAddress() == null
+//        && (pt.getProperties().getPhoneNumbers() == null
+//        || pt.getProperties().getPhoneNumbers().isEmpty())) {
+//      return wptType.getExtensions();
+//    }
+//    final WaypointExtension waypointExtension3 = new WaypointExtension();
+//    waypointExtension3.setAddress(addressConverter.convert(
+//        pt.getProperties().getAddress(), AddressT::new));
+//    waypointExtension3.getPhoneNumbers().addAll(
+//        pt.getProperties().getPhoneNumbers()
+//            .stream()
+//            .filter(Objects::nonNull)
+//            .map(number -> phoneNumberConverter.convert(
+//                number, PhoneNumberT::new))
+//            .collect(Collectors.toList()));
+//
+//    final org.bremersee.garmin.waypoint.v1.model.ext.WaypointExtension waypointExtension1
+//        = new org.bremersee.garmin.waypoint.v1.model.ext.WaypointExtension();
+//    waypointExtension1.setAddress(addressConverter.convert(
+//        pt.getProperties().getAddress(),
+//        org.bremersee.garmin.waypoint.v1.model.ext.AddressT::new));
+//    waypointExtension1.getPhoneNumbers().addAll(
+//        pt.getProperties().getPhoneNumbers()
+//            .stream()
+//            .filter(Objects::nonNull)
+//            .map(
+//                number -> phoneNumberConverter.convert(
+//                    number,
+//                    org.bremersee.garmin.waypoint.v1.model.ext.PhoneNumberT::new))
+//            .collect(Collectors.toList()));
+//
+//    final CreationTimeExtension timeExtension = new CreationTimeExtension();
+//    timeExtension.setCreationTime(offsetDateTimeToXmlCalendarUtc(pt.getProperties().getCreated()));
+//
+//    return ExtensionsTypeBuilder.builder(wptType.getExtensions())
+//        .addElement(waypointExtension3, jaxbContextBuilder.buildJaxbContext(gpxNameSpaces))
+//        .addElement(waypointExtension1, jaxbContextBuilder.buildJaxbContext(gpxNameSpaces))
+//        .addElement(timeExtension, jaxbContextBuilder.buildJaxbContext(gpxNameSpaces))
+//        .build(true);
+//  }
 
 }

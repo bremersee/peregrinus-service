@@ -18,6 +18,7 @@ package org.bremersee.peregrinus.entity;
 
 import java.math.BigDecimal;
 import java.time.OffsetDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
@@ -28,6 +29,7 @@ import lombok.ToString;
 import org.bremersee.common.model.Address;
 import org.bremersee.common.model.Link;
 import org.bremersee.common.model.PhoneNumber;
+import org.locationtech.jts.geom.Polygon;
 import org.springframework.data.annotation.TypeAlias;
 
 /**
@@ -39,7 +41,34 @@ import org.springframework.data.annotation.TypeAlias;
 @ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
 @NoArgsConstructor
-public class WptEntityProperties extends PtEntityProperties {
+public class WptEntityProperties extends FeatureEntityProperties {
+
+  private String internalType; // photo, video or not // TODO
+
+  /**
+   * Elevation in meters
+   */
+  private BigDecimal ele;
+
+  /**
+   * Address
+   */
+  private Address address;
+
+  /**
+   * Phone numbers
+   */
+  private List<PhoneNumber> phoneNumbers = new ArrayList<>();
+
+  private Polygon area;
+
+  private String osmId;
+
+  private String osmType;
+
+  private String osmPlaceId;
+
+  private String osmCategory;
 
   @Builder
   public WptEntityProperties(
@@ -58,10 +87,32 @@ public class WptEntityProperties extends PtEntityProperties {
       String internalType,
       BigDecimal ele,
       Address address,
-      List<PhoneNumber> phoneNumbers) {
+      List<PhoneNumber> phoneNumbers,
+      Polygon area,
+      String osmId,
+      String osmType,
+      String osmPlaceId,
+      String osmCategory) {
 
     super(acl, created, createdBy, modified, modifiedBy, name, plainTextDescription,
-        markdownDescription, internalComments, links, departureTime, arrivalTime, internalType, ele,
-        address, phoneNumbers);
+        markdownDescription, internalComments, links, departureTime, arrivalTime);
+    setInternalType(internalType);
+    setEle(ele);
+    setAddress(address);
+    setPhoneNumbers(phoneNumbers);
+    setArea(area);
+    setOsmId(osmId);
+    setOsmType(osmType);
+    setOsmPlaceId(osmPlaceId);
+    setOsmCategory(osmCategory);
   }
+
+  public void setPhoneNumbers(List<PhoneNumber> phoneNumbers) {
+    if (phoneNumbers == null) {
+      this.phoneNumbers = new ArrayList<>();
+    } else {
+      this.phoneNumbers = phoneNumbers;
+    }
+  }
+
 }

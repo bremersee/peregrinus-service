@@ -30,9 +30,6 @@ import org.bremersee.garmin.gpx.v3.model.ext.WaypointExtension;
 import org.bremersee.geojson.utils.GeometryUtils;
 import org.bremersee.gpx.GpxJaxbContextHelper;
 import org.bremersee.gpx.model.WptType;
-import org.bremersee.peregrinus.model.Pt;
-import org.bremersee.peregrinus.model.PtProperties;
-import org.bremersee.peregrinus.model.PtSettings;
 import org.bremersee.xml.JaxbContextBuilder;
 
 /**
@@ -60,34 +57,34 @@ abstract class PtTypeToPtConverter extends AbstractGpxConverter {
     this.jaxbContextBuilder = jaxbContextBuilder;
   }
 
-  /**
-   * Convert garmin point.
-   *
-   * @param <T>                  the point type parameter
-   * @param <P>                  the properties type parameter
-   * @param wptType              the wpt type
-   * @param ptSupplier           the pt supplier
-   * @param ptPropertiesSupplier the pt properties supplier
-   * @return the point
-   */
-  <T extends Pt, P extends PtProperties<? extends PtSettings>> T convert(
-      final WptType wptType, Supplier<T> ptSupplier, Supplier<P> ptPropertiesSupplier) {
-
-    final T wpt = ptSupplier.get();
-    wpt.setProperties(convertCommonGpxType(wptType, ptPropertiesSupplier));
-    wpt.setGeometry(GeometryUtils.createPointWGS84(wptType.getLat(), wptType.getLon()));
-    wpt.setBbox(GeometryUtils.getBoundingBox(wpt.getGeometry()));
-    wpt.getProperties().setAddress(getAddress(wptType));
-    wpt.getProperties().setEle(wptType.getEle());
-    wpt.getProperties().setPhoneNumbers(getPhoneNumbers(wptType));
-    //wpt.getProperties().setTime(getTime(wptType));
-
-    if (GarminType.PHOTO.equals(wptType.getType())) {
-      // TODO wanted images
-    }
-
-    return wpt;
-  }
+//  /**
+//   * Convert garmin point.
+//   *
+//   * @param <T>                  the point type parameter
+//   * @param <P>                  the properties type parameter
+//   * @param wptType              the wpt type
+//   * @param ptSupplier           the pt supplier
+//   * @param ptPropertiesSupplier the pt properties supplier
+//   * @return the point
+//   */
+//  <T extends Pt, P extends PtProperties<? extends PtSettings>> T convert(
+//      final WptType wptType, Supplier<T> ptSupplier, Supplier<P> ptPropertiesSupplier) {
+//
+//    final T wpt = ptSupplier.get();
+//    wpt.setProperties(convertCommonGpxType(wptType, ptPropertiesSupplier));
+//    wpt.setGeometry(GeometryUtils.createPointWGS84(wptType.getLat(), wptType.getLon()));
+//    wpt.setBbox(GeometryUtils.getBoundingBox(wpt.getGeometry()));
+//    wpt.getProperties().setAddress(getAddress(wptType));
+//    wpt.getProperties().setEle(wptType.getEle());
+//    wpt.getProperties().setPhoneNumbers(getPhoneNumbers(wptType));
+//    //wpt.getProperties().setTime(getTime(wptType));
+//
+//    if (GarminType.PHOTO.equals(wptType.getType())) {
+//      // TODO wanted images
+//    }
+//
+//    return wpt;
+//  }
 
   private Optional<CreationTimeExtension> getCreationTimeExtension(WptType wptType) {
     return GpxJaxbContextHelper.findFirstExtension(

@@ -19,6 +19,7 @@ package org.bremersee.peregrinus.model;
 import io.swagger.annotations.ApiModel;
 import java.math.BigDecimal;
 import java.time.OffsetDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
@@ -37,12 +38,39 @@ import org.locationtech.jts.geom.Polygon;
 @ApiModel(
     value = "WptProperties",
     description = "Properties of a way point.",
-    parent = PtProperties.class)
+    parent = FeatureProperties.class)
 @Getter
 @Setter
 @ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
-public class WptProperties extends PtProperties<WptSettings> {
+public class WptProperties extends FeatureProperties<WptSettings> {
+
+  private String internalType; // photo, video or not // TODO
+
+  /**
+   * Elevation in meters
+   */
+  private BigDecimal ele;
+
+  /**
+   * Address
+   */
+  private Address address;
+
+  /**
+   * Phone numbers
+   */
+  private List<PhoneNumber> phoneNumbers;
+
+  private Polygon area;
+
+  private String osmId;
+
+  private String osmType;
+
+  private String osmPlaceId;
+
+  private String osmCategory;
 
   public WptProperties() {
     setSettings(new WptSettings());
@@ -74,8 +102,23 @@ public class WptProperties extends PtProperties<WptSettings> {
       String osmCategory) {
 
     super(acl, created, createdBy, modified, modifiedBy, name, plainTextDescription,
-        markdownDescription, internalComments, links, departureTime, arrivalTime, settings, internalType,
-        ele, address, phoneNumbers, area, osmId, osmType, osmPlaceId, osmCategory);
+        markdownDescription, internalComments, links, departureTime, arrivalTime, settings);
+    setInternalType(internalType);
+    setEle(ele);
+    setAddress(address);
+    setPhoneNumbers(phoneNumbers);
+    setArea(area);
+    setOsmId(osmId);
+    setOsmType(osmType);
+    setOsmPlaceId(osmPlaceId);
+    setOsmCategory(osmCategory);
   }
 
+  public void setPhoneNumbers(List<PhoneNumber> phoneNumbers) {
+    if (phoneNumbers == null) {
+      this.phoneNumbers = new ArrayList<>();
+    } else {
+      this.phoneNumbers = phoneNumbers;
+    }
+  }
 }
