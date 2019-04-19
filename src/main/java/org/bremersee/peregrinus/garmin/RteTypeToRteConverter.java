@@ -44,7 +44,7 @@ import reactor.util.function.Tuples;
  */
 class RteTypeToRteConverter extends AbstractGpxConverter {
 
-  private final RtePtTypeToRtePtConverter rtePtTypeToRtePtConverter;
+  //private final RtePtTypeToRtePtConverter rtePtTypeToRtePtConverter;
 
   private final JaxbContextBuilder jaxbContextBuilder;
 
@@ -55,7 +55,7 @@ class RteTypeToRteConverter extends AbstractGpxConverter {
    */
   RteTypeToRteConverter(final JaxbContextBuilder jaxbContextBuilder) {
     this.jaxbContextBuilder = jaxbContextBuilder;
-    this.rtePtTypeToRtePtConverter = new RtePtTypeToRtePtConverter(jaxbContextBuilder);
+    //this.rtePtTypeToRtePtConverter = new RtePtTypeToRtePtConverter(jaxbContextBuilder);
   }
 
   Rte convert(final RteType rteType, final List<WptType> wptTypes) {
@@ -137,10 +137,10 @@ class RteTypeToRteConverter extends AbstractGpxConverter {
       final String transportationMode,
       final List<WptType> wptTypes) {
 
-    final RtePt tmpRtePt = findWptType(wptTypes, rtePtType)
-        .map(wptType -> Tuples.of(wptType, transportationMode))
-        .map(rtePtTypeToRtePtConverter::convert)
-        .orElse(new RtePt());
+//    final RtePt tmpRtePt = findWptType(wptTypes, rtePtType)
+//        .map(wptType -> Tuples.of(wptType, transportationMode))
+//        .map(rtePtTypeToRtePtConverter::convert)
+//        .orElse(new RtePt());
     // TODO
 //    final RtePt rtePt = rtePtTypeToRtePtConverter
 //        .convert(rtePtType, () -> tmpRtePt, tmpRtePt::getProperties);

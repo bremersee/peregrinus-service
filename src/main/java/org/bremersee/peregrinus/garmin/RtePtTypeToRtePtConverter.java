@@ -33,7 +33,7 @@ import reactor.util.function.Tuple2;
  *
  * @author Christian Bremer
  */
-class RtePtTypeToRtePtConverter extends PtTypeToPtConverter {
+class RtePtTypeToRtePtConverter { //extends PtTypeToPtConverter {
 
   /**
    * Instantiates a new rte pt type to rte pt converter.
@@ -41,7 +41,7 @@ class RtePtTypeToRtePtConverter extends PtTypeToPtConverter {
    * @param jaxbContextBuilder the jaxb context builder
    */
   RtePtTypeToRtePtConverter(final JaxbContextBuilder jaxbContextBuilder) {
-    super(jaxbContextBuilder);
+    //super(jaxbContextBuilder);
   }
 
   /**
@@ -78,11 +78,12 @@ class RtePtTypeToRtePtConverter extends PtTypeToPtConverter {
   }
 
   private Optional<ViaPoint> getViaPointExtension(final WptType wptType) {
-    return GpxJaxbContextHelper.findFirstExtension(
-        ViaPoint.class,
-        true,
-        wptType.getExtensions(),
-        getJaxbContextBuilder().buildUnmarshaller());
+    return null;
+//    return GpxJaxbContextHelper.findFirstExtension(
+//        ViaPoint.class,
+//        true,
+//        wptType.getExtensions(),
+//        getJaxbContextBuilder().buildUnmarshaller());
   }
 
   private OffsetDateTime getDepartureTime(final WptType wptType) {

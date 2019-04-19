@@ -45,14 +45,14 @@ public class RteToRteTypeConverter extends AbstractFeatureConverter {
 
   private final JaxbContextBuilder jaxbContextBuilder;
 
-  private final RtePtToRtePtTypeConverter rtePtConverter;
+  //private final RtePtToRtePtTypeConverter rtePtConverter;
 
   RteToRteTypeConverter(final JaxbContextBuilder jaxbContextBuilder, String... gpxNameSpaces) {
     this.gpxNameSpaces = gpxNameSpaces == null || gpxNameSpaces.length == 0
         ? GarminJaxbContextDataProvider.GPX_NAMESPACES
         : gpxNameSpaces;
     this.jaxbContextBuilder = jaxbContextBuilder;
-    this.rtePtConverter = new RtePtToRtePtTypeConverter(jaxbContextBuilder, gpxNameSpaces);
+    //this.rtePtConverter = new RtePtToRtePtTypeConverter(jaxbContextBuilder, gpxNameSpaces);
   }
 
   /**
@@ -96,7 +96,7 @@ public class RteToRteTypeConverter extends AbstractFeatureConverter {
     for (int n = 0; n <= size; n++) {
       final LineString line = n < size ? (LineString) routes.getGeometryN(n) : null;
       final RtePt rtePt = rtePts.get(n);
-      final WptType rtePtType = rtePtConverter.convert(Tuples.of(rtePt, Optional.ofNullable(line)));
+      final WptType rtePtType = null; //rtePtConverter.convert(Tuples.of(rtePt, Optional.ofNullable(line)));
       // TODO
       final WptType wptType = null; //rtePtConverter.convert(rtePt);
       rtePtTypes.add(rtePtType);
