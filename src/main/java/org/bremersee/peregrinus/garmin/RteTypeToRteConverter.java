@@ -19,7 +19,6 @@ package org.bremersee.peregrinus.garmin;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 import org.bremersee.garmin.gpx.v3.model.ext.AutoroutePointT;
 import org.bremersee.garmin.gpx.v3.model.ext.RouteExtension;
 import org.bremersee.garmin.gpx.v3.model.ext.RoutePointExtension;
@@ -32,10 +31,11 @@ import org.bremersee.peregrinus.model.DisplayColor;
 import org.bremersee.peregrinus.model.Rte;
 import org.bremersee.peregrinus.model.RteProperties;
 import org.bremersee.peregrinus.model.RtePt;
+import org.bremersee.peregrinus.model.RteSeg;
 import org.bremersee.xml.JaxbContextBuilder;
 import org.locationtech.jts.geom.Coordinate;
-import reactor.util.function.Tuple2;
-import reactor.util.function.Tuples;
+import org.locationtech.jts.geom.LineString;
+import org.locationtech.jts.geom.Point;
 
 /**
  * The rte type to rte converter.
@@ -43,8 +43,6 @@ import reactor.util.function.Tuples;
  * @author Christian Bremer
  */
 class RteTypeToRteConverter extends AbstractGpxConverter {
-
-  //private final RtePtTypeToRtePtConverter rtePtTypeToRtePtConverter;
 
   private final JaxbContextBuilder jaxbContextBuilder;
 
@@ -55,34 +53,60 @@ class RteTypeToRteConverter extends AbstractGpxConverter {
    */
   RteTypeToRteConverter(final JaxbContextBuilder jaxbContextBuilder) {
     this.jaxbContextBuilder = jaxbContextBuilder;
-    //this.rtePtTypeToRtePtConverter = new RtePtTypeToRtePtConverter(jaxbContextBuilder);
   }
 
-  Rte convert(final RteType rteType, final List<WptType> wptTypes) {
-
-    final String transportationMode = getTransportationMode(rteType);
-//    final List<Tuple2<RtePt, List<Coordinate>>> rtePtsWithCoordinates = getRtePtsWithCoordinates(
-//        rteType.getRtepts(),
-//        transportationMode,
-//        wptTypes);
-
+  Rte convert(final RteType rteType) {
     final Rte rte = new Rte();
     rte.setProperties(convertCommonGpxType(rteType, RteProperties::new));
     rte.getProperties().getSettings().setDisplayColor(getDisplayColor(rteType));
-    rte.getProperties().setRteSegments(null); // TODO
-//    rte.getProperties().setRtePts(
-//        rtePtsWithCoordinates
-//            .stream()
-//            .map(Tuple2::getT1)
-//            .collect(Collectors.toList()));
-//    rte.setGeometry(
-//        GeometryUtils.createMultiLineString(
-//            rtePtsWithCoordinates
-//                .stream()
-//                .map(Tuple2::getT2)
-//                .filter(list -> list.size() > 1)
-//                .map(GeometryUtils::createLineString)
-//                .collect(Collectors.toList())));
+
+    final List<LineString> lineStrings = new ArrayList<>();
+    final List<RteSeg> rteSegments = new ArrayList<>();
+    for (int i = 1; i < rteType.getRtepts().size(); i++) {
+      final WptType from = rteType.getRtepts().get(i - 1);
+      final WptType to = rteType.getRtepts().get(i);
+      final Point fromPoint = GeometryUtils.createPoint(to.getLon(), to.getLat());
+      final Point toPoint = GeometryUtils.createPoint(to.getLon(), to.getLat());
+
+      final List<Coordinate> lineStringCoordinates = new ArrayList<>();
+      final RteSeg rteSeg = new RteSeg();
+
+      lineStringCoordinates.add(fromPoint.getCoordinate());
+      rteSeg.getRtePts().add(
+          RtePt
+              .builder()
+              .name(from.getName())
+              .position(GeometryUtils.createPoint(from.getLon(), from.getLat()))
+              .build());
+
+      getRoutePointExtension(from).ifPresent(routePointExtension -> {
+        Point previous = fromPoint;
+        for (AutoroutePointT apt : routePointExtension.getRpts()) {
+          final Point pt = GeometryUtils.createPoint(apt.getLon(), apt.getLat());
+          if (!GeometryUtils.equals(previous, pt)) {
+            lineStringCoordinates.add(pt.getCoordinate());
+            previous = pt;
+          }
+        }
+      });
+
+      if (!GeometryUtils.equals(
+          toPoint,
+          GeometryUtils.createPoint(lineStringCoordinates.get(lineStringCoordinates.size() - 1)))) {
+        lineStringCoordinates.add(toPoint.getCoordinate());
+      }
+      rteSeg.getRtePts().add(
+          RtePt
+              .builder()
+              .name(to.getName())
+              .position(toPoint)
+              .build());
+
+      rteSegments.add(rteSeg);
+      lineStrings.add(GeometryUtils.createLineString(lineStringCoordinates));
+    }
+    rte.getProperties().setRteSegments(rteSegments);
+    rte.setGeometry(GeometryUtils.createMultiLineString(lineStrings));
     return rte;
   }
 
@@ -108,78 +132,9 @@ class RteTypeToRteConverter extends AbstractGpxConverter {
         jaxbContextBuilder.buildUnmarshaller());
   }
 
+  @SuppressWarnings("unused")
   private String getTransportationMode(final RteType rteType) {
     return getTripExtension(rteType).map(Trip::getTransportationMode).orElse(null);
-  }
-
-  private List<Tuple2<RtePt, List<Coordinate>>> getRtePtsWithCoordinates(
-      final List<WptType> rtePtTypes,
-      final String transportationMode,
-      final List<WptType> wptTypes) {
-
-    final List<Tuple2<RtePt, List<Coordinate>>> tuples = rtePtTypes
-        .stream()
-        .map(rtePtType -> getRtePtWithCoordinates(rtePtType, transportationMode, wptTypes))
-        .collect(Collectors.toList());
-    for (int i = 0; i < tuples.size() - 1; i++) {
-      List<Coordinate> coordinates = tuples.get(i).getT2();
-      // TODO
-//      Coordinate endPt = tuples.get(i + 1).getT1().getGeometry().getCoordinate();
-//      if (!endPt.equals2D(coordinates.get(coordinates.size() - 1))) {
-//        coordinates.add(endPt);
-//      }
-    }
-    return tuples;
-  }
-
-  private Tuple2<RtePt, List<Coordinate>> getRtePtWithCoordinates(
-      final WptType rtePtType,
-      final String transportationMode,
-      final List<WptType> wptTypes) {
-
-//    final RtePt tmpRtePt = findWptType(wptTypes, rtePtType)
-//        .map(wptType -> Tuples.of(wptType, transportationMode))
-//        .map(rtePtTypeToRtePtConverter::convert)
-//        .orElse(new RtePt());
-    // TODO
-//    final RtePt rtePt = rtePtTypeToRtePtConverter
-//        .convert(rtePtType, () -> tmpRtePt, tmpRtePt::getProperties);
-//    final List<Coordinate> coordinates = new ArrayList<>();
-//    coordinates.add(rtePt.getGeometry().getCoordinate());
-//    int i = 0;
-//    for (Coordinate coordinate : getCoordinates(rtePtType)) {
-//      Coordinate previous = coordinates.get(i);
-//      if (!previous.equals2D(coordinate)) {
-//        coordinates.add(coordinate);
-//        i++;
-//      }
-//    }
-//    return Tuples.of(rtePt, coordinates);
-    return  null;
-  }
-
-  private Optional<WptType> findWptType(final List<WptType> wptTypes, final WptType rtePtType) {
-    return wptTypes
-        .stream()
-        .filter(wptType -> areEqual(wptType, rtePtType))
-        .findAny();
-  }
-
-  private boolean areEqual(final WptType a, final WptType b) {
-    return a != null && b != null && a.getName() != null && a.getName().equals(b.getName())
-        && a.getLat() != null && a.getLat().equals(b.getLat())
-        && a.getLon() != null && a.getLon().equals(b.getLon());
-  }
-
-  private List<Coordinate> getCoordinates(final WptType rtePtType) {
-    return getRoutePointExtension(rtePtType)
-        .map(RoutePointExtension::getRpts)
-        .map(pts -> pts.stream().map(this::getCoordinate).collect(Collectors.toList()))
-        .orElse(new ArrayList<>());
-  }
-
-  private Coordinate getCoordinate(AutoroutePointT pt) {
-    return GeometryUtils.createCoordinateWGS84(pt.getLat(), pt.getLon());
   }
 
   private Optional<RoutePointExtension> getRoutePointExtension(final WptType rtePtType) {

@@ -76,7 +76,7 @@ public class GpxToFeaturesConverter {
     final List<Feature> rtes = gpx.getRtes()
         .stream()
         .filter(Objects::nonNull)
-        .map(rteType -> rteTypeConverter.convert(rteType, gpx.getWpts()))
+        .map(rteType -> rteTypeConverter.convert(rteType))
         .collect(Collectors.toList());
 
     final List<Feature> trks = gpx.getTrks()
