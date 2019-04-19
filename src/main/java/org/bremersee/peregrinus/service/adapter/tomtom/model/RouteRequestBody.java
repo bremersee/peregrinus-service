@@ -14,11 +14,28 @@
  * limitations under the License.
  */
 
-package org.bremersee.peregrinus.service.adapter;
+package org.bremersee.peregrinus.service.adapter.tomtom.model;
+
+import java.util.List;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
+import org.bremersee.common.model.ThreeLetterCountryCode;
 
 /**
  * @author Christian Bremer
  */
-public abstract class AbstractRouteAdapterImpl implements RouteAdapter {
+@Getter
+@Setter
+@ToString
+@EqualsAndHashCode
+@NoArgsConstructor
+public class RouteRequestBody {
+
+  private List<ThreeLetterCountryCode> avoidVignette;
+
+  private AvoidAreas avoidAreas;
 
 }

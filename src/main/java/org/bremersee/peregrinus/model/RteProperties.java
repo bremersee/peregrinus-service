@@ -17,6 +17,7 @@
 package org.bremersee.peregrinus.model;
 
 import io.swagger.annotations.ApiModel;
+import java.math.BigInteger;
 import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -77,4 +78,29 @@ public class RteProperties extends FeatureProperties<RteSettings> {
       this.rteSegments = rteSegments;
     }
   }
+
+  public BigInteger calculateTravelTimeInSeconds() {
+    BigInteger sum = BigInteger.valueOf(0);
+    for (RteSeg rteSegment : rteSegments) {
+      if (rteSegment.getTravelTimeInSeconds() != null) {
+        sum = sum.add(rteSegment.getTravelTimeInSeconds());
+      } else {
+        return null;
+      }
+    }
+    return sum;
+  }
+
+  public BigInteger calculateLengthInMeters() {
+    BigInteger sum = BigInteger.valueOf(0);
+    for (RteSeg rteSegment : rteSegments) {
+      if (rteSegment.getLengthInMeters() != null) {
+        sum = sum.add(rteSegment.getLengthInMeters());
+      } else {
+        return null;
+      }
+    }
+    return sum;
+  }
+
 }

@@ -16,6 +16,8 @@
 
 package org.bremersee.peregrinus.model.tomtom;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonValue;
 import lombok.Getter;
 
 /**
@@ -70,12 +72,19 @@ public enum TravelMode {
     this.value = value;
   }
 
+  @JsonValue
+  @Override
+  public String toString() {
+    return value;
+  }
+
   /**
    * From value travel mode.
    *
    * @param value the value
    * @return the travel mode
    */
+  @JsonCreator
   public static TravelMode fromValue(String value) {
     for (TravelMode travelMode : TravelMode.values()) {
       if (travelMode.getValue().equalsIgnoreCase(value)) {

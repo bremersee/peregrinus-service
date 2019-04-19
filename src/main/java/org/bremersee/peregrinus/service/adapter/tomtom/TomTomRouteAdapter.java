@@ -42,28 +42,34 @@ import org.bremersee.peregrinus.model.tomtom.RouteType;
 import org.bremersee.peregrinus.model.tomtom.TomTomRteCalculationRequest;
 import org.bremersee.peregrinus.service.adapter.RouteAdapter;
 import org.bremersee.peregrinus.service.adapter.tomtom.exception.RoutingExceptionMessageParser;
+import org.bremersee.peregrinus.service.adapter.tomtom.model.AvoidAreas;
+import org.bremersee.peregrinus.service.adapter.tomtom.model.Rectangle;
 import org.bremersee.peregrinus.service.adapter.tomtom.model.Route;
 import org.bremersee.peregrinus.service.adapter.tomtom.model.RouteInstruction;
 import org.bremersee.peregrinus.service.adapter.tomtom.model.RouteInstruction.InstructionType;
 import org.bremersee.peregrinus.service.adapter.tomtom.model.RouteLeg;
+import org.bremersee.peregrinus.service.adapter.tomtom.model.RouteRequestBody;
 import org.bremersee.peregrinus.service.adapter.tomtom.model.RouteResponse;
 import org.bremersee.web.ErrorDetectors;
 import org.bremersee.web.reactive.function.client.MessageAwareWebClientErrorDecoder;
 import org.bremersee.web.reactive.function.client.WebClientErrorDecoder;
+import org.locationtech.jts.geom.Coordinate;
 import org.locationtech.jts.geom.LineString;
 import org.locationtech.jts.geom.Point;
 import org.springframework.http.HttpMethod;
+import org.springframework.stereotype.Component;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.util.StringUtils;
+import org.springframework.web.reactive.function.BodyInserters;
 import org.springframework.web.reactive.function.client.WebClient;
-import org.springframework.web.reactive.function.client.WebClient.Builder;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 /**
  * @author Christian Bremer
  */
+@Component
 public class TomTomRouteAdapter implements RouteAdapter {
 
   private static final DateTimeFormatter dtf = new DateTimeFormatterBuilder()
@@ -76,8 +82,10 @@ public class TomTomRouteAdapter implements RouteAdapter {
 
   private WebClientErrorDecoder<? extends Throwable> webClientErrorDecoder;
 
-  public TomTomRouteAdapter(TomTomProperties properties,
-      Builder webClientBuilder) {
+  public TomTomRouteAdapter(
+      TomTomProperties properties,
+      WebClient.Builder webClientBuilder) {
+
     this.properties = properties;
     this.webClientBuilder = webClientBuilder;
     this.webClientErrorDecoder = new MessageAwareWebClientErrorDecoder(
@@ -103,11 +111,22 @@ public class TomTomRouteAdapter implements RouteAdapter {
     final MultiValueMap<String, String> params = buildParameters(tomTomRequest);
     params.set("key", properties.getKey());
 
-    return webClientBuilder
+    final WebClient webClient = webClientBuilder
         .baseUrl(baseUri)
-        .build()
-        .get()
-        .uri(uriBuilder -> uriBuilder.queryParams(params).build())
+        .build();
+    final WebClient.RequestHeadersSpec spec;
+    if (HttpMethod.POST.equals(getHttpMethod(tomTomRequest))) {
+      spec = webClient
+          .post()
+          .uri(uriBuilder -> uriBuilder.queryParams(params).build())
+          .body(BodyInserters.fromObject(buildRequestBody(tomTomRequest)));
+
+    } else {
+      spec = webClient
+          .get()
+          .uri(uriBuilder -> uriBuilder.queryParams(params).build());
+    }
+    return spec
         .header("User-Agent", properties.getUserAgent())
         .retrieve()
         .onStatus(ErrorDetectors.DEFAULT, webClientErrorDecoder)
@@ -161,9 +180,25 @@ public class TomTomRouteAdapter implements RouteAdapter {
           .map(Avoid::getValue)
           .collect(Collectors.joining(","))); // tollRoads, motorways, ferries, etc
     }
-    // avoidVignette -> post
-    // avoidAreas -> post
     return map;
+  }
+
+  private RouteRequestBody buildRequestBody(TomTomRteCalculationRequest request) {
+    final RouteRequestBody body = new RouteRequestBody();
+    body.setAvoidVignette(request.getAvoidVignette());
+    if (request.getAvoidAreas() != null) {
+      final AvoidAreas avoidAreas = new AvoidAreas();
+      for (int n = 0; n < request.getAvoidAreas().getNumGeometries(); n++) {
+        final double[] bbox = GeometryUtils.getBoundingBox(request.getAvoidAreas().getGeometryN(n));
+        final Coordinate sw = GeometryUtils.getSouthWest(bbox);
+        final Coordinate ne = GeometryUtils.getNorthEast(bbox);
+        avoidAreas
+            .getRectangles()
+            .add(new Rectangle(new LatitudeLongitude(sw), new LatitudeLongitude(ne)));
+      }
+      body.setAvoidAreas(avoidAreas);
+    }
+    return body;
   }
 
   private Flux<Rte> mapMany(

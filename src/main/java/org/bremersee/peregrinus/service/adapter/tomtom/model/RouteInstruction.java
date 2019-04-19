@@ -176,37 +176,37 @@ public class RouteInstruction extends UnknownAware {
   public enum InstructionType {
 
     /**
-     * Unknown instruction type.
+     * Unknown.
      */
     UNKNOWN,
 
     /**
-     * Turn instruction type.
+     * Turn.
      */
     TURN,
 
     /**
-     * Road change instruction type.
+     * Road change.
      */
     ROAD_CHANGE,
 
     /**
-     * Location departure instruction type.
+     * Location departure.
      */
     LOCATION_DEPARTURE,
 
     /**
-     * Location arrival instruction type.
+     * Location arrival.
      */
     LOCATION_ARRIVAL,
 
     /**
-     * Direction info instruction type.
+     * Direction info.
      */
     DIRECTION_INFO,
 
     /**
-     * Location waypoint instruction type.
+     * Location waypoint.
      */
     LOCATION_WAYPOINT;
 

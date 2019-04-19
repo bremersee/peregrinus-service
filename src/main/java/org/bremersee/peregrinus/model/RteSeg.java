@@ -16,7 +16,6 @@
 
 package org.bremersee.peregrinus.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
@@ -64,26 +63,22 @@ public class RteSeg {
     return rtePts;
   }
 
-  @JsonIgnore
-  public boolean isDepartureRtePtPresent() {
-    return getDepartureRtePt() != null;
+  public boolean hasDepartureRtePtPresent() {
+    return findDepartureRtePt() != null;
   }
 
-  @JsonIgnore
-  public RtePt getDepartureRtePt() {
+  public RtePt findDepartureRtePt() {
     if (rtePts == null || rtePts.isEmpty()) {
       return null;
     }
     return rtePts.get(0);
   }
 
-  @JsonIgnore
-  public boolean isArrivalRtePtPresent() {
-    return getArrivalRtePt() != null;
+  public boolean hasArrivalRtePtPresent() {
+    return findArrivalRtePt() != null;
   }
 
-  @JsonIgnore
-  public RtePt getArrivalRtePt() {
+  public RtePt findArrivalRtePt() {
     if (rtePts == null || rtePts.isEmpty()) {
       return null;
     }

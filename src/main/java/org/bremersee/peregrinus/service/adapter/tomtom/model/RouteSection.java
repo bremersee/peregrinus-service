@@ -16,11 +16,14 @@
 
 package org.bremersee.peregrinus.service.adapter.tomtom.model;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonValue;
 import java.math.BigInteger;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
+import org.bremersee.peregrinus.model.tomtom.TravelMode;
 import org.bremersee.plain.model.UnknownAware;
 
 /**
@@ -58,19 +61,18 @@ public class RouteSection extends UnknownAware {
   /**
    * Contains the response section type.
    */
-  private String sectionType;
+  private SectionType sectionType;
 
   /**
    * This attribute is either set to the value given to the request parameter travelMode, if this
    * travel mode is possible, or to other which indicates that the given mode of transport is not
    * possible in this section. This field can only be used within sections of type TRAVEL_MODE.
    */
-  private String travelMode;
+  private TravelMode travelMode;
 
   /**
    * The section type.
    */
-  @SuppressWarnings("unused")
   public enum SectionType {
 
     /**
@@ -128,12 +130,19 @@ public class RouteSection extends UnknownAware {
      */
     TUNNEL;
 
+    @JsonValue
+    @Override
+    public String toString() {
+      return name();
+    }
+
     /**
      * From value section type.
      *
      * @param value the value
      * @return the section type
      */
+    @JsonCreator
     public static SectionType fromValue(String value) {
       for (SectionType sectionType : SectionType.values()) {
         if (sectionType.name().equalsIgnoreCase(value)) {

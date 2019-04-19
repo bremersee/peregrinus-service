@@ -26,11 +26,6 @@ import org.bremersee.nominatim.NominatimProperties;
 import org.bremersee.nominatim.client.ReactiveNominatimClient;
 import org.bremersee.nominatim.client.ReactiveNominatimClientImpl;
 import org.bremersee.security.reactive.function.client.JwtAuthenticationTokenAppender;
-import org.bremersee.tomtom.TomTomProperties;
-import org.bremersee.tomtom.client.ReactiveGeocodingClient;
-import org.bremersee.tomtom.client.ReactiveGeocodingClientImpl;
-import org.bremersee.tomtom.client.ReactiveRoutingClient;
-import org.bremersee.tomtom.client.ReactiveRoutingClientImpl;
 import org.bremersee.web.reactive.function.client.DefaultWebClientErrorDecoder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
@@ -90,21 +85,21 @@ public class PeregrinusConfiguration {
     return new ReactiveNominatimClientImpl(nominatimProperties, WebClient.builder());
   }
 
-  @Bean
-  public ReactiveGeocodingClient tomTomGeocodingService() {
-    return new ReactiveGeocodingClientImpl(tomTomProperties, WebClient.builder());
-  }
+//  @Bean
+//  public ReactiveGeocodingClient tomTomGeocodingService() {
+//    return new ReactiveGeocodingClientImpl(tomTomProperties, WebClient.builder());
+//  }
 
-  @Bean
-  public org.bremersee.google.maps.client.ReactiveGeocodingClient googleGeocodingService() {
-    return new org.bremersee.google.maps.client.ReactiveGeocodingClientImpl(
-        googleMapsProperties,
-        WebClient.builder());
-  }
+//  @Bean
+//  public org.bremersee.google.maps.client.ReactiveGeocodingClient googleGeocodingService() {
+//    return new org.bremersee.google.maps.client.ReactiveGeocodingClientImpl(
+//        googleMapsProperties,
+//        WebClient.builder());
+//  }
 
-  @Bean
-  public ReactiveRoutingClient tomTomRoutingService() {
-    return new ReactiveRoutingClientImpl(tomTomProperties, WebClient.builder());
-  }
+//  @Bean
+//  public ReactiveRoutingClient tomTomRoutingService() {
+//    return new ReactiveRoutingClientImpl(tomTomProperties, WebClient.builder());
+//  }
 
 }
