@@ -26,6 +26,7 @@ import lombok.Getter;
 import org.bremersee.garmin.GarminJaxbContextDataProvider;
 import org.bremersee.garmin.creationtime.v1.model.ext.CreationTimeExtension;
 import org.bremersee.garmin.gpx.v3.model.ext.AddressT;
+import org.bremersee.garmin.gpx.v3.model.ext.DisplayModeT;
 import org.bremersee.garmin.gpx.v3.model.ext.PhoneNumberT;
 import org.bremersee.garmin.gpx.v3.model.ext.WaypointExtension;
 import org.bremersee.geojson.utils.GeometryUtils;
@@ -81,6 +82,7 @@ class WptToWptTypeConverter extends AbstractFeatureConverter {
       return wptType.getExtensions();
     }
     final WaypointExtension waypointExtension3 = new WaypointExtension();
+    waypointExtension3.setDisplayMode(DisplayModeT.SYMBOL_AND_NAME);
     waypointExtension3.setAddress(addressConverter.convert(
         wpt.getProperties().getAddress(), AddressT::new));
     waypointExtension3.getPhoneNumbers().addAll(
@@ -93,6 +95,8 @@ class WptToWptTypeConverter extends AbstractFeatureConverter {
 
     final org.bremersee.garmin.waypoint.v1.model.ext.WaypointExtension waypointExtension1
         = new org.bremersee.garmin.waypoint.v1.model.ext.WaypointExtension();
+    waypointExtension1.setDisplayMode(
+        org.bremersee.garmin.waypoint.v1.model.ext.DisplayModeT.SYMBOL_AND_NAME);
     waypointExtension1.setAddress(addressConverter.convert(
         wpt.getProperties().getAddress(),
         org.bremersee.garmin.waypoint.v1.model.ext.AddressT::new));

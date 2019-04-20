@@ -39,8 +39,10 @@ public class ExportSettings {
 
   private String description;
 
+  private Boolean exportRouteWaypoints = Boolean.TRUE;
+
   // values 100, 50, 33, 25, 20, 15, 14, 12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1, 0
-  private Integer percentWaypoints = 100;
+  private Integer percentWaypoints = 100; // enum?
 
   private TripTransportationMode transportationMode = TripTransportationMode.AUTOMOTIVE;
 

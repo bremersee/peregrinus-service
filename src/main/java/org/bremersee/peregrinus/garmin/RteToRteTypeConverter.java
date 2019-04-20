@@ -16,13 +16,19 @@
 
 package org.bremersee.peregrinus.garmin;
 
+import static org.bremersee.xml.ConverterUtils.millisToXmlCalendar;
+
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import org.bremersee.garmin.GarminJaxbContextDataProvider;
+import org.bremersee.garmin.creationtime.v1.model.ext.CreationTimeExtension;
+import org.bremersee.garmin.gpx.v3.model.ext.DisplayModeT;
 import org.bremersee.garmin.gpx.v3.model.ext.RouteExtension;
+import org.bremersee.garmin.gpx.v3.model.ext.WaypointExtension;
 import org.bremersee.garmin.trip.v1.model.ext.Trip;
 import org.bremersee.garmin.trip.v1.model.ext.ViaPoint;
+import org.bremersee.garmin.trip.v1.model.ext.ViaPointCalculationMode;
 import org.bremersee.gpx.ExtensionsTypeBuilder;
 import org.bremersee.gpx.model.ExtensionsType;
 import org.bremersee.gpx.model.RteType;
@@ -68,13 +74,24 @@ public class RteToRteTypeConverter extends AbstractFeatureConverter {
       for (RtePt rtePt : rteSeg.getRtePts()) {
         if ((n < nSize - 1 && n % eachRtePtNumber == 0)
             || (n == nSize - 1 && i == iSize - 1)) {
+
           final WptType wptType = new WptType();
           wptType.setLat(BigDecimal.valueOf(rtePt.getPosition().getY()));
           wptType.setLon(BigDecimal.valueOf(rtePt.getPosition().getX()));
           wptType.setName(getRtePtName(iSize, i, nSize, n, rte.getProperties().getName()));
           wptType.setExtensions(getViaPoint(exportSettings));
           rteType.getRtepts().add(wptType);
-          wptTypes.add(wptType);
+
+          if (Boolean.TRUE.equals(exportSettings.getExportRouteWaypoints())) {
+            final WptType wpt = new WptType();
+            wpt.setLat(wptType.getLat());
+            wpt.setLon(wptType.getLon());
+            wpt.setName(wptType.getName());
+            wpt.setSym("Flag, Blue"); // settings?
+            wpt.setType("user");
+            wpt.setExtensions(getWptTypeExtensions());
+            wptTypes.add(wpt);
+          }
         }
         n++;
       }
@@ -95,12 +112,11 @@ public class RteToRteTypeConverter extends AbstractFeatureConverter {
   }
 
   private String getRtePtName(int iSize, int i, int nSize, int n, String name) {
-    final String ptName = name.length() > 6 ? name.substring(0, 6) : name;
     int len = Integer.toString(iSize).length();
     final String iStr = String.format("%0" + len + "d", i);
     len = Integer.toString(nSize).length();
     final String nStr = String.format("%0" + len + "d", n);
-    return ptName + "_" + iStr + "_" + nStr;
+    return name + " WPT(" + iStr + "_" + nStr + ")";
   }
 
   private ExtensionsType getRouteExtension(
@@ -110,6 +126,13 @@ public class RteToRteTypeConverter extends AbstractFeatureConverter {
     final RouteExtension routeExtension = new RouteExtension();
     routeExtension.setDisplayColor(rte.getProperties().getSettings().getDisplayColor().getGarmin());
     routeExtension.setIsAutoNamed(true);
+
+    if (ViaPointCalculationMode.DIRECT.equals(exportSettings.getCalculationMode())) {
+      return ExtensionsTypeBuilder
+          .builder()
+          .addElement(routeExtension, jaxbContextBuilder.buildJaxbContext(gpxNameSpaces))
+          .build(true);
+    }
 
     final Trip trip = new Trip();
     trip.setTransportationMode(exportSettings.getTransportationMode().toString());
@@ -135,4 +158,22 @@ public class RteToRteTypeConverter extends AbstractFeatureConverter {
         .build(true);
   }
 
+  private ExtensionsType getWptTypeExtensions() {
+    final WaypointExtension waypointExtension3 = new WaypointExtension();
+    waypointExtension3.setDisplayMode(DisplayModeT.SYMBOL_AND_NAME);
+
+    final org.bremersee.garmin.waypoint.v1.model.ext.WaypointExtension waypointExtension1
+        = new org.bremersee.garmin.waypoint.v1.model.ext.WaypointExtension();
+    waypointExtension1.setDisplayMode(
+        org.bremersee.garmin.waypoint.v1.model.ext.DisplayModeT.SYMBOL_AND_NAME);
+
+    final CreationTimeExtension timeExtension = new CreationTimeExtension();
+    timeExtension.setCreationTime(millisToXmlCalendar(System.currentTimeMillis()));
+
+    return ExtensionsTypeBuilder.builder()
+        .addElement(waypointExtension3, jaxbContextBuilder.buildJaxbContext(gpxNameSpaces))
+        .addElement(waypointExtension1, jaxbContextBuilder.buildJaxbContext(gpxNameSpaces))
+        .addElement(timeExtension, jaxbContextBuilder.buildJaxbContext(gpxNameSpaces))
+        .build(true);
+  }
 }
