@@ -34,6 +34,7 @@ import org.bremersee.peregrinus.model.Feature;
 import org.bremersee.peregrinus.model.Rte;
 import org.bremersee.peregrinus.model.Trk;
 import org.bremersee.peregrinus.model.Wpt;
+import org.bremersee.peregrinus.model.garmin.ExportSettings;
 import org.bremersee.xml.ConverterUtils;
 import org.bremersee.xml.JaxbContextBuilder;
 import org.locationtech.jts.geom.Coordinate;
@@ -102,6 +103,7 @@ public class FeaturesToGpxConverter {
   @NotNull
   public Gpx convert(
       @Nullable final Collection<? extends Feature> features,
+      final ExportSettings exportSettings,
       @Nullable final String name,
       @Nullable final String description,
       @Nullable final String keywords,
@@ -121,7 +123,8 @@ public class FeaturesToGpxConverter {
         } else if (feature instanceof Trk) {
           gpx.getTrks().add(trkConverter.convert((Trk) feature));
         } else if (feature instanceof Rte) {
-          final Tuple2<RteType, List<WptType>> rteTuple = rteConverter.convert((Rte) feature);
+          final Tuple2<RteType, List<WptType>> rteTuple = rteConverter
+              .convert((Rte) feature, exportSettings);
           if (rteTuple != null) {
             gpx.getRtes().add(rteTuple.getT1());
             gpx.getWpts().addAll(

@@ -16,21 +16,22 @@
 
 package org.bremersee.peregrinus.garmin;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import org.bremersee.garmin.GarminJaxbContextDataProvider;
 import org.bremersee.garmin.gpx.v3.model.ext.RouteExtension;
 import org.bremersee.garmin.trip.v1.model.ext.Trip;
+import org.bremersee.garmin.trip.v1.model.ext.ViaPoint;
 import org.bremersee.gpx.ExtensionsTypeBuilder;
 import org.bremersee.gpx.model.ExtensionsType;
 import org.bremersee.gpx.model.RteType;
 import org.bremersee.gpx.model.WptType;
 import org.bremersee.peregrinus.model.Rte;
 import org.bremersee.peregrinus.model.RtePt;
+import org.bremersee.peregrinus.model.RteSeg;
+import org.bremersee.peregrinus.model.garmin.ExportSettings;
 import org.bremersee.xml.JaxbContextBuilder;
-import org.locationtech.jts.geom.LineString;
-import org.locationtech.jts.geom.MultiLineString;
 import reactor.util.function.Tuple2;
 import reactor.util.function.Tuples;
 
@@ -45,38 +46,73 @@ public class RteToRteTypeConverter extends AbstractFeatureConverter {
 
   private final JaxbContextBuilder jaxbContextBuilder;
 
-  //private final RtePtToRtePtTypeConverter rtePtConverter;
-
   RteToRteTypeConverter(final JaxbContextBuilder jaxbContextBuilder, String... gpxNameSpaces) {
     this.gpxNameSpaces = gpxNameSpaces == null || gpxNameSpaces.length == 0
         ? GarminJaxbContextDataProvider.GPX_NAMESPACES
         : gpxNameSpaces;
     this.jaxbContextBuilder = jaxbContextBuilder;
-    //this.rtePtConverter = new RtePtToRtePtTypeConverter(jaxbContextBuilder, gpxNameSpaces);
   }
 
-  /**
-   * Convert tuple.
-   *
-   * @param rte the rte
-   * @return the tuple
-   */
-  Tuple2<RteType, List<WptType>> convert(final Rte rte) {
-    final Tuple2<List<WptType>, List<WptType>> points = getRteptsAndWpts(rte);
+  Tuple2<RteType, List<WptType>> convert(
+      final Rte rte,
+      final ExportSettings exportSettings) {
+
+    final int eachRtePtNumber = getEachRtePointValue(exportSettings);
+    final List<WptType> wptTypes = new ArrayList<>();
     final RteType rteType = convertFeatureProperties(rte.getProperties(), RteType::new);
-    rteType.setExtensions(getRteTypeExtension(rte));
-    rteType.getRtepts().addAll(points.getT1());
-    return Tuples.of(rteType, points.getT2());
+    int iSize = rte.getProperties().getRteSegments().size();
+    int i = 0;
+    for (RteSeg rteSeg : rte.getProperties().getRteSegments()) {
+      int nSize = rteSeg.getRtePts().size();
+      int n = 0;
+      for (RtePt rtePt : rteSeg.getRtePts()) {
+        if ((n < nSize - 1 && n % eachRtePtNumber == 0)
+            || (n == nSize - 1 && i == iSize - 1)) {
+          final WptType wptType = new WptType();
+          wptType.setLat(BigDecimal.valueOf(rtePt.getPosition().getY()));
+          wptType.setLon(BigDecimal.valueOf(rtePt.getPosition().getX()));
+          wptType.setName(getRtePtName(iSize, i, nSize, n, rte.getProperties().getName()));
+          wptType.setExtensions(getViaPoint(exportSettings));
+          rteType.getRtepts().add(wptType);
+          wptTypes.add(wptType);
+        }
+        n++;
+      }
+      i++;
+    }
+    rteType.setExtensions(getRouteExtension(rte, exportSettings));
+    return Tuples.of(rteType, wptTypes);
   }
 
-  private ExtensionsType getRteTypeExtension(final Rte rte) {
+  private int getEachRtePointValue(ExportSettings exportSettings) {
+    if (exportSettings.getPercentWaypoints() == null || exportSettings.getPercentWaypoints() <= 0) {
+      return Integer.MAX_VALUE;
+    }
+    if (100 / exportSettings.getPercentWaypoints() < 1) {
+      return 1;
+    }
+    return 100 / exportSettings.getPercentWaypoints();
+  }
+
+  private String getRtePtName(int iSize, int i, int nSize, int n, String name) {
+    final String ptName = name.length() > 6 ? name.substring(0, 6) : name;
+    int len = Integer.toString(iSize).length();
+    final String iStr = String.format("%0" + len + "d", i);
+    len = Integer.toString(nSize).length();
+    final String nStr = String.format("%0" + len + "d", n);
+    return ptName + "_" + iStr + "_" + nStr;
+  }
+
+  private ExtensionsType getRouteExtension(
+      final Rte rte,
+      final ExportSettings exportSettings) {
 
     final RouteExtension routeExtension = new RouteExtension();
     routeExtension.setDisplayColor(rte.getProperties().getSettings().getDisplayColor().getGarmin());
     routeExtension.setIsAutoNamed(true);
 
     final Trip trip = new Trip();
-    trip.setTransportationMode("Automotive"); // TODO
+    trip.setTransportationMode(exportSettings.getTransportationMode().toString());
 
     return ExtensionsTypeBuilder
         .builder()
@@ -85,24 +121,18 @@ public class RteToRteTypeConverter extends AbstractFeatureConverter {
         .build(true);
   }
 
-  private Tuple2<List<WptType>, List<WptType>> getRteptsAndWpts(final Rte rte) {
-
-    final List<WptType> rtePtTypes = new ArrayList<>();
-    final List<WptType> wptTypes = new ArrayList<>();
-    final MultiLineString routes = rte.getGeometry();
-    // TODO
-    final List<RtePt> rtePts = null; // rte.getProperties().getRtePts();
-    final int size = routes.getNumGeometries();
-    for (int n = 0; n <= size; n++) {
-      final LineString line = n < size ? (LineString) routes.getGeometryN(n) : null;
-      final RtePt rtePt = rtePts.get(n);
-      final WptType rtePtType = null; //rtePtConverter.convert(Tuples.of(rtePt, Optional.ofNullable(line)));
-      // TODO
-      final WptType wptType = null; //rtePtConverter.convert(rtePt);
-      rtePtTypes.add(rtePtType);
-      wptTypes.add(wptType);
-    }
-
-    return Tuples.of(rtePtTypes, wptTypes);
+  private ExtensionsType getViaPoint(final ExportSettings exportSettings) {
+    ViaPoint viaPoint = new ViaPoint();
+    viaPoint.setArrivalTime(null);
+    viaPoint.setCalculationMode(exportSettings.getCalculationMode().toString());
+    viaPoint.setDepartureTime(null);
+    viaPoint.setElevationMode(exportSettings.getElevationMode().toString());
+    viaPoint.setNamedRoad(null);
+    viaPoint.setStopDuration(null);
+    return ExtensionsTypeBuilder
+        .builder()
+        .addElement(viaPoint, jaxbContextBuilder.buildJaxbContext(gpxNameSpaces))
+        .build(true);
   }
+
 }

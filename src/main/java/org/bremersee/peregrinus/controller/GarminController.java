@@ -20,6 +20,7 @@ import org.bremersee.gpx.model.Gpx;
 import org.bremersee.peregrinus.garmin.FeaturesToGpxConverter;
 import org.bremersee.peregrinus.garmin.GpxToFeaturesConverter;
 import org.bremersee.peregrinus.model.FeatureCollection;
+import org.bremersee.peregrinus.model.garmin.ExportSettings;
 import org.bremersee.xml.JaxbContextBuilder;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -57,7 +58,7 @@ public class GarminController {
       @RequestBody FeatureCollection featureCollection) {
 
     return Mono.just(toGpxConverter.convert(
-        featureCollection.getFeatures(), name, description, keywords, link, author));
+        featureCollection.getFeatures(), new ExportSettings(), name, description, keywords, link, author));
   }
 
   @PostMapping(path = "/gpx-to-geojson",

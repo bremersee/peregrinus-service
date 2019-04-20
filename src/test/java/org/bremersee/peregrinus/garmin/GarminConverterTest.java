@@ -14,6 +14,7 @@ import org.bremersee.geojson.GeoJsonObjectMapperModule;
 import org.bremersee.gpx.model.Gpx;
 import org.bremersee.peregrinus.model.FeatureCollection;
 import org.bremersee.peregrinus.model.PeregrinusObjectMapperModule;
+import org.bremersee.peregrinus.model.garmin.ExportSettings;
 import org.bremersee.xml.JaxbContextBuilder;
 import org.bremersee.xml.JaxbContextDataProvider;
 import org.junit.Assert;
@@ -120,6 +121,7 @@ public class GarminConverterTest {
     FeatureCollection featureCollection = loadFeatureCollection("route.json");
     Gpx gpx = featuresToGpxConverter.convert(
         featureCollection.getFeatures(),
+        new ExportSettings(),
         "Route",
         "A route from A to B",
         "Erlangen",
@@ -137,6 +139,7 @@ public class GarminConverterTest {
     FeatureCollection featureCollection = loadFeatureCollection("track.json");
     Gpx gpx = featuresToGpxConverter.convert(
         featureCollection.getFeatures(),
+        new ExportSettings(),
         "Track",
         "A track from A to B",
         "Norway",
@@ -154,6 +157,7 @@ public class GarminConverterTest {
     FeatureCollection featureCollection = loadFeatureCollection("waypoint.json");
     Gpx gpx = featuresToGpxConverter.convert(
         featureCollection.getFeatures(),
+        new ExportSettings(),
         "Waypoint",
         null,
         null,
