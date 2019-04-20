@@ -21,6 +21,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
+import org.bremersee.garmin.model.WptSymbol;
 import org.bremersee.garmin.trip.v1.model.ext.TripTransportationMode;
 import org.bremersee.garmin.trip.v1.model.ext.ViaPointCalculationMode;
 import org.bremersee.garmin.trip.v1.model.ext.ViaPointElevationMode;
@@ -39,7 +40,11 @@ public class ExportSettings {
 
   private String description;
 
+  private Boolean exportRouteAsTrack = Boolean.TRUE; // TODO
+
   private Boolean exportRouteWaypoints = Boolean.TRUE;
+
+  private WptSymbol routeWaypointSymbol = WptSymbol.FLAG_BLUE;
 
   // values 100, 50, 33, 25, 20, 15, 14, 12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1, 0
   private Integer percentWaypoints = 100; // enum?

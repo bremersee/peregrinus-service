@@ -87,7 +87,7 @@ public class RteToRteTypeConverter extends AbstractFeatureConverter {
             wpt.setLat(wptType.getLat());
             wpt.setLon(wptType.getLon());
             wpt.setName(wptType.getName());
-            wpt.setSym("Flag, Blue"); // settings?
+            wpt.setSym(exportSettings.getRouteWaypointSymbol().toString());
             wpt.setType("user");
             wpt.setExtensions(getWptTypeExtensions());
             wptTypes.add(wpt);
