@@ -52,13 +52,14 @@ public class GarminController {
   public Mono<Gpx> convertToGpx(
       @RequestParam(name = "name", required = false) String name,
       @RequestParam(name = "description", required = false) String description,
-      @RequestParam(name = "keywords", required = false) String keywords,
-      @RequestParam(name = "link", required = false) String link,
-      @RequestParam(name = "author", required = false) String author,
+      @RequestParam(name = "percentWaypoints", required = false) Integer percentWaypoints,
+      @RequestParam(name = "transportationMode", required = false) String transportationMode,
+      @RequestParam(name = "calculationMode", required = false) String calculationMode,
+      @RequestParam(name = "elevationMode", required = false) String elevationMode,
       @RequestBody FeatureCollection featureCollection) {
 
     return Mono.just(toGpxConverter.convert(
-        featureCollection.getFeatures(), new ExportSettings(), name, description, keywords, link, author));
+        featureCollection.getFeatures(), new ExportSettings()));
   }
 
   @PostMapping(path = "/gpx-to-geojson",

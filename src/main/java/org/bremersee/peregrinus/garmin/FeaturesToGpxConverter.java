@@ -25,9 +25,7 @@ import javax.validation.constraints.NotNull;
 import org.bremersee.geojson.utils.GeometryUtils;
 import org.bremersee.gpx.model.BoundsType;
 import org.bremersee.gpx.model.Gpx;
-import org.bremersee.gpx.model.LinkType;
 import org.bremersee.gpx.model.MetadataType;
-import org.bremersee.gpx.model.PersonType;
 import org.bremersee.gpx.model.RteType;
 import org.bremersee.gpx.model.WptType;
 import org.bremersee.peregrinus.model.Feature;
@@ -90,25 +88,16 @@ public class FeaturesToGpxConverter {
   }
 
   /**
-   * Convert garmin.
+   * Convert features to gpx.
    *
-   * @param features    the features
-   * @param name        the name
-   * @param description the description
-   * @param keywords    the keywords
-   * @param link        the link
-   * @param author      the author
-   * @return the garmin
+   * @param features       the features
+   * @param exportSettings the export settings
+   * @return the gpx
    */
   @NotNull
   public Gpx convert(
       @Nullable final Collection<? extends Feature> features,
-      final ExportSettings exportSettings,
-      @Nullable final String name,
-      @Nullable final String description,
-      @Nullable final String keywords,
-      @Nullable final String link,
-      @Nullable final String author) {
+      final ExportSettings exportSettings) {
 
     final Gpx gpx = new Gpx();
     gpx.setVersion(version);
@@ -157,19 +146,8 @@ public class FeaturesToGpxConverter {
     final MetadataType metadata = new MetadataType();
     metadata.setTime(ConverterUtils.millisToXmlCalendar(System.currentTimeMillis()));
     metadata.setBounds(bounds);
-    metadata.setName(name);
-    metadata.setDesc(description);
-    metadata.setKeywords(keywords);
-    if (StringUtils.hasText(link)) {
-      final LinkType linkType = new LinkType();
-      linkType.setHref(link);
-      metadata.getLinks().add(linkType);
-    }
-    if (StringUtils.hasText(author)) {
-      final PersonType personType = new PersonType();
-      personType.setName(author);
-      metadata.setAuthor(personType);
-    }
+    metadata.setName(exportSettings.getName());
+    metadata.setDesc(exportSettings.getDescription());
     gpx.setMetadata(metadata);
     return gpx;
   }

@@ -121,12 +121,7 @@ public class GarminConverterTest {
     FeatureCollection featureCollection = loadFeatureCollection("route.json");
     Gpx gpx = featuresToGpxConverter.convert(
         featureCollection.getFeatures(),
-        new ExportSettings(),
-        "Route",
-        "A route from A to B",
-        "Erlangen",
-        "http://example.com",
-        "Anna Livia Plurabelle");
+        new ExportSettings());
     System.out.println("Route: GeoJson -> GPX");
     jaxbContextBuilder
         .buildMarshaller(GarminJaxbContextDataProvider.GPX_NAMESPACES)
@@ -139,12 +134,7 @@ public class GarminConverterTest {
     FeatureCollection featureCollection = loadFeatureCollection("track.json");
     Gpx gpx = featuresToGpxConverter.convert(
         featureCollection.getFeatures(),
-        new ExportSettings(),
-        "Track",
-        "A track from A to B",
-        "Norway",
-        "http://example.com",
-        "Anna Livia Plurabelle");
+        new ExportSettings());
     System.out.println("Track: GeoJson -> GPX");
     jaxbContextBuilder
         .buildMarshaller(GarminJaxbContextDataProvider.GPX_NAMESPACES)
@@ -157,12 +147,7 @@ public class GarminConverterTest {
     FeatureCollection featureCollection = loadFeatureCollection("waypoint.json");
     Gpx gpx = featuresToGpxConverter.convert(
         featureCollection.getFeatures(),
-        new ExportSettings(),
-        "Waypoint",
-        null,
-        null,
-        null,
-        null);
+        new ExportSettings());
     System.out.println("Wpt: GeoJson -> GPX");
     jaxbContextBuilder
         .buildMarshaller(GarminJaxbContextDataProvider.GPX_NAMESPACES)
