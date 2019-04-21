@@ -45,8 +45,6 @@ import org.locationtech.jts.geom.Polygon;
 @EqualsAndHashCode(callSuper = true)
 public class WptProperties extends FeatureProperties<WptSettings> {
 
-  private String internalType; // photo, video or not // TODO
-
   /**
    * Elevation in meters
    */
@@ -91,7 +89,6 @@ public class WptProperties extends FeatureProperties<WptSettings> {
       OffsetDateTime departureTime,
       OffsetDateTime arrivalTime,
       WptSettings settings,
-      String internalType,
       BigDecimal ele,
       Address address,
       List<PhoneNumber> phoneNumbers,
@@ -103,7 +100,6 @@ public class WptProperties extends FeatureProperties<WptSettings> {
 
     super(acl, created, createdBy, modified, modifiedBy, name, plainTextDescription,
         markdownDescription, internalComments, links, departureTime, arrivalTime, settings);
-    setInternalType(internalType);
     setEle(ele);
     setAddress(address);
     setPhoneNumbers(phoneNumbers);

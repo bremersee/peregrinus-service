@@ -43,8 +43,6 @@ import org.springframework.data.annotation.TypeAlias;
 @NoArgsConstructor
 public class WptEntityProperties extends FeatureEntityProperties {
 
-  private String internalType; // photo, video or not // TODO
-
   /**
    * Elevation in meters
    */
@@ -84,7 +82,6 @@ public class WptEntityProperties extends FeatureEntityProperties {
       List<Link> links,
       OffsetDateTime departureTime,
       OffsetDateTime arrivalTime,
-      String internalType,
       BigDecimal ele,
       Address address,
       List<PhoneNumber> phoneNumbers,
@@ -96,7 +93,6 @@ public class WptEntityProperties extends FeatureEntityProperties {
 
     super(acl, created, createdBy, modified, modifiedBy, name, plainTextDescription,
         markdownDescription, internalComments, links, departureTime, arrivalTime);
-    setInternalType(internalType);
     setEle(ele);
     setAddress(address);
     setPhoneNumbers(phoneNumbers);

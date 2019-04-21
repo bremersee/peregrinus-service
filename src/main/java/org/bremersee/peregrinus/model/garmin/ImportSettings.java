@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 the original author or authors.
+ * Copyright 2019 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,31 +14,24 @@
  * limitations under the License.
  */
 
-package org.bremersee.peregrinus.model;
+package org.bremersee.peregrinus.model.garmin;
 
-import com.fasterxml.jackson.annotation.JsonSubTypes;
-import com.fasterxml.jackson.annotation.JsonSubTypes.Type;
-import com.fasterxml.jackson.annotation.JsonTypeInfo;
-import com.fasterxml.jackson.annotation.JsonTypeInfo.Id;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
-import org.bremersee.peregrinus.model.tomtom.TomTomRteSegCalcSettings;
 
 /**
  * @author Christian Bremer
  */
-@JsonTypeInfo(use = Id.NAME, property = "provider")
-@JsonSubTypes({
-    @Type(
-        value = TomTomRteSegCalcSettings.class,
-        name = "TomTom")
-})
 @Getter
 @Setter
 @ToString
 @EqualsAndHashCode
-public abstract class RteSegCalcSettings {
+@NoArgsConstructor
+public class ImportSettings {
+
+  private Boolean importRouteWaypoints = Boolean.TRUE;
 
 }

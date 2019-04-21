@@ -17,8 +17,9 @@
 package org.bremersee.peregrinus.controller;
 
 import org.bremersee.gpx.model.Gpx;
-import org.bremersee.peregrinus.garmin.FeaturesToGpxConverter;
-import org.bremersee.peregrinus.garmin.GpxToFeaturesConverter;
+import org.bremersee.peregrinus.model.garmin.ImportSettings;
+import org.bremersee.peregrinus.service.adapter.garmin.FeaturesToGpxConverter;
+import org.bremersee.peregrinus.service.adapter.garmin.GpxToFeaturesConverter;
 import org.bremersee.peregrinus.model.FeatureCollection;
 import org.bremersee.peregrinus.model.garmin.ExportSettings;
 import org.bremersee.xml.JaxbContextBuilder;
@@ -69,6 +70,6 @@ public class GarminController {
       @RequestParam(name = "removeRteWpts", defaultValue = "true") Boolean removeRteWpts,
       @RequestBody Gpx gpx) {
 
-    return Mono.just(toFeaturesConverter.convert(gpx, removeRteWpts));
+    return Mono.just(toFeaturesConverter.convert(gpx, new ImportSettings()));
   }
 }

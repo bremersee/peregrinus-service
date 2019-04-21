@@ -16,10 +16,11 @@
 
 package org.bremersee.peregrinus.model.garmin;
 
+import com.fasterxml.jackson.annotation.JsonAutoDetect;
+import com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility;
+import lombok.Builder;
 import lombok.EqualsAndHashCode;
-import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 import lombok.ToString;
 import org.bremersee.garmin.model.WptSymbol;
 import org.bremersee.garmin.trip.v1.model.ext.TripTransportationMode;
@@ -29,8 +30,11 @@ import org.bremersee.garmin.trip.v1.model.ext.ViaPointElevationMode;
 /**
  * @author Christian Bremer
  */
-@Getter
-@Setter
+@JsonAutoDetect(
+    fieldVisibility = Visibility.NONE,
+    getterVisibility = Visibility.PUBLIC_ONLY,
+    isGetterVisibility = Visibility.PUBLIC_ONLY,
+    setterVisibility = Visibility.PUBLIC_ONLY)
 @ToString
 @EqualsAndHashCode
 @NoArgsConstructor
@@ -40,7 +44,7 @@ public class ExportSettings {
 
   private String description;
 
-  private Boolean exportRouteAsTrack = Boolean.TRUE; // TODO
+  private Boolean exportRouteAsTrack = Boolean.TRUE;
 
   private Boolean exportRouteWaypoints = Boolean.TRUE;
 
@@ -55,4 +59,110 @@ public class ExportSettings {
 
   private ViaPointElevationMode elevationMode = ViaPointElevationMode.STANDARD;
 
+  @Builder
+  public ExportSettings(
+      String name,
+      String description,
+      Boolean exportRouteAsTrack,
+      Boolean exportRouteWaypoints,
+      WptSymbol routeWaypointSymbol,
+      Integer percentWaypoints,
+      TripTransportationMode transportationMode,
+      ViaPointCalculationMode calculationMode,
+      ViaPointElevationMode elevationMode) {
+
+    setName(name);
+    setDescription(description);
+    setExportRouteAsTrack(exportRouteAsTrack);
+    setExportRouteWaypoints(exportRouteWaypoints);
+    setRouteWaypointSymbol(routeWaypointSymbol);
+    setPercentWaypoints(percentWaypoints);
+    setTransportationMode(transportationMode);
+    setCalculationMode(calculationMode);
+    setElevationMode(elevationMode);
+  }
+
+  public String getName() {
+    return name;
+  }
+
+  public void setName(String name) {
+    this.name = name;
+  }
+
+  public String getDescription() {
+    return description;
+  }
+
+  public void setDescription(String description) {
+    this.description = description;
+  }
+
+  public Boolean getExportRouteAsTrack() {
+    return exportRouteAsTrack;
+  }
+
+  public void setExportRouteAsTrack(Boolean exportRouteAsTrack) {
+    this.exportRouteAsTrack = !Boolean.FALSE.equals(exportRouteAsTrack);
+  }
+
+  public Boolean getExportRouteWaypoints() {
+    return exportRouteWaypoints;
+  }
+
+  public void setExportRouteWaypoints(Boolean exportRouteWaypoints) {
+    this.exportRouteWaypoints = !Boolean.FALSE.equals(exportRouteWaypoints);
+  }
+
+  public WptSymbol getRouteWaypointSymbol() {
+    return routeWaypointSymbol;
+  }
+
+  public void setRouteWaypointSymbol(WptSymbol routeWaypointSymbol) {
+    this.routeWaypointSymbol = routeWaypointSymbol != null
+        ? routeWaypointSymbol
+        : WptSymbol.FLAG_BLUE;
+  }
+
+  public Integer getPercentWaypoints() {
+    return percentWaypoints;
+  }
+
+  public void setPercentWaypoints(Integer percentWaypoints) {
+    if (percentWaypoints == null || percentWaypoints > 100) {
+      this.percentWaypoints = 100;
+    } else if (percentWaypoints < 0) {
+      this.percentWaypoints = 0;
+    } else {
+      this.percentWaypoints = percentWaypoints;
+    }
+  }
+
+  public TripTransportationMode getTransportationMode() {
+    return transportationMode;
+  }
+
+  public void setTransportationMode(TripTransportationMode transportationMode) {
+    this.transportationMode = transportationMode != null
+        ? transportationMode
+        : TripTransportationMode.AUTOMOTIVE;
+  }
+
+  public ViaPointCalculationMode getCalculationMode() {
+    return calculationMode;
+  }
+
+  public void setCalculationMode(ViaPointCalculationMode calculationMode) {
+    this.calculationMode = calculationMode != null
+        ? calculationMode
+        : ViaPointCalculationMode.FASTER_TIME;
+  }
+
+  public ViaPointElevationMode getElevationMode() {
+    return elevationMode;
+  }
+
+  public void setElevationMode(ViaPointElevationMode elevationMode) {
+    this.elevationMode = elevationMode != null ? elevationMode : ViaPointElevationMode.STANDARD;
+  }
 }
