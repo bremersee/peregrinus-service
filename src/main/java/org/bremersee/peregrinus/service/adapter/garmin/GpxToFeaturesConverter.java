@@ -16,29 +16,25 @@
 
 package org.bremersee.peregrinus.service.adapter.garmin;
 
-import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
-import java.util.function.Function;
 import java.util.stream.Collectors;
-import javax.validation.constraints.NotNull;
 import org.bremersee.geojson.utils.GeometryUtils;
 import org.bremersee.gpx.model.Gpx;
+import org.bremersee.gpx.model.RteType;
 import org.bremersee.gpx.model.WptType;
 import org.bremersee.peregrinus.model.Feature;
 import org.bremersee.peregrinus.model.FeatureCollection;
-import org.bremersee.peregrinus.model.RtePt;
 import org.bremersee.peregrinus.model.garmin.ImportSettings;
 import org.bremersee.xml.JaxbContextBuilder;
-import org.locationtech.jts.geom.Geometry;
-import org.springframework.validation.annotation.Validated;
+import org.springframework.stereotype.Component;
 
 /**
- * The garmin to features converter.
+ * The gpx to features converter.
  *
  * @author Christian Bremer
  */
-@Validated
+@Component
 public class GpxToFeaturesConverter {
 
   private final WptTypeToWptConverter wptTypeConverter;
@@ -48,7 +44,7 @@ public class GpxToFeaturesConverter {
   private final RteTypeToRteConverter rteTypeConverter;
 
   /**
-   * Instantiates a new garmin to features converter.
+   * Instantiates a new gpx to features converter.
    *
    * @param jaxbContextBuilder the jaxb context builder
    */
@@ -59,13 +55,12 @@ public class GpxToFeaturesConverter {
   }
 
   /**
-   * Convert garmin.
+   * Convert gpx.
    *
    * @param gpx            the gpx
    * @param importSettings import settings
    * @return the list
    */
-  @NotNull
   public FeatureCollection convert(
       final Gpx gpx,
       final ImportSettings importSettings) {
@@ -74,64 +69,52 @@ public class GpxToFeaturesConverter {
       return new FeatureCollection();
     }
 
-    final boolean removeRteWpts = !importSettings.getImportRouteWaypoints();
-
-    final List<Feature> rtes = gpx.getRtes()
-        .stream()
-        .filter(Objects::nonNull)
-        .map(rteType -> rteTypeConverter.convert(rteType))
-        .collect(Collectors.toList());
-
-    final List<Feature> trks = gpx.getTrks()
-        .stream()
-        .filter(Objects::nonNull)
-        .map(trkTypeConverter::convert)
-        .collect(Collectors.toList());
-
     final List<Feature> features = gpx.getWpts()
         .stream()
         .filter(Objects::nonNull)
-        .filter(wptType -> !isExcluded(removeRteWpts, wptType, rtes))
+        .filter(wptType -> importWpt(wptType, gpx.getRtes(), importSettings))
         .map(wptTypeConverter::convert)
         .collect(Collectors.toList());
 
-    features.addAll(trks);
-    features.addAll(rtes);
+    features.addAll(gpx.getRtes()
+        .stream()
+        .filter(Objects::nonNull)
+        .map(rteTypeConverter::convert)
+        .collect(Collectors.toList()));
+
+    features.addAll(gpx.getTrks()
+        .stream()
+        .filter(Objects::nonNull)
+        .map(trkTypeConverter::convert)
+        .collect(Collectors.toList()));
 
     final double[] boundingBox = GeometryUtils.getBoundingBox(
         features
             .stream()
-            .map((Function<Feature, Geometry>) Feature::getGeometry)
+            .map(Feature::getGeometry)
             .collect(Collectors.toList()));
 
     return new FeatureCollection(features, boundingBox);
   }
 
-  private boolean isExcluded(
-      final boolean removeRteWpts,
+  private boolean importWpt(
       final WptType wptType,
-      final List<Feature> rtes) {
+      final List<RteType> rteTypes,
+      final ImportSettings importSettings) {
 
-    // TODO
-    return false;
-//    return removeRteWpts && rtes
-//        .stream()
-//        .filter(f -> f instanceof Rte)
-//        .map(f -> ((Rte) f).getProperties().getRtePts())
-//        .anyMatch(rtePts -> contains(rtePts, wptType));
+    return Boolean.TRUE.equals(importSettings.getImportRouteWaypoints())
+        || !wptIsRtePt(wptType, rteTypes);
   }
 
-  private boolean contains(final Collection<RtePt> rtePts, final WptType wptType) {
-    return rtePts.stream().anyMatch(rtePt -> areEqual(rtePt, wptType));
-  }
-
-  private boolean areEqual(final RtePt rtePt, final WptType wptType) {
-//    String an = rtePt.getProperties().getName() != null ? rtePt.getProperties().getName() : "";
-//    String bn = wptType.getName() != null ? wptType.getName() : "";
-//    Coordinate ap = rtePt.getGeometry().getCoordinate();
-//    Coordinate bp = GeometryUtils.createCoordinateWGS84(wptType.getLat(), wptType.getLon());
-//    return an.equals(bn) && ap.equals2D(bp, 0.000000000000001);
-    return false;
+  private boolean wptIsRtePt(final WptType wptType, final List<RteType> rteTypes) {
+    return rteTypes
+        .stream()
+        .anyMatch(rteType -> rteType
+            .getRtepts()
+            .stream()
+            .anyMatch(rtePt -> rtePt.getName().equals(wptType.getName())
+                && rtePt.getLat().equals(wptType.getLat())
+                && rtePt.getLon().equals(wptType.getLon())));
   }
 
 }

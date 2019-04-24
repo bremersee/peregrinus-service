@@ -60,7 +60,7 @@ public class GarminConverterTest {
         .builder()
         .processAll(ServiceLoader.load(JaxbContextDataProvider.class));
     gpxToFeaturesConverter = new GpxToFeaturesConverter(jaxbContextBuilder);
-    featuresToGpxConverter = new FeaturesToGpxConverter(jaxbContextBuilder);
+    featuresToGpxConverter = new FeaturesToGpxConverter(jaxbContextBuilder, null, null, null, null, null);
   }
 
   private Gpx loadGpx(String file) throws Exception {

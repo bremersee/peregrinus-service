@@ -25,27 +25,46 @@ import org.bremersee.peregrinus.model.Rte;
 import org.bremersee.peregrinus.model.Trk;
 import org.bremersee.peregrinus.model.garmin.ExportSettings;
 import org.bremersee.peregrinus.model.garmin.ImportSettings;
+import org.bremersee.peregrinus.service.adapter.garmin.FeaturesToGpxConverter;
+import org.bremersee.peregrinus.service.adapter.garmin.GpxToFeaturesConverter;
+import org.springframework.stereotype.Component;
 
 /**
  * @author Christian Bremer
  */
+@Component
 public class ConverterServiceImpl implements ConverterService {
 
   private final Function<Rte, Trk> rteToTrkConvert = new RteToTrkConverter();
 
+  private FeaturesToGpxConverter featuresToGpxConverter;
+
+  private GpxToFeaturesConverter gpxToFeaturesConverter;
+
+  public ConverterServiceImpl(
+      final FeaturesToGpxConverter featuresToGpxConverter,
+      final GpxToFeaturesConverter gpxToFeaturesConverter) {
+    this.featuresToGpxConverter = featuresToGpxConverter;
+    this.gpxToFeaturesConverter = gpxToFeaturesConverter;
+  }
+
   @Override
-  public Trk convertRteToTrk(Rte rte) {
+  public Trk convertRteToTrk(final Rte rte) {
     return rteToTrkConvert.apply(rte);
   }
 
   @Override
-  public Gpx convertFeaturesToGpx(Collection<? extends Feature> features,
-      ExportSettings exportSettings) {
-    return null;
+  public Gpx convertFeaturesToGpx(
+      final Collection<? extends Feature> features,
+      final ExportSettings exportSettings) {
+    return featuresToGpxConverter.convert(features, exportSettings);
   }
 
   @Override
-  public FeatureCollection convertGpxToFeatures(Gpx gpx, ImportSettings importSettings) {
-    return null;
+  public FeatureCollection convertGpxToFeatures(
+      final Gpx gpx,
+      final ImportSettings importSettings) {
+    return gpxToFeaturesConverter.convert(gpx, importSettings);
   }
+
 }

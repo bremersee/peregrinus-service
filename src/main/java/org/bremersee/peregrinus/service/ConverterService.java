@@ -36,12 +36,14 @@ public interface ConverterService {
   @NotNull
   Trk convertRteToTrk(@NotNull Rte rte);
 
+  @NotNull
   Gpx convertFeaturesToGpx(
-      Collection<? extends Feature> features,
-      ExportSettings exportSettings);
+      @NotNull Collection<? extends Feature> features,
+      @NotNull ExportSettings exportSettings);
 
+  @NotNull
   FeatureCollection convertGpxToFeatures(
-      Gpx gpx,
-      ImportSettings importSettings);
+      @NotNull Gpx gpx,
+      @NotNull ImportSettings importSettings);
 
 }

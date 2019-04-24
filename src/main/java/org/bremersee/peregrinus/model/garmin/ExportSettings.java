@@ -40,6 +40,8 @@ import org.bremersee.garmin.trip.v1.model.ext.ViaPointElevationMode;
 @NoArgsConstructor
 public class ExportSettings {
 
+  private String author;
+
   private String name;
 
   private String description;
@@ -61,6 +63,7 @@ public class ExportSettings {
 
   @Builder
   public ExportSettings(
+      String author,
       String name,
       String description,
       Boolean exportRouteAsTrack,
@@ -71,6 +74,7 @@ public class ExportSettings {
       ViaPointCalculationMode calculationMode,
       ViaPointElevationMode elevationMode) {
 
+    setAuthor(author);
     setName(name);
     setDescription(description);
     setExportRouteAsTrack(exportRouteAsTrack);
@@ -80,6 +84,14 @@ public class ExportSettings {
     setTransportationMode(transportationMode);
     setCalculationMode(calculationMode);
     setElevationMode(elevationMode);
+  }
+
+  public String getAuthor() {
+    return author;
+  }
+
+  public void setAuthor(String author) {
+    this.author = author;
   }
 
   public String getName() {

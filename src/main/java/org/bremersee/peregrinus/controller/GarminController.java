@@ -17,12 +17,7 @@
 package org.bremersee.peregrinus.controller;
 
 import org.bremersee.gpx.model.Gpx;
-import org.bremersee.peregrinus.model.garmin.ImportSettings;
-import org.bremersee.peregrinus.service.adapter.garmin.FeaturesToGpxConverter;
-import org.bremersee.peregrinus.service.adapter.garmin.GpxToFeaturesConverter;
 import org.bremersee.peregrinus.model.FeatureCollection;
-import org.bremersee.peregrinus.model.garmin.ExportSettings;
-import org.bremersee.xml.JaxbContextBuilder;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -38,15 +33,6 @@ import reactor.core.publisher.Mono;
 @RequestMapping(path = "/api/public/garmin")
 public class GarminController {
 
-  private final FeaturesToGpxConverter toGpxConverter;
-
-  private final GpxToFeaturesConverter toFeaturesConverter;
-
-  public GarminController(final JaxbContextBuilder jaxbContextBuilder) {
-    this.toGpxConverter = new FeaturesToGpxConverter(jaxbContextBuilder);
-    this.toFeaturesConverter = new GpxToFeaturesConverter(jaxbContextBuilder);
-  }
-
   @PostMapping(path = "/geojson-to-gpx",
       consumes = MediaType.APPLICATION_JSON_UTF8_VALUE,
       produces = MediaType.APPLICATION_XML_VALUE)
@@ -59,8 +45,7 @@ public class GarminController {
       @RequestParam(name = "elevationMode", required = false) String elevationMode,
       @RequestBody FeatureCollection featureCollection) {
 
-    return Mono.just(toGpxConverter.convert(
-        featureCollection.getFeatures(), new ExportSettings()));
+    return Mono.empty();
   }
 
   @PostMapping(path = "/gpx-to-geojson",
@@ -70,6 +55,6 @@ public class GarminController {
       @RequestParam(name = "removeRteWpts", defaultValue = "true") Boolean removeRteWpts,
       @RequestBody Gpx gpx) {
 
-    return Mono.just(toFeaturesConverter.convert(gpx, new ImportSettings()));
+    return Mono.empty();
   }
 }

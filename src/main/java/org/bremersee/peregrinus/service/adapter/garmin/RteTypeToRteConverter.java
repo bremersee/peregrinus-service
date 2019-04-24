@@ -124,19 +124,6 @@ class RteTypeToRteConverter extends AbstractGpxConverter {
         .orElse(DisplayColor.MAGENTA);
   }
 
-  private Optional<Trip> getTripExtension(final RteType rteType) {
-    return GpxJaxbContextHelper.findFirstExtension(
-        Trip.class,
-        true,
-        rteType.getExtensions(),
-        jaxbContextBuilder.buildUnmarshaller());
-  }
-
-  @SuppressWarnings("unused")
-  private String getTransportationMode(final RteType rteType) {
-    return getTripExtension(rteType).map(Trip::getTransportationMode).orElse(null);
-  }
-
   private Optional<RoutePointExtension> getRoutePointExtension(final WptType rtePtType) {
     return GpxJaxbContextHelper
         .findFirstExtension(

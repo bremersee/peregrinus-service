@@ -21,6 +21,7 @@ import static org.bremersee.xml.ConverterUtils.millisToXmlCalendar;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 import org.bremersee.garmin.GarminJaxbContextDataProvider;
 import org.bremersee.garmin.creationtime.v1.model.ext.CreationTimeExtension;
 import org.bremersee.garmin.gpx.v3.model.ext.DisplayModeT;
@@ -46,7 +47,7 @@ import reactor.util.function.Tuples;
  *
  * @author Christian Bremer
  */
-public class RteToRteTypeConverter extends AbstractFeatureConverter {
+class RteToRteTypeConverter extends AbstractFeatureConverter {
 
   private String[] gpxNameSpaces;
 
@@ -61,7 +62,8 @@ public class RteToRteTypeConverter extends AbstractFeatureConverter {
 
   Tuple2<RteType, List<WptType>> convert(
       final Rte rte,
-      final ExportSettings exportSettings) {
+      final ExportSettings exportSettings,
+      final Set<String> usedNames) {
 
     final int eachRtePtNumber = getEachRtePointValue(exportSettings);
     final List<WptType> wptTypes = new ArrayList<>();
@@ -78,7 +80,8 @@ public class RteToRteTypeConverter extends AbstractFeatureConverter {
           final WptType wptType = new WptType();
           wptType.setLat(BigDecimal.valueOf(rtePt.getPosition().getY()));
           wptType.setLon(BigDecimal.valueOf(rtePt.getPosition().getX()));
-          wptType.setName(getRtePtName(iSize, i, nSize, n, rte.getProperties().getName()));
+          wptType.setName(getRtePtName(
+              iSize, i, nSize, n, getRtePtBaseName(rte.getProperties().getName(), usedNames)));
           wptType.setExtensions(getViaPoint(exportSettings));
           rteType.getRtepts().add(wptType);
 
@@ -111,12 +114,25 @@ public class RteToRteTypeConverter extends AbstractFeatureConverter {
     return 100 / exportSettings.getPercentWaypoints();
   }
 
-  private String getRtePtName(int iSize, int i, int nSize, int n, String name) {
+  private String getRtePtBaseName(final String rteName, final Set<String> usedNames) {
+    final String name = rteName.length() > 6 ? rteName.substring(0, 6) : rteName;
+    int counter = 0;
+    String newName = name;
+    while (usedNames.contains(newName)) {
+      counter++;
+      newName = name + counter;
+    }
+    usedNames.add(newName);
+    return newName;
+  }
+
+  private String getRtePtName(
+      final int iSize, final int i, final int nSize, final int n, final String baseName) {
     int len = Integer.toString(iSize).length();
     final String iStr = String.format("%0" + len + "d", i);
     len = Integer.toString(nSize).length();
     final String nStr = String.format("%0" + len + "d", n);
-    return name + " WPT(" + iStr + "_" + nStr + ")";
+    return baseName + " (" + iStr + "," + nStr + ")";
   }
 
   private ExtensionsType getRouteExtension(
