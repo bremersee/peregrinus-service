@@ -16,10 +16,13 @@
 
 package org.bremersee.peregrinus.model;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonSubTypes.Type;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.fasterxml.jackson.annotation.JsonTypeInfo.Id;
+import io.swagger.annotations.ApiModel;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
@@ -27,14 +30,16 @@ import lombok.ToString;
 import org.bremersee.peregrinus.model.tomtom.TomTomRteSegCalcSettings;
 
 /**
+ * The calculation settings of a route segment.
+ *
  * @author Christian Bremer
  */
+@ApiModel(description = "Calculation settings of a route segment.", discriminator = "provider")
 @JsonTypeInfo(use = Id.NAME, property = "provider")
 @JsonSubTypes({
-    @Type(
-        value = TomTomRteSegCalcSettings.class,
-        name = "TomTom")
+    @Type(value = TomTomRteSegCalcSettings.class, name = "TomTom")
 })
+@JsonInclude(Include.NON_EMPTY)
 @Getter
 @Setter
 @ToString

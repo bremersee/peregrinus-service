@@ -16,11 +16,13 @@
 
 package org.bremersee.peregrinus.controller;
 
+import org.bremersee.gpx.model.Gpx;
 import org.bremersee.groupman.api.GroupControllerApi;
 import org.bremersee.peregrinus.model.Branch;
 import org.bremersee.peregrinus.model.Feature;
 import org.bremersee.peregrinus.model.FeatureCollection;
 import org.bremersee.peregrinus.model.FeatureLeaf;
+import org.bremersee.peregrinus.model.gpx.GpxImportSettings;
 import org.bremersee.peregrinus.service.TreeService;
 import org.hibernate.validator.constraints.Length;
 import org.springframework.http.MediaType;
@@ -84,21 +86,6 @@ public class TreeController extends AbstractController {
         .renameNode(nodeId, name, auth.getUserId(), auth.getRoles(), auth.getGroups()));
   }
 
-  /*
-  @PutMapping(path = "/{nodeId}/access-control")
-  public Mono<Boolean> updateAccessControl(
-      @PathVariable("nodeId") String nodeId,
-      @RequestBody AccessControlList acl) {
-    return null;
-  }
-
-  @DeleteMapping(path = "/{nodeId}")
-  public Mono<Boolean> removeNode(
-      @PathVariable("nodeId") String nodeId) {
-    return null;
-  }
-  */
-
   @GetMapping(path = "/{branchId}/open", produces = {MediaType.APPLICATION_JSON_UTF8_VALUE})
   public Mono<Branch> openBranch(
       @PathVariable("branchId") String branchId,
@@ -135,6 +122,20 @@ public class TreeController extends AbstractController {
     return manyWithAuth(auth -> treeService
         .createFeatureLeafs(
             branchId, featureCollection, auth.getUserId(), auth.getRoles(), auth.getGroups()));
+  }
+
+  @PostMapping(
+      path = "/{branchId}/features/import/gpx",
+      consumes = {MediaType.APPLICATION_XML_VALUE},
+      produces = {MediaType.APPLICATION_JSON_UTF8_VALUE})
+  public Flux<FeatureLeaf> importGpx(
+      @PathVariable("branchId") String branchId,
+      @RequestParam(name = "waypoints", defaultValue = "true") Boolean waypoints,
+      @RequestBody Gpx gpx) {
+    final GpxImportSettings settings = new GpxImportSettings();
+    settings.setImportRouteWaypoints(waypoints);
+    return manyWithAuth(auth -> treeService
+        .importGpx(branchId, gpx, settings, auth.getUserId(), auth.getRoles(), auth.getGroups()));
   }
 
 }

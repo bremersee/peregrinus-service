@@ -23,10 +23,10 @@ import org.bremersee.peregrinus.model.Feature;
 import org.bremersee.peregrinus.model.FeatureCollection;
 import org.bremersee.peregrinus.model.Rte;
 import org.bremersee.peregrinus.model.Trk;
-import org.bremersee.peregrinus.model.garmin.ExportSettings;
-import org.bremersee.peregrinus.model.garmin.ImportSettings;
-import org.bremersee.peregrinus.service.adapter.garmin.FeaturesToGpxConverter;
-import org.bremersee.peregrinus.service.adapter.garmin.GpxToFeaturesConverter;
+import org.bremersee.peregrinus.model.gpx.GpxExportSettings;
+import org.bremersee.peregrinus.model.gpx.GpxImportSettings;
+import org.bremersee.peregrinus.service.adapter.gpx.FeaturesToGpxConverter;
+import org.bremersee.peregrinus.service.adapter.gpx.GpxToFeaturesConverter;
 import org.springframework.stereotype.Component;
 
 /**
@@ -56,14 +56,14 @@ public class ConverterServiceImpl implements ConverterService {
   @Override
   public Gpx convertFeaturesToGpx(
       final Collection<? extends Feature> features,
-      final ExportSettings exportSettings) {
+      final GpxExportSettings exportSettings) {
     return featuresToGpxConverter.convert(features, exportSettings);
   }
 
   @Override
   public FeatureCollection convertGpxToFeatures(
       final Gpx gpx,
-      final ImportSettings importSettings) {
+      final GpxImportSettings importSettings) {
     return gpxToFeaturesConverter.convert(gpx, importSettings);
   }
 

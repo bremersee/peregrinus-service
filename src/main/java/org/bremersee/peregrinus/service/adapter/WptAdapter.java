@@ -20,8 +20,10 @@ import java.time.Clock;
 import java.time.OffsetDateTime;
 import javax.validation.constraints.NotNull;
 import org.bremersee.common.model.AccessControlList;
+import org.bremersee.common.model.Address;
 import org.bremersee.geojson.utils.GeometryUtils;
 import org.bremersee.peregrinus.entity.AclEntity;
+import org.bremersee.peregrinus.entity.AddressEntity;
 import org.bremersee.peregrinus.entity.FeatureEntity;
 import org.bremersee.peregrinus.entity.FeatureEntitySettings;
 import org.bremersee.peregrinus.entity.WptEntity;
@@ -81,12 +83,6 @@ public class WptAdapter extends AbstractAdapter implements FeatureAdapter {
       @Nullable FeatureSettings featureSettings) {
 
     return featureEntitySettings;
-    // nothing to do at the moment
-    //final WptEntitySettings destination = (WptEntitySettings) featureEntitySettings;
-    //if (featureSettings != null) {
-    //  final WptSettings source = (WptSettings) featureSettings;
-    //}
-    //return destination;
   }
 
   @Override
@@ -102,11 +98,10 @@ public class WptAdapter extends AbstractAdapter implements FeatureAdapter {
         .id(wptEntity.getId())
         .properties(WptProperties.builder()
             .acl(getAclMapper().map(wptEntity.getProperties().getAcl()))
-            .address(wptEntity.getProperties().getAddress())
+            .address(mapToAddress(wptEntity.getProperties()))
             .created(wptEntity.getProperties().getCreated())
             .createdBy(wptEntity.getProperties().getCreatedBy())
             .ele(wptEntity.getProperties().getEle())
-            .internalComments(wptEntity.getProperties().getInternalComments())
             .links(wptEntity.getProperties().getLinks())
             .markdownDescription(wptEntity.getProperties().getMarkdownDescription())
             .modified(wptEntity.getProperties().getModified())
@@ -123,10 +118,27 @@ public class WptAdapter extends AbstractAdapter implements FeatureAdapter {
                 .id(wptEntitySettings.getId())
                 .userId(wptEntitySettings.getUserId())
                 .build())
-            .departureTime(wptEntity.getProperties().getDepartureTime())
-            .arrivalTime(wptEntity.getProperties().getArrivalTime())
             .build())
         .build());
+  }
+
+  private Address mapToAddress(WptEntityProperties wptProperties) {
+    if (wptProperties == null || wptProperties.getAddress() == null) {
+      return null;
+    }
+    final AddressEntity address = wptProperties.getAddress();
+    return Address
+        .builder()
+        .city(address.getCity())
+        .country(address.getCountry())
+        .countryCode(address.getCountryCode())
+        .formattedAddress(address.getFormattedAddress())
+        .postalCode(address.getPostalCode())
+        .state(address.getState())
+        .street(address.getStreet())
+        .streetNumber(address.getStreetNumber())
+        .suburb(address.getSuburb())
+        .build();
   }
 
   @Override
@@ -153,12 +165,11 @@ public class WptAdapter extends AbstractAdapter implements FeatureAdapter {
         .id(featureEntity != null ? featureEntity.getId() : null)
         .properties(WptEntityProperties.builder()
             .acl(getAclMapper().map(acl))
-            .address(wptProperties.getAddress())
+            .address(mapToAddressEntity(wptProperties))
             .created(featureEntity != null ? featureEntity.getProperties().getCreated() : null)
             .createdBy(
                 featureEntity != null ? featureEntity.getProperties().getCreatedBy() : userId)
             .ele(wptProperties.getEle())
-            .internalComments(wptProperties.getInternalComments())
             .links(wptProperties.getLinks())
             .markdownDescription(wptProperties.getMarkdownDescription())
             .modified(OffsetDateTime.now(Clock.systemUTC()))
@@ -170,9 +181,27 @@ public class WptAdapter extends AbstractAdapter implements FeatureAdapter {
             .osmType(wptProperties.getOsmType())
             .phoneNumbers(wptProperties.getPhoneNumbers())
             .plainTextDescription(wptProperties.getPlainTextDescription())
-            .departureTime(wpt.getProperties().getDepartureTime())
-            .arrivalTime(wpt.getProperties().getArrivalTime())
             .build())
         .build();
   }
+
+  private AddressEntity mapToAddressEntity(WptProperties wptProperties) {
+    if (wptProperties == null || wptProperties.getAddress() == null) {
+      return null;
+    }
+    final Address address = wptProperties.getAddress();
+    return AddressEntity
+        .builder()
+        .city(address.getCity())
+        .country(address.getCountry())
+        .countryCode(address.getCountryCode())
+        .formattedAddress(address.getFormattedAddress())
+        .postalCode(address.getPostalCode())
+        .state(address.getState())
+        .street(address.getStreet())
+        .streetNumber(address.getStreetNumber())
+        .suburb(address.getSuburb())
+        .build();
+  }
+
 }

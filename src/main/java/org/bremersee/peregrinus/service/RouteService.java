@@ -18,7 +18,7 @@ package org.bremersee.peregrinus.service;
 
 import java.util.Set;
 import org.bremersee.peregrinus.model.Rte;
-import org.bremersee.peregrinus.model.RteCalculationRequest;
+import org.bremersee.peregrinus.model.RteCalcRequest;
 import reactor.core.publisher.Mono;
 
 /**
@@ -26,22 +26,6 @@ import reactor.core.publisher.Mono;
  */
 public interface RouteService {
 
-  //Flux<Rte> calculateRoutes(RteCalculationRequest request, String userId, Set<String> roles);
-
-  Mono<Rte> calculateRoute(RteCalculationRequest request, String userId, Set<String> roles);
-
-  /*
-  Mono<Rte> addRtePt(RteAddRtePtRequest request, String userId, Set<String> roles);
-
-  Mono<Rte> changeRtePtCalculationProperties(RteChangeRtePtCalculationPropertiesRequest request, String userId, Set<String> roles);
-
-  Mono<Rte> changeRtePtIndex(RteChangeRtePtIndexRequest request, String userId, Set<String> roles);
-
-  Mono<Rte> changeRtePtLocation(RteChangeRtePtLocationRequest request, String userId, Set<String> roles);
-
-  Mono<Rte> removeRtePt(RteRemoveRtePtRequest request, String userId, Set<String> roles);
-  */
-
-  // recalculate?
+  Mono<Rte> calculateRoute(RteCalcRequest request, String userId, Set<String> roles);
 
 }

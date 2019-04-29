@@ -30,6 +30,7 @@ import javax.validation.constraints.NotNull;
 import lombok.extern.slf4j.Slf4j;
 import org.bremersee.common.model.AccessControlList;
 import org.bremersee.exception.ServiceException;
+import org.bremersee.gpx.model.Gpx;
 import org.bremersee.peregrinus.entity.AclEntity;
 import org.bremersee.peregrinus.entity.BranchEntity;
 import org.bremersee.peregrinus.entity.BranchEntitySettings;
@@ -44,6 +45,7 @@ import org.bremersee.peregrinus.model.Feature;
 import org.bremersee.peregrinus.model.FeatureCollection;
 import org.bremersee.peregrinus.model.FeatureLeaf;
 import org.bremersee.peregrinus.model.Node;
+import org.bremersee.peregrinus.model.gpx.GpxImportSettings;
 import org.bremersee.peregrinus.repository.TreeRepository;
 import org.bremersee.peregrinus.service.adapter.LeafAdapter;
 import org.bremersee.security.access.AclBuilder;
@@ -67,14 +69,18 @@ public class TreeServiceImpl extends AbstractServiceImpl implements TreeService 
 
   private FeatureService featureService;
 
+  private ConverterService converterService;
+
   public TreeServiceImpl(
       AclMapper<AclEntity> aclMapper,
       TreeRepository treeRepository,
       List<LeafAdapter> leafAdapters,
-      FeatureService featureService) {
+      FeatureService featureService,
+      ConverterService converterService) {
     super(aclMapper);
     this.treeRepository = treeRepository;
     this.featureService = featureService;
+    this.converterService = converterService;
     for (final LeafAdapter leafAdapter : leafAdapters) {
       for (final String key : leafAdapter.getSupportedKeys()) {
         leafAdapterMap.put(key, leafAdapter);
@@ -210,6 +216,23 @@ public class TreeServiceImpl extends AbstractServiceImpl implements TreeService 
         })
         .flatMap(tuple -> getLeafAdapter(tuple.getT1()).buildLeaf(tuple.getT1(), tuple.getT2()))
         .cast(FeatureLeaf.class);
+  }
+
+  @Override
+  public Flux<FeatureLeaf> importGpx(
+      @NotNull final String parentId,
+      @NotNull final Gpx gpx,
+      @NotNull final GpxImportSettings importSettings,
+      @NotNull final String userId,
+      @NotNull final Set<String> roles,
+      @NotNull final Set<String> groups) {
+
+    return createFeatureLeafs(
+        parentId,
+        converterService.convertGpxToFeatures(gpx, importSettings),
+        userId,
+        roles,
+        groups);
   }
 
   @Override

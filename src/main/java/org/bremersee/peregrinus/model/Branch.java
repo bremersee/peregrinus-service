@@ -16,6 +16,8 @@
 
 package org.bremersee.peregrinus.model;
 
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -27,20 +29,41 @@ import lombok.ToString;
 import org.bremersee.common.model.AccessControlList;
 
 /**
+ * The tree branch.
+ *
  * @author Christian Bremer
  */
+@ApiModel(description = "The tree branch.")
 @Getter
 @Setter
 @EqualsAndHashCode(callSuper = true)
 @ToString(callSuper = true)
 public final class Branch extends Node<BranchSettings> {
 
-  private List<Node> children = new ArrayList<>();
+  @ApiModelProperty("The children.")
+  private List<Node> children;
 
+  /**
+   * Instantiates a new tree branch.
+   */
   public Branch() {
     setSettings(new BranchSettings());
   }
 
+  /**
+   * Instantiates a new tree branch.
+   *
+   * @param id         the id
+   * @param created    the created
+   * @param createdBy  the created by
+   * @param modified   the modified
+   * @param modifiedBy the modified by
+   * @param acl        the acl
+   * @param settings   the settings
+   * @param parentId   the parent id
+   * @param name       the name
+   * @param children   the children
+   */
   @Builder
   public Branch(
       String id,
@@ -57,4 +80,15 @@ public final class Branch extends Node<BranchSettings> {
     this.children = children;
   }
 
+  /**
+   * Gets children.
+   *
+   * @return the children
+   */
+  public List<Node> getChildren() {
+    if (children == null) {
+      children = new ArrayList<>();
+    }
+    return children;
+  }
 }

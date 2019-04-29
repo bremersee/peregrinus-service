@@ -32,14 +32,14 @@ import org.bremersee.geojson.utils.GeometryUtils;
 import org.bremersee.peregrinus.config.TomTomProperties;
 import org.bremersee.peregrinus.model.GeocodeQueryRequest;
 import org.bremersee.peregrinus.model.Rte;
-import org.bremersee.peregrinus.model.RteCalculationRequest;
+import org.bremersee.peregrinus.model.RteCalcRequest;
 import org.bremersee.peregrinus.model.RteProperties;
 import org.bremersee.peregrinus.model.RtePt;
 import org.bremersee.peregrinus.model.RteSeg;
 import org.bremersee.peregrinus.model.RteSettings;
 import org.bremersee.peregrinus.model.tomtom.Avoid;
 import org.bremersee.peregrinus.model.tomtom.RouteType;
-import org.bremersee.peregrinus.model.tomtom.TomTomRteCalculationRequest;
+import org.bremersee.peregrinus.model.tomtom.TomTomRteCalcRequest;
 import org.bremersee.peregrinus.service.adapter.RouteAdapter;
 import org.bremersee.peregrinus.service.adapter.tomtom.exception.RoutingExceptionMessageParser;
 import org.bremersee.peregrinus.service.adapter.tomtom.model.AvoidAreas;
@@ -60,7 +60,6 @@ import org.springframework.http.HttpMethod;
 import org.springframework.stereotype.Component;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
-import org.springframework.util.StringUtils;
 import org.springframework.web.reactive.function.BodyInserters;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Flux;
@@ -96,17 +95,17 @@ public class TomTomRouteAdapter implements RouteAdapter {
   public @NotNull Class<? extends GeocodeQueryRequest>[] getSupportedRequestClasses() {
     //noinspection unchecked
     return new Class[]{
-        TomTomRteCalculationRequest.class
+        TomTomRteCalcRequest.class
     };
   }
 
   @Override
   public Mono<Rte> calculateRoute(
-      final RteCalculationRequest request,
+      final RteCalcRequest request,
       final String userId,
       final Set<String> roles) {
 
-    final TomTomRteCalculationRequest tomTomRequest = (TomTomRteCalculationRequest) request;
+    final TomTomRteCalcRequest tomTomRequest = (TomTomRteCalcRequest) request;
     final String baseUri = properties.getRoutingUri() + buildPath(tomTomRequest.getRtePts());
     final MultiValueMap<String, String> params = buildParameters(tomTomRequest);
     params.set("key", properties.getKey());
@@ -145,7 +144,7 @@ public class TomTomRouteAdapter implements RouteAdapter {
     return "/" + locationsStr + "/json";
   }
 
-  private HttpMethod getHttpMethod(final TomTomRteCalculationRequest request) {
+  private HttpMethod getHttpMethod(final TomTomRteCalcRequest request) {
     if (request.getAvoidAreas() != null
         || (request.getAvoidVignette() != null && !request.getAvoidVignette().isEmpty())) {
       return HttpMethod.POST;
@@ -153,7 +152,7 @@ public class TomTomRouteAdapter implements RouteAdapter {
     return HttpMethod.GET;
   }
 
-  private MultiValueMap<String, String> buildParameters(final TomTomRteCalculationRequest request) {
+  private MultiValueMap<String, String> buildParameters(final TomTomRteCalcRequest request) {
     final MultiValueMap<String, String> map = new LinkedMultiValueMap<>();
     map.set("routeRepresentation", "polyline");
     map.set("instructionsType", "text");
@@ -183,7 +182,7 @@ public class TomTomRouteAdapter implements RouteAdapter {
     return map;
   }
 
-  private RouteRequestBody buildRequestBody(TomTomRteCalculationRequest request) {
+  private RouteRequestBody buildRequestBody(TomTomRteCalcRequest request) {
     final RouteRequestBody body = new RouteRequestBody();
     body.setAvoidVignette(request.getAvoidVignette());
     if (request.getAvoidAreas() != null) {
@@ -202,7 +201,7 @@ public class TomTomRouteAdapter implements RouteAdapter {
   }
 
   private Flux<Rte> mapMany(
-      final RteCalculationRequest request,
+      final RteCalcRequest request,
       final RouteResponse response,
       final String userId) {
     if (response.getRoutes() == null || response.getRoutes().isEmpty()) {
@@ -217,7 +216,7 @@ public class TomTomRouteAdapter implements RouteAdapter {
   }
 
   private Mono<Rte> mapFirst(
-      final RteCalculationRequest request,
+      final RteCalcRequest request,
       final RouteResponse response,
       final String userId) {
 
@@ -251,7 +250,7 @@ public class TomTomRouteAdapter implements RouteAdapter {
   }
 
   private Rte mapRoute(
-      final RteCalculationRequest request,
+      final RteCalcRequest request,
       final Route route,
       final String userId) {
 
@@ -311,10 +310,10 @@ public class TomTomRouteAdapter implements RouteAdapter {
         .geometry(GeometryUtils.createMultiLineString(lineStrings))
         .properties(RteProperties
             .builder()
-            .arrivalTime(route.getSummary() != null ? route.getSummary().getArrivalTime() : null)
+            //.arrivalTime(route.getSummary() != null ? route.getSummary().getArrivalTime() : null)
             .createdBy(userId)
-            .departureTime(
-                route.getSummary() != null ? route.getSummary().getDepartureTime() : null)
+            //.departureTime(
+            //    route.getSummary() != null ? route.getSummary().getDepartureTime() : null)
             .modifiedBy(userId)
             .name(departureName + " -> " + arrivalName)
             .settings(RteSettings.builder().build())

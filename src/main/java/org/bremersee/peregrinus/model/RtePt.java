@@ -16,23 +16,28 @@
 
 package org.bremersee.peregrinus.model;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 import java.math.BigDecimal;
-import java.math.BigInteger;
-import java.util.List;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
-import org.bremersee.common.model.TwoLetterCountryCode;
 import org.locationtech.jts.geom.Point;
 import org.springframework.util.StringUtils;
 
 /**
+ * The route point.
+ *
  * @author Christian Bremer
  */
+@ApiModel(description = "Route point.")
+@JsonInclude(Include.NON_EMPTY)
 @Getter
 @Setter
 @EqualsAndHashCode
@@ -40,17 +45,30 @@ import org.springframework.util.StringUtils;
 @NoArgsConstructor
 public class RtePt {
 
+  @ApiModelProperty("The position.")
   @JsonProperty(value = "position", required = true)
   private Point position;
 
+  @ApiModelProperty("The name.")
   private String name;
 
+  /**
+   * Instantiates a new route point.
+   *
+   * @param position the position
+   * @param name     the name
+   */
   @Builder
   public RtePt(Point position, String name) {
     this.position = position;
     this.name = name;
   }
 
+  /**
+   * Gets name.
+   *
+   * @return the name
+   */
   @JsonProperty("name")
   public String getName() {
     if (!StringUtils.hasText(name) && position != null) {

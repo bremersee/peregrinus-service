@@ -17,6 +17,7 @@
 package org.bremersee.peregrinus.model;
 
 import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 import java.math.BigDecimal;
 import java.time.OffsetDateTime;
 import java.util.ArrayList;
@@ -33,47 +34,70 @@ import org.bremersee.common.model.PhoneNumber;
 import org.locationtech.jts.geom.Polygon;
 
 /**
+ * The waypoint properties.
+ *
  * @author Christian Bremer
  */
-@ApiModel(
-    value = "WptProperties",
-    description = "Properties of a way point.",
-    parent = FeatureProperties.class)
+@ApiModel(description = "The waypoint properties.")
 @Getter
 @Setter
 @ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
 public class WptProperties extends FeatureProperties<WptSettings> {
 
-  /**
-   * Elevation in meters
-   */
+  @ApiModelProperty("The elevation in meters.")
   private BigDecimal ele;
 
-  /**
-   * Address
-   */
+  @ApiModelProperty("The address of this waypoint.")
   private Address address;
 
-  /**
-   * Phone numbers
-   */
+  @ApiModelProperty("The phone numbers")
   private List<PhoneNumber> phoneNumbers;
 
+  @ApiModelProperty("The polygon of the building.")
   private Polygon area;
 
+  @ApiModelProperty("The OSM ID.")
   private String osmId;
 
+  @ApiModelProperty("The OSM type.")
   private String osmType;
 
+  @ApiModelProperty("The OSM place ID.")
   private String osmPlaceId;
 
+  @ApiModelProperty("The OSM category.")
   private String osmCategory;
 
+  /**
+   * Instantiates new waypoint properties.
+   */
   public WptProperties() {
     setSettings(new WptSettings());
   }
 
+  /**
+   * Instantiates new waypoint properties.
+   *
+   * @param acl                  the acl
+   * @param created              the created
+   * @param createdBy            the created by
+   * @param modified             the modified
+   * @param modifiedBy           the modified by
+   * @param name                 the name
+   * @param plainTextDescription the plain text description
+   * @param markdownDescription  the markdown description
+   * @param links                the links
+   * @param settings             the settings
+   * @param ele                  the ele
+   * @param address              the address
+   * @param phoneNumbers         the phone numbers
+   * @param area                 the area
+   * @param osmId                the osm id
+   * @param osmType              the osm type
+   * @param osmPlaceId           the osm place id
+   * @param osmCategory          the osm category
+   */
   @Builder
   public WptProperties(
       AccessControlList acl,
@@ -84,10 +108,7 @@ public class WptProperties extends FeatureProperties<WptSettings> {
       String name,
       String plainTextDescription,
       String markdownDescription,
-      String internalComments,
       List<Link> links,
-      OffsetDateTime departureTime,
-      OffsetDateTime arrivalTime,
       WptSettings settings,
       BigDecimal ele,
       Address address,
@@ -99,7 +120,7 @@ public class WptProperties extends FeatureProperties<WptSettings> {
       String osmCategory) {
 
     super(acl, created, createdBy, modified, modifiedBy, name, plainTextDescription,
-        markdownDescription, internalComments, links, departureTime, arrivalTime, settings);
+        markdownDescription, links, settings);
     setEle(ele);
     setAddress(address);
     setPhoneNumbers(phoneNumbers);
@@ -110,6 +131,23 @@ public class WptProperties extends FeatureProperties<WptSettings> {
     setOsmCategory(osmCategory);
   }
 
+  /**
+   * Gets phone numbers.
+   *
+   * @return the phone numbers
+   */
+  public List<PhoneNumber> getPhoneNumbers() {
+    if (phoneNumbers == null) {
+      phoneNumbers = new ArrayList<>();
+    }
+    return phoneNumbers;
+  }
+
+  /**
+   * Sets phone numbers.
+   *
+   * @param phoneNumbers the phone numbers
+   */
   public void setPhoneNumbers(List<PhoneNumber> phoneNumbers) {
     if (phoneNumbers == null) {
       this.phoneNumbers = new ArrayList<>();

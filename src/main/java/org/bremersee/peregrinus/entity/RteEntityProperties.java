@@ -54,14 +54,14 @@ public class RteEntityProperties extends FeatureEntityProperties {
       String name,
       String plainTextDescription,
       String markdownDescription,
-      String internalComments,
       List<Link> links,
+      AddressEntity address,
       OffsetDateTime departureTime,
       OffsetDateTime arrivalTime,
       List<RteSeg> rteSegments) {
 
     super(acl, created, createdBy, modified, modifiedBy, name, plainTextDescription,
-        markdownDescription, internalComments, links, departureTime, arrivalTime);
+        markdownDescription, links, address, departureTime, arrivalTime);
     setRteSegments(rteSegments);
   }
 

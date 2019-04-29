@@ -16,13 +16,14 @@
 
 package org.bremersee.peregrinus.model;
 
-import com.fasterxml.jackson.annotation.JsonAutoDetect;
-import com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonSubTypes.Type;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 import java.time.Clock;
 import java.time.OffsetDateTime;
 import lombok.EqualsAndHashCode;
@@ -32,14 +33,14 @@ import lombok.ToString;
 import org.bremersee.common.model.AccessControlList;
 
 /**
+ * The tree node.
+ *
+ * @param <S> the node settings type parameter
  * @author Christian Bremer
  */
-@JsonAutoDetect(
-    fieldVisibility = Visibility.ANY,
-    getterVisibility = Visibility.NONE,
-    setterVisibility = Visibility.NONE)
+@ApiModel(description = "The tree node.", discriminator = "_type")
 @JsonInclude(Include.NON_EMPTY)
-@JsonTypeInfo(use = JsonTypeInfo.Id.NAME, property = "type", visible = true)
+@JsonTypeInfo(use = JsonTypeInfo.Id.NAME, property = "_type", visible = true)
 @JsonSubTypes({
     @Type(value = Branch.class, name = "branch"),
     @Type(value = FeatureLeaf.class, name = "feature-leaf")
@@ -50,24 +51,37 @@ import org.bremersee.common.model.AccessControlList;
 @ToString
 public abstract class Node<S extends NodeSettings> {
 
+  @ApiModelProperty("The node ID.")
   private String id;
 
+  @ApiModelProperty("The date of creation.")
   private OffsetDateTime created;
 
+  @ApiModelProperty("The user ID of the creator.")
   private String createdBy;
 
+  @ApiModelProperty("The date of last modification.")
   private OffsetDateTime modified;
 
+  @ApiModelProperty("The ID of the user who made the last modification.")
   private String modifiedBy;
 
+  @ApiModelProperty("The access control list.")
   private AccessControlList acl;
 
+  @ApiModelProperty("The node settings.")
   private S settings;
 
+  @ApiModelProperty("The parent ID.")
   private String parentId;
 
+  @ApiModelProperty(value = "The name.", required = true)
+  @JsonProperty(value = "name", required = true)
   private String name;
 
+  /**
+   * Instantiates a new tree node.
+   */
   Node() {
     final OffsetDateTime now = OffsetDateTime.now(Clock.systemUTC());
     created = now;
@@ -75,6 +89,19 @@ public abstract class Node<S extends NodeSettings> {
     acl = new AccessControlList();
   }
 
+  /**
+   * Instantiates a new tree node.
+   *
+   * @param id         the id
+   * @param created    the created
+   * @param createdBy  the created by
+   * @param modified   the modified
+   * @param modifiedBy the modified by
+   * @param acl        the acl
+   * @param settings   the settings
+   * @param parentId   the parent id
+   * @param name       the name
+   */
   Node(
       String id,
       OffsetDateTime created,
@@ -100,24 +127,44 @@ public abstract class Node<S extends NodeSettings> {
     setName(name);
   }
 
+  /**
+   * Sets created.
+   *
+   * @param created the created
+   */
   public void setCreated(final OffsetDateTime created) {
     if (created != null) {
       this.created = created;
     }
   }
 
+  /**
+   * Sets modified.
+   *
+   * @param modified the modified
+   */
   public void setModified(final OffsetDateTime modified) {
     if (modified != null) {
       this.modified = modified;
     }
   }
 
+  /**
+   * Sets acl.
+   *
+   * @param acl the acl
+   */
   public void setAcl(final AccessControlList acl) {
     if (acl != null) {
       this.acl = acl;
     }
   }
 
+  /**
+   * Sets settings.
+   *
+   * @param settings the settings
+   */
   public void setSettings(final S settings) {
     if (settings != null) {
       this.settings = settings;

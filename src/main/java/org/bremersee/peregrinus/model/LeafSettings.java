@@ -16,6 +16,7 @@
 
 package org.bremersee.peregrinus.model;
 
+import io.swagger.annotations.ApiModel;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -25,6 +26,7 @@ import lombok.ToString;
 /**
  * @author Christian Bremer
  */
+@ApiModel(description = "The tree leaf settings.")
 @Getter
 @Setter
 @EqualsAndHashCode(callSuper = true)

@@ -22,10 +22,7 @@
       "name" : "Anna Livia",
       "plainTextDescription" : "Seerosenweg 5\n91056, Erlangen - Dechsendorf, Erlangen, DEU",
       "markdownDescription" : "Seerosenweg 5\n91056, Erlangen - Dechsendorf, Erlangen, DEU",
-      "internalComments" : null,
       "links" : [ ],
-      "departureTime" : null,
-      "arrivalTime" : null,
       "settings" : {
         "_type" : "Wpt"
       },

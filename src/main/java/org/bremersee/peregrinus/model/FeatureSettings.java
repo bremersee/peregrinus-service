@@ -16,14 +16,13 @@
 
 package org.bremersee.peregrinus.model;
 
-import com.fasterxml.jackson.annotation.JsonAutoDetect;
-import com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonSubTypes.Type;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -31,20 +30,18 @@ import lombok.Setter;
 import lombok.ToString;
 
 /**
+ * The GeoJSON feature settings.
+ *
  * @author Christian Bremer
  */
-@ApiModel(value = "FeatureSettings", description = "Common settings of a GeoJSON feature.")
-@JsonAutoDetect(
-    fieldVisibility = Visibility.ANY,
-    getterVisibility = Visibility.NONE,
-    setterVisibility = Visibility.NONE)
-@JsonInclude(Include.NON_EMPTY)
+@ApiModel(description = "Common settings of a GeoJSON feature.", discriminator = "_type")
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, property = "_type")
 @JsonSubTypes({
     @Type(value = WptSettings.class, name = Feature.WPT_TYPE),
     @Type(value = TrkSettings.class, name = Feature.TRK_TYPE),
     @Type(value = RteSettings.class, name = Feature.RTE_TYPE)
 })
+@JsonInclude(Include.NON_EMPTY)
 @Getter
 @Setter
 @EqualsAndHashCode
@@ -52,12 +49,22 @@ import lombok.ToString;
 @NoArgsConstructor
 public abstract class FeatureSettings {
 
+  @ApiModelProperty("The settings ID.")
   private String id;
 
+  @ApiModelProperty("The feature ID.")
   private String featureId;
 
+  @ApiModelProperty("The user ID.")
   private String userId;
 
+  /**
+   * Instantiates new GeoJSON feature settings.
+   *
+   * @param id        the id
+   * @param featureId the feature id
+   * @param userId    the user id
+   */
   public FeatureSettings(String id, String featureId, String userId) {
     this.id = id;
     this.featureId = featureId;

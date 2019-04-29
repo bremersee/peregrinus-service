@@ -24,11 +24,16 @@ import java.util.Map;
 import org.bremersee.geojson.GeoJsonObjectMapperModule;
 
 /**
+ * The object mapper module of the peregrinus project.
+ *
  * @author Christian Bremer
  */
 @SuppressWarnings("unused")
 public class PeregrinusObjectMapperModule extends SimpleModule {
 
+  /**
+   * Instantiates a new peregrinus object mapper module.
+   */
   public PeregrinusObjectMapperModule() {
     super("PeregrinusModule", getVersion(), getDeserializers());
   }

@@ -30,6 +30,7 @@ import org.bremersee.security.access.AclBuilder;
 import org.bremersee.security.access.PermissionConstants;
 import org.springframework.data.annotation.TypeAlias;
 import org.springframework.data.mongodb.core.index.Indexed;
+import org.springframework.data.mongodb.core.index.TextIndexed;
 
 /**
  * @author Christian Bremer
@@ -52,26 +53,22 @@ public abstract class FeatureEntityProperties {
 
   private String modifiedBy;
 
-  @Indexed
+  @TextIndexed(weight = 4f)
   private String name;
 
+  @TextIndexed
   private String plainTextDescription; // desc == cmt
 
+  @TextIndexed(weight = 2f)
   private String markdownDescription;
-
-  private String internalComments;
 
   private List<Link> links;
 
-  /**
-   * Start time of tracks.
-   */
+  private AddressEntity address;
+
   @Indexed
   private OffsetDateTime departureTime;
 
-  /**
-   * Stop time of tracks.
-   */
   @Indexed
   private OffsetDateTime arrivalTime;
 
@@ -92,8 +89,8 @@ public abstract class FeatureEntityProperties {
       String name,
       String plainTextDescription,
       String markdownDescription,
-      String internalComments,
       List<Link> links,
+      AddressEntity address,
       OffsetDateTime departureTime,
       OffsetDateTime arrivalTime) {
 
@@ -105,8 +102,8 @@ public abstract class FeatureEntityProperties {
     setName(name);
     setPlainTextDescription(plainTextDescription);
     setMarkdownDescription(markdownDescription);
-    setInternalComments(internalComments);
     setLinks(links);
+    setAddress(address);
     setDepartureTime(departureTime);
     setArrivalTime(arrivalTime);
   }

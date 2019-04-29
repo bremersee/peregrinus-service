@@ -17,6 +17,7 @@
 package org.bremersee.peregrinus.model;
 
 import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 import java.math.BigDecimal;
 import java.time.OffsetDateTime;
 import java.util.ArrayList;
@@ -30,29 +31,58 @@ import org.bremersee.common.model.AccessControlList;
 import org.bremersee.common.model.Link;
 
 /**
+ * The track properties.
+ *
  * @author Christian Bremer
  */
-@ApiModel(
-    value = "TrkProperties",
-    description = "Properties of a track.",
-    parent = FeatureProperties.class)
+@ApiModel(description = "The track properties.")
 @Getter
 @Setter
 @ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
 public class TrkProperties extends FeatureProperties<TrkSettings> {
 
+  @ApiModelProperty("The departure time of a track.")
+  private OffsetDateTime departureTime;
+
+  @ApiModelProperty("The arrival time of a track.")
+  private OffsetDateTime arrivalTime;
+
+  @ApiModelProperty("The elevation values of each point in the geometry object.")
   private List<List<BigDecimal>> eleLines;
 
+  @ApiModelProperty("The time stamp of each point in the geometry object.")
   private List<List<OffsetDateTime>> timeLines;
 
+  /**
+   * Instantiates new track properties.
+   */
   public TrkProperties() {
     eleLines = new ArrayList<>();
     timeLines = new ArrayList<>();
     setSettings(new TrkSettings());
   }
 
+  /**
+   * Instantiates new track properties.
+   *
+   * @param acl                  the acl
+   * @param created              the created
+   * @param createdBy            the created by
+   * @param modified             the modified
+   * @param modifiedBy           the modified by
+   * @param name                 the name
+   * @param plainTextDescription the plain text description
+   * @param markdownDescription  the markdown description
+   * @param links                the links
+   * @param settings             the settings
+   * @param departureTime        the departure time
+   * @param arrivalTime          the arrival time
+   * @param eleLines             the ele lines
+   * @param timeLines            the time lines
+   */
   @Builder
+  @SuppressWarnings("unused")
   public TrkProperties(
       AccessControlList acl,
       OffsetDateTime created,
@@ -62,20 +92,26 @@ public class TrkProperties extends FeatureProperties<TrkSettings> {
       String name,
       String plainTextDescription,
       String markdownDescription,
-      String internalComments,
       List<Link> links,
+      TrkSettings settings,
       OffsetDateTime departureTime,
       OffsetDateTime arrivalTime,
-      TrkSettings settings,
       List<List<BigDecimal>> eleLines,
       List<List<OffsetDateTime>> timeLines) {
 
     super(acl, created, createdBy, modified, modifiedBy, name, plainTextDescription,
-        markdownDescription, internalComments, links, departureTime, arrivalTime, settings);
+        markdownDescription, links, settings);
+    setDepartureTime(departureTime);
+    setArrivalTime(arrivalTime);
     setEleLines(eleLines);
     setTimeLines(timeLines);
   }
 
+  /**
+   * Sets elevation values of each point in the geometry object.
+   *
+   * @param eleLines the elevation values
+   */
   public void setEleLines(List<List<BigDecimal>> eleLines) {
     if (eleLines == null) {
       this.eleLines = new ArrayList<>();
@@ -84,6 +120,11 @@ public class TrkProperties extends FeatureProperties<TrkSettings> {
     }
   }
 
+  /**
+   * Sets time stamps of each point in the geometry object.
+   *
+   * @param timeLines the time stamps
+   */
   public void setTimeLines(List<List<OffsetDateTime>> timeLines) {
     if (timeLines == null) {
       this.timeLines = new ArrayList<>();

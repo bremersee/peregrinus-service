@@ -18,6 +18,7 @@ package org.bremersee.peregrinus.service;
 
 import static org.bremersee.security.access.PermissionConstants.WRITE;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -25,17 +26,22 @@ import java.util.Set;
 import javax.validation.constraints.NotNull;
 import lombok.extern.slf4j.Slf4j;
 import org.bremersee.exception.ServiceException;
+import org.bremersee.gpx.model.Gpx;
 import org.bremersee.peregrinus.entity.AclEntity;
 import org.bremersee.peregrinus.entity.FeatureEntity;
 import org.bremersee.peregrinus.entity.FeatureEntitySettings;
 import org.bremersee.peregrinus.model.Feature;
 import org.bremersee.peregrinus.model.FeatureSettings;
+import org.bremersee.peregrinus.model.gpx.GpxExportSettings;
 import org.bremersee.peregrinus.repository.FeatureRepository;
 import org.bremersee.peregrinus.service.adapter.FeatureAdapter;
 import org.bremersee.security.access.AclMapper;
+import org.bremersee.security.access.PermissionConstants;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
+import reactor.util.function.Tuples;
 
 /**
  * @author Christian Bremer
@@ -48,12 +54,16 @@ public class FeatureServiceImpl extends AbstractServiceImpl implements FeatureSe
 
   private FeatureRepository featureRepository;
 
+  private ConverterService converterService;
+
   public FeatureServiceImpl(
       AclMapper<AclEntity> aclMapper,
       FeatureRepository featureRepository,
-      List<FeatureAdapter> featureAdapters) {
+      List<FeatureAdapter> featureAdapters,
+      ConverterService converterService) {
     super(aclMapper);
     this.featureRepository = featureRepository;
+    this.converterService = converterService;
     for (final FeatureAdapter featureAdapter : featureAdapters) {
       for (final String key : featureAdapter.getSupportedKeys()) {
         featureAdapterMap.put(key, featureAdapter);
@@ -124,7 +134,41 @@ public class FeatureServiceImpl extends AbstractServiceImpl implements FeatureSe
   }
 
   @Override
+  public Flux<Feature> findFeaturesById(
+      Set<String> featureIds,
+      String userId,
+      Set<String> roles,
+      Set<String> groups) {
+
+    final List<String> ids = new ArrayList<>(featureIds);
+    return featureRepository
+        .findFeaturesByIds(ids, PermissionConstants.READ, true, userId, roles, groups)
+        .flatMap(featureEntity -> featureRepository
+            .findFeatureEntitySettings(featureEntity.getId(), userId)
+            .switchIfEmpty(featureRepository
+                .persistFeatureSettings(getFeatureAdapter(featureEntity)
+                    .buildFeatureEntitySettings(featureEntity, userId)))
+            .map(featureEntitySettings -> Tuples.of(featureEntity, featureEntitySettings)))
+        .flatMap(tuple -> getFeatureAdapter(tuple.getT1())
+            .buildFeature(tuple.getT1(), tuple.getT2()));
+  }
+
+  @Override
   public Mono<Boolean> renameFeature(String id, String name, @NotNull String userId) {
     return featureRepository.renameFeature(id, name, userId);
   }
+
+  @Override
+  public Mono<Gpx> exportGpx(
+      Set<String> featureIds,
+      GpxExportSettings exportSettings,
+      String userId,
+      Set<String> roles,
+      Set<String> groups) {
+
+    return findFeaturesById(featureIds, userId, roles, groups)
+        .collectList()
+        .map(features -> converterService.convertFeaturesToGpx(features, exportSettings));
+  }
+
 }

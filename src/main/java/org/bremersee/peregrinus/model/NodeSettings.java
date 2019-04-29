@@ -16,13 +16,13 @@
 
 package org.bremersee.peregrinus.model;
 
-import com.fasterxml.jackson.annotation.JsonAutoDetect;
-import com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonSubTypes.Type;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 import lombok.AccessLevel;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -33,12 +33,9 @@ import lombok.ToString;
 /**
  * @author Christian Bremer
  */
-@JsonAutoDetect(
-    fieldVisibility = Visibility.ANY,
-    getterVisibility = Visibility.NONE,
-    setterVisibility = Visibility.NONE)
+@ApiModel(description = "The node settings.", discriminator = "_type")
 @JsonInclude(Include.NON_EMPTY)
-@JsonTypeInfo(use = JsonTypeInfo.Id.NAME, property = "type", visible = true)
+@JsonTypeInfo(use = JsonTypeInfo.Id.NAME, property = "_type", visible = true)
 @JsonSubTypes({
     @Type(value = BranchSettings.class, name = "branch-settings"),
     @Type(value = FeatureLeafSettings.class, name = "feature-leaf-settings")
@@ -50,15 +47,16 @@ import lombok.ToString;
 @NoArgsConstructor(access = AccessLevel.PACKAGE)
 public class NodeSettings {
 
+  @ApiModelProperty("The settings ID.")
   private String id;
 
+  @ApiModelProperty("The node ID.")
   private String nodeId;
 
+  @ApiModelProperty("The user ID.")
   private String userId;
 
-  // TODO state: new, normal, deleted (, deletion_accepted = remove)
-
-  NodeSettings(String id, String nodeId, String userId) {
+  public NodeSettings(String id, String nodeId, String userId) {
     this.id = id;
     this.nodeId = nodeId;
     this.userId = userId;

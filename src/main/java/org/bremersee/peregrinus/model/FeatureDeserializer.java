@@ -31,10 +31,15 @@ import org.locationtech.jts.geom.Point;
 import org.springframework.util.StringUtils;
 
 /**
+ * The GeoJSON feature deserializer.
+ *
  * @author Christian Bremer
  */
 public class FeatureDeserializer extends StdDeserializer<Feature> {
 
+  /**
+   * Instantiates a new GeoJSOn feature deserializer.
+   */
   @SuppressWarnings("WeakerAccess")
   public FeatureDeserializer() {
     super(Feature.class);
@@ -142,8 +147,16 @@ public class FeatureDeserializer extends StdDeserializer<Feature> {
     return feature;
   }
 
+  /**
+   * The GeoJSON feature parser exception.
+   */
   public static class FeatureParserException extends JsonProcessingException {
 
+    /**
+     * Instantiates a new GeoJSOn feature parser exception.
+     *
+     * @param msg the msg
+     */
     FeatureParserException(String msg) {
       super(msg);
     }

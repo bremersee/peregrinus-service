@@ -23,8 +23,8 @@ import org.bremersee.peregrinus.model.Feature;
 import org.bremersee.peregrinus.model.FeatureCollection;
 import org.bremersee.peregrinus.model.Rte;
 import org.bremersee.peregrinus.model.Trk;
-import org.bremersee.peregrinus.model.garmin.ExportSettings;
-import org.bremersee.peregrinus.model.garmin.ImportSettings;
+import org.bremersee.peregrinus.model.gpx.GpxExportSettings;
+import org.bremersee.peregrinus.model.gpx.GpxImportSettings;
 import org.springframework.validation.annotation.Validated;
 
 /**
@@ -39,11 +39,11 @@ public interface ConverterService {
   @NotNull
   Gpx convertFeaturesToGpx(
       @NotNull Collection<? extends Feature> features,
-      @NotNull ExportSettings exportSettings);
+      @NotNull GpxExportSettings exportSettings);
 
   @NotNull
   FeatureCollection convertGpxToFeatures(
       @NotNull Gpx gpx,
-      @NotNull ImportSettings importSettings);
+      @NotNull GpxImportSettings importSettings);
 
 }

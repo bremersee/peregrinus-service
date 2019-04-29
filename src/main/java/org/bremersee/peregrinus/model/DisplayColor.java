@@ -16,6 +16,8 @@
 
 package org.bremersee.peregrinus.model;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonValue;
 import lombok.Getter;
 import org.bremersee.garmin.gpx.v3.model.ext.DisplayColorT;
 
@@ -70,6 +72,22 @@ public enum DisplayColor {
     this.value = value;
     this.garmin = garmin;
     this.garminOrder = garminOrder;
+  }
+
+  @Override
+  @JsonValue
+  public String toString() {
+    return value;
+  }
+
+  @JsonCreator
+  public static DisplayColor fromValue(String value) {
+    for (DisplayColor e : DisplayColor.values()) {
+      if (e.value.equalsIgnoreCase(value)) {
+        return e;
+      }
+    }
+    return null;
   }
 
   public static DisplayColor findByGarminDisplayColor(

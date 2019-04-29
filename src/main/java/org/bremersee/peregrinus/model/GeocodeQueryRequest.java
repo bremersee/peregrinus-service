@@ -16,11 +16,18 @@
 
 package org.bremersee.peregrinus.model;
 
+import static org.bremersee.peregrinus.model.ProviderConstants.GOOGLE;
+import static org.bremersee.peregrinus.model.ProviderConstants.NOMINATIM;
+import static org.bremersee.peregrinus.model.ProviderConstants.TOMTOM;
+
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonSubTypes.Type;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.fasterxml.jackson.annotation.JsonTypeInfo.Id;
+import io.swagger.annotations.ApiModel;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -35,12 +42,14 @@ import org.bremersee.peregrinus.model.tomtom.TomTomGeocodeQueryRequest;
 /**
  * @author Christian Bremer
  */
+@ApiModel(description = "Geocoding request.", discriminator = "provider")
 @JsonTypeInfo(use = Id.NAME, property = "provider")
 @JsonSubTypes({
-    @Type(value = GoogleGeocodeQueryRequest.class, name = "GOOGLE"),
-    @Type(value = NominatimGeocodeQueryRequest.class, name = "NOMINATIM"),
-    @Type(value = TomTomGeocodeQueryRequest.class, name = "TOMTOM")
+    @Type(value = GoogleGeocodeQueryRequest.class, name = GOOGLE),
+    @Type(value = NominatimGeocodeQueryRequest.class, name = NOMINATIM),
+    @Type(value = TomTomGeocodeQueryRequest.class, name = TOMTOM)
 })
+@JsonInclude(Include.NON_EMPTY)
 @Getter
 @Setter
 @EqualsAndHashCode(callSuper = true)

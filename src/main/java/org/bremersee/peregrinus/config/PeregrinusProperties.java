@@ -32,8 +32,4 @@ public class PeregrinusProperties {
 
   private String groupmanBaseUri;
 
-  private String tomTomKey;
-
-  private String googleKey;
-
 }

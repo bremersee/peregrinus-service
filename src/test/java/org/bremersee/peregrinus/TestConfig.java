@@ -16,10 +16,19 @@
 
 package org.bremersee.peregrinus;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.databind.util.StdDateFormat;
+import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import java.util.Locale;
 import java.util.ServiceLoader;
+import java.util.TimeZone;
 import lombok.Getter;
+import org.bremersee.geojson.GeoJsonObjectMapperModule;
 import org.bremersee.peregrinus.config.MapperConfiguration;
 import org.bremersee.peregrinus.entity.AclEntity;
+import org.bremersee.peregrinus.model.PeregrinusObjectMapperModule;
 import org.bremersee.security.access.AclMapper;
 import org.bremersee.xml.JaxbContextBuilder;
 import org.bremersee.xml.JaxbContextDataProvider;
@@ -31,6 +40,9 @@ import org.modelmapper.ModelMapper;
 public abstract class TestConfig {
 
   @Getter
+  private static final ObjectMapper objectMapper;
+
+  @Getter
   private static final JaxbContextBuilder jaxbContextBuilder;
 
   @Getter
@@ -40,6 +52,18 @@ public abstract class TestConfig {
   private static final AclMapper<AclEntity> aclMapper;
 
   static {
+    objectMapper = new ObjectMapper();
+    objectMapper.registerModules(
+        new Jdk8Module(),
+        new JavaTimeModule(),
+        new GeoJsonObjectMapperModule(),
+        new PeregrinusObjectMapperModule());
+    objectMapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
+    objectMapper.enable(SerializationFeature.WRITE_DATES_WITH_ZONE_ID);
+    objectMapper.setDateFormat(new StdDateFormat());
+    objectMapper.setTimeZone(TimeZone.getTimeZone("GMT"));
+    objectMapper.setLocale(Locale.GERMANY);
+
     MapperConfiguration modelMapperConfiguration = new MapperConfiguration();
     jaxbContextBuilder = JaxbContextBuilder.builder().processAll(
         ServiceLoader.load(JaxbContextDataProvider.class));

@@ -16,6 +16,8 @@
 
 package org.bremersee.peregrinus.model;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonSubTypes.Type;
@@ -35,60 +37,61 @@ import org.bremersee.common.model.AccessControlList;
 import org.bremersee.common.model.Link;
 
 /**
+ * The GeoJSON feature properties.
+ *
+ * @param <S> the settings type parameter
  * @author Christian Bremer
  */
-@ApiModel(
-    value = "FeatureProperties",
-    description = "Common properties of a GeoJSON feature.",
-    discriminator = "_type",
-    subTypes = {
-        WptProperties.class,
-        TrkProperties.class,
-        RteProperties.class
-    })
+@ApiModel(description = "Common properties of a GeoJSON feature.", discriminator = "_type")
 @JsonTypeInfo(use = Id.NAME, property = "_type")
 @JsonSubTypes({
     @Type(value = WptProperties.class, name = Feature.WPT_TYPE),
     @Type(value = TrkProperties.class, name = Feature.TRK_TYPE),
     @Type(value = RteProperties.class, name = Feature.RTE_TYPE)
 })
+@JsonInclude(Include.NON_EMPTY)
 @Getter
 @Setter
 @EqualsAndHashCode
 @ToString
 public abstract class FeatureProperties<S extends FeatureSettings> {
 
+  @ApiModelProperty("The access control list.")
   private AccessControlList acl;
 
+  @ApiModelProperty("The date of creation.")
   private OffsetDateTime created;
 
+  @ApiModelProperty("The user ID of the creator.")
   private String createdBy;
 
+  @ApiModelProperty("The date of last modification.")
   private OffsetDateTime modified;
 
+  @ApiModelProperty("The ID of the user who made the last modification.")
   private String modifiedBy;
 
   @ApiModelProperty(value = "The name of the feature.", required = true)
   @JsonProperty(value = "name", required = true)
   private String name;
 
+  @ApiModelProperty("The plain text description.")
   private String plainTextDescription;
 
+  @ApiModelProperty("The markdown description.")
   private String markdownDescription;
 
-  private String internalComments;
-
+  @ApiModelProperty("Links to other resources.")
   private List<Link> links;
-
-  private OffsetDateTime departureTime;
-
-  private OffsetDateTime arrivalTime;
 
   @ApiModelProperty(
       value = "The private settings.",
       dataType = "org.bremersee.peregrinus.model.FeatureLeafSettings")
   private S settings;
 
+  /**
+   * Instantiates new GeoJSON feature properties.
+   */
   public FeatureProperties() {
     final OffsetDateTime now = OffsetDateTime.now(Clock.systemUTC());
     created = now;
@@ -97,6 +100,20 @@ public abstract class FeatureProperties<S extends FeatureSettings> {
     links = new ArrayList<>();
   }
 
+  /**
+   * Instantiates new GeoJSON feature properties.
+   *
+   * @param acl                  the acl
+   * @param created              the created
+   * @param createdBy            the created by
+   * @param modified             the modified
+   * @param modifiedBy           the modified by
+   * @param name                 the name
+   * @param plainTextDescription the plain text description
+   * @param markdownDescription  the markdown description
+   * @param links                the links
+   * @param settings             the settings
+   */
   public FeatureProperties(
       AccessControlList acl,
       OffsetDateTime created,
@@ -106,10 +123,7 @@ public abstract class FeatureProperties<S extends FeatureSettings> {
       String name,
       String plainTextDescription,
       String markdownDescription,
-      String internalComments,
       List<Link> links,
-      OffsetDateTime departureTime,
-      OffsetDateTime arrivalTime,
       S settings) {
 
     setAcl(acl);
@@ -120,31 +134,48 @@ public abstract class FeatureProperties<S extends FeatureSettings> {
     setName(name);
     setPlainTextDescription(plainTextDescription);
     setMarkdownDescription(markdownDescription);
-    setInternalComments(internalComments);
     setLinks(links);
-    setDepartureTime(departureTime);
-    setArrivalTime(arrivalTime);
     setSettings(settings);
   }
 
+  /**
+   * Sets acl.
+   *
+   * @param acl the acl
+   */
   public void setAcl(AccessControlList acl) {
     if (acl != null) {
       this.acl = acl;
     }
   }
 
+  /**
+   * Sets created.
+   *
+   * @param created the created
+   */
   public void setCreated(OffsetDateTime created) {
     if (created != null) {
       this.created = created;
     }
   }
 
+  /**
+   * Sets modified.
+   *
+   * @param modified the modified
+   */
   public void setModified(OffsetDateTime modified) {
     if (modified != null) {
       this.modified = modified;
     }
   }
 
+  /**
+   * Sets links.
+   *
+   * @param links the links
+   */
   public void setLinks(List<Link> links) {
     if (links == null) {
       this.links = new ArrayList<>();
@@ -153,18 +184,29 @@ public abstract class FeatureProperties<S extends FeatureSettings> {
     }
   }
 
+  /**
+   * Sets settings.
+   *
+   * @param settings the settings
+   */
   public void setSettings(S settings) {
     if (settings != null) {
       this.settings = settings;
     }
   }
 
-  @SuppressWarnings("WeakerAccess")
+  /**
+   * No acl.
+   */
+  @SuppressWarnings({"unused"})
   protected void noAcl() {
     this.acl = null;
   }
 
-  @SuppressWarnings("WeakerAccess")
+  /**
+   * No settings.
+   */
+  @SuppressWarnings({"unused"})
   protected void noSettings() {
     this.settings = null;
   }

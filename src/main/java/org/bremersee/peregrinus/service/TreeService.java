@@ -19,10 +19,12 @@ package org.bremersee.peregrinus.service;
 import java.util.Collections;
 import java.util.Set;
 import javax.validation.constraints.NotNull;
+import org.bremersee.gpx.model.Gpx;
 import org.bremersee.peregrinus.model.Branch;
 import org.bremersee.peregrinus.model.Feature;
 import org.bremersee.peregrinus.model.FeatureCollection;
 import org.bremersee.peregrinus.model.FeatureLeaf;
+import org.bremersee.peregrinus.model.gpx.GpxImportSettings;
 import org.hibernate.validator.constraints.Length;
 import org.springframework.validation.annotation.Validated;
 import reactor.core.publisher.Flux;
@@ -59,6 +61,14 @@ public interface TreeService {
   Flux<FeatureLeaf> createFeatureLeafs(
       @NotNull String parentId,
       @NotNull FeatureCollection featureCollection,
+      @NotNull String userId,
+      @NotNull Set<String> roles,
+      @NotNull Set<String> groups);
+
+  Flux<FeatureLeaf> importGpx(
+      @NotNull String parentId,
+      @NotNull Gpx gpx,
+      @NotNull GpxImportSettings importSettings,
       @NotNull String userId,
       @NotNull Set<String> roles,
       @NotNull Set<String> groups);

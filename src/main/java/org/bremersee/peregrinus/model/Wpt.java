@@ -16,21 +16,39 @@
 
 package org.bremersee.peregrinus.model;
 
+import io.swagger.annotations.ApiModel;
 import lombok.Builder;
 import org.locationtech.jts.geom.Geometry;
 import org.locationtech.jts.geom.Point;
 
 /**
+ * The waypoint.
+ *
  * @author Christian Bremer
  */
+@ApiModel(description = "The waypoint (a GeoJSON feature with well known properties).")
 public class Wpt extends Feature {
 
+  /**
+   * Instantiates a new waypoint.
+   */
   public Wpt() {
     setProperties(new WptProperties());
   }
 
+  /**
+   * Instantiates a new waypoint.
+   *
+   * @param id         the id
+   * @param geometry   the geometry
+   * @param bbox       the bbox
+   * @param properties the properties
+   */
   @Builder
-  public Wpt(String id, Point geometry, double[] bbox,
+  public Wpt(
+      String id,
+      Point geometry,
+      double[] bbox,
       WptProperties properties) {
     super(id, geometry, bbox, properties);
   }

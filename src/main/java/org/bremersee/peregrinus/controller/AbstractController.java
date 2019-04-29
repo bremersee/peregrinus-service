@@ -16,6 +16,7 @@
 
 package org.bremersee.peregrinus.controller;
 
+import java.util.HashSet;
 import java.util.Set;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -48,15 +49,30 @@ public abstract class AbstractController {
         .flatMap(function);
   }
 
+  <R> Mono<R> oneWithUserIdAndRoles(Function<Auth, ? extends Mono<R>> function) {
+    return ReactiveSecurityContextHolder.getContext()
+        .map(SecurityContext::getAuthentication)
+        .switchIfEmpty(Mono.error(ServiceException.forbidden()))
+        .map(authentication -> new Auth(
+            authentication.getName(),
+            authentication
+                .getAuthorities()
+                .stream()
+                .map(GrantedAuthority::getAuthority)
+                .collect(Collectors.toSet()),
+            new HashSet<>()))
+        .flatMap(function);
+  }
+
   <R> Mono<R> oneWithAuth(Function<Auth, ? extends Mono<R>> function) {
     return ReactiveSecurityContextHolder.getContext()
         .map(SecurityContext::getAuthentication)
+        .switchIfEmpty(Mono.error(ServiceException.forbidden()))
         .zipWith(groupService.getMembershipIds())
         .map(tuple -> new Auth(
             tuple.getT1().getName(),
             toRoles(tuple.getT1()),
             tuple.getT2()))
-        .switchIfEmpty(Mono.error(ServiceException.forbidden()))
         .flatMap(function);
   }
 

@@ -104,7 +104,6 @@ public class TrkAdapter extends AbstractAdapter implements FeatureAdapter {
             .created(trkEntity.getProperties().getCreated())
             .createdBy(trkEntity.getProperties().getCreatedBy())
             .eleLines(trkEntity.getProperties().getEleLines())
-            .internalComments(trkEntity.getProperties().getInternalComments())
             .links(trkEntity.getProperties().getLinks())
             .markdownDescription(trkEntity.getProperties().getMarkdownDescription())
             .modified(trkEntity.getProperties().getModified())
@@ -152,7 +151,6 @@ public class TrkAdapter extends AbstractAdapter implements FeatureAdapter {
             .createdBy(
                 featureEntity != null ? featureEntity.getProperties().getCreatedBy() : userId)
             .eleLines(trkProperties.getEleLines())
-            .internalComments(trkProperties.getInternalComments())
             .links(trkProperties.getLinks())
             .markdownDescription(trkProperties.getMarkdownDescription())
             .modified(OffsetDateTime.now(Clock.systemUTC()))

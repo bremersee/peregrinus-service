@@ -16,19 +16,34 @@
 
 package org.bremersee.peregrinus.model;
 
+import io.swagger.annotations.ApiModel;
 import lombok.Builder;
 import org.locationtech.jts.geom.Geometry;
 import org.locationtech.jts.geom.MultiLineString;
 
 /**
+ * The track.
+ *
  * @author Christian Bremer
  */
+@ApiModel(description = "The track (a GeoJSON feature with well known properties).")
 public class Trk extends Feature {
 
+  /**
+   * Instantiates a new track.
+   */
   public Trk() {
     setProperties(new TrkProperties());
   }
 
+  /**
+   * Instantiates a new track.
+   *
+   * @param id         the id
+   * @param geometry   the geometry
+   * @param bbox       the bbox
+   * @param properties the properties
+   */
   @Builder
   public Trk(String id, MultiLineString geometry, double[] bbox,
       TrkProperties properties) {

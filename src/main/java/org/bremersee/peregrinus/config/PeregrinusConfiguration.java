@@ -18,13 +18,9 @@ package org.bremersee.peregrinus.config;
 
 import lombok.extern.slf4j.Slf4j;
 import org.bremersee.exception.RestApiExceptionParser;
-import org.bremersee.google.maps.GoogleMapsProperties;
 import org.bremersee.groupman.api.GroupControllerApi;
 import org.bremersee.groupman.client.GroupControllerClient;
 import org.bremersee.groupman.mock.GroupControllerMock;
-import org.bremersee.nominatim.NominatimProperties;
-import org.bremersee.nominatim.client.ReactiveNominatimClient;
-import org.bremersee.nominatim.client.ReactiveNominatimClientImpl;
 import org.bremersee.security.reactive.function.client.JwtAuthenticationTokenAppender;
 import org.bremersee.web.reactive.function.client.DefaultWebClientErrorDecoder;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,21 +40,10 @@ public class PeregrinusConfiguration {
 
   private PeregrinusProperties peregrinusProperties;
 
-  private NominatimProperties nominatimProperties;
-
-  private TomTomProperties tomTomProperties;
-
-  private GoogleMapsProperties googleMapsProperties;
-
   @Autowired
   public PeregrinusConfiguration(
       PeregrinusProperties peregrinusProperties) {
     this.peregrinusProperties = peregrinusProperties;
-    this.nominatimProperties = new NominatimProperties();
-    this.tomTomProperties = new TomTomProperties();
-    this.tomTomProperties.setKey(peregrinusProperties.getTomTomKey());
-    this.googleMapsProperties = new GoogleMapsProperties();
-    this.googleMapsProperties.setKey(peregrinusProperties.getGoogleKey());
   }
 
   @Bean
@@ -79,27 +64,5 @@ public class PeregrinusConfiguration {
       return new GroupControllerMock();
     }
   }
-
-  @Bean
-  public ReactiveNominatimClient nominatimService() {
-    return new ReactiveNominatimClientImpl(nominatimProperties, WebClient.builder());
-  }
-
-//  @Bean
-//  public ReactiveGeocodingClient tomTomGeocodingService() {
-//    return new ReactiveGeocodingClientImpl(tomTomProperties, WebClient.builder());
-//  }
-
-//  @Bean
-//  public org.bremersee.google.maps.client.ReactiveGeocodingClient googleGeocodingService() {
-//    return new org.bremersee.google.maps.client.ReactiveGeocodingClientImpl(
-//        googleMapsProperties,
-//        WebClient.builder());
-//  }
-
-//  @Bean
-//  public ReactiveRoutingClient tomTomRoutingService() {
-//    return new ReactiveRoutingClientImpl(tomTomProperties, WebClient.builder());
-//  }
 
 }

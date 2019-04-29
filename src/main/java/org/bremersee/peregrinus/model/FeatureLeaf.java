@@ -16,6 +16,7 @@
 
 package org.bremersee.peregrinus.model;
 
+import io.swagger.annotations.ApiModel;
 import java.time.OffsetDateTime;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
@@ -25,8 +26,11 @@ import lombok.ToString;
 import org.bremersee.common.model.AccessControlList;
 
 /**
+ * The feature leaf.
+ *
  * @author Christian Bremer
  */
+@ApiModel(description = "The feature leaf.")
 @Getter
 @Setter
 @EqualsAndHashCode(callSuper = true)
@@ -35,10 +39,27 @@ public class FeatureLeaf extends Leaf<FeatureLeafSettings> {
 
   private Feature feature;
 
+  /**
+   * Instantiates a new feature leaf.
+   */
   public FeatureLeaf() {
     setSettings(new FeatureLeafSettings());
   }
 
+  /**
+   * Instantiates a new feature leaf.
+   *
+   * @param id         the id
+   * @param created    the created
+   * @param createdBy  the created by
+   * @param modified   the modified
+   * @param modifiedBy the modified by
+   * @param acl        the acl
+   * @param settings   the settings
+   * @param parentId   the parent id
+   * @param name       the name
+   * @param feature    the feature
+   */
   @Builder
   public FeatureLeaf(
       String id,

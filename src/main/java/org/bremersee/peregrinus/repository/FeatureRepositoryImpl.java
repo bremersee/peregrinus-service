@@ -27,6 +27,7 @@ import static org.springframework.data.mongodb.core.query.Query.query;
 
 import java.util.Collection;
 import java.util.Date;
+import java.util.List;
 import javax.validation.constraints.NotNull;
 import org.bremersee.peregrinus.entity.AclEntity;
 import org.bremersee.peregrinus.entity.FeatureEntity;
@@ -35,8 +36,11 @@ import org.bremersee.security.access.AclMapper;
 import org.springframework.data.mongodb.core.ReactiveMongoOperations;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
+import org.springframework.data.mongodb.core.query.TextCriteria;
+import org.springframework.data.mongodb.core.query.TextQuery;
 import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Repository;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 /**
@@ -74,6 +78,21 @@ public class FeatureRepositoryImpl extends AbstractMongoRepository implements Fe
         where(FeatureEntity.ID_PATH).is(id), includePublic, userId, roles, groups, permission);
     return getMongoOperations()
         .findOne(query, FeatureEntity.class);
+  }
+
+  @Override
+  public Flux<FeatureEntity> findFeaturesByIds(
+      @NotNull List<String> ids,
+      @NotNull String permission,
+      boolean includePublic,
+      @NotNull String userId,
+      @NotNull Collection<String> roles,
+      @NotNull Collection<String> groups) {
+
+    final Query query = queryAnd(
+        where(FeatureEntity.ID_PATH).in(ids), includePublic, userId, roles, groups, permission);
+    return getMongoOperations()
+        .find(query, FeatureEntity.class);
   }
 
   @Override

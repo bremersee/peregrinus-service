@@ -16,6 +16,7 @@
 
 package org.bremersee.peregrinus.model;
 
+import io.swagger.annotations.ApiModel;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -23,8 +24,11 @@ import lombok.Setter;
 import lombok.ToString;
 
 /**
+ * The track settings.
+ *
  * @author Christian Bremer
  */
+@ApiModel(description = "The track settings.")
 @Getter
 @Setter
 @ToString(callSuper = true)
@@ -33,11 +37,24 @@ public class TrkSettings extends FeatureSettings {
 
   private DisplayColor displayColor;
 
+  /**
+   * Instantiates new track settings.
+   */
+  @SuppressWarnings("WeakerAccess")
   public TrkSettings() {
     displayColor = DisplayColor.DARK_GRAY;
   }
 
+  /**
+   * Instantiates new track settings.
+   *
+   * @param id           the id
+   * @param featureId    the feature id
+   * @param userId       the user id
+   * @param displayColor the display color
+   */
   @Builder
+  @SuppressWarnings("unused")
   public TrkSettings(
       String id,
       String featureId,
@@ -48,6 +65,11 @@ public class TrkSettings extends FeatureSettings {
     setDisplayColor(displayColor);
   }
 
+  /**
+   * Sets display color.
+   *
+   * @param displayColor the display color
+   */
   public void setDisplayColor(DisplayColor displayColor) {
     if (displayColor != null) {
       this.displayColor = displayColor;

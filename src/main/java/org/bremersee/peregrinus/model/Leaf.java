@@ -16,6 +16,7 @@
 
 package org.bremersee.peregrinus.model;
 
+import io.swagger.annotations.ApiModel;
 import java.time.OffsetDateTime;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -25,8 +26,12 @@ import lombok.ToString;
 import org.bremersee.common.model.AccessControlList;
 
 /**
+ * The tree leaf.
+ *
+ * @param <S> the leaf settings type parameter
  * @author Christian Bremer
  */
+@ApiModel(description = "The tree leaf.")
 @Getter
 @Setter
 @EqualsAndHashCode(callSuper = true)
@@ -34,6 +39,20 @@ import org.bremersee.common.model.AccessControlList;
 @NoArgsConstructor
 public abstract class Leaf<S extends LeafSettings> extends Node<S> {
 
+  /**
+   * Instantiates a new tree leaf.
+   *
+   * @param id         the id
+   * @param created    the created
+   * @param createdBy  the created by
+   * @param modified   the modified
+   * @param modifiedBy the modified by
+   * @param acl        the acl
+   * @param settings   the settings
+   * @param parentId   the parent id
+   * @param name       the name
+   */
+  @SuppressWarnings("WeakerAccess")
   public Leaf(
       String id,
       OffsetDateTime created,

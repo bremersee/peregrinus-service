@@ -24,7 +24,7 @@ import java.util.Map;
 import java.util.Set;
 import org.bremersee.peregrinus.model.GeocodeQueryRequest;
 import org.bremersee.peregrinus.model.Rte;
-import org.bremersee.peregrinus.model.RteCalculationRequest;
+import org.bremersee.peregrinus.model.RteCalcRequest;
 import org.bremersee.peregrinus.service.adapter.RouteAdapter;
 import org.springframework.stereotype.Component;
 import reactor.core.publisher.Mono;
@@ -48,7 +48,7 @@ public class RouteServiceImpl implements RouteService {
   }
 
   @Override
-  public Mono<Rte> calculateRoute(RteCalculationRequest request, String userId, Set<String> roles) {
+  public Mono<Rte> calculateRoute(RteCalcRequest request, String userId, Set<String> roles) {
     return getAdapter(adapterMap, request).calculateRoute(request, userId, roles);
   }
 }

@@ -22,7 +22,6 @@ import java.time.OffsetDateTime;
 import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
@@ -32,7 +31,24 @@ import org.bremersee.common.model.Link;
 import org.bremersee.common.model.PhoneNumber;
 import org.bremersee.common.model.TwoLetterCountryCode;
 import org.bremersee.geojson.utils.GeometryUtils;
+import org.bremersee.peregrinus.entity.AclEntity;
+import org.bremersee.peregrinus.entity.AddressEntity;
+import org.bremersee.peregrinus.entity.BranchEntity;
+import org.bremersee.peregrinus.entity.BranchEntitySettings;
+import org.bremersee.peregrinus.entity.FeatureLeafEntity;
+import org.bremersee.peregrinus.entity.FeatureLeafEntitySettings;
+import org.bremersee.peregrinus.entity.RteEntity;
+import org.bremersee.peregrinus.entity.RteEntityProperties;
+import org.bremersee.peregrinus.entity.RteEntitySettings;
+import org.bremersee.peregrinus.entity.TrkEntity;
+import org.bremersee.peregrinus.entity.TrkEntityProperties;
+import org.bremersee.peregrinus.entity.WptEntity;
+import org.bremersee.peregrinus.entity.WptEntityProperties;
+import org.bremersee.peregrinus.model.Branch;
+import org.bremersee.peregrinus.model.BranchSettings;
 import org.bremersee.peregrinus.model.DisplayColor;
+import org.bremersee.peregrinus.model.FeatureLeaf;
+import org.bremersee.peregrinus.model.FeatureLeafSettings;
 import org.bremersee.peregrinus.model.Rte;
 import org.bremersee.peregrinus.model.RteProperties;
 import org.bremersee.peregrinus.model.RtePt;
@@ -43,22 +59,6 @@ import org.bremersee.peregrinus.model.TrkSettings;
 import org.bremersee.peregrinus.model.Wpt;
 import org.bremersee.peregrinus.model.WptProperties;
 import org.bremersee.peregrinus.model.WptSettings;
-import org.bremersee.peregrinus.entity.RteEntity;
-import org.bremersee.peregrinus.entity.RteEntityProperties;
-import org.bremersee.peregrinus.entity.RteEntitySettings;
-import org.bremersee.peregrinus.entity.TrkEntity;
-import org.bremersee.peregrinus.entity.TrkEntityProperties;
-import org.bremersee.peregrinus.entity.WptEntity;
-import org.bremersee.peregrinus.entity.WptEntityProperties;
-import org.bremersee.peregrinus.entity.AclEntity;
-import org.bremersee.peregrinus.model.Branch;
-import org.bremersee.peregrinus.model.BranchSettings;
-import org.bremersee.peregrinus.model.FeatureLeaf;
-import org.bremersee.peregrinus.model.FeatureLeafSettings;
-import org.bremersee.peregrinus.entity.BranchEntity;
-import org.bremersee.peregrinus.entity.BranchEntitySettings;
-import org.bremersee.peregrinus.entity.FeatureLeafEntity;
-import org.bremersee.peregrinus.entity.FeatureLeafEntitySettings;
 import org.bremersee.security.access.Ace;
 import org.bremersee.security.access.Acl;
 import org.bremersee.security.access.AclBuilder;
@@ -66,7 +66,6 @@ import org.bremersee.security.access.PermissionConstants;
 import org.locationtech.jts.geom.Coordinate;
 import org.locationtech.jts.geom.LineString;
 import org.locationtech.jts.geom.MultiLineString;
-import org.locationtech.jts.geom.Point;
 
 /**
  * @author Christian Bremer
@@ -159,12 +158,11 @@ public abstract class TestData {
             .acl(accessControlDto(ANNAS_FRIEND))
             .address(address())
             .ele(BigDecimal.valueOf(123.4))
-            .internalComments("An internal comment")
             .links(links())
             .markdownDescription("# My Test Waypoint\n\nThis way point is not very interesting.")
             .name("My test wpt")
             .phoneNumbers(phoneNumbers())
-            .plainTextDescription("Imported from garmin ...")
+            .plainTextDescription("Imported from gpx ...")
             .settings(WptSettings.builder()
                 .id(wptSettingsId)
                 .featureId(wptId)
@@ -181,10 +179,9 @@ public abstract class TestData {
         .id(wpt.getId())
         .properties(WptEntityProperties.builder()
             .acl(accessControlEntity(wpt.getProperties().getAcl()))
-            .address(wpt.getProperties().getAddress())
+            .address(addressEntity(wpt.getProperties().getAddress()))
             .created(wpt.getProperties().getCreated())
             .ele(wpt.getProperties().getEle())
-            .internalComments(wpt.getProperties().getInternalComments())
             .links(wpt.getProperties().getLinks())
             .markdownDescription(wpt.getProperties().getMarkdownDescription())
             .modified(wpt.getProperties().getModified())
@@ -245,7 +242,6 @@ public abstract class TestData {
         .properties(TrkProperties.builder()
             .acl(accessControlDto(ANNA))
             .eleLines(trkEleLines())
-            .internalComments("Try this track!")
             .name("My test track")
             .settings(TrkSettings.builder()
                 .displayColor(DisplayColor.DARK_RED)
@@ -270,7 +266,6 @@ public abstract class TestData {
             .acl(accessControlEntity(trk.getProperties().getAcl()))
             .created(trk.getProperties().getCreated())
             .eleLines(trk.getProperties().getEleLines())
-            .internalComments(trk.getProperties().getInternalComments())
             .links(trk.getProperties().getLinks())
             .markdownDescription(trk.getProperties().getMarkdownDescription())
             .modified(trk.getProperties().getModified())
@@ -353,7 +348,6 @@ public abstract class TestData {
         .properties(RteEntityProperties.builder()
             .acl(accessControlEntity(rte.getProperties().getAcl()))
             .created(rte.getProperties().getCreated())
-            .internalComments(rte.getProperties().getInternalComments())
             .links(rte.getProperties().getLinks())
             .markdownDescription(rte.getProperties().getMarkdownDescription())
             .modified(rte.getProperties().getModified())
@@ -453,6 +447,24 @@ public abstract class TestData {
     address.setStreetNumber("4");
     address.setFormattedAddress("Mengstraße 4, 23552 Lübeck");
     return address;
+  }
+
+  public static AddressEntity addressEntity(Address address) {
+    if (address == null) {
+      return null;
+    }
+    return AddressEntity
+        .builder()
+        .city(address.getCity())
+        .country(address.getCountry())
+        .countryCode(address.getCountryCode())
+        .formattedAddress(address.getFormattedAddress())
+        .postalCode(address.getPostalCode())
+        .state(address.getState())
+        .street(address.getStreet())
+        .streetNumber(address.getStreetNumber())
+        .suburb(address.getSuburb())
+        .build();
   }
 
   public static List<Link> links() {

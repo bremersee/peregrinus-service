@@ -16,6 +16,7 @@
 
 package org.bremersee.peregrinus.model;
 
+import io.swagger.annotations.ApiModel;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -24,8 +25,11 @@ import lombok.Setter;
 import lombok.ToString;
 
 /**
+ * The waypoint settings.
+ *
  * @author Christian Bremer
  */
+@ApiModel(description = "The waypoint settings.")
 @Getter
 @Setter
 @ToString(callSuper = true)
@@ -33,7 +37,15 @@ import lombok.ToString;
 @NoArgsConstructor
 public class WptSettings extends FeatureSettings {
 
+  /**
+   * Instantiates new waypoint settings.
+   *
+   * @param id        the id
+   * @param featureId the feature id
+   * @param userId    the user id
+   */
   @Builder
+  @SuppressWarnings("unused")
   public WptSettings(String id, String featureId, String userId) {
     super(id, featureId, userId);
   }

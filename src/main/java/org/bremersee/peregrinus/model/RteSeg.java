@@ -16,6 +16,10 @@
 
 package org.bremersee.peregrinus.model;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
@@ -27,8 +31,12 @@ import lombok.Setter;
 import lombok.ToString;
 
 /**
+ * The route segment.
+ *
  * @author Christian Bremer
  */
+@ApiModel(description = "Route segment.")
+@JsonInclude(Include.NON_EMPTY)
 @Getter
 @Setter
 @EqualsAndHashCode
@@ -36,14 +44,26 @@ import lombok.ToString;
 @NoArgsConstructor
 public class RteSeg {
 
+  @ApiModelProperty("The route points.")
   private List<RtePt> rtePts;
 
+  @ApiModelProperty("The calculation settings of this route segment.")
   private RteSegCalcSettings calculationSettings;
 
+  @ApiModelProperty("Travel time in seconds.")
   private BigInteger travelTimeInSeconds;
 
+  @ApiModelProperty("Length in meters.")
   private BigInteger lengthInMeters;
 
+  /**
+   * Instantiates a new route segment.
+   *
+   * @param rtePts              the rte pts
+   * @param calculationSettings the calculation settings
+   * @param travelTimeInSeconds the travel time in seconds
+   * @param lengthInMeters      the length in meters
+   */
   @Builder
   public RteSeg(
       List<RtePt> rtePts,
@@ -56,6 +76,11 @@ public class RteSeg {
     this.lengthInMeters = lengthInMeters;
   }
 
+  /**
+   * Gets route points.
+   *
+   * @return the route points
+   */
   public List<RtePt> getRtePts() {
     if (rtePts == null) {
       rtePts = new ArrayList<>();
@@ -63,10 +88,20 @@ public class RteSeg {
     return rtePts;
   }
 
+  /**
+   * Has departure route point.
+   *
+   * @return the boolean
+   */
   public boolean hasDepartureRtePtPresent() {
     return findDepartureRtePt() != null;
   }
 
+  /**
+   * Find departure route point.
+   *
+   * @return the rte pt
+   */
   public RtePt findDepartureRtePt() {
     if (rtePts == null || rtePts.isEmpty()) {
       return null;
@@ -74,10 +109,20 @@ public class RteSeg {
     return rtePts.get(0);
   }
 
+  /**
+   * Has arrival route point.
+   *
+   * @return the boolean
+   */
   public boolean hasArrivalRtePtPresent() {
     return findArrivalRtePt() != null;
   }
 
+  /**
+   * Find arrival route point.
+   *
+   * @return the rte pt
+   */
   public RtePt findArrivalRtePt() {
     if (rtePts == null || rtePts.isEmpty()) {
       return null;

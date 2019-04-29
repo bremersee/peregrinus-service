@@ -20,7 +20,7 @@ import java.util.Set;
 import javax.validation.constraints.NotNull;
 import org.bremersee.peregrinus.model.GeocodeQueryRequest;
 import org.bremersee.peregrinus.model.Rte;
-import org.bremersee.peregrinus.model.RteCalculationRequest;
+import org.bremersee.peregrinus.model.RteCalcRequest;
 import reactor.core.publisher.Mono;
 
 /**
@@ -31,6 +31,6 @@ public interface RouteAdapter {
   @NotNull
   Class<? extends GeocodeQueryRequest>[] getSupportedRequestClasses();
 
-  Mono<Rte> calculateRoute(RteCalculationRequest request, String userId, Set<String> roles);
+  Mono<Rte> calculateRoute(RteCalcRequest request, String userId, Set<String> roles);
 
 }

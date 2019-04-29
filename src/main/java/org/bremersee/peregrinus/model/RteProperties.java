@@ -17,6 +17,7 @@
 package org.bremersee.peregrinus.model;
 
 import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 import java.math.BigInteger;
 import java.time.OffsetDateTime;
 import java.util.ArrayList;
@@ -30,26 +31,45 @@ import org.bremersee.common.model.AccessControlList;
 import org.bremersee.common.model.Link;
 
 /**
+ * The route properties.
+ *
  * @author Christian Bremer
  */
-@ApiModel(
-    value = "RteProperties",
-    description = "Properties of a route.",
-    parent = FeatureProperties.class)
+@ApiModel(description = "Route properties.")
 @Getter
 @Setter
 @ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
 public class RteProperties extends FeatureProperties<RteSettings> {
 
+  @ApiModelProperty("The route segments.")
   private List<RteSeg> rteSegments;
 
+  /**
+   * Instantiates new route properties.
+   */
   public RteProperties() {
     setSettings(new RteSettings());
     rteSegments = new ArrayList<>();
   }
 
+  /**
+   * Instantiates new route properties.
+   *
+   * @param acl                  the acl
+   * @param created              the created
+   * @param createdBy            the created by
+   * @param modified             the modified
+   * @param modifiedBy           the modified by
+   * @param name                 the name
+   * @param plainTextDescription the plain text description
+   * @param markdownDescription  the markdown description
+   * @param links                the links
+   * @param settings             the settings
+   * @param rteSegments          the rte segments
+   */
   @Builder
+  @SuppressWarnings("unused")
   public RteProperties(
       AccessControlList acl,
       OffsetDateTime created,
@@ -59,18 +79,20 @@ public class RteProperties extends FeatureProperties<RteSettings> {
       String name,
       String plainTextDescription,
       String markdownDescription,
-      String internalComments,
       List<Link> links,
-      OffsetDateTime departureTime,
-      OffsetDateTime arrivalTime,
       RteSettings settings,
       List<RteSeg> rteSegments) {
 
     super(acl, created, createdBy, modified, modifiedBy, name, plainTextDescription,
-        markdownDescription, internalComments, links, departureTime, arrivalTime, settings);
+        markdownDescription, links, settings);
     setRteSegments(rteSegments);
   }
 
+  /**
+   * Sets rte segments.
+   *
+   * @param rteSegments the rte segments
+   */
   public void setRteSegments(List<RteSeg> rteSegments) {
     if (rteSegments == null) {
       this.rteSegments = new ArrayList<>();
@@ -79,6 +101,11 @@ public class RteProperties extends FeatureProperties<RteSettings> {
     }
   }
 
+  /**
+   * Calculate travel time in seconds.
+   *
+   * @return travel time in seconds
+   */
   public BigInteger calculateTravelTimeInSeconds() {
     BigInteger sum = BigInteger.valueOf(0);
     for (RteSeg rteSegment : rteSegments) {
@@ -91,6 +118,11 @@ public class RteProperties extends FeatureProperties<RteSettings> {
     return sum;
   }
 
+  /**
+   * Calculate length in meters.
+   *
+   * @return the big integer
+   */
   public BigInteger calculateLengthInMeters() {
     BigInteger sum = BigInteger.valueOf(0);
     for (RteSeg rteSegment : rteSegments) {

@@ -103,7 +103,6 @@ public class RteAdapter extends AbstractAdapter implements FeatureAdapter {
             .acl(getAclMapper().map(rteEntity.getProperties().getAcl()))
             .created(rteEntity.getProperties().getCreated())
             .createdBy(rteEntity.getProperties().getCreatedBy())
-            .internalComments(rteEntity.getProperties().getInternalComments())
             .links(rteEntity.getProperties().getLinks())
             .markdownDescription(rteEntity.getProperties().getMarkdownDescription())
             .modified(rteEntity.getProperties().getModified())
@@ -117,8 +116,8 @@ public class RteAdapter extends AbstractAdapter implements FeatureAdapter {
                 .id(rteEntitySettings.getId())
                 .userId(rteEntitySettings.getUserId())
                 .build())
-            .departureTime(rteEntity.getProperties().getDepartureTime())
-            .arrivalTime(rteEntity.getProperties().getArrivalTime())
+            //.departureTime(rteEntity.getProperties().getDepartureTime())
+            //.arrivalTime(rteEntity.getProperties().getArrivalTime())
             .build())
         .build());
   }
@@ -150,7 +149,6 @@ public class RteAdapter extends AbstractAdapter implements FeatureAdapter {
             .created(featureEntity != null ? featureEntity.getProperties().getCreated() : null)
             .createdBy(
                 featureEntity != null ? featureEntity.getProperties().getCreatedBy() : userId)
-            .internalComments(rteProperties.getInternalComments())
             .links(rteProperties.getLinks())
             .markdownDescription(rteProperties.getMarkdownDescription())
             .modified(OffsetDateTime.now(Clock.systemUTC()))

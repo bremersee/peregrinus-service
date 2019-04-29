@@ -49,11 +49,6 @@ public class WptEntityProperties extends FeatureEntityProperties {
   private BigDecimal ele;
 
   /**
-   * Address
-   */
-  private Address address;
-
-  /**
    * Phone numbers
    */
   private List<PhoneNumber> phoneNumbers = new ArrayList<>();
@@ -78,12 +73,11 @@ public class WptEntityProperties extends FeatureEntityProperties {
       String name,
       String plainTextDescription,
       String markdownDescription,
-      String internalComments,
       List<Link> links,
+      AddressEntity address,
       OffsetDateTime departureTime,
       OffsetDateTime arrivalTime,
       BigDecimal ele,
-      Address address,
       List<PhoneNumber> phoneNumbers,
       Polygon area,
       String osmId,
@@ -92,9 +86,8 @@ public class WptEntityProperties extends FeatureEntityProperties {
       String osmCategory) {
 
     super(acl, created, createdBy, modified, modifiedBy, name, plainTextDescription,
-        markdownDescription, internalComments, links, departureTime, arrivalTime);
+        markdownDescription, links, address, departureTime, arrivalTime);
     setEle(ele);
-    setAddress(address);
     setPhoneNumbers(phoneNumbers);
     setArea(area);
     setOsmId(osmId);

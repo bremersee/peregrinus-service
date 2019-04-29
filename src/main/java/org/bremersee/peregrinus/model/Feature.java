@@ -30,21 +30,30 @@ import org.bremersee.geojson.utils.GeometryUtils;
 import org.locationtech.jts.geom.Geometry;
 
 /**
+ * The abstract GeoJSON feature.
+ *
  * @author Christian Bremer
  */
-@ApiModel(value = "Feature", description = "A GeoJSON feature with well known properties.")
+@ApiModel(description = "A GeoJSON feature with well known properties.")
 @NoArgsConstructor
 @SuppressWarnings("WeakerAccess")
 public abstract class Feature
     extends AbstractGeoJsonFeature<Geometry, FeatureProperties<? extends FeatureSettings>> {
 
+  /**
+   * The constant WPT_TYPE.
+   */
   public static final String WPT_TYPE = "Wpt";
 
+  /**
+   * The constant TRK_TYPE.
+   */
   public static final String TRK_TYPE = "Trk";
 
+  /**
+   * The constant RTE_TYPE.
+   */
   public static final String RTE_TYPE = "Rte";
-
-  public static final String RTE_PT_TYPE = "RtePt";
 
   @JsonIgnore
   private String id;
@@ -52,6 +61,14 @@ public abstract class Feature
   @JsonIgnore
   private Geometry geometry;
 
+  /**
+   * Instantiates a new Feature.
+   *
+   * @param id         the id
+   * @param geometry   the geometry
+   * @param bbox       the bbox
+   * @param properties the properties
+   */
   public Feature(
       String id,
       Geometry geometry,
@@ -63,11 +80,14 @@ public abstract class Feature
     setProperties(properties);
   }
 
+  @ApiModelProperty("The ID os the feature.")
+  @JsonProperty("id")
   @Override
   public String getId() {
     return id;
   }
 
+  @JsonProperty("id")
   @Override
   public void setId(String id) {
     this.id = id;

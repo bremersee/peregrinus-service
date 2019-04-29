@@ -20,7 +20,9 @@ import java.util.Collection;
 import java.util.Set;
 import java.util.stream.Collectors;
 import javax.validation.constraints.NotNull;
+import org.bremersee.gpx.model.Gpx;
 import org.bremersee.peregrinus.model.Feature;
+import org.bremersee.peregrinus.model.gpx.GpxExportSettings;
 import org.springframework.validation.annotation.Validated;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -57,9 +59,22 @@ public interface FeatureService {
       @NotNull String id,
       @NotNull String userId);
 
+  Flux<Feature> findFeaturesById(
+      @NotNull Set<String> featureIds,
+      @NotNull String userId,
+      @NotNull Set<String> roles,
+      @NotNull Set<String> groups);
+
   Mono<Boolean> renameFeature(
       @NotNull String id,
       @NotNull String name,
       @NotNull String userId);
+
+  Mono<Gpx> exportGpx(
+      @NotNull Set<String> featureIds,
+      @NotNull GpxExportSettings exportSettings,
+      @NotNull String userId,
+      @NotNull Set<String> roles,
+      @NotNull Set<String> groups);
 
 }

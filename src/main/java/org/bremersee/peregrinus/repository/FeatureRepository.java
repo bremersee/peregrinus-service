@@ -17,10 +17,12 @@
 package org.bremersee.peregrinus.repository;
 
 import java.util.Collection;
+import java.util.List;
 import javax.validation.constraints.NotNull;
 import org.bremersee.peregrinus.entity.FeatureEntity;
 import org.bremersee.peregrinus.entity.FeatureEntitySettings;
 import org.springframework.validation.annotation.Validated;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 /**
@@ -33,6 +35,14 @@ public interface FeatureRepository {
 
   Mono<FeatureEntity> findFeatureById(
       @NotNull String id,
+      @NotNull String permission,
+      boolean includePublic,
+      @NotNull String userId,
+      @NotNull Collection<String> roles,
+      @NotNull Collection<String> groups);
+
+  Flux<FeatureEntity> findFeaturesByIds(
+      @NotNull List<String> ids,
       @NotNull String permission,
       boolean includePublic,
       @NotNull String userId,

@@ -49,7 +49,6 @@ public class RteToTrkConverter implements Function<Rte, Trk> {
             .acl(rte.getProperties().getAcl())
             .createdBy(rte.getProperties().getCreatedBy())
             .eleLines(getEleLines(rte))
-            .internalComments(rte.getProperties().getInternalComments())
             .links(rte.getProperties().getLinks())
             .markdownDescription(rte.getProperties().getMarkdownDescription())
             .modifiedBy(rte.getProperties().getModifiedBy())
