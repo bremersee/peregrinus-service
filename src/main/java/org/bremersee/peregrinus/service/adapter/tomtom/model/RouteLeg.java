@@ -21,8 +21,8 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
+import org.bremersee.common.model.UnknownAware;
 import org.bremersee.geojson.model.LatitudeLongitude;
-import org.bremersee.plain.model.UnknownAware;
 
 /**
  * A description of a part of a route, comprised of a list of points. Each additional waypoint

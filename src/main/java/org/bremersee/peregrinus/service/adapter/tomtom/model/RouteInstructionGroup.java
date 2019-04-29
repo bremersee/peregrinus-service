@@ -21,7 +21,7 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
-import org.bremersee.plain.model.UnknownAware;
+import org.bremersee.common.model.UnknownAware;
 
 /**
  * Groups a sequence of instruction elements which are related to each other. The sequence range is

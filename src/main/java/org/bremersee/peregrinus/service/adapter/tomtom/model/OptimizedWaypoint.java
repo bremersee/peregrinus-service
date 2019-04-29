@@ -21,7 +21,7 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
-import org.bremersee.plain.model.UnknownAware;
+import org.bremersee.common.model.UnknownAware;
 
 /**
  * An optimized waypoint.

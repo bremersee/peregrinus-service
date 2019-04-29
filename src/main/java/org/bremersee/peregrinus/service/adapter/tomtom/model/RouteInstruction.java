@@ -25,8 +25,8 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 import org.bremersee.common.model.ThreeLetterCountryCode;
+import org.bremersee.common.model.UnknownAware;
 import org.bremersee.geojson.model.LatitudeLongitude;
-import org.bremersee.plain.model.UnknownAware;
 import org.springframework.util.StringUtils;
 
 /**

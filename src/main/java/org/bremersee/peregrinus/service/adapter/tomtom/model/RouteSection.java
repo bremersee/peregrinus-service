@@ -23,8 +23,8 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
+import org.bremersee.common.model.UnknownAware;
 import org.bremersee.peregrinus.model.tomtom.TravelMode;
-import org.bremersee.plain.model.UnknownAware;
 
 /**
  * The route section.

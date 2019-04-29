@@ -21,7 +21,7 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
-import org.bremersee.plain.model.UnknownAware;
+import org.bremersee.common.model.UnknownAware;
 
 /**
  * Contains guidance related elements. This field is present only when guidance was requested and is

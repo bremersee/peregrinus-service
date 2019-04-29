@@ -22,8 +22,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
+import org.bremersee.common.model.UnknownAware;
 import org.bremersee.geojson.model.LatLon;
-import org.bremersee.plain.model.UnknownAware;
 
 /**
  * The bounding box.
