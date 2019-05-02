@@ -33,7 +33,8 @@ abstract class AbstractNodeEntityReadConverter<T extends NodeEntity>
   }
 
   void convert(Document document, NodeEntity entity) {
-    entity.setAcl(getMongoConverter().read(AclEntity.class, document));
+    entity.setAcl(getMongoConverter()
+        .read(AclEntity.class, document.get("acl", Document.class)));
     entity.setCreated(convertToOffsetDateTime(document.getDate("created")));
     entity.setCreatedBy(document.getString("createdBy"));
     entity.setId(document.getObjectId("_id").toString());

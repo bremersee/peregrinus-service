@@ -34,7 +34,7 @@ enum OpenBranchCommand {
   }
 
   public boolean isCurrentAndBranchNotOpen(BranchEntitySettings branchSettings) {
-    return this == CURRENT && (branchSettings.getOpen() == null || branchSettings.getOpen());
+    return this == CURRENT && (Boolean.FALSE.equals(branchSettings.getOpen()));
   }
 
   public boolean openBranch(Branch branch) {

@@ -34,6 +34,7 @@ public abstract class EntityConverters {
     return Arrays.asList(
         new NodeEntityReadConverter(applicationContext),
         new NodeEntitySettingsReadConverter(applicationContext),
+        new BranchEntityReadConverter(applicationContext),
         new BranchEntitySettingsReadConverter(applicationContext),
         new LeafEntityReadConverter(applicationContext),
         new LeafEntitySettingsReadConverter(applicationContext),

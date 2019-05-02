@@ -25,7 +25,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.logging.Level;
 import java.util.stream.Collectors;
 import javax.validation.constraints.NotNull;
 import lombok.extern.slf4j.Slf4j;
@@ -99,7 +98,8 @@ public class TreeServiceImpl extends AbstractServiceImpl implements TreeService 
       @NotNull final String userId) {
 
     return treeRepository
-        .persistNode(BranchEntity.builder()
+        .persistNode(BranchEntity
+            .builder()
             .acl(getAclMapper().defaultAcl(userId))
             .createdBy(userId)
             .modifiedBy(userId)
@@ -112,9 +112,7 @@ public class TreeServiceImpl extends AbstractServiceImpl implements TreeService 
                 .open(true)
                 .userId(userId)
                 .build()))
-        .map(tuple -> buildBranchWithoutChildren(tuple.getT1(), tuple.getT2()))
-        .log(getClass().getName(), Level.INFO)
-        ;
+        .map(tuple -> buildBranchWithoutChildren(tuple.getT1(), tuple.getT2()));
   }
 
   @Override
@@ -128,11 +126,11 @@ public class TreeServiceImpl extends AbstractServiceImpl implements TreeService 
     log.info("msg=[Creating branch.] name=[{}] parentId=[{}]", name, parentId);
     return treeRepository
         .findBranchById(parentId, WRITE, true, userId, roles, groups)
-        .log(getClass().getName(), Level.INFO)
         .switchIfEmpty(Mono.error(ServiceException.forbidden()))
-        .log(getClass().getName(), Level.INFO)
-        .map(parentBranchEntity -> BranchEntity.builder()
-            .acl(AclBuilder.builder()
+        .map(parentBranchEntity -> BranchEntity
+            .builder()
+            .acl(AclBuilder
+                .builder()
                 .from(parentBranchEntity.getAcl())
                 .owner(userId)
                 .build(AclEntity::new))
@@ -142,7 +140,6 @@ public class TreeServiceImpl extends AbstractServiceImpl implements TreeService 
             .modifiedBy(userId)
             .build())
         .flatMap(treeRepository::persistNode)
-        .log(getClass().getName(), Level.INFO)
         .zipWhen(branchEntity -> treeRepository.persistNodeSettings(
             BranchEntitySettings
                 .builder()
@@ -150,9 +147,7 @@ public class TreeServiceImpl extends AbstractServiceImpl implements TreeService 
                 .open(true)
                 .userId(userId)
                 .build()))
-        .map(tuple -> buildBranchWithoutChildren(tuple.getT1(), tuple.getT2()))
-        .log(getClass().getName(), Level.INFO)
-        ;
+        .map(tuple -> buildBranchWithoutChildren(tuple.getT1(), tuple.getT2()));
   }
 
   private Branch buildBranchWithoutChildren(
@@ -304,7 +299,6 @@ public class TreeServiceImpl extends AbstractServiceImpl implements TreeService 
       final Set<String> roles,
       final Set<String> groups) {
 
-    //log.info(">>>>>>>> Processing {}", branchEntity);
     return treeRepository.findNodeSettings(branchEntity.getId(), userId)
         .cast(BranchEntitySettings.class)
         .switchIfEmpty(treeRepository.persistNodeSettings(
@@ -318,7 +312,6 @@ public class TreeServiceImpl extends AbstractServiceImpl implements TreeService 
             branchEntitySettings.setOpen(true);
             return treeRepository.openBranch(branchEntitySettings.getId())
                 .flatMap(result -> Mono.just(branchEntitySettings));
-            //return treeRepository.persistNodeSettings(branchEntitySettings);
           }
           return Mono.just(branchEntitySettings);
         })
