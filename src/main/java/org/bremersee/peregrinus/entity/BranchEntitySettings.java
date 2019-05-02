@@ -28,7 +28,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
  * @author Christian Bremer
  */
 @Document(collection = "directory-settings")
-@TypeAlias("BranchSettings")
+@TypeAlias(TypeAliases.BRANCH_SETTINGS)
 @EqualsAndHashCode(callSuper = true)
 @ToString(callSuper = true)
 @NoArgsConstructor

@@ -27,6 +27,7 @@ import org.bremersee.peregrinus.entity.NodeEntity;
 import org.bremersee.peregrinus.entity.NodeEntitySettings;
 import org.bremersee.security.access.AclMapper;
 import org.springframework.data.mongodb.core.ReactiveMongoOperations;
+import org.springframework.data.mongodb.core.ReactiveMongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
@@ -42,9 +43,10 @@ import reactor.core.publisher.Mono;
 public class TreeRepositoryImpl extends AbstractMongoRepository implements TreeRepository {
 
   public TreeRepositoryImpl(
+      ReactiveMongoTemplate mongoTemplate,
       ReactiveMongoOperations mongoOperations,
       AclMapper<AclEntity> aclMapper) {
-    super(mongoOperations, aclMapper);
+    super(mongoTemplate, mongoOperations, aclMapper);
   }
 
   @Override
@@ -69,7 +71,8 @@ public class TreeRepositoryImpl extends AbstractMongoRepository implements TreeR
 
   @Override
   public <T extends NodeEntity> Mono<T> persistNode(@NotNull T node) {
-    return getMongoOperations().save(node);
+    return getMongoTemplate().save(node);
+    //return getMongoOperations().save(node);
   }
 
   @Override
@@ -93,12 +96,12 @@ public class TreeRepositoryImpl extends AbstractMongoRepository implements TreeR
 
   @Override
   public <T extends NodeEntitySettings> Mono<T> persistNodeSettings(@NotNull T nodeSettings) {
-    return getMongoOperations().save(nodeSettings);
+    return getMongoTemplate().save(nodeSettings);
   }
 
   @Override
   public Mono<NodeEntitySettings> findNodeSettings(@NotNull String nodeId, @NotNull String userId) {
-    return getMongoOperations()
+    return getMongoTemplate()
         .findOne(query(nodeSettingsCriteria(nodeId, userId)), NodeEntitySettings.class);
   }
 

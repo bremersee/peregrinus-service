@@ -17,27 +17,26 @@
 package org.bremersee.peregrinus.entity;
 
 import java.time.OffsetDateTime;
+import lombok.AccessLevel;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
-import org.springframework.data.annotation.TypeAlias;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 /**
  * @author Christian Bremer
  */
 @Document(collection = "directory")
-@TypeAlias("Leaf")
 @Getter
 @Setter
 @EqualsAndHashCode(callSuper = true)
 @ToString(callSuper = true)
-@NoArgsConstructor
-public abstract class LeafEntity extends NodeEntity {
+@NoArgsConstructor(access = AccessLevel.PACKAGE)
+public class LeafEntity extends NodeEntity {
 
-  public LeafEntity(
+  LeafEntity(
       String id,
       OffsetDateTime created,
       String createdBy,

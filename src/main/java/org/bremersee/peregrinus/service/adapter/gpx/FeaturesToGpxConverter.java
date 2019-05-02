@@ -82,7 +82,7 @@ public class FeaturesToGpxConverter {
    */
   public FeaturesToGpxConverter(
       final JaxbContextBuilder jaxbContextBuilder,
-      final @Value("${bremersee.gpx.name-spaces}") String[] gpxNameSpaces,
+      final @Value("${bremersee.gpx.name-spaces:@null}") String[] gpxNameSpaces,
       final @Value("${bremersee.gpx.creator:Peregrinus Web App}") String creator,
       final @Value("${bremersee.gpx.version:1.1}") String version,
       final @Value("${bremersee.gpx.link:https://peregrinus.bremersee.org}") String link,

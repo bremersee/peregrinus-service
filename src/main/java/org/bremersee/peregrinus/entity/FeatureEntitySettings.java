@@ -16,6 +16,7 @@
 
 package org.bremersee.peregrinus.entity;
 
+import lombok.AccessLevel;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -40,8 +41,8 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @Setter
 @EqualsAndHashCode
 @ToString
-@NoArgsConstructor
-public abstract class FeatureEntitySettings {
+@NoArgsConstructor(access = AccessLevel.PACKAGE)
+public class FeatureEntitySettings {
 
   public static final String FEATURE_ID_PATH = "featureId";
 
@@ -56,7 +57,7 @@ public abstract class FeatureEntitySettings {
   @Indexed
   private String userId;
 
-  public FeatureEntitySettings(String id, String featureId, String userId) {
+  FeatureEntitySettings(String id, String featureId, String userId) {
     this.id = id;
     this.featureId = featureId;
     this.userId = userId;

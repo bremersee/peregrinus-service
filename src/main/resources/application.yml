@@ -46,6 +46,8 @@ bremersee:
   exception-mapping:
     api-paths:
       - /api/**
+    default-exception-mapping-config:
+      include-stack-trace: true
     exception-mappings:
       - exception-class-name: org.springframework.dao.DuplicateKeyException
         status: 409
@@ -55,6 +57,8 @@ bremersee:
         status: 409
         message: "Version is not up to date."
         code: "PER:1001"
+  peregrinus:
+    groupman-base-uri: ""
 
 ---
 

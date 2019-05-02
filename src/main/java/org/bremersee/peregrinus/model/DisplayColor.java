@@ -83,7 +83,7 @@ public enum DisplayColor {
   @JsonCreator
   public static DisplayColor fromValue(String value) {
     for (DisplayColor e : DisplayColor.values()) {
-      if (e.value.equalsIgnoreCase(value)) {
+      if (e.value.equalsIgnoreCase(value) || e.name().equalsIgnoreCase(value)) {
         return e;
       }
     }

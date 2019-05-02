@@ -20,6 +20,7 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.function.Function;
 import java.util.stream.Collectors;
+import lombok.extern.slf4j.Slf4j;
 import org.bremersee.exception.ServiceException;
 import org.bremersee.groupman.api.GroupControllerApi;
 import org.reactivestreams.Publisher;
@@ -27,18 +28,22 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.ReactiveSecurityContextHolder;
 import org.springframework.security.core.context.SecurityContext;
+import org.springframework.util.Assert;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 /**
  * @author Christian Bremer
  */
+@Slf4j
 public abstract class AbstractController {
 
   private final GroupControllerApi groupService;
 
   public AbstractController(GroupControllerApi groupService) {
+    Assert.notNull(groupService, "Group service must be present.");
     this.groupService = groupService;
+    log.info("Using group service {}", groupService.getClass().getName());
   }
 
   <R> Mono<R> oneWithUserId(Function<String, ? extends Mono<R>> function) {

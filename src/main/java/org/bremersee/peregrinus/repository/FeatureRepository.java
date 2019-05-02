@@ -18,9 +18,12 @@ package org.bremersee.peregrinus.repository;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.Set;
 import javax.validation.constraints.NotNull;
 import org.bremersee.peregrinus.entity.FeatureEntity;
 import org.bremersee.peregrinus.entity.FeatureEntitySettings;
+import org.bremersee.peregrinus.entity.WptEntity;
+import org.bremersee.peregrinus.model.GeocodeQueryRequest;
 import org.springframework.validation.annotation.Validated;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -61,6 +64,12 @@ public interface FeatureRepository {
       @NotNull String id,
       @NotNull String name,
       @NotNull String userId);
+
+  Flux<WptEntity> queryGeocode(
+      GeocodeQueryRequest request,
+      String userId,
+      Set<String> roles,
+      Set<String> groups);
 
   /*
   <F extends Feature> Mono<F> findById(@NotNull String id, @NotNull String userId);

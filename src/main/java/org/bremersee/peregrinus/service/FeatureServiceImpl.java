@@ -32,6 +32,8 @@ import org.bremersee.peregrinus.entity.FeatureEntity;
 import org.bremersee.peregrinus.entity.FeatureEntitySettings;
 import org.bremersee.peregrinus.model.Feature;
 import org.bremersee.peregrinus.model.FeatureSettings;
+import org.bremersee.peregrinus.model.GeocodeQueryRequest;
+import org.bremersee.peregrinus.model.Wpt;
 import org.bremersee.peregrinus.model.gpx.GpxExportSettings;
 import org.bremersee.peregrinus.repository.FeatureRepository;
 import org.bremersee.peregrinus.service.adapter.FeatureAdapter;
@@ -143,14 +145,7 @@ public class FeatureServiceImpl extends AbstractServiceImpl implements FeatureSe
     final List<String> ids = new ArrayList<>(featureIds);
     return featureRepository
         .findFeaturesByIds(ids, PermissionConstants.READ, true, userId, roles, groups)
-        .flatMap(featureEntity -> featureRepository
-            .findFeatureEntitySettings(featureEntity.getId(), userId)
-            .switchIfEmpty(featureRepository
-                .persistFeatureSettings(getFeatureAdapter(featureEntity)
-                    .buildFeatureEntitySettings(featureEntity, userId)))
-            .map(featureEntitySettings -> Tuples.of(featureEntity, featureEntitySettings)))
-        .flatMap(tuple -> getFeatureAdapter(tuple.getT1())
-            .buildFeature(tuple.getT1(), tuple.getT2()));
+        .flatMap(featureEntity -> mapFeatureEntity(featureEntity, userId));
   }
 
   @Override
@@ -169,6 +164,29 @@ public class FeatureServiceImpl extends AbstractServiceImpl implements FeatureSe
     return findFeaturesById(featureIds, userId, roles, groups)
         .collectList()
         .map(features -> converterService.convertFeaturesToGpx(features, exportSettings));
+  }
+
+  @Override
+  public Flux<Wpt> queryGeocode(
+      GeocodeQueryRequest request,
+      String userId,
+      Set<String> roles,
+      Set<String> groups) {
+
+    return featureRepository.queryGeocode(request, userId, roles, groups)
+        .flatMap(wptEntity -> mapFeatureEntity(wptEntity, userId))
+        .cast(Wpt.class);
+  }
+
+  private Mono<Feature> mapFeatureEntity(final FeatureEntity featureEntity, final String userId) {
+    return featureRepository
+        .findFeatureEntitySettings(featureEntity.getId(), userId)
+        .switchIfEmpty(featureRepository
+            .persistFeatureSettings(getFeatureAdapter(featureEntity)
+                .buildFeatureEntitySettings(featureEntity, userId)))
+        .map(featureEntitySettings -> Tuples.of(featureEntity, featureEntitySettings))
+        .flatMap(tuple -> getFeatureAdapter(tuple.getT1())
+            .buildFeature(tuple.getT1(), tuple.getT2()));
   }
 
 }

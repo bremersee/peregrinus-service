@@ -29,6 +29,7 @@ import org.bremersee.peregrinus.model.GeocodeQueryRequest;
 import org.bremersee.peregrinus.model.Wpt;
 import org.bremersee.peregrinus.service.adapter.GeocodeAdapter;
 import org.springframework.stereotype.Component;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 /**
@@ -39,8 +40,12 @@ public class GeocodeServiceImpl implements GeocodeService {
 
   private Map<String, GeocodeAdapter> adapterMap = new HashMap<>();
 
+  private FeatureService featureService;
+
   public GeocodeServiceImpl(
-      List<GeocodeAdapter> adapters) {
+      List<GeocodeAdapter> adapters,
+      FeatureService featureService) {
+
     if (adapters != null) {
       for (GeocodeAdapter adapter : adapters) {
         for (Class<? extends GeocodeQueryRequest> cls : adapter.getSupportedRequestClasses()) {
@@ -48,6 +53,7 @@ public class GeocodeServiceImpl implements GeocodeService {
         }
       }
     }
+    this.featureService = featureService;
   }
 
   @Override
@@ -57,8 +63,10 @@ public class GeocodeServiceImpl implements GeocodeService {
       Set<String> roles,
       Set<String> groups) {
 
-    return getAdapter(adapterMap, request)
-        .queryGeocode(request, userId, roles, groups)
+    final Flux<Wpt> webWpts = getAdapter(adapterMap, request)
+        .queryGeocode(request, userId, roles, groups);
+    final Flux<Wpt> localWpts = featureService.queryGeocode(request, userId, roles, groups);
+    return Flux.concat(webWpts, localWpts)
         .collectList()
         .map(wpts -> new FeatureCollection(
             wpts,

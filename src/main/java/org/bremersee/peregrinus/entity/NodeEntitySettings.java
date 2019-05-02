@@ -23,7 +23,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 import org.springframework.data.annotation.Id;
-import org.springframework.data.annotation.TypeAlias;
 import org.springframework.data.mongodb.core.index.CompoundIndex;
 import org.springframework.data.mongodb.core.index.CompoundIndexes;
 import org.springframework.data.mongodb.core.index.Indexed;
@@ -33,7 +32,6 @@ import org.springframework.data.mongodb.core.mapping.Document;
  * @author Christian Bremer
  */
 @Document(collection = "directory-settings")
-@TypeAlias("NodeSettings")
 @CompoundIndexes({
     @CompoundIndex(name = "uk_node_user", def = "{'nodeId': 1, 'userId': 1 }", unique = true)
 })
@@ -56,8 +54,6 @@ public class NodeEntitySettings {
 
   @Indexed
   private String userId;
-
-  // TODO state: new, normal, deleted (, deletion_accepted = remove)
 
   NodeEntitySettings(String id, String nodeId, String userId) {
     this.id = id;

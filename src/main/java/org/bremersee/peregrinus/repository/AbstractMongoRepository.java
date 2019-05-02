@@ -29,9 +29,14 @@ import javax.validation.constraints.NotNull;
 import lombok.Getter;
 import org.bremersee.peregrinus.entity.AclEntity;
 import org.bremersee.security.access.AclMapper;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.mongodb.core.ReactiveMongoOperations;
+import org.springframework.data.mongodb.core.ReactiveMongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
+import org.springframework.data.mongodb.core.query.TextCriteria;
+import org.springframework.data.mongodb.core.query.TextQuery;
 import org.springframework.lang.Nullable;
 import org.springframework.util.StringUtils;
 import org.springframework.validation.annotation.Validated;
@@ -46,13 +51,18 @@ public abstract class AbstractMongoRepository {
   private ReactiveMongoOperations mongoOperations;
 
   @Getter
+  private ReactiveMongoTemplate mongoTemplate;
+
+  @Getter
   private AclMapper<AclEntity> aclMapper;
 
   public AbstractMongoRepository(
+      ReactiveMongoTemplate mongoTemplate,
       ReactiveMongoOperations mongoOperations,
       AclMapper<AclEntity> aclMapper) {
     notNull(mongoOperations, "Mongo operations must not be null.");
     notNull(aclMapper, "Acl mapper must not be null.");
+    this.mongoTemplate = mongoTemplate;
     this.mongoOperations = mongoOperations;
     this.aclMapper = aclMapper;
   }
@@ -133,6 +143,29 @@ public abstract class AbstractMongoRepository {
     return queryAnd(criteria, any(includePublic, userId, roles, groups, permissions));
   }
 
+  protected @NotNull Query queryAnd(
+      @NotNull final TextCriteria criteria,
+      @Nullable final Pageable pageable,
+      final boolean includePublic,
+      @Nullable final String userId,
+      @Nullable final Collection<String> roles,
+      @Nullable final Collection<String> groups,
+      @NotNull @NotEmpty final String... permissions) {
+
+    Criteria aclCriteria = any(includePublic, userId, roles, groups, permissions);
+    if (pageable == null) {
+      return TextQuery
+          .queryText(criteria)
+          .sortByScore()
+          .addCriteria(aclCriteria);
+    }
+    return TextQuery
+        .queryText(criteria)
+        .sortByScore()
+        .with(pageable)
+        .addCriteria(aclCriteria);
+  }
+
   protected @NotNull Criteria any(
       final boolean includePublic,
       @Nullable final String userId,
@@ -144,7 +177,7 @@ public abstract class AbstractMongoRepository {
     final Set<String> groupSet = groups == null ? new HashSet<>() : new HashSet<>(groups);
     final List<Criteria> criteriaList = new ArrayList<>();
     if (StringUtils.hasText(userId)) {
-      criteriaList.add(0, Criteria.where(aclOwnerPath()).is(userId));
+      criteriaList.add(Criteria.where(aclOwnerPath()).is(userId));
     }
     for (final String permission : permissions) {
       if (includePublic) {

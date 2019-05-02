@@ -17,18 +17,20 @@
 package org.bremersee.peregrinus.config;
 
 import java.time.OffsetDateTime;
-import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 import java.util.regex.Pattern;
+import lombok.extern.slf4j.Slf4j;
 import org.bremersee.geojson.spring.data.mongodb.convert.GeoJsonConverters;
+import org.bremersee.peregrinus.entity.converter.EntityConverters;
+import org.bremersee.peregrinus.entity.converter.OffsetDateTimeReadConverter;
+import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
 import org.springframework.core.convert.converter.Converter;
-import org.springframework.data.convert.CustomConversions;
 import org.springframework.data.convert.ReadingConverter;
 import org.springframework.data.convert.WritingConverter;
 import org.springframework.data.mongodb.core.convert.MongoCustomConversions;
@@ -40,22 +42,30 @@ import org.springframework.util.StringUtils;
  */
 @Configuration
 @EnableReactiveMongoRepositories
+@Slf4j
 public class PersistenceConfiguration {
+
+  private ApplicationContext applicationContext;
+
+  public PersistenceConfiguration(ApplicationContext applicationContext) {
+    this.applicationContext = applicationContext;
+  }
 
   @Primary
   @Bean
-  public CustomConversions customConversions() {
-    final List<Object> converters = new ArrayList<>(
+  public MongoCustomConversions customConversions() {
+    List<Converter<?, ?>> converters = new ArrayList<>(
         GeoJsonConverters.getConvertersToRegister(null));
-    converters.add(new LocaleToStringConverter());
-    converters.add(new StringToLocaleConverter());
-    converters.add(new OffsetDateTimeToDateConverter());
-    converters.add(new DateToOffsetDateTimeConverter());
+    converters.add(new LocaleWriteConverter());
+    converters.add(new LocaleReadConverter());
+    converters.add(new OffsetDateTimeWriteConverter());
+    converters.add(new OffsetDateTimeReadConverter());
+    converters.addAll(EntityConverters.getConvertersToRegister(applicationContext));
     return new MongoCustomConversions(converters);
   }
 
   @WritingConverter
-  public static class LocaleToStringConverter implements Converter<Locale, String> {
+  public static class LocaleWriteConverter implements Converter<Locale, String> {
 
     @Override
     public String convert(Locale locale) {
@@ -64,7 +74,7 @@ public class PersistenceConfiguration {
   }
 
   @ReadingConverter
-  public static class StringToLocaleConverter implements Converter<String, Locale> {
+  public static class LocaleReadConverter implements Converter<String, Locale> {
 
     @Override
     public Locale convert(String s) {
@@ -84,7 +94,7 @@ public class PersistenceConfiguration {
   }
 
   @WritingConverter
-  public static class OffsetDateTimeToDateConverter
+  public static class OffsetDateTimeWriteConverter
       implements Converter<OffsetDateTime, Date> {
 
     @Override
@@ -96,16 +106,33 @@ public class PersistenceConfiguration {
     }
   }
 
-  @ReadingConverter
-  public static class DateToOffsetDateTimeConverter
-      implements Converter<Date, OffsetDateTime> {
-
-    @Override
-    public OffsetDateTime convert(Date date) {
-      if (date == null) {
-        return null;
-      }
-      return OffsetDateTime.ofInstant(date.toInstant(), ZoneId.of("Z"));
-    }
-  }
+//  @ReadingConverter
+//  public static class NodeEntityReadConverter implements Converter<Document, NodeEntity> {
+//
+//    private ApplicationContext applicationContext;
+//
+//    public NodeEntityReadConverter(ApplicationContext applicationContext) {
+//      this.applicationContext = applicationContext;
+//    }
+//
+//    @Override
+//    public NodeEntity convert(Document source) {
+//
+//      System.out.println("++++++++ " + applicationContext.getBean(MongoConverter.class));
+//
+//      MappingMongoConverter converter = (MappingMongoConverter)applicationContext.getBean(MongoConverter.class);
+//
+//      return BranchEntity
+//          .builder()
+//          .acl(converter.read(AclEntity.class, source.get("acl", Document.class)))
+//          .created(new DateToOffsetDateTimeConverter().convert(source.getDate("created")))
+//          .createdBy(source.getString("createdBy"))
+//          .id(source.getObjectId("_id").toString())
+//          .modified(new DateToOffsetDateTimeConverter().convert(source.getDate("modified")))
+//          .modifiedBy(source.getString("modifiedBy"))
+//          .name(source.getString("name"))
+//          .parentId(source.getString("parentId"))
+//          .build();
+//    }
+//  }
 }

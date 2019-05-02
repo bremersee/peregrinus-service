@@ -30,7 +30,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
  * @author Christian Bremer
  */
 @Document(collection = "directory")
-@TypeAlias("Branch")
+@TypeAlias(TypeAliases.BRANCH)
 @Getter
 @Setter
 @EqualsAndHashCode(callSuper = true)

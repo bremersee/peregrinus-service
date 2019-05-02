@@ -22,11 +22,9 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
-import org.bremersee.peregrinus.entity.AclEntity;
 import org.bremersee.security.access.AclBuilder;
 import org.bremersee.security.access.PermissionConstants;
 import org.springframework.data.annotation.Id;
-import org.springframework.data.annotation.TypeAlias;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 
@@ -34,12 +32,11 @@ import org.springframework.data.mongodb.core.mapping.Document;
  * @author Christian Bremer
  */
 @Document(collection = "directory")
-@TypeAlias("Node")
 @Getter
 @Setter
 @EqualsAndHashCode
 @ToString
-public abstract class NodeEntity {
+public class NodeEntity {
 
   public static final String ID_PATH = "id";
 

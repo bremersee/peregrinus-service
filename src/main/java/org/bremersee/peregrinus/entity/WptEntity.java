@@ -29,7 +29,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
  * @author Christian Bremer
  */
 @Document(collection = "feature")
-@TypeAlias("Wpt")
+@TypeAlias(TypeAliases.WPT)
 @Getter
 @Setter
 @ToString(callSuper = true)

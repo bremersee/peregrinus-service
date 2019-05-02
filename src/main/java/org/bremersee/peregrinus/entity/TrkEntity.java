@@ -29,7 +29,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
  * @author Christian Bremer
  */
 @Document(collection = "feature")
-@TypeAlias("Trk")
+@TypeAlias(TypeAliases.TRK)
 @Getter
 @Setter
 @ToString(callSuper = true)

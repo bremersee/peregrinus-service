@@ -16,27 +16,26 @@
 
 package org.bremersee.peregrinus.entity;
 
+import lombok.AccessLevel;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
-import org.springframework.data.annotation.TypeAlias;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 /**
  * @author Christian Bremer
  */
 @Document(collection = "directory-settings")
-@TypeAlias("LeafSettings")
 @Getter
 @Setter
 @EqualsAndHashCode(callSuper = true)
 @ToString(callSuper = true)
-@NoArgsConstructor
-public abstract class LeafEntitySettings extends NodeEntitySettings {
+@NoArgsConstructor(access = AccessLevel.PACKAGE)
+public class LeafEntitySettings extends NodeEntitySettings {
 
-  public LeafEntitySettings(String id, String nodeId, String userId) {
+  LeafEntitySettings(String id, String nodeId, String userId) {
     super(id, nodeId, userId);
   }
 }

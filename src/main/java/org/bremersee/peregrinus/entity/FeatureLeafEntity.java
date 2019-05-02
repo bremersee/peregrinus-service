@@ -30,7 +30,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
  * @author Christian Bremer
  */
 @Document(collection = "directory")
-@TypeAlias("GeoLeaf")
+@TypeAlias(TypeAliases.FEATURE_LEAF)
 @Getter
 @Setter
 @EqualsAndHashCode(callSuper = true)

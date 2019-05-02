@@ -22,6 +22,8 @@ import java.util.stream.Collectors;
 import javax.validation.constraints.NotNull;
 import org.bremersee.gpx.model.Gpx;
 import org.bremersee.peregrinus.model.Feature;
+import org.bremersee.peregrinus.model.GeocodeQueryRequest;
+import org.bremersee.peregrinus.model.Wpt;
 import org.bremersee.peregrinus.model.gpx.GpxExportSettings;
 import org.springframework.validation.annotation.Validated;
 import reactor.core.publisher.Flux;
@@ -73,6 +75,12 @@ public interface FeatureService {
   Mono<Gpx> exportGpx(
       @NotNull Set<String> featureIds,
       @NotNull GpxExportSettings exportSettings,
+      @NotNull String userId,
+      @NotNull Set<String> roles,
+      @NotNull Set<String> groups);
+
+  Flux<Wpt> queryGeocode(
+      @NotNull GeocodeQueryRequest request,
       @NotNull String userId,
       @NotNull Set<String> roles,
       @NotNull Set<String> groups);

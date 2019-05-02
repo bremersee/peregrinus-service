@@ -58,7 +58,7 @@ public class TreeController extends AbstractController {
 
   @PostMapping(
       params = {"name"},
-      consumes = {MediaType.APPLICATION_JSON_UTF8_VALUE},
+      consumes = {MediaType.ALL_VALUE},
       produces = {MediaType.APPLICATION_JSON_UTF8_VALUE})
   public Mono<Branch> createBranch(
       @RequestParam(value = "name") @Length(min = 1) String name,
@@ -78,7 +78,11 @@ public class TreeController extends AbstractController {
         .loadBranches(openAll, includePublic, auth.getUserId(), auth.getRoles(), auth.getGroups()));
   }
 
-  @PutMapping(path = "/{nodeId}", params = {"name"})
+  @PutMapping(
+      path = "/{nodeId}",
+      params = {"name"},
+      consumes = MediaType.ALL_VALUE,
+      produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
   public Mono<Boolean> renameNode(
       @PathVariable("nodeId") String nodeId,
       @RequestParam(value = "name") @Length(min = 1) String name) {

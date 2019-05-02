@@ -28,16 +28,21 @@ import static org.springframework.data.mongodb.core.query.Query.query;
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
 import javax.validation.constraints.NotNull;
+import org.bremersee.common.model.MongoSearchLanguage;
 import org.bremersee.peregrinus.entity.AclEntity;
 import org.bremersee.peregrinus.entity.FeatureEntity;
 import org.bremersee.peregrinus.entity.FeatureEntitySettings;
+import org.bremersee.peregrinus.entity.WptEntity;
+import org.bremersee.peregrinus.model.GeocodeQueryRequest;
+import org.bremersee.peregrinus.model.GeocodeRequest;
 import org.bremersee.security.access.AclMapper;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.mongodb.core.ReactiveMongoOperations;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.TextCriteria;
-import org.springframework.data.mongodb.core.query.TextQuery;
 import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Repository;
 import reactor.core.publisher.Flux;
@@ -52,7 +57,7 @@ public class FeatureRepositoryImpl extends AbstractMongoRepository implements Fe
   public FeatureRepositoryImpl(
       ReactiveMongoOperations mongoOperations,
       AclMapper<AclEntity> aclMapper) {
-    super(mongoOperations, aclMapper);
+    super(null, mongoOperations, aclMapper);
   }
 
   @Override
@@ -137,4 +142,35 @@ public class FeatureRepositoryImpl extends AbstractMongoRepository implements Fe
         where(USER_ID_PATH).is(userId));
   }
 
+  @Override
+  public Flux<WptEntity> queryGeocode(
+      GeocodeQueryRequest request,
+      String userId,
+      Set<String> roles,
+      Set<String> groups) {
+
+    final TextCriteria textCriteria = TextCriteria
+        .forLanguage(findMongoSearchLanguage(request))
+        .caseSensitive(false)
+        .matching(request.getQuery());
+    final Query query = queryAnd(
+        textCriteria, PageRequest.of(0, findLimit(request)),
+        true, userId, roles, groups);
+    return getMongoOperations().find(query, WptEntity.class);
+  }
+
+  private int findLimit(GeocodeRequest geocodeRequest) {
+    return geocodeRequest.getLimit() != null && geocodeRequest.getLimit() > 0
+        ? geocodeRequest.getLimit()
+        : 8;
+  }
+
+  private String findMongoSearchLanguage(GeocodeRequest geocodeRequest) {
+    if (geocodeRequest.getLanguage() == null) {
+      return MongoSearchLanguage.NONE.toString();
+    }
+    return MongoSearchLanguage
+        .fromLocale(geocodeRequest.getLanguage().toLocale(), MongoSearchLanguage.NONE)
+        .toString();
+  }
 }

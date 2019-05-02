@@ -18,6 +18,7 @@ package org.bremersee.peregrinus.entity;
 
 import java.util.Arrays;
 import java.util.Objects;
+import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -34,12 +35,11 @@ import org.springframework.data.mongodb.core.mapping.Document;
  * @author Christian Bremer
  */
 @Document(collection = "feature")
-@TypeAlias("Feature")
 @Getter
 @Setter
 @ToString
-@NoArgsConstructor
-public abstract class FeatureEntity<G extends Geometry, P extends FeatureEntityProperties> {
+@NoArgsConstructor(access = AccessLevel.PACKAGE)
+public class FeatureEntity<G extends Geometry, P extends FeatureEntityProperties> {
 
   public static final String ID_PATH = "id";
 
@@ -61,7 +61,7 @@ public abstract class FeatureEntity<G extends Geometry, P extends FeatureEntityP
 
   private P properties;
 
-  public FeatureEntity(String id, G geometry, double[] bbox, P properties) {
+  FeatureEntity(String id, G geometry, double[] bbox, P properties) {
     setId(id);
     setGeometry(geometry);
     setBbox(bbox);
