@@ -34,15 +34,18 @@ import org.bremersee.common.model.MongoSearchLanguage;
 import org.bremersee.peregrinus.entity.AclEntity;
 import org.bremersee.peregrinus.entity.FeatureEntity;
 import org.bremersee.peregrinus.entity.FeatureEntitySettings;
+import org.bremersee.peregrinus.entity.TypeAliases;
 import org.bremersee.peregrinus.entity.WptEntity;
 import org.bremersee.peregrinus.model.GeocodeQueryRequest;
 import org.bremersee.peregrinus.model.GeocodeRequest;
 import org.bremersee.security.access.AclMapper;
+import org.bremersee.security.access.PermissionConstants;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.mongodb.core.ReactiveMongoOperations;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.TextCriteria;
+import org.springframework.data.mongodb.core.query.TextQuery;
 import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Repository;
 import reactor.core.publisher.Flux;
@@ -153,9 +156,13 @@ public class FeatureRepositoryImpl extends AbstractMongoRepository implements Fe
         .forLanguage(findMongoSearchLanguage(request))
         .caseSensitive(false)
         .matching(request.getQuery());
-    final Query query = queryAnd(
-        textCriteria, PageRequest.of(0, findLimit(request)),
-        true, userId, roles, groups);
+    Criteria classCriteria = Criteria.where("_class").is(TypeAliases.WPT);
+    Criteria aclCriteria = any(true, userId, roles, groups, PermissionConstants.READ);
+    Query query = TextQuery
+        .queryText(textCriteria)
+        .sortByScore()
+        .with(PageRequest.of(0, findLimit(request)))
+        .addCriteria(andCriteria(classCriteria, aclCriteria));
     return getMongoOperations().find(query, WptEntity.class);
   }
 

@@ -235,7 +235,7 @@ public class NominatimGeocodeQueryRequest extends GeocodeQueryRequest {
    *
    * @return {@code true} if debug mode is enabled, otherwise {@code false}
    */
-  @JsonProperty("dedupe")
+  @JsonProperty("debug")
   public Boolean getDebug() {
     return debug;
   }
@@ -245,7 +245,7 @@ public class NominatimGeocodeQueryRequest extends GeocodeQueryRequest {
    *
    * @param debug the debug
    */
-  @JsonProperty("dedupe")
+  @JsonProperty("debug")
   public void setDebug(Boolean debug) {
     this.debug = Boolean.TRUE.equals(debug);
   }
