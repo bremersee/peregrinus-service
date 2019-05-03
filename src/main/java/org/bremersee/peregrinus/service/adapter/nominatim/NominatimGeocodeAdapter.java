@@ -17,7 +17,6 @@
 package org.bremersee.peregrinus.service.adapter.nominatim;
 
 import java.math.BigDecimal;
-import java.nio.charset.StandardCharsets;
 import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -42,7 +41,6 @@ import org.springframework.util.MultiValueMap;
 import org.springframework.util.StringUtils;
 import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.reactive.function.client.WebClient.Builder;
-import org.springframework.web.util.UriUtils;
 import reactor.core.publisher.Flux;
 
 /**
@@ -138,9 +136,7 @@ public class NominatimGeocodeAdapter implements GeocodeAdapter {
 
     map.set("addressdetails", Boolean.FALSE.equals(request.getAddressDetails()) ? "0" : "1");
     if (StringUtils.hasText(request.getEmail())) {
-      map.set(
-          "email",
-          UriUtils.encodeQueryParam(request.getEmail(), StandardCharsets.UTF_8));
+      map.set("email", request.getEmail());
     }
     if (request.getPolygon() == null || Boolean.TRUE.equals(request.getPolygon())) {
       map.set("polygon_geojson", "1");
@@ -148,9 +144,7 @@ public class NominatimGeocodeAdapter implements GeocodeAdapter {
     map.set("extratags", Boolean.FALSE.equals(request.getExtraTags()) ? "0" : "1");
     map.set("namedetails", Boolean.FALSE.equals(request.getNameDetails()) ? "0" : "1");
 
-    map.set(
-        "q",
-        UriUtils.encodeQueryParam(request.getQuery(), StandardCharsets.UTF_8));
+    map.set("q", request.getQuery());
     return map;
   }
 

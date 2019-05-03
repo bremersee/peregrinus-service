@@ -32,7 +32,7 @@ public abstract class ProviderConstants {
   /**
    * The constant TOMTOM.
    */
-  public static final String TOMTOM = "TomeTom";
+  public static final String TOMTOM = "TomTom";
 
   /**
    * The constant GOOGLE.
