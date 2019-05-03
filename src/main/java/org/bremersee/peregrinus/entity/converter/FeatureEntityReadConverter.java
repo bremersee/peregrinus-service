@@ -36,11 +36,18 @@ import org.springframework.data.convert.ReadingConverter;
 import org.springframework.data.mongodb.core.convert.MappingMongoConverter;
 
 /**
+ * The feature entity read converter.
+ *
  * @author Christian Bremer
  */
 @ReadingConverter
 class FeatureEntityReadConverter extends AbstractEntityReadConverter<FeatureEntity> {
 
+  /**
+   * Instantiates a new feature entity read converter.
+   *
+   * @param applicationContext the application context
+   */
   FeatureEntityReadConverter(ApplicationContext applicationContext) {
     super(applicationContext);
   }
@@ -82,6 +89,12 @@ class FeatureEntityReadConverter extends AbstractEntityReadConverter<FeatureEnti
         TypeDescriptor.valueOf(FeatureEntity.class));
   }
 
+  /**
+   * Convert mongo document to feature entity.
+   *
+   * @param document the document
+   * @param entity   the feature entity
+   */
   void convert(Document document, FeatureEntity entity) {
     final List<?> bboxList = document.get("bbox", List.class);
     if (bboxList != null && bboxList.size() == 4) {

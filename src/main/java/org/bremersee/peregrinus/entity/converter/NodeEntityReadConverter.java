@@ -28,13 +28,20 @@ import org.springframework.core.convert.TypeDescriptor;
 import org.springframework.data.convert.ReadingConverter;
 
 /**
+ * The node entity read converter.
+ *
  * @author Christian Bremer
  */
 @ReadingConverter
-public class NodeEntityReadConverter extends AbstractNodeEntityReadConverter<NodeEntity> {
+class NodeEntityReadConverter extends AbstractNodeEntityReadConverter<NodeEntity> {
 
   private LeafEntityReadConverter leafConverter;
 
+  /**
+   * Instantiates a new node entity read converter.
+   *
+   * @param applicationContext the application context
+   */
   NodeEntityReadConverter(
       ApplicationContext applicationContext) {
     super(applicationContext);

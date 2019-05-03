@@ -22,13 +22,20 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.data.convert.ReadingConverter;
 
 /**
+ * The branch entity read converter.
+ *
  * @author Christian Bremer
  */
 @ReadingConverter
-public class BranchEntityReadConverter extends AbstractEntityReadConverter<BranchEntity> {
+class BranchEntityReadConverter extends AbstractEntityReadConverter<BranchEntity> {
 
   private NodeEntityReadConverter converter;
 
+  /**
+   * Instantiates a branch entity read converter.
+   *
+   * @param applicationContext the application context
+   */
   BranchEntityReadConverter(ApplicationContext applicationContext) {
     super(applicationContext);
     converter = new NodeEntityReadConverter(applicationContext);

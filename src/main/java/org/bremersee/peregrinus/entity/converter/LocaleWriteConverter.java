@@ -16,25 +16,20 @@
 
 package org.bremersee.peregrinus.entity.converter;
 
-import java.time.OffsetDateTime;
-import java.time.ZoneId;
-import java.util.Date;
+import java.util.Locale;
 import org.springframework.core.convert.converter.Converter;
-import org.springframework.data.convert.ReadingConverter;
+import org.springframework.data.convert.WritingConverter;
 
 /**
- * The offset date time read converter.
+ * The locale write converter.
  *
  * @author Christian Bremer
  */
-@ReadingConverter
-class OffsetDateTimeReadConverter implements Converter<Date, OffsetDateTime> {
+@WritingConverter
+class LocaleWriteConverter implements Converter<Locale, String> {
 
   @Override
-  public OffsetDateTime convert(Date date) {
-    if (date == null) {
-      return null;
-    }
-    return OffsetDateTime.ofInstant(date.toInstant(), ZoneId.of("Z"));
+  public String convert(Locale locale) {
+    return locale != null ? locale.toString() : null;
   }
 }

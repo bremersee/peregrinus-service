@@ -22,6 +22,8 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.data.convert.ReadingConverter;
 
 /**
+ * The trk entity read converter.
+ *
  * @author Christian Bremer
  */
 @ReadingConverter
@@ -29,6 +31,11 @@ class TrkEntityReadConverter extends AbstractEntityReadConverter<TrkEntity> {
 
   private FeatureEntityReadConverter featureConverter;
 
+  /**
+   * Instantiates a new trk entity read converter.
+   *
+   * @param applicationContext the application context
+   */
   TrkEntityReadConverter(ApplicationContext applicationContext) {
     super(applicationContext);
     this.featureConverter = new FeatureEntityReadConverter(applicationContext);

@@ -16,22 +16,27 @@
 
 package org.bremersee.peregrinus.entity.converter;
 
-import lombok.extern.slf4j.Slf4j;
 import org.bremersee.peregrinus.entity.FeatureLeafEntitySettings;
 import org.bson.Document;
 import org.springframework.context.ApplicationContext;
 import org.springframework.data.convert.ReadingConverter;
 
 /**
+ * The feature leaf entity settings read converter.
+ *
  * @author Christian Bremer
  */
 @ReadingConverter
-@Slf4j
-public class FeatureLeafEntitySettingsReadConverter
+class FeatureLeafEntitySettingsReadConverter
     extends AbstractEntityReadConverter<FeatureLeafEntitySettings> {
 
   private LeafEntitySettingsReadConverter leafSettingsConverter;
 
+  /**
+   * Instantiates a new feature leaf entity settings read converter.
+   *
+   * @param applicationContext the application context
+   */
   FeatureLeafEntitySettingsReadConverter(
       ApplicationContext applicationContext) {
     super(applicationContext);

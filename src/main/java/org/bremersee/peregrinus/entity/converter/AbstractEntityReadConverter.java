@@ -24,6 +24,9 @@ import org.springframework.core.convert.converter.Converter;
 import org.springframework.data.mongodb.core.convert.MappingMongoConverter;
 
 /**
+ * The abstract entity read converter.
+ *
+ * @param <T> the target type parameter
  * @author Christian Bremer
  */
 abstract class AbstractEntityReadConverter<T> implements Converter<Document, T> {
@@ -32,14 +35,30 @@ abstract class AbstractEntityReadConverter<T> implements Converter<Document, T> 
 
   private ApplicationContext applicationContext;
 
+  /**
+   * Instantiates a new abstract entity read converter.
+   *
+   * @param applicationContext the application context
+   */
   AbstractEntityReadConverter(ApplicationContext applicationContext) {
     this.applicationContext = applicationContext;
   }
 
+  /**
+   * Gets mongo converter.
+   *
+   * @return the mongo converter
+   */
   MappingMongoConverter getMongoConverter() {
     return applicationContext.getBean(MappingMongoConverter.class);
   }
 
+  /**
+   * Convert date to offset date time.
+   *
+   * @param date the date
+   * @return the offset date time
+   */
   OffsetDateTime convertToOffsetDateTime(Date date) {
     return dateConverter.convert(date);
   }

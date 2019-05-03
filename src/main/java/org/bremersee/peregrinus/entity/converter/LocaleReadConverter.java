@@ -16,34 +16,33 @@
 
 package org.bremersee.peregrinus.entity.converter;
 
-import org.bremersee.peregrinus.entity.RteEntity;
-import org.bson.Document;
-import org.springframework.context.ApplicationContext;
+import java.util.Locale;
+import java.util.regex.Pattern;
+import org.springframework.core.convert.converter.Converter;
 import org.springframework.data.convert.ReadingConverter;
+import org.springframework.util.StringUtils;
 
 /**
- * The rte entity read converter.
+ * The locale read converter.
  *
  * @author Christian Bremer
  */
 @ReadingConverter
-class RteEntityReadConverter extends AbstractEntityReadConverter<RteEntity> {
-
-  private FeatureEntityReadConverter featureConverter;
-
-  /**
-   * Instantiates a new rte entity read converter.
-   *
-   * @param applicationContext the application context
-   */
-  RteEntityReadConverter(ApplicationContext applicationContext) {
-    super(applicationContext);
-    this.featureConverter = new FeatureEntityReadConverter(applicationContext);
-  }
+class LocaleReadConverter implements Converter<String, Locale> {
 
   @Override
-  public RteEntity convert(Document document) {
-    return (RteEntity) featureConverter.convert(document);
+  public Locale convert(String s) {
+    if (StringUtils.hasText(s)) {
+      String[] parts = s.split(Pattern.quote("_"));
+      switch (parts.length) {
+        case 1:
+          return new Locale(parts[0]);
+        case 2:
+          return new Locale(parts[0], parts[1]);
+        default:
+          return new Locale(parts[0], parts[1], parts[2]);
+      }
+    }
+    return null;
   }
-
 }

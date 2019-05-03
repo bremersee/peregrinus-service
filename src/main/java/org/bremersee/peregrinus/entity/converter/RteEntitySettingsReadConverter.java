@@ -22,6 +22,8 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.data.convert.ReadingConverter;
 
 /**
+ * The rte entity settings read converter.
+ *
  * @author Christian Bremer
  */
 @ReadingConverter
@@ -30,6 +32,11 @@ class RteEntitySettingsReadConverter
 
   private FeatureEntitySettingsReadConverter converter;
 
+  /**
+   * Instantiates a new rte entity settings read converter.
+   *
+   * @param applicationContext the application context
+   */
   RteEntitySettingsReadConverter(ApplicationContext applicationContext) {
     super(applicationContext);
     this.converter = new FeatureEntitySettingsReadConverter(applicationContext);

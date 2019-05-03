@@ -22,6 +22,8 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.data.convert.ReadingConverter;
 
 /**
+ * The wpt entity settings read converter.
+ *
  * @author Christian Bremer
  */
 @ReadingConverter
@@ -30,6 +32,11 @@ class WptEntitySettingsReadConverter
 
   private FeatureEntitySettingsReadConverter converter;
 
+  /**
+   * Instantiates a new wpt entity settings read converter.
+   *
+   * @param applicationContext the application context
+   */
   WptEntitySettingsReadConverter(ApplicationContext applicationContext) {
     super(applicationContext);
     this.converter = new FeatureEntitySettingsReadConverter(applicationContext);

@@ -29,12 +29,19 @@ import org.springframework.core.convert.TypeDescriptor;
 import org.springframework.data.convert.ReadingConverter;
 
 /**
+ * The feature entity settings read converter.
+ *
  * @author Christian Bremer
  */
 @ReadingConverter
 class FeatureEntitySettingsReadConverter
     extends AbstractEntityReadConverter<FeatureEntitySettings> {
 
+  /**
+   * Instantiates a new feature entity settings read converter.
+   *
+   * @param applicationContext the application context
+   */
   FeatureEntitySettingsReadConverter(ApplicationContext applicationContext) {
     super(applicationContext);
   }
@@ -65,6 +72,12 @@ class FeatureEntitySettingsReadConverter
         TypeDescriptor.valueOf(FeatureEntitySettings.class));
   }
 
+  /**
+   * Convert mongo document to feature entity settings.
+   *
+   * @param document the document
+   * @param entity   the feature entity settings
+   */
   void convert(Document document, FeatureEntitySettings entity) {
     entity.setId(document.getObjectId("_id").toString());
     entity.setFeatureId(document.getString("featureId"));

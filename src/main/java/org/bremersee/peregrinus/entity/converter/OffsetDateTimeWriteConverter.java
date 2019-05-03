@@ -17,24 +17,24 @@
 package org.bremersee.peregrinus.entity.converter;
 
 import java.time.OffsetDateTime;
-import java.time.ZoneId;
 import java.util.Date;
 import org.springframework.core.convert.converter.Converter;
-import org.springframework.data.convert.ReadingConverter;
+import org.springframework.data.convert.WritingConverter;
 
 /**
- * The offset date time read converter.
+ * The offset date time write converter.
  *
  * @author Christian Bremer
  */
-@ReadingConverter
-class OffsetDateTimeReadConverter implements Converter<Date, OffsetDateTime> {
+@WritingConverter
+class OffsetDateTimeWriteConverter
+    implements Converter<OffsetDateTime, Date> {
 
   @Override
-  public OffsetDateTime convert(Date date) {
-    if (date == null) {
+  public Date convert(OffsetDateTime offsetDateTime) {
+    if (offsetDateTime == null) {
       return null;
     }
-    return OffsetDateTime.ofInstant(date.toInstant(), ZoneId.of("Z"));
+    return Date.from(offsetDateTime.toInstant());
   }
 }

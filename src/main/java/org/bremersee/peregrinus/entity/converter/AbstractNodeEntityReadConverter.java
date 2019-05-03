@@ -22,16 +22,30 @@ import org.bson.Document;
 import org.springframework.context.ApplicationContext;
 
 /**
+ * The abstract node entity read converter.
+ *
+ * @param <T> the target type parameter
  * @author Christian Bremer
  */
 abstract class AbstractNodeEntityReadConverter<T extends NodeEntity>
     extends AbstractEntityReadConverter<T> {
 
+  /**
+   * Instantiates a new abstract node entity read converter.
+   *
+   * @param applicationContext the application context
+   */
   AbstractNodeEntityReadConverter(
       ApplicationContext applicationContext) {
     super(applicationContext);
   }
 
+  /**
+   * Convert mongo document to node entity.
+   *
+   * @param document the document
+   * @param entity   the node entity
+   */
   void convert(Document document, NodeEntity entity) {
     entity.setAcl(getMongoConverter()
         .read(AclEntity.class, document.get("acl", Document.class)));

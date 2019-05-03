@@ -22,13 +22,20 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.data.convert.ReadingConverter;
 
 /**
+ * The type feature leaf entity read converter.
+ *
  * @author Christian Bremer
  */
 @ReadingConverter
-public class FeatureLeafEntityReadConverter extends AbstractEntityReadConverter<FeatureLeafEntity> {
+class FeatureLeafEntityReadConverter extends AbstractEntityReadConverter<FeatureLeafEntity> {
 
   private LeafEntityReadConverter leafConverter;
 
+  /**
+   * Instantiates a new feature leaf entity read converter.
+   *
+   * @param applicationContext the application context
+   */
   FeatureLeafEntityReadConverter(
       ApplicationContext applicationContext) {
     super(applicationContext);

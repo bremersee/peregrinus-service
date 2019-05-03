@@ -27,12 +27,19 @@ import org.springframework.core.convert.TypeDescriptor;
 import org.springframework.data.convert.ReadingConverter;
 
 /**
+ * The leaf entity settings read converter.
+ *
  * @author Christian Bremer
  */
 @ReadingConverter
-public class LeafEntitySettingsReadConverter
+class LeafEntitySettingsReadConverter
     extends AbstractNodeEntitySettingsReadConverter<LeafEntitySettings> {
 
+  /**
+   * Instantiates a new leaf entity settings read converter.
+   *
+   * @param applicationContext the application context
+   */
   LeafEntitySettingsReadConverter(
       ApplicationContext applicationContext) {
     super(applicationContext);

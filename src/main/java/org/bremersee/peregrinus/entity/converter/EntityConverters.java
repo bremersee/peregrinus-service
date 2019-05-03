@@ -22,6 +22,8 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.core.convert.converter.Converter;
 
 /**
+ * The mongo entity converters.
+ *
  * @author Christian Bremer
  */
 public abstract class EntityConverters {
@@ -29,9 +31,20 @@ public abstract class EntityConverters {
   private EntityConverters() {
   }
 
+  /**
+   * Gets converters to register.
+   *
+   * @param applicationContext the application context
+   * @return the converters to register
+   */
   public static List<Converter<?, ?>> getConvertersToRegister(
       ApplicationContext applicationContext) {
     return Arrays.asList(
+        new LocaleReadConverter(),
+        new LocaleWriteConverter(),
+        new OffsetDateTimeReadConverter(),
+        new OffsetDateTimeWriteConverter(),
+
         new NodeEntityReadConverter(applicationContext),
         new NodeEntitySettingsReadConverter(applicationContext),
         new BranchEntityReadConverter(applicationContext),

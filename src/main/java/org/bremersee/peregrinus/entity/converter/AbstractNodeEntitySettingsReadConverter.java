@@ -21,16 +21,30 @@ import org.bson.Document;
 import org.springframework.context.ApplicationContext;
 
 /**
+ * The abstract node entity settings read converter.
+ *
+ * @param <T> the target type parameter
  * @author Christian Bremer
  */
 abstract class AbstractNodeEntitySettingsReadConverter<T extends NodeEntitySettings>
     extends AbstractEntityReadConverter<T> {
 
+  /**
+   * Instantiates a new abstract node entity settings read converter.
+   *
+   * @param applicationContext the application context
+   */
   AbstractNodeEntitySettingsReadConverter(
       ApplicationContext applicationContext) {
     super(applicationContext);
   }
 
+  /**
+   * Convert mongo document to node entity settings.
+   *
+   * @param document the document
+   * @param entity   the node entity settings
+   */
   void convert(Document document, NodeEntitySettings entity) {
     entity.setId(document.getObjectId("_id").toString());
     entity.setNodeId(document.getString("nodeId"));

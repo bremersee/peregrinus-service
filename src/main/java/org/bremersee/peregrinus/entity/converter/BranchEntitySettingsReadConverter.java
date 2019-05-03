@@ -16,22 +16,27 @@
 
 package org.bremersee.peregrinus.entity.converter;
 
-import lombok.extern.slf4j.Slf4j;
 import org.bremersee.peregrinus.entity.BranchEntitySettings;
 import org.bson.Document;
 import org.springframework.context.ApplicationContext;
 import org.springframework.data.convert.ReadingConverter;
 
 /**
+ * The branch entity settings read converter.
+ *
  * @author Christian Bremer
  */
 @ReadingConverter
-@Slf4j
-public class BranchEntitySettingsReadConverter
+class BranchEntitySettingsReadConverter
     extends AbstractEntityReadConverter<BranchEntitySettings> {
 
   private NodeEntitySettingsReadConverter nodeSettingsConverter;
 
+  /**
+   * Instantiates a new branch entity settings read converter.
+   *
+   * @param applicationContext the application context
+   */
   BranchEntitySettingsReadConverter(
       ApplicationContext applicationContext) {
     super(applicationContext);

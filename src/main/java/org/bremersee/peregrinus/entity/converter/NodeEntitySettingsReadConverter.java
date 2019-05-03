@@ -18,7 +18,6 @@ package org.bremersee.peregrinus.entity.converter;
 
 import static org.bremersee.peregrinus.entity.TypeAliases.BRANCH_SETTINGS;
 
-import lombok.extern.slf4j.Slf4j;
 import org.bremersee.peregrinus.entity.BranchEntitySettings;
 import org.bremersee.peregrinus.entity.NodeEntitySettings;
 import org.bremersee.peregrinus.entity.TypeAliases;
@@ -29,15 +28,21 @@ import org.springframework.core.convert.TypeDescriptor;
 import org.springframework.data.convert.ReadingConverter;
 
 /**
+ * The node entity settings read converter.
+ *
  * @author Christian Bremer
  */
 @ReadingConverter
-@Slf4j
-public class NodeEntitySettingsReadConverter
+class NodeEntitySettingsReadConverter
     extends AbstractNodeEntitySettingsReadConverter<NodeEntitySettings> {
 
   private LeafEntitySettingsReadConverter leafSettingsConverter;
 
+  /**
+   * Instantiates a new node entity settings read converter.
+   *
+   * @param applicationContext the application context
+   */
   NodeEntitySettingsReadConverter(
       ApplicationContext applicationContext) {
     super(applicationContext);
@@ -47,9 +52,6 @@ public class NodeEntitySettingsReadConverter
   @Override
   public NodeEntitySettings convert(Document document) {
     final String typeAlias = document.getString("_class");
-
-    log.info("******************** " + typeAlias);
-
     if (BRANCH_SETTINGS.equalsIgnoreCase(typeAlias)) {
       BranchEntitySettings entity = new BranchEntitySettings();
       entity.setOpen(document.getBoolean("open", false));
