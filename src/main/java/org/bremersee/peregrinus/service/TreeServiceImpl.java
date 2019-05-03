@@ -26,7 +26,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
-import javax.validation.constraints.NotNull;
 import lombok.extern.slf4j.Slf4j;
 import org.bremersee.common.model.AccessControlList;
 import org.bremersee.exception.ServiceException;
@@ -51,7 +50,6 @@ import org.bremersee.peregrinus.service.adapter.LeafAdapter;
 import org.bremersee.security.access.AclBuilder;
 import org.bremersee.security.access.AclMapper;
 import org.bremersee.security.access.PermissionConstants;
-import org.hibernate.validator.constraints.Length;
 import org.springframework.stereotype.Component;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -94,8 +92,8 @@ public class TreeServiceImpl extends AbstractServiceImpl implements TreeService 
 
   @Override
   public Mono<Branch> createBranch(
-      @NotNull @Length(min = 1) final String name,
-      @NotNull final String userId) {
+      final String name,
+      final String userId) {
 
     return treeRepository
         .persistNode(BranchEntity
@@ -117,11 +115,11 @@ public class TreeServiceImpl extends AbstractServiceImpl implements TreeService 
 
   @Override
   public Mono<Branch> createBranch(
-      @NotNull @Length(min = 1) final String name,
-      @NotNull final String parentId,
-      @NotNull final String userId,
-      @NotNull final Set<String> roles,
-      @NotNull final Set<String> groups) {
+      final String name,
+      final String parentId,
+      final String userId,
+      final Set<String> roles,
+      final Set<String> groups) {
 
     log.info("msg=[Creating branch.] name=[{}] parentId=[{}]", name, parentId);
     return treeRepository
@@ -174,11 +172,11 @@ public class TreeServiceImpl extends AbstractServiceImpl implements TreeService 
 
   @Override
   public Flux<FeatureLeaf> createFeatureLeafs(
-      @NotNull final String parentId,
-      @NotNull final FeatureCollection featureCollection,
-      @NotNull final String userId,
-      @NotNull final Set<String> roles,
-      @NotNull final Set<String> groups) {
+      final String parentId,
+      final FeatureCollection featureCollection,
+      final String userId,
+      final Set<String> roles,
+      final Set<String> groups) {
 
     return treeRepository.findBranchById(parentId, WRITE, true, userId, roles, groups)
         .switchIfEmpty(Mono.error(ServiceException.forbidden("Branch", parentId)))
@@ -239,12 +237,12 @@ public class TreeServiceImpl extends AbstractServiceImpl implements TreeService 
 
   @Override
   public Flux<FeatureLeaf> importGpx(
-      @NotNull final String parentId,
-      @NotNull final Gpx gpx,
-      @NotNull final GpxImportSettings importSettings,
-      @NotNull final String userId,
-      @NotNull final Set<String> roles,
-      @NotNull final Set<String> groups) {
+      final String parentId,
+      final Gpx gpx,
+      final GpxImportSettings importSettings,
+      final String userId,
+      final Set<String> roles,
+      final Set<String> groups) {
 
     return createFeatureLeafs(
         parentId,
@@ -258,9 +256,9 @@ public class TreeServiceImpl extends AbstractServiceImpl implements TreeService 
   public Flux<Branch> loadBranches(
       boolean openAll,
       boolean includePublic,
-      @NotNull String userId,
-      @NotNull Set<String> roles,
-      @NotNull Set<String> groups) {
+      String userId,
+      Set<String> roles,
+      Set<String> groups) {
 
     final OpenBranchCommand openBranchCommand = openAll
         ? OpenBranchCommand.ALL
@@ -272,11 +270,11 @@ public class TreeServiceImpl extends AbstractServiceImpl implements TreeService 
 
   @Override
   public Mono<Branch> openBranch(
-      @NotNull String branchId,
+      String branchId,
       boolean openAll,
-      @NotNull String userId,
-      @NotNull Set<String> roles,
-      @NotNull Set<String> groups) {
+      String userId,
+      Set<String> roles,
+      Set<String> groups) {
 
     return treeRepository.findBranchById(branchId, READ, true, userId, roles, groups)
         .switchIfEmpty(Mono.error(ServiceException.forbidden()))
@@ -286,8 +284,8 @@ public class TreeServiceImpl extends AbstractServiceImpl implements TreeService 
 
   @Override
   public Mono<Void> closeBranch(
-      @NotNull String branchId,
-      @NotNull String userId) {
+      String branchId,
+      String userId) {
 
     return treeRepository.closeBranch(branchId, userId);
   }

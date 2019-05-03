@@ -24,6 +24,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.function.Function;
 import java.util.stream.Collectors;
+import lombok.extern.slf4j.Slf4j;
 import org.bremersee.geojson.utils.GeometryUtils;
 import org.bremersee.gpx.model.BoundsType;
 import org.bremersee.gpx.model.Gpx;
@@ -52,6 +53,7 @@ import reactor.util.function.Tuple2;
  * @author Christian Bremer
  */
 @Component
+@Slf4j
 public class FeaturesToGpxConverter {
 
   private final Function<Rte, Trk> rteToTrkConvert = new RteToTrkConverter();
@@ -82,7 +84,7 @@ public class FeaturesToGpxConverter {
    */
   public FeaturesToGpxConverter(
       final JaxbContextBuilder jaxbContextBuilder,
-      final @Value("${bremersee.gpx.name-spaces:@null}") String[] gpxNameSpaces,
+      final @Value("${bremersee.gpx.name-spaces:}") String[] gpxNameSpaces,
       final @Value("${bremersee.gpx.creator:Peregrinus Web App}") String creator,
       final @Value("${bremersee.gpx.version:1.1}") String version,
       final @Value("${bremersee.gpx.link:https://peregrinus.bremersee.org}") String link,

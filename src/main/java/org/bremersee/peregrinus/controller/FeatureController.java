@@ -24,7 +24,6 @@ import org.bremersee.garmin.trip.v1.model.ext.ViaPointCalculationMode;
 import org.bremersee.garmin.trip.v1.model.ext.ViaPointElevationMode;
 import org.bremersee.gpx.model.Gpx;
 import org.bremersee.groupman.api.GroupControllerApi;
-import org.bremersee.peregrinus.model.FeatureCollection;
 import org.bremersee.peregrinus.model.StringList;
 import org.bremersee.peregrinus.model.gpx.GpxExportSettings;
 import org.bremersee.peregrinus.service.FeatureService;

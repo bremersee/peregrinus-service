@@ -149,7 +149,10 @@ public class FeatureServiceImpl extends AbstractServiceImpl implements FeatureSe
   }
 
   @Override
-  public Mono<Boolean> renameFeature(String id, String name, @NotNull String userId) {
+  public Mono<Boolean> renameFeature(
+      String id,
+      String name,
+      String userId) {
     return featureRepository.renameFeature(id, name, userId);
   }
 

@@ -16,6 +16,8 @@
 
 package org.bremersee.peregrinus.entity.converter;
 
+import java.math.BigDecimal;
+import java.util.List;
 import org.bremersee.peregrinus.entity.FeatureEntity;
 import org.bremersee.peregrinus.entity.RteEntity;
 import org.bremersee.peregrinus.entity.RteEntityProperties;
@@ -81,7 +83,26 @@ class FeatureEntityReadConverter extends AbstractEntityReadConverter<FeatureEnti
   }
 
   void convert(Document document, FeatureEntity entity) {
-    entity.setBbox(getMongoConverter().read(double[].class, document.get("bbox", Document.class)));
+    final List<?> bboxList = document.get("bbox", List.class);
+    if (bboxList != null && bboxList.size() == 4) {
+      final double[] bbox = new double[4];
+      int i = 0;
+      for (Object value : bboxList) {
+        bbox[i] = toNumber(value);
+        i++;
+      }
+      entity.setBbox(bbox);
+    }
     entity.setId(document.getObjectId("_id").toString());
+  }
+
+  private double toNumber(Object value) {
+    if (value instanceof Number) {
+      return ((Number) value).doubleValue();
+    }
+    if (value != null) {
+      return new BigDecimal(value.toString()).doubleValue();
+    }
+    return 0.;
   }
 }
