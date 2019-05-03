@@ -72,15 +72,15 @@ public class FeatureController extends AbstractController {
     final GpxExportSettings settings = GpxExportSettings
         .builder()
         .author(author)
-        .calculationMode(ViaPointCalculationMode.valueOf(calculationMode))
+        .calculationMode(ViaPointCalculationMode.fromValue(calculationMode))
         .description(description)
-        .elevationMode(ViaPointElevationMode.valueOf(elevationMode))
+        .elevationMode(ViaPointElevationMode.fromValue(elevationMode))
         .exportRouteAsTrack(track)
         .exportRouteWaypoints(waypoints)
         .name(name)
         .percentWaypoints(percentWaypoints)
-        .routeWaypointSymbol(WptSymbol.valueOf(waypointSymbol))
-        .transportationMode(TripTransportationMode.valueOf(transportationMode))
+        .routeWaypointSymbol(WptSymbol.fromValue(waypointSymbol))
+        .transportationMode(TripTransportationMode.fromValue(transportationMode))
         .build();
     return oneWithAuth(auth -> featureService
         .exportGpx(ids, settings, auth.getUserId(), auth.getRoles(), auth.getGroups()));
