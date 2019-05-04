@@ -51,7 +51,7 @@ bremersee:
     exception-mappings:
       - exception-class-name: org.springframework.dao.DuplicateKeyException
         status: 409
-        message: "Entity already exists."
+        message: "Entry already exists."
         code: "PER:1000"
       - exception-class-name: org.springframework.dao.OptimisticLockingFailureException
         status: 409
