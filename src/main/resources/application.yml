@@ -58,7 +58,7 @@ bremersee:
         message: "Version is not up to date."
         code: "PER:1001"
   peregrinus:
-    groupman-base-uri: ""
+    groupman-base-uri: ${GROUPMAN_URI:}
 
 ---
 
@@ -68,5 +68,3 @@ spring:
   data:
     mongodb:
       uri: ${MONGODB_URI:mongodb://user:secret@192.168.1.40:27017,192.168.1.40:27018,192.168.1.40:27019/peregrinus?connect=direct}
-
-

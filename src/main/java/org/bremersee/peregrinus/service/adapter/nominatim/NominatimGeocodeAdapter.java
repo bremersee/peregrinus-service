@@ -80,7 +80,6 @@ public class NominatimGeocodeAdapter implements GeocodeAdapter {
     final NominatimGeocodeQueryRequest nominatimRequest = (NominatimGeocodeQueryRequest) request;
     final MultiValueMap<String, String> params = buildParameters(nominatimRequest);
     return webClientBuilder
-        .uriBuilderFactory(null)
         .baseUrl(properties.getSearchUri())
         .build()
         .get()

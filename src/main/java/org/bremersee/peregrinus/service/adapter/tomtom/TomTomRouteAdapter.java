@@ -43,6 +43,7 @@ import org.bremersee.peregrinus.model.tomtom.TomTomRteCalcRequest;
 import org.bremersee.peregrinus.service.adapter.RouteAdapter;
 import org.bremersee.peregrinus.service.adapter.tomtom.exception.RoutingExceptionMessageParser;
 import org.bremersee.peregrinus.service.adapter.tomtom.model.AvoidAreas;
+import org.bremersee.peregrinus.service.adapter.tomtom.model.Language;
 import org.bremersee.peregrinus.service.adapter.tomtom.model.Rectangle;
 import org.bremersee.peregrinus.service.adapter.tomtom.model.Route;
 import org.bremersee.peregrinus.service.adapter.tomtom.model.RouteInstruction;
@@ -157,7 +158,8 @@ public class TomTomRouteAdapter implements RouteAdapter {
     map.set("routeRepresentation", "polyline");
     map.set("instructionsType", "text");
     if (request.getLanguage() != null) {
-      map.set("language", request.getLanguage().toString());
+      final Language language = Language.fromLocale(request.getLanguage().toLocale());
+      map.set("language", language.toString());
     }
     if (request.getTravelMode() != null) {
       map.set("travelMode", request.getTravelMode().getValue()); // car, bicycle

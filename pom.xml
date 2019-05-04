@@ -20,7 +20,7 @@
 
   <properties>
     <start-class>org.bremersee.peregrinus.Application</start-class>
-
+    <dockerfile.image>peregrinus</dockerfile.image>
     <keycloak.version>4.8.3.Final</keycloak.version>
   </properties>
 

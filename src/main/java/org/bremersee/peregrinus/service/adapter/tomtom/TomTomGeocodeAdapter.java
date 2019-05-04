@@ -35,6 +35,7 @@ import org.bremersee.peregrinus.model.tomtom.TomTomGeocodeQueryRequest;
 import org.bremersee.peregrinus.service.adapter.GeocodeAdapter;
 import org.bremersee.peregrinus.service.adapter.tomtom.model.GeocodeResponse;
 import org.bremersee.peregrinus.service.adapter.tomtom.model.GeocodeResult;
+import org.bremersee.peregrinus.service.adapter.tomtom.model.Language;
 import org.bremersee.web.ErrorDetectors;
 import org.bremersee.web.reactive.function.client.WebClientErrorDecoder;
 import org.locationtech.jts.geom.Coordinate;
@@ -89,10 +90,13 @@ public class TomTomGeocodeAdapter implements GeocodeAdapter {
     params.set("key", properties.getKey());
 
     return webClientBuilder
-        .baseUrl(baseUri)
+        .baseUrl(properties.getGeocodeUri())
         .build()
         .get()
-        .uri(uriBuilder -> uriBuilder.queryParams(params).build())
+        .uri(uriBuilder -> uriBuilder
+            .path("/geocode/{query}.json")
+            .queryParams(params)
+            .build(request.getQuery()))
         .header("User-Agent", properties.getUserAgent())
         .retrieve()
         .onStatus(ErrorDetectors.DEFAULT, webClientErrorDecoder)
@@ -102,7 +106,10 @@ public class TomTomGeocodeAdapter implements GeocodeAdapter {
   }
 
   private String buildPath(GeocodeQueryRequest request) {
-    return "/geocode/" + UriUtils.encodePath(request.getQuery(), StandardCharsets.UTF_8) + ".json";
+    final String path = "/geocode/"
+        + UriUtils.encodePath(request.getQuery(), StandardCharsets.UTF_8) + ".json";
+    log.info("Using path {}", path);
+    return path;
   }
 
   private MultiValueMap<String, String> buildParameters(TomTomGeocodeQueryRequest request) {
@@ -114,7 +121,8 @@ public class TomTomGeocodeAdapter implements GeocodeAdapter {
       map.set("ofs", request.getOffset().toString());
     }
     if (request.getLanguage() != null) {
-      map.set("language", request.getLanguage().toString());
+      final Language language = Language.fromLocale(request.getLanguage().toLocale());
+      map.set("language", language.toString());
     }
     if (request.getCountryCodes() != null && !request.getCountryCodes().isEmpty()) {
       map.set("countrySet", StringUtils.collectionToCommaDelimitedString(
@@ -153,7 +161,8 @@ public class TomTomGeocodeAdapter implements GeocodeAdapter {
   private Wpt map(GeocodeResult geocodeResult) {
     return Wpt.builder()
         .geometry(geocodeResult.getPosition().toPoint())
-        .properties(WptProperties.builder()
+        .properties(WptProperties
+            .builder()
             .address(map(geocodeResult.getAddress()))
             .name(findName(geocodeResult))
             .build())
