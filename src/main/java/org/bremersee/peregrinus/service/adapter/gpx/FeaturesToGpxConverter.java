@@ -17,7 +17,6 @@
 package org.bremersee.peregrinus.service.adapter.gpx;
 
 import java.math.BigDecimal;
-import java.net.URL;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
@@ -33,6 +32,7 @@ import org.bremersee.gpx.model.MetadataType;
 import org.bremersee.gpx.model.RteType;
 import org.bremersee.gpx.model.TrkType;
 import org.bremersee.gpx.model.WptType;
+import org.bremersee.peregrinus.config.GpxProperties;
 import org.bremersee.peregrinus.model.Feature;
 import org.bremersee.peregrinus.model.Rte;
 import org.bremersee.peregrinus.model.Trk;
@@ -42,9 +42,7 @@ import org.bremersee.peregrinus.service.RteToTrkConverter;
 import org.bremersee.xml.ConverterUtils;
 import org.bremersee.xml.JaxbContextBuilder;
 import org.locationtech.jts.geom.Coordinate;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
-import org.springframework.util.StringUtils;
 import reactor.util.function.Tuple2;
 
 /**
@@ -73,42 +71,23 @@ public class FeaturesToGpxConverter {
   private final String linkText;
 
   /**
-   * Instantiates a new Features to gpx converter.
+   * Instantiates a new features to gpx converter.
    *
    * @param jaxbContextBuilder the jaxb context builder
-   * @param gpxNameSpaces      the gpx name spaces (can be {@code null})
-   * @param creator            the creator (can be {@code null})
-   * @param version            the version (can be {@code null})
-   * @param link               the link (can be {@code null})
-   * @param linkText           the link text (can be {@code null})
+   * @param gpxProperties      the gpx properties
    */
   public FeaturesToGpxConverter(
       final JaxbContextBuilder jaxbContextBuilder,
-      final @Value("${bremersee.gpx.name-spaces:}") String[] gpxNameSpaces,
-      final @Value("${bremersee.gpx.creator:Peregrinus Web App}") String creator,
-      final @Value("${bremersee.gpx.version:1.1}") String version,
-      final @Value("${bremersee.gpx.link:https://peregrinus.bremersee.org}") String link,
-      final @Value("${bremersee.gpx.link-text:Peregrinus Web App}") String linkText) {
+      final GpxProperties gpxProperties) {
 
+    final String[] gpxNameSpaces = gpxProperties.getNameSpaces();
     this.rteConverter = new RteToRteTypeConverter(jaxbContextBuilder, gpxNameSpaces);
     this.trkConverter = new TrkToTrkTypeConverter(jaxbContextBuilder, gpxNameSpaces);
     this.wptConverter = new WptToWptTypeConverter(jaxbContextBuilder, gpxNameSpaces);
-    this.version = StringUtils.hasText(version) ? version.trim() : "1.1";
-    this.creator = StringUtils.hasText(creator) ? creator.trim() : "Peregrinus Web App";
-    this.link = isLink(link) ? link : "https://peregrinus.bremersee.org";
-    this.linkText = StringUtils.hasText(linkText) ? linkText : "Peregrinus Web App";
-  }
-
-  private static boolean isLink(String link) {
-    if (!StringUtils.hasText(link)) {
-      return false;
-    }
-    try {
-      new URL(link);
-      return true;
-    } catch (Exception ignored) {
-      return false;
-    }
+    this.version = gpxProperties.getVersion();
+    this.creator = gpxProperties.getCreator();
+    this.link = gpxProperties.getLink();
+    this.linkText = gpxProperties.getLinkText();
   }
 
   /**

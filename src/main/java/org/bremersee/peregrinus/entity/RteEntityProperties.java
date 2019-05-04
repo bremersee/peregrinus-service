@@ -29,6 +29,8 @@ import org.bremersee.peregrinus.model.RteSeg;
 import org.springframework.data.annotation.TypeAlias;
 
 /**
+ * The route properties entity.
+ *
  * @author Christian Bremer
  */
 @TypeAlias("RteProperties")
@@ -40,11 +42,33 @@ public class RteEntityProperties extends FeatureEntityProperties {
 
   private List<RteSeg> rteSegments;
 
+  /**
+   * Instantiates a new route properties entity.
+   */
+  @SuppressWarnings("WeakerAccess")
   public RteEntityProperties() {
     rteSegments = new ArrayList<>();
   }
 
+  /**
+   * Instantiates a new route properties entity.
+   *
+   * @param acl                  the acl
+   * @param created              the created
+   * @param createdBy            the created by
+   * @param modified             the modified
+   * @param modifiedBy           the modified by
+   * @param name                 the name
+   * @param plainTextDescription the plain text description
+   * @param markdownDescription  the markdown description
+   * @param links                the links
+   * @param address              the address
+   * @param departureTime        the departure time
+   * @param arrivalTime          the arrival time
+   * @param rteSegments          the rte segments
+   */
   @Builder
+  @SuppressWarnings("unused")
   public RteEntityProperties(
       AclEntity acl,
       OffsetDateTime created,
@@ -65,6 +89,12 @@ public class RteEntityProperties extends FeatureEntityProperties {
     setRteSegments(rteSegments);
   }
 
+  /**
+   * Sets route segments.
+   *
+   * @param rteSegments the route segments
+   */
+  @SuppressWarnings("WeakerAccess")
   public void setRteSegments(List<RteSeg> rteSegments) {
     if (rteSegments == null) {
       this.rteSegments = new ArrayList<>();

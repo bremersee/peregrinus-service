@@ -29,6 +29,8 @@ import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 /**
+ * The tree node entity.
+ *
  * @author Christian Bremer
  */
 @Document(collection = "directory")
@@ -38,10 +40,19 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @ToString
 public class NodeEntity {
 
+  /**
+   * The constant ID_PATH.
+   */
   public static final String ID_PATH = "id";
 
+  /**
+   * The constant ACL_PATH.
+   */
   public static final String ACL_PATH = "acl";
 
+  /**
+   * The constant PARENT_ID_PATH.
+   */
   public static final String PARENT_ID_PATH = "parentId";
 
   @Id
@@ -60,6 +71,9 @@ public class NodeEntity {
 
   private AclEntity acl;
 
+  /**
+   * Instantiates a new tree node entity.
+   */
   NodeEntity() {
     final OffsetDateTime now = OffsetDateTime.now(Clock.systemUTC());
     this.created = now;
@@ -67,6 +81,17 @@ public class NodeEntity {
     this.acl = AclBuilder.builder().defaults(PermissionConstants.ALL).build(AclEntity::new);
   }
 
+  /**
+   * Instantiates a new tree node entity.
+   *
+   * @param id         the id
+   * @param created    the created
+   * @param createdBy  the created by
+   * @param modified   the modified
+   * @param modifiedBy the modified by
+   * @param parentId   the parent id
+   * @param acl        the acl
+   */
   NodeEntity(
       String id,
       OffsetDateTime created,
@@ -88,18 +113,33 @@ public class NodeEntity {
     setParentId(parentId);
   }
 
+  /**
+   * Sets created.
+   *
+   * @param created the created
+   */
   public void setCreated(final OffsetDateTime created) {
     if (created != null) {
       this.created = created;
     }
   }
 
+  /**
+   * Sets modified.
+   *
+   * @param modified the modified
+   */
   public void setModified(final OffsetDateTime modified) {
     if (modified != null) {
       this.modified = modified;
     }
   }
 
+  /**
+   * Sets acl.
+   *
+   * @param acl the acl
+   */
   public void setAcl(final AclEntity acl) {
     if (acl != null) {
       this.acl = acl;

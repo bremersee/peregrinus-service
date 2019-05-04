@@ -29,6 +29,8 @@ import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 /**
+ * The tree node settings entity.
+ *
  * @author Christian Bremer
  */
 @Document(collection = "directory-settings")
@@ -42,8 +44,14 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @NoArgsConstructor(access = AccessLevel.PACKAGE)
 public class NodeEntitySettings {
 
+  /**
+   * The constant NODE_ID_PATH.
+   */
   public static final String NODE_ID_PATH = "nodeId";
 
+  /**
+   * The constant USER_ID_PATH.
+   */
   public static final String USER_ID_PATH = "userId";
 
   @Id
@@ -55,6 +63,13 @@ public class NodeEntitySettings {
   @Indexed
   private String userId;
 
+  /**
+   * Instantiates a new tree node settings entity.
+   *
+   * @param id     the id
+   * @param nodeId the node id
+   * @param userId the user id
+   */
   NodeEntitySettings(String id, String nodeId, String userId) {
     this.id = id;
     this.nodeId = nodeId;

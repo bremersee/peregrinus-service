@@ -23,17 +23,17 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 import org.springframework.data.annotation.Id;
-import org.springframework.data.annotation.TypeAlias;
 import org.springframework.data.mongodb.core.index.CompoundIndex;
 import org.springframework.data.mongodb.core.index.CompoundIndexes;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 /**
+ * The GeoJSON feature settings entity.
+ *
  * @author Christian Bremer
  */
 @Document(collection = "feature-settings")
-@TypeAlias("FeatureSettings")
 @CompoundIndexes({
     @CompoundIndex(name = "uk_feature_user", def = "{'featureId': 1, 'userId': 1}", unique = true)
 })
@@ -44,8 +44,14 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @NoArgsConstructor(access = AccessLevel.PACKAGE)
 public class FeatureEntitySettings {
 
+  /**
+   * The constant FEATURE_ID_PATH.
+   */
   public static final String FEATURE_ID_PATH = "featureId";
 
+  /**
+   * The constant USER_ID_PATH.
+   */
   public static final String USER_ID_PATH = "userId";
 
   @Id
@@ -57,6 +63,13 @@ public class FeatureEntitySettings {
   @Indexed
   private String userId;
 
+  /**
+   * Instantiates a new GeoJSON feature settings entity.
+   *
+   * @param id        the id
+   * @param featureId the feature id
+   * @param userId    the user id
+   */
   FeatureEntitySettings(String id, String featureId, String userId) {
     this.id = id;
     this.featureId = featureId;

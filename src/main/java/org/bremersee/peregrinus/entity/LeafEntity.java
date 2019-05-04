@@ -26,6 +26,8 @@ import lombok.ToString;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 /**
+ * The tree leaf entity.
+ *
  * @author Christian Bremer
  */
 @Document(collection = "directory")
@@ -36,6 +38,17 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @NoArgsConstructor(access = AccessLevel.PACKAGE)
 public class LeafEntity extends NodeEntity {
 
+  /**
+   * Instantiates a new tree leaf entity.
+   *
+   * @param id         the id
+   * @param created    the created
+   * @param createdBy  the created by
+   * @param modified   the modified
+   * @param modifiedBy the modified by
+   * @param parentId   the parent id
+   * @param acl        the acl
+   */
   LeafEntity(
       String id,
       OffsetDateTime created,

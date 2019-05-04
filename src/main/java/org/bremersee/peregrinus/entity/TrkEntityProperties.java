@@ -29,6 +29,8 @@ import org.bremersee.common.model.Link;
 import org.springframework.data.annotation.TypeAlias;
 
 /**
+ * The track properties entity.
+ *
  * @author Christian Bremer
  */
 @TypeAlias("TrkProperties")
@@ -42,12 +44,35 @@ public class TrkEntityProperties extends FeatureEntityProperties {
 
   private List<List<OffsetDateTime>> timeLines;
 
+  /**
+   * Instantiates a new track properties entity.
+   */
+  @SuppressWarnings("WeakerAccess")
   public TrkEntityProperties() {
     eleLines = new ArrayList<>();
     timeLines = new ArrayList<>();
   }
 
+  /**
+   * Instantiates a new track properties entity.
+   *
+   * @param acl                  the acl
+   * @param created              the created
+   * @param createdBy            the created by
+   * @param modified             the modified
+   * @param modifiedBy           the modified by
+   * @param name                 the name
+   * @param plainTextDescription the plain text description
+   * @param markdownDescription  the markdown description
+   * @param links                the links
+   * @param address              the address
+   * @param departureTime        the departure time
+   * @param arrivalTime          the arrival time
+   * @param eleLines             the ele lines
+   * @param timeLines            the time lines
+   */
   @Builder
+  @SuppressWarnings("unused")
   public TrkEntityProperties(
       AclEntity acl,
       OffsetDateTime created,
@@ -70,6 +95,12 @@ public class TrkEntityProperties extends FeatureEntityProperties {
     setTimeLines(timeLines);
   }
 
+  /**
+   * Sets ele lines.
+   *
+   * @param eleLines the ele lines
+   */
+  @SuppressWarnings("WeakerAccess")
   public void setEleLines(List<List<BigDecimal>> eleLines) {
     if (eleLines == null) {
       this.eleLines = new ArrayList<>();
@@ -78,6 +109,12 @@ public class TrkEntityProperties extends FeatureEntityProperties {
     }
   }
 
+  /**
+   * Sets time lines.
+   *
+   * @param timeLines the time lines
+   */
+  @SuppressWarnings("WeakerAccess")
   public void setTimeLines(List<List<OffsetDateTime>> timeLines) {
     if (timeLines == null) {
       this.timeLines = new ArrayList<>();

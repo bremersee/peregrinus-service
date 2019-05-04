@@ -41,7 +41,7 @@ import org.bremersee.peregrinus.model.GeocodeRequest;
 import org.bremersee.security.access.AclMapper;
 import org.bremersee.security.access.PermissionConstants;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.mongodb.core.ReactiveMongoOperations;
+import org.springframework.data.mongodb.core.ReactiveMongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.TextCriteria;
@@ -58,9 +58,9 @@ import reactor.core.publisher.Mono;
 public class FeatureRepositoryImpl extends AbstractMongoRepository implements FeatureRepository {
 
   public FeatureRepositoryImpl(
-      ReactiveMongoOperations mongoOperations,
+      ReactiveMongoTemplate mongoTemplate,
       AclMapper<AclEntity> aclMapper) {
-    super(null, mongoOperations, aclMapper);
+    super(mongoTemplate, aclMapper);
   }
 
   @Override
@@ -70,7 +70,7 @@ public class FeatureRepositoryImpl extends AbstractMongoRepository implements Fe
 
   @Override
   public Mono<FeatureEntity> findFeatureById(final String id) {
-    return getMongoOperations().findOne(query(where(ID_PATH).is(id)), FeatureEntity.class);
+    return getMongoTemplate().findOne(query(where(ID_PATH).is(id)), FeatureEntity.class);
   }
 
   @Override
@@ -84,7 +84,7 @@ public class FeatureRepositoryImpl extends AbstractMongoRepository implements Fe
 
     final Query query = queryAnd(
         where(FeatureEntity.ID_PATH).is(id), includePublic, userId, roles, groups, permission);
-    return getMongoOperations()
+    return getMongoTemplate()
         .findOne(query, FeatureEntity.class);
   }
 
@@ -99,7 +99,7 @@ public class FeatureRepositoryImpl extends AbstractMongoRepository implements Fe
 
     final Query query = queryAnd(
         where(FeatureEntity.ID_PATH).in(ids), includePublic, userId, roles, groups, permission);
-    return getMongoOperations()
+    return getMongoTemplate()
         .find(query, FeatureEntity.class);
   }
 
@@ -107,20 +107,20 @@ public class FeatureRepositoryImpl extends AbstractMongoRepository implements Fe
   public Mono<FeatureEntitySettings> findFeatureEntitySettings(
       final String featureId,
       final String userId) {
-    return getMongoOperations()
+    return getMongoTemplate()
         .findOne(query(featureSettingsCriteria(featureId, userId)), FeatureEntitySettings.class);
   }
 
   @Override
   public <S extends FeatureEntitySettings> Mono<S> persistFeatureSettings(
       final S featureSettings) {
-    return getMongoOperations().save(featureSettings);
+    return getMongoTemplate().save(featureSettings);
   }
 
   @Override
   public <F extends FeatureEntity> Mono<F> persistFeature(
       final F feature) {
-    return getMongoOperations().save(feature);
+    return getMongoTemplate().save(feature);
   }
 
   @Override
@@ -133,7 +133,7 @@ public class FeatureRepositoryImpl extends AbstractMongoRepository implements Fe
     final Update update = Update.update(NAME_PATH, name)
         .set(MODIFIED_PATH, new Date())
         .set(MODIFIED_BY_PATH, userId);
-    return getMongoOperations()
+    return getMongoTemplate()
         .findAndModify(query, update, FeatureEntity.class)
         .flatMap(result -> Mono.just(true))
         .switchIfEmpty(Mono.just(false));
@@ -163,7 +163,7 @@ public class FeatureRepositoryImpl extends AbstractMongoRepository implements Fe
         .sortByScore()
         .with(PageRequest.of(0, findLimit(request)))
         .addCriteria(andCriteria(classCriteria, aclCriteria));
-    return getMongoOperations().find(query, WptEntity.class);
+    return getMongoTemplate().find(query, WptEntity.class);
   }
 
   private int findLimit(GeocodeRequest geocodeRequest) {

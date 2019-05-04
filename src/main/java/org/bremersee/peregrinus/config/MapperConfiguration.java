@@ -16,29 +16,29 @@
 
 package org.bremersee.peregrinus.config;
 
-import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import org.bremersee.common.model.AccessControlList;
-import org.bremersee.geojson.GeoJsonObjectMapperModule;
-import org.bremersee.peregrinus.model.Feature;
 import org.bremersee.peregrinus.entity.AclEntity;
-import org.bremersee.peregrinus.model.PeregrinusObjectMapperModule;
+import org.bremersee.peregrinus.model.Feature;
 import org.bremersee.security.access.AclMapper;
 import org.bremersee.security.access.AclMapperImpl;
 import org.bremersee.security.access.PermissionConstants;
 import org.modelmapper.ModelMapper;
-import org.springframework.boot.autoconfigure.jackson.Jackson2ObjectMapperBuilderCustomizer;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.converter.json.Jackson2ObjectMapperBuilder;
 
 /**
+ * The mapper configuration.
+ *
  * @author Christian Bremer
  */
 @Configuration
-@SuppressWarnings("Duplicates")
 public class MapperConfiguration {
 
+  /**
+   * Creates acl mapper bean.
+   *
+   * @return the acl mapper
+   */
   @Bean
   public AclMapper<AclEntity> aclMapper() {
     return new AclMapperImpl<>(
@@ -48,6 +48,11 @@ public class MapperConfiguration {
         false);
   }
 
+  /**
+   * Creates odel mapper bean.
+   *
+   * @return the model mapper
+   */
   @Bean
   public ModelMapper modelMapper() {
     final ModelMapper modelMapper = new ModelMapper();

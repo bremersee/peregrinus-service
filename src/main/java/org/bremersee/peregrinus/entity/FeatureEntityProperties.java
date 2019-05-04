@@ -25,17 +25,16 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 import org.bremersee.common.model.Link;
-import org.bremersee.peregrinus.entity.AclEntity;
 import org.bremersee.security.access.AclBuilder;
 import org.bremersee.security.access.PermissionConstants;
-import org.springframework.data.annotation.TypeAlias;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.index.TextIndexed;
 
 /**
+ * The GeoJSON feature properties entity.
+ *
  * @author Christian Bremer
  */
-@TypeAlias("FeatureProperties")
 @Getter
 @Setter
 @EqualsAndHashCode
@@ -57,7 +56,7 @@ public abstract class FeatureEntityProperties {
   private String name;
 
   @TextIndexed
-  private String plainTextDescription; // desc == cmt
+  private String plainTextDescription;
 
   @TextIndexed(weight = 2f)
   private String markdownDescription;
@@ -72,7 +71,10 @@ public abstract class FeatureEntityProperties {
   @Indexed
   private OffsetDateTime arrivalTime;
 
-  public FeatureEntityProperties() {
+  /**
+   * Instantiates a new GeoJSON feature properties entity.
+   */
+  FeatureEntityProperties() {
     final OffsetDateTime now = OffsetDateTime.now(Clock.systemUTC());
     created = now;
     modified = now;
@@ -80,7 +82,23 @@ public abstract class FeatureEntityProperties {
     links = new ArrayList<>();
   }
 
-  public FeatureEntityProperties(
+  /**
+   * Instantiates a new GeoJSON feature properties entity.
+   *
+   * @param acl                  the acl
+   * @param created              the created
+   * @param createdBy            the created by
+   * @param modified             the modified
+   * @param modifiedBy           the modified by
+   * @param name                 the name
+   * @param plainTextDescription the plain text description
+   * @param markdownDescription  the markdown description
+   * @param links                the links
+   * @param address              the address
+   * @param departureTime        the departure time
+   * @param arrivalTime          the arrival time
+   */
+  FeatureEntityProperties(
       AclEntity acl,
       OffsetDateTime created,
       String createdBy,
@@ -108,24 +126,44 @@ public abstract class FeatureEntityProperties {
     setArrivalTime(arrivalTime);
   }
 
+  /**
+   * Sets acl.
+   *
+   * @param acl the acl
+   */
   public void setAcl(AclEntity acl) {
     if (acl != null) {
       this.acl = acl;
     }
   }
 
+  /**
+   * Sets created.
+   *
+   * @param created the created
+   */
   public void setCreated(OffsetDateTime created) {
     if (created != null) {
       this.created = created;
     }
   }
 
+  /**
+   * Sets modified.
+   *
+   * @param modified the modified
+   */
   public void setModified(OffsetDateTime modified) {
     if (modified != null) {
       this.modified = modified;
     }
   }
 
+  /**
+   * Sets links.
+   *
+   * @param links the links
+   */
   public void setLinks(List<Link> links) {
     if (links == null) {
       this.links = new ArrayList<>();

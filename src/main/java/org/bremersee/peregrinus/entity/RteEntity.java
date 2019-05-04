@@ -26,6 +26,8 @@ import org.springframework.data.annotation.TypeAlias;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 /**
+ * The route entity.
+ *
  * @author Christian Bremer
  */
 @Document(collection = "feature")
@@ -36,11 +38,23 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @EqualsAndHashCode(callSuper = true)
 public class RteEntity extends FeatureEntity<MultiLineString, RteEntityProperties> {
 
+  /**
+   * Instantiates a new route entity.
+   */
   public RteEntity() {
     setProperties(new RteEntityProperties());
   }
 
+  /**
+   * Instantiates a new route entity.
+   *
+   * @param id         the id
+   * @param geometry   the geometry
+   * @param bbox       the bbox
+   * @param properties the properties
+   */
   @Builder
+  @SuppressWarnings("unused")
   public RteEntity(String id, MultiLineString geometry, double[] bbox,
       RteEntityProperties properties) {
     super(id, geometry, bbox, properties);

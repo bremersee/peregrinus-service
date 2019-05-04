@@ -26,6 +26,8 @@ import org.springframework.data.annotation.TypeAlias;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 /**
+ * The route settings entity.
+ *
  * @author Christian Bremer
  */
 @Document(collection = "feature-settings")
@@ -38,11 +40,23 @@ public class RteEntitySettings extends FeatureEntitySettings {
 
   private DisplayColor displayColor;
 
+  /**
+   * Instantiates a new route settings entity.
+   */
   public RteEntitySettings() {
     displayColor = DisplayColor.MAGENTA;
   }
 
+  /**
+   * Instantiates a new route settings entity.
+   *
+   * @param id           the id
+   * @param featureId    the feature id
+   * @param userId       the user id
+   * @param displayColor the display color
+   */
   @Builder
+  @SuppressWarnings("unused")
   public RteEntitySettings(
       String id,
       String featureId,
@@ -53,6 +67,11 @@ public class RteEntitySettings extends FeatureEntitySettings {
     setDisplayColor(displayColor);
   }
 
+  /**
+   * Sets display color.
+   *
+   * @param displayColor the display color
+   */
   public void setDisplayColor(DisplayColor displayColor) {
     if (displayColor != null) {
       this.displayColor = displayColor;

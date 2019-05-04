@@ -27,6 +27,8 @@ import org.springframework.data.annotation.TypeAlias;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 /**
+ * The GeoJSON feature leaf entity.
+ *
  * @author Christian Bremer
  */
 @Document(collection = "directory")
@@ -40,7 +42,20 @@ public class FeatureLeafEntity extends LeafEntity {
 
   private String featureId;
 
+  /**
+   * Instantiates a new GeoJSON feature leaf entity.
+   *
+   * @param id         the id
+   * @param created    the created
+   * @param createdBy  the created by
+   * @param modified   the modified
+   * @param modifiedBy the modified by
+   * @param parentId   the parent id
+   * @param acl        the acl
+   * @param featureId  the feature id
+   */
   @Builder
+  @SuppressWarnings("unused")
   public FeatureLeafEntity(
       String id,
       OffsetDateTime created,

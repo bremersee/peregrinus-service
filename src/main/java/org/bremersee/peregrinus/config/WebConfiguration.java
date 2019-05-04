@@ -35,6 +35,8 @@ import org.springframework.web.reactive.config.EnableWebFlux;
 import org.springframework.web.reactive.config.WebFluxConfigurer;
 
 /**
+ * The web configuration.
+ *
  * @author Christian Bremer
  */
 @EnableWebFlux
@@ -46,6 +48,12 @@ public class WebConfiguration implements WebFluxConfigurer {
 
   private final Jackson2ObjectMapperBuilder objectMapperBuilder;
 
+  /**
+   * Instantiates a new web configuration.
+   *
+   * @param jaxbContextBuilder  the jaxb context builder
+   * @param objectMapperBuilder the object mapper builder
+   */
   @Autowired
   public WebConfiguration(
       JaxbContextBuilder jaxbContextBuilder,

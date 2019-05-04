@@ -31,6 +31,8 @@ import org.springframework.data.annotation.TypeAlias;
 import org.springframework.data.mongodb.core.index.Indexed;
 
 /**
+ * The access control entry entity.
+ *
  * @author Christian Bremer
  */
 @Getter
@@ -52,6 +54,11 @@ public class AceEntity implements Ace {
   @Indexed
   private Set<String> groups = new LinkedHashSet<>();
 
+  /**
+   * Instantiates a new access control entry entity.
+   *
+   * @param ace the ace
+   */
   AceEntity(final Ace ace) {
     if (ace != null) {
       this.guest = ace.isGuest();
@@ -61,6 +68,11 @@ public class AceEntity implements Ace {
     }
   }
 
+  /**
+   * Unmodifiable ace entity.
+   *
+   * @return the ace entity
+   */
   AceEntity unmodifiable() {
     final AceEntity ace = new AceEntity();
     ace.guest = this.guest;

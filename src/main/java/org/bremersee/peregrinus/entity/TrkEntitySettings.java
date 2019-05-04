@@ -26,6 +26,8 @@ import org.springframework.data.annotation.TypeAlias;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 /**
+ * The track settings entity.
+ *
  * @author Christian Bremer
  */
 @Document(collection = "feature-settings")
@@ -38,17 +40,34 @@ public class TrkEntitySettings extends FeatureEntitySettings {
 
   private DisplayColor displayColor;
 
+  /**
+   * Instantiates a new track settings entity.
+   */
   public TrkEntitySettings() {
     displayColor = DisplayColor.DARK_GRAY;
   }
 
+  /**
+   * Instantiates a new track settings entity.
+   *
+   * @param id           the id
+   * @param featureId    the feature id
+   * @param userId       the user id
+   * @param displayColor the display color
+   */
   @Builder
+  @SuppressWarnings("unused")
   public TrkEntitySettings(String id, String featureId, String userId,
       DisplayColor displayColor) {
     super(id, featureId, userId);
     setDisplayColor(displayColor);
   }
 
+  /**
+   * Sets display color.
+   *
+   * @param displayColor the display color
+   */
   public void setDisplayColor(DisplayColor displayColor) {
     if (displayColor != null) {
       this.displayColor = displayColor;

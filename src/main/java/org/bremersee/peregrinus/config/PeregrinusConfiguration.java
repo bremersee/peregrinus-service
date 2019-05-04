@@ -31,6 +31,8 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.reactive.function.client.WebClient;
 
 /**
+ * The peregrinus configuration.
+ *
  * @author Christian Bremer
  */
 @Configuration
@@ -40,12 +42,23 @@ public class PeregrinusConfiguration {
 
   private PeregrinusProperties peregrinusProperties;
 
+  /**
+   * Instantiates a new peregrinus configuration.
+   *
+   * @param peregrinusProperties the peregrinus properties
+   */
   @Autowired
   public PeregrinusConfiguration(
       PeregrinusProperties peregrinusProperties) {
     this.peregrinusProperties = peregrinusProperties;
   }
 
+  /**
+   * Creates group service client.
+   *
+   * @param restApiExceptionParser the rest api exception parser
+   * @return the group service client
+   */
   @Bean
   public GroupControllerApi groupService(final RestApiExceptionParser restApiExceptionParser) {
     if (StringUtils.hasText(peregrinusProperties.getGroupmanBaseUri())) {

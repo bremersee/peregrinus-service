@@ -29,9 +29,7 @@ import javax.validation.constraints.NotNull;
 import lombok.Getter;
 import org.bremersee.peregrinus.entity.AclEntity;
 import org.bremersee.security.access.AclMapper;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.mongodb.core.ReactiveMongoOperations;
 import org.springframework.data.mongodb.core.ReactiveMongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
@@ -48,9 +46,6 @@ import org.springframework.validation.annotation.Validated;
 public abstract class AbstractMongoRepository {
 
   @Getter
-  private ReactiveMongoOperations mongoOperations;
-
-  @Getter
   private ReactiveMongoTemplate mongoTemplate;
 
   @Getter
@@ -58,12 +53,10 @@ public abstract class AbstractMongoRepository {
 
   public AbstractMongoRepository(
       ReactiveMongoTemplate mongoTemplate,
-      ReactiveMongoOperations mongoOperations,
       AclMapper<AclEntity> aclMapper) {
-    notNull(mongoOperations, "Mongo operations must not be null.");
+    notNull(mongoTemplate, "Mongo template must not be null.");
     notNull(aclMapper, "Acl mapper must not be null.");
     this.mongoTemplate = mongoTemplate;
-    this.mongoOperations = mongoOperations;
     this.aclMapper = aclMapper;
   }
 

@@ -26,13 +26,14 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
-import org.bremersee.common.model.Address;
 import org.bremersee.common.model.Link;
 import org.bremersee.common.model.PhoneNumber;
 import org.locationtech.jts.geom.Polygon;
 import org.springframework.data.annotation.TypeAlias;
 
 /**
+ * The waypoint properties entity.
+ *
  * @author Christian Bremer
  */
 @TypeAlias("WptProperties")
@@ -48,9 +49,6 @@ public class WptEntityProperties extends FeatureEntityProperties {
    */
   private BigDecimal ele;
 
-  /**
-   * Phone numbers
-   */
   private List<PhoneNumber> phoneNumbers = new ArrayList<>();
 
   private Polygon area;
@@ -63,7 +61,31 @@ public class WptEntityProperties extends FeatureEntityProperties {
 
   private String osmCategory;
 
+  /**
+   * Instantiates a new waypoint properties entity.
+   *
+   * @param acl                  the acl
+   * @param created              the created
+   * @param createdBy            the created by
+   * @param modified             the modified
+   * @param modifiedBy           the modified by
+   * @param name                 the name
+   * @param plainTextDescription the plain text description
+   * @param markdownDescription  the markdown description
+   * @param links                the links
+   * @param address              the address
+   * @param departureTime        the departure time
+   * @param arrivalTime          the arrival time
+   * @param ele                  the elevation in meters
+   * @param phoneNumbers         the phone numbers
+   * @param area                 the area
+   * @param osmId                the osm id
+   * @param osmType              the osm type
+   * @param osmPlaceId           the osm place id
+   * @param osmCategory          the osm category
+   */
   @Builder
+  @SuppressWarnings("unused")
   public WptEntityProperties(
       AclEntity acl,
       OffsetDateTime created,
@@ -96,6 +118,12 @@ public class WptEntityProperties extends FeatureEntityProperties {
     setOsmCategory(osmCategory);
   }
 
+  /**
+   * Sets phone numbers.
+   *
+   * @param phoneNumbers the phone numbers
+   */
+  @SuppressWarnings("WeakerAccess")
   public void setPhoneNumbers(List<PhoneNumber> phoneNumbers) {
     if (phoneNumbers == null) {
       this.phoneNumbers = new ArrayList<>();

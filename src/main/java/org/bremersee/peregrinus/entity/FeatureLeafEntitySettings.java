@@ -25,6 +25,8 @@ import org.springframework.data.annotation.TypeAlias;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 /**
+ * The GeoJSON feature leaf settings entity.
+ *
  * @author Christian Bremer
  */
 @Document(collection = "directory-settings")
@@ -37,7 +39,16 @@ public class FeatureLeafEntitySettings extends LeafEntitySettings {
   @Getter
   private Boolean displayedOnMap = false;
 
+  /**
+   * Instantiates a new GeoJSON feature leaf settings entity.
+   *
+   * @param id             the id
+   * @param nodeId         the node id
+   * @param userId         the user id
+   * @param displayedOnMap the displayed on map
+   */
   @Builder
+  @SuppressWarnings("unused")
   public FeatureLeafEntitySettings(
       String id,
       String nodeId,
@@ -47,6 +58,11 @@ public class FeatureLeafEntitySettings extends LeafEntitySettings {
     setDisplayedOnMap(displayedOnMap);
   }
 
+  /**
+   * Sets displayed on map.
+   *
+   * @param displayedOnMap the displayed on map
+   */
   public void setDisplayedOnMap(Boolean displayedOnMap) {
     if (displayedOnMap != null) {
       this.displayedOnMap = displayedOnMap;

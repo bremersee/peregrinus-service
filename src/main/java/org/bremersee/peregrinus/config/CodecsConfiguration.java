@@ -29,6 +29,8 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.http.converter.json.Jackson2ObjectMapperBuilder;
 
 /**
+ * Thecodecs configuration.
+ *
  * @author Christian Bremer
  */
 @Configuration
@@ -44,6 +46,11 @@ public class CodecsConfiguration implements Jackson2ObjectMapperBuilderCustomize
             new JavaTimeModule());
   }
 
+  /**
+   * Creates jaxb context builder bean.
+   *
+   * @return the jaxb context builder
+   */
   @Bean
   public JaxbContextBuilder jaxbContextBuilder() {
     return JaxbContextBuilder

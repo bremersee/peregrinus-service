@@ -25,6 +25,8 @@ import org.springframework.data.annotation.TypeAlias;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 /**
+ * The tree branch settings entity.
+ *
  * @author Christian Bremer
  */
 @Document(collection = "directory-settings")
@@ -34,12 +36,24 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @NoArgsConstructor
 public final class BranchEntitySettings extends NodeEntitySettings {
 
+  /**
+   * The constant OPEN_PATH.
+   */
   public static final String OPEN_PATH = "open";
 
   @Getter
   private Boolean open = true;
 
+  /**
+   * Instantiates a new tree branch settings entity.
+   *
+   * @param id     the id
+   * @param nodeId the node id
+   * @param userId the user id
+   * @param open   the open
+   */
   @Builder
+  @SuppressWarnings("unused")
   public BranchEntitySettings(String id, String nodeId, String userId, Boolean open) {
     super(id, nodeId, userId);
     if (open != null) {
@@ -47,6 +61,11 @@ public final class BranchEntitySettings extends NodeEntitySettings {
     }
   }
 
+  /**
+   * Sets open.
+   *
+   * @param open the open
+   */
   public void setOpen(Boolean open) {
     if (open != null) {
       this.open = open;

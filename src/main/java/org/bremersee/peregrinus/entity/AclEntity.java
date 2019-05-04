@@ -31,6 +31,8 @@ import org.springframework.data.annotation.TypeAlias;
 import org.springframework.data.mongodb.core.index.Indexed;
 
 /**
+ * The access control list entity.
+ *
  * @author Christian Bremer
  */
 @Getter
@@ -53,6 +55,12 @@ public class AclEntity implements Acl<AceEntity> {
 
   private AceEntity write = new AceEntity();
 
+  /**
+   * Instantiates a new access control list entity.
+   *
+   * @param owner   the owner
+   * @param entries the entries
+   */
   public AclEntity(final String owner, final Map<String, ? extends Ace> entries) {
     this.owner = owner;
     if (entries != null) {

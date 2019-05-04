@@ -16,18 +16,26 @@
 
 package org.bremersee.peregrinus.config;
 
-import lombok.Data;
+import java.net.URL;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 import org.bremersee.garmin.GarminJaxbContextDataProvider;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
+import org.springframework.util.StringUtils;
 
 /**
+ * The gpx properties.
+ *
  * @author Christian Bremer
  */
 @ConfigurationProperties(prefix = "bremersee.gpx")
 @Component
-@Data
+@Setter
+@ToString
+@EqualsAndHashCode
 @NoArgsConstructor
 public class GpxProperties {
 
@@ -41,4 +49,62 @@ public class GpxProperties {
 
   private String linkText = "Peregrinus Web App";
 
+  private static boolean validLink(String link) {
+    if (!StringUtils.hasText(link)) {
+      return false;
+    }
+    try {
+      new URL(link);
+      return true;
+    } catch (Exception ignored) {
+      return false;
+    }
+  }
+
+  /**
+   * Get name spaces of gpx xml document.
+   *
+   * @return the name spaces of gpx xml document
+   */
+  public String[] getNameSpaces() {
+    return nameSpaces != null && nameSpaces.length > 0
+        ? nameSpaces
+        : GarminJaxbContextDataProvider.GPX_NAMESPACES;
+  }
+
+  /**
+   * Gets gpx version (default is {@code 1.1}).
+   *
+   * @return the gpx version
+   */
+  public String getVersion() {
+    return StringUtils.hasText(version) ? version : "1.1";
+  }
+
+  /**
+   * Gets gpx document creator (default is {@code Peregrinus Web App}).
+   *
+   * @return the creator
+   */
+  public String getCreator() {
+    return StringUtils.hasText(creator) ? creator : "Peregrinus Web App";
+  }
+
+  /**
+   * Gets gpx link (default is {@code https://peregrinus.bremersee.org}).
+   *
+   * @return the link
+   */
+  public String getLink() {
+    return validLink(link) ? link : "https://peregrinus.bremersee.org";
+  }
+
+  /**
+   * Gets gpx link text (default is {@code Peregrinus Web App}).
+   *
+   * @return the link text
+   */
+  public String getLinkText() {
+    return StringUtils.hasText(linkText) ? linkText : "Peregrinus Web App";
+  }
 }

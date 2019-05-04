@@ -17,17 +17,23 @@
 package org.bremersee.peregrinus.entity;
 
 import lombok.Builder;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.ToString;
 import org.bremersee.common.model.TwoLetterCountryCode;
 import org.springframework.data.mongodb.core.index.TextIndexed;
 
 /**
+ * The address entity.
+ *
  * @author Christian Bremer
  */
 @Getter
 @Setter
+@ToString
+@EqualsAndHashCode
 @NoArgsConstructor
 public class AddressEntity {
 
@@ -54,7 +60,21 @@ public class AddressEntity {
   @TextIndexed
   private String formattedAddress;
 
+  /**
+   * Instantiates a new address entity.
+   *
+   * @param streetNumber     the street number
+   * @param street           the street
+   * @param postalCode       the postal code
+   * @param city             the city
+   * @param suburb           the suburb
+   * @param state            the state
+   * @param country          the country
+   * @param countryCode      the country code
+   * @param formattedAddress the formatted address
+   */
   @Builder
+  @SuppressWarnings("unused")
   public AddressEntity(
       String streetNumber,
       String street,

@@ -26,6 +26,8 @@ import org.springframework.data.annotation.TypeAlias;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 /**
+ * The waypoint entity.
+ *
  * @author Christian Bremer
  */
 @Document(collection = "feature")
@@ -36,11 +38,23 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @EqualsAndHashCode(callSuper = true)
 public class WptEntity extends FeatureEntity<Point, WptEntityProperties> {
 
+  /**
+   * Instantiates a new waypoint entity.
+   */
   public WptEntity() {
     setProperties(new WptEntityProperties());
   }
 
+  /**
+   * Instantiates a new waypoint entity.
+   *
+   * @param id         the id
+   * @param geometry   the geometry
+   * @param bbox       the bbox
+   * @param properties the properties
+   */
   @Builder
+  @SuppressWarnings("unused")
   public WptEntity(String id, Point geometry, double[] bbox,
       WptEntityProperties properties) {
     super(id, geometry, bbox, properties);

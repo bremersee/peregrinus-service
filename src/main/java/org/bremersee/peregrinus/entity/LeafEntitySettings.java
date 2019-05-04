@@ -25,6 +25,8 @@ import lombok.ToString;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 /**
+ * The tree leaf settings entity.
+ *
  * @author Christian Bremer
  */
 @Document(collection = "directory-settings")
@@ -35,6 +37,13 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @NoArgsConstructor(access = AccessLevel.PACKAGE)
 public class LeafEntitySettings extends NodeEntitySettings {
 
+  /**
+   * Instantiates a new tree leaf settings entity.
+   *
+   * @param id     the id
+   * @param nodeId the node id
+   * @param userId the user id
+   */
   LeafEntitySettings(String id, String nodeId, String userId) {
     super(id, nodeId, userId);
   }

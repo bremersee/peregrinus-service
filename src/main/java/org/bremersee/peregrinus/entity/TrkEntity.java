@@ -26,6 +26,8 @@ import org.springframework.data.annotation.TypeAlias;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 /**
+ * The track entity.
+ *
  * @author Christian Bremer
  */
 @Document(collection = "feature")
@@ -36,11 +38,23 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @EqualsAndHashCode(callSuper = true)
 public class TrkEntity extends FeatureEntity<MultiLineString, TrkEntityProperties> {
 
+  /**
+   * Instantiates a new track entity.
+   */
   public TrkEntity() {
     setProperties(new TrkEntityProperties());
   }
 
+  /**
+   * Instantiates a new track entity.
+   *
+   * @param id         the id
+   * @param geometry   the geometry
+   * @param bbox       the bbox
+   * @param properties the properties
+   */
   @Builder
+  @SuppressWarnings("unused")
   public TrkEntity(String id, MultiLineString geometry, double[] bbox,
       TrkEntityProperties properties) {
     super(id, geometry, bbox, properties);

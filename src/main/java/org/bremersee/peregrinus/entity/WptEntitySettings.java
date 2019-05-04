@@ -26,6 +26,8 @@ import org.springframework.data.annotation.TypeAlias;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 /**
+ * The waypoint settings entity.
+ *
  * @author Christian Bremer
  */
 @Document(collection = "feature-settings")
@@ -37,7 +39,15 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @NoArgsConstructor
 public class WptEntitySettings extends FeatureEntitySettings {
 
+  /**
+   * Instantiates a new waypoint settings entity.
+   *
+   * @param id        the id
+   * @param featureId the feature id
+   * @param userId    the user id
+   */
   @Builder
+  @SuppressWarnings("unused")
   public WptEntitySettings(String id, String featureId, String userId) {
     super(id, featureId, userId);
   }

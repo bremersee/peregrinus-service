@@ -37,6 +37,8 @@ import org.springframework.http.codec.ServerCodecConfigurer;
 import org.springframework.http.converter.json.Jackson2ObjectMapperBuilder;
 
 /**
+ * The exception handling configuration.
+ *
  * @author Christian Bremer
  */
 @Configuration
@@ -47,6 +49,12 @@ public class ExceptionConfiguration {
 
   private final RestApiExceptionMapperProperties apiExceptionMapperProperties;
 
+  /**
+   * Instantiates a new exception handling configuration.
+   *
+   * @param applicationName              the application name
+   * @param apiExceptionMapperProperties the api exception mapper properties
+   */
   @Autowired
   public ExceptionConfiguration(
       @Value("${spring.application.name:peregrinus}") String applicationName,
@@ -55,17 +63,34 @@ public class ExceptionConfiguration {
     this.apiExceptionMapperProperties = apiExceptionMapperProperties;
   }
 
+  /**
+   * Creates rest api exception mapper bean.
+   *
+   * @return the rest api exception mapper
+   */
   @Bean
   public RestApiExceptionMapper restApiExceptionMapper() {
     return new RestApiExceptionMapperImpl(apiExceptionMapperProperties, applicationName);
   }
 
+  /**
+   * Creates rest api exception parser bean.
+   *
+   * @param objectMapperBuilder the object mapper builder
+   * @return the rest api exception parser
+   */
   @Bean
   public RestApiExceptionParser restApiExceptionParser(
       Jackson2ObjectMapperBuilder objectMapperBuilder) {
     return new RestApiExceptionParserImpl(objectMapperBuilder);
   }
 
+  /**
+   * Creates default web client error decoder bean.
+   *
+   * @param parser the parser
+   * @return the default web client error decoder
+   */
   @Primary
   @Bean("defaultWebClientErrorDecoder")
   public DefaultWebClientErrorDecoder defaultWebClientErrorDecoder(
@@ -73,6 +98,16 @@ public class ExceptionConfiguration {
     return new DefaultWebClientErrorDecoder(parser);
   }
 
+  /**
+   * Creates api exception handler bean.
+   *
+   * @param errorAttributes        the error attributes
+   * @param resourceProperties     the resource properties
+   * @param applicationContext     the application context
+   * @param serverCodecConfigurer  the server codec configurer
+   * @param restApiExceptionMapper the rest api exception mapper
+   * @return the api exception handler
+   */
   @Bean
   @Order(-2)
   public ApiExceptionHandler apiExceptionHandler(

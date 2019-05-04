@@ -27,6 +27,8 @@ import org.springframework.data.annotation.TypeAlias;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 /**
+ * The tree branch entity.
+ *
  * @author Christian Bremer
  */
 @Document(collection = "directory")
@@ -40,7 +42,20 @@ public final class BranchEntity extends NodeEntity {
 
   private String name;
 
+  /**
+   * Instantiates a new tree branch entity.
+   *
+   * @param id         the id
+   * @param created    the created
+   * @param createdBy  the created by
+   * @param modified   the modified
+   * @param modifiedBy the modified by
+   * @param parentId   the parent id
+   * @param acl        the acl
+   * @param name       the name
+   */
   @Builder
+  @SuppressWarnings("unused")
   public BranchEntity(
       String id,
       OffsetDateTime created,

@@ -26,6 +26,8 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.security.oauth2.jwt.ReactiveJwtDecoder;
 
 /**
+ * The security support configuration.
+ *
  * @author Christian Bremer
  */
 @Configuration
@@ -34,16 +36,33 @@ public class SecuritySupportConfiguration {
 
   private OAuth2Properties properties;
 
+  /**
+   * Instantiates a new security support configuration.
+   *
+   * @param properties the properties
+   */
   @Autowired
   public SecuritySupportConfiguration(OAuth2Properties properties) {
     this.properties = properties;
   }
 
+  /**
+   * Creates keycloak jwt converter bean.
+   *
+   * @return the keycloak jwt converter
+   */
   @Bean
   public KeycloakReactiveJwtConverter keycloakJwtConverter() {
     return new KeycloakReactiveJwtConverter();
   }
 
+  /**
+   * Creates an authentication manager with OAuth2 password flow.
+   *
+   * @param jwtDecoder           the jwt decoder
+   * @param keycloakJwtConverter the keycloak jwt converter
+   * @return the authentication manager with OAuth2 password flow
+   */
   @Bean
   public PasswordFlowReactiveAuthenticationManager passwordFlowReactiveAuthenticationManager(
       ReactiveJwtDecoder jwtDecoder,

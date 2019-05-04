@@ -15,8 +15,8 @@
   <version>1.0.0-SNAPSHOT</version>
   <packaging>jar</packaging>
 
-  <name>peregrinus-service</name><!-- aka 'bco' BaseCamp Online -->
-  <description>Demo project for Spring Boot</description>
+  <name>peregrinus-service</name>
+  <description>The peregrinus service.</description>
 
   <properties>
     <start-class>org.bremersee.peregrinus.Application</start-class>
@@ -127,23 +127,6 @@
       <artifactId>bremersee-geojson-spring-data-mongodb</artifactId>
       <version>2.0.0-SNAPSHOT</version>
     </dependency>
-    <!--
-    <dependency>
-      <groupId>org.bremersee</groupId>
-      <artifactId>nominatim-client</artifactId>
-      <version>1.0.0-SNAPSHOT</version>
-    </dependency>
-    <dependency>
-      <groupId>org.bremersee</groupId>
-      <artifactId>tomtom-client</artifactId>
-      <version>1.0.0-SNAPSHOT</version>
-    </dependency>
-    <dependency>
-      <groupId>org.bremersee</groupId>
-      <artifactId>google-maps-client</artifactId>
-      <version>1.0.0-SNAPSHOT</version>
-    </dependency>
-    -->
 
     <dependency>
       <groupId>org.modelmapper</groupId>
@@ -234,13 +217,6 @@
       <groupId>org.springframework.cloud</groupId>
       <artifactId>spring-cloud-starter-zipkin</artifactId>
     </dependency>
-
-    <!--
-    <dependency>
-      <groupId>org.springframework.security</groupId>
-      <artifactId>spring-security-acl</artifactId>
-    </dependency>
-    -->
 
     <dependency>
       <groupId>org.springframework.boot</groupId>

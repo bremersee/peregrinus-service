@@ -26,7 +26,6 @@ import org.bremersee.peregrinus.entity.BranchEntitySettings;
 import org.bremersee.peregrinus.entity.NodeEntity;
 import org.bremersee.peregrinus.entity.NodeEntitySettings;
 import org.bremersee.security.access.AclMapper;
-import org.springframework.data.mongodb.core.ReactiveMongoOperations;
 import org.springframework.data.mongodb.core.ReactiveMongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
@@ -44,9 +43,8 @@ public class TreeRepositoryImpl extends AbstractMongoRepository implements TreeR
 
   public TreeRepositoryImpl(
       ReactiveMongoTemplate mongoTemplate,
-      ReactiveMongoOperations mongoOperations,
       AclMapper<AclEntity> aclMapper) {
-    super(mongoTemplate, mongoOperations, aclMapper);
+    super(mongoTemplate, aclMapper);
   }
 
   @Override
@@ -65,14 +63,14 @@ public class TreeRepositoryImpl extends AbstractMongoRepository implements TreeR
 
     final Query query = queryAnd(
         where(NodeEntity.ID_PATH).is(id), includePublic, userId, roles, groups, permission);
-    return getMongoOperations()
+    return getMongoTemplate()
         .findOne(query, NodeEntity.class);
   }
 
   @Override
   public <T extends NodeEntity> Mono<T> persistNode(@NotNull T node) {
     return getMongoTemplate().save(node);
-    //return getMongoOperations().save(node);
+    //return getMongoTemplate().save(node);
   }
 
   @Override
@@ -90,7 +88,7 @@ public class TreeRepositoryImpl extends AbstractMongoRepository implements TreeR
             where(NodeEntity.PARENT_ID_PATH).exists(false),
             where(NodeEntity.PARENT_ID_PATH).is(null));
     final Query query = queryAnd(criteria, includePublic, userId, roles, groups, permission);
-    return getMongoOperations()
+    return getMongoTemplate()
         .find(query, NodeEntity.class);
   }
 
@@ -108,7 +106,7 @@ public class TreeRepositoryImpl extends AbstractMongoRepository implements TreeR
   @Override
   public Mono<Boolean> openBranch(@NotNull String settingsId) {
     final Update update = Update.update(BranchEntitySettings.OPEN_PATH, true);
-    return getMongoOperations()
+    return getMongoTemplate()
         .findAndModify(query(where("id").is(settingsId)), update, BranchEntitySettings.class)
         .map(result -> true)
         .switchIfEmpty(Mono.just(false));
@@ -118,7 +116,7 @@ public class TreeRepositoryImpl extends AbstractMongoRepository implements TreeR
   public Mono<Void> closeBranch(@NotNull String branchId, @NotNull String userId) {
     final Query query = query(nodeSettingsCriteria(branchId, userId));
     final Update update = Update.update(BranchEntitySettings.OPEN_PATH, false);
-    return getMongoOperations()
+    return getMongoTemplate()
         .findAndModify(query, update, BranchEntitySettings.class)
         .flatMap(result -> Mono.empty());
   }

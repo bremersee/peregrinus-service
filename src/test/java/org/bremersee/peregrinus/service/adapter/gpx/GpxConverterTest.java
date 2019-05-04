@@ -6,6 +6,7 @@ import java.util.ServiceLoader;
 import org.bremersee.garmin.GarminJaxbContextDataProvider;
 import org.bremersee.gpx.model.Gpx;
 import org.bremersee.peregrinus.TestConfig;
+import org.bremersee.peregrinus.config.GpxProperties;
 import org.bremersee.peregrinus.model.FeatureCollection;
 import org.bremersee.peregrinus.model.gpx.GpxExportSettings;
 import org.bremersee.peregrinus.model.gpx.GpxImportSettings;
@@ -40,7 +41,7 @@ public class GpxConverterTest {
         .processAll(ServiceLoader.load(JaxbContextDataProvider.class));
     gpxToFeaturesConverter = new GpxToFeaturesConverter(jaxbContextBuilder);
     featuresToGpxConverter = new FeaturesToGpxConverter(
-        jaxbContextBuilder, null, null, null, null, null);
+        jaxbContextBuilder, new GpxProperties());
   }
 
   private Gpx loadGpx(String file) throws Exception {

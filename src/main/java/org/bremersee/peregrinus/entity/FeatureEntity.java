@@ -26,12 +26,15 @@ import lombok.ToString;
 import org.bremersee.geojson.utils.GeometryUtils;
 import org.locationtech.jts.geom.Geometry;
 import org.springframework.data.annotation.Id;
-import org.springframework.data.annotation.TypeAlias;
 import org.springframework.data.mongodb.core.index.GeoSpatialIndexType;
 import org.springframework.data.mongodb.core.index.GeoSpatialIndexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 /**
+ * The GeoJSON feature entity.
+ *
+ * @param <G> the geometry type
+ * @param <P> the properties type
  * @author Christian Bremer
  */
 @Document(collection = "feature")
@@ -41,14 +44,29 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @NoArgsConstructor(access = AccessLevel.PACKAGE)
 public class FeatureEntity<G extends Geometry, P extends FeatureEntityProperties> {
 
+  /**
+   * The constant ID_PATH.
+   */
   public static final String ID_PATH = "id";
 
+  /**
+   * The constant ACL_PATH.
+   */
   public static final String ACL_PATH = "properties.acl";
 
+  /**
+   * The constant NAME_PATH.
+   */
   public static final String NAME_PATH = "properties.name";
 
+  /**
+   * The constant MODIFIED_PATH.
+   */
   public static final String MODIFIED_PATH = "properties.modified";
 
+  /**
+   * The constant MODIFIED_BY_PATH.
+   */
   public static final String MODIFIED_BY_PATH = "properties.modifiedBy";
 
   @Id
@@ -61,6 +79,14 @@ public class FeatureEntity<G extends Geometry, P extends FeatureEntityProperties
 
   private P properties;
 
+  /**
+   * Instantiates a new GeoJSON feature entity.
+   *
+   * @param id         the id
+   * @param geometry   the geometry
+   * @param bbox       the bbox
+   * @param properties the properties
+   */
   FeatureEntity(String id, G geometry, double[] bbox, P properties) {
     setId(id);
     setGeometry(geometry);
@@ -68,6 +94,11 @@ public class FeatureEntity<G extends Geometry, P extends FeatureEntityProperties
     setProperties(properties);
   }
 
+  /**
+   * Sets properties.
+   *
+   * @param properties the properties
+   */
   public void setProperties(final P properties) {
     if (properties != null) {
       this.properties = properties;

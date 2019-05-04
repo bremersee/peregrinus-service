@@ -31,6 +31,8 @@ import org.springframework.security.web.server.SecurityWebFilterChain;
 import org.springframework.security.web.server.util.matcher.ServerWebExchangeMatchers;
 
 /**
+ * The security configuration.
+ *
  * @author Christian Bremer
  */
 @Configuration
@@ -41,6 +43,13 @@ public class SecurityConfiguration {
 
   private PasswordFlowReactiveAuthenticationManager passwordFlowReactiveAuthenticationManager;
 
+  /**
+   * Instantiates a new security configuration.
+   *
+   * @param keycloakJwtConverter                      the keycloak jwt converter
+   * @param passwordFlowReactiveAuthenticationManager the password flow reactive authentication
+   *                                                  manager
+   */
   @Autowired
   public SecurityConfiguration(
       KeycloakReactiveJwtConverter keycloakJwtConverter,
@@ -49,6 +58,12 @@ public class SecurityConfiguration {
     this.passwordFlowReactiveAuthenticationManager = passwordFlowReactiveAuthenticationManager;
   }
 
+  /**
+   * Creates actuator filter chain.
+   *
+   * @param http the server http security
+   * @return the actuator filter chain
+   */
   @Bean
   @Order(51)
   public SecurityWebFilterChain actuatorFilterChain(
@@ -69,6 +84,12 @@ public class SecurityConfiguration {
     return http.build();
   }
 
+  /**
+   * Creates resource server filter chain.
+   *
+   * @param http the server http security
+   * @return the resource server filter chain
+   */
   @Bean
   @Order(52)
   public SecurityWebFilterChain oauth2ResourceServerFilterChain(
