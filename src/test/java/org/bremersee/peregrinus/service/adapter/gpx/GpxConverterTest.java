@@ -1,7 +1,6 @@
 package org.bremersee.peregrinus.service.adapter.gpx;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import java.io.File;
 import java.util.ServiceLoader;
 import org.bremersee.garmin.GarminJaxbContextDataProvider;
 import org.bremersee.gpx.model.Gpx;
@@ -135,7 +134,7 @@ public class GpxConverterTest {
     System.out.println("Wpt: GeoJson -> GPX");
     jaxbContextBuilder
         .buildMarshaller(GarminJaxbContextDataProvider.GPX_NAMESPACES)
-        .marshal(gpx, new File("/Users/cbr/waypoint_written.xml"));
+        .marshal(gpx, System.out);
     System.out.println("-------------------");
   }
 }
