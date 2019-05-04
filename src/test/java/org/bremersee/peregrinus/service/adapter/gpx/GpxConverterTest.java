@@ -102,6 +102,9 @@ public class GpxConverterTest {
   @Test
   public void rteFeaturesToGpx() throws Exception {
     FeatureCollection featureCollection = loadFeatureCollection("route.json");
+    System.out.println(">>>>>>> featureCollection = " + featureCollection);
+    System.out.println(">>>>>>> featureCollection features = " + featureCollection.getFeatures());
+    System.out.println("converter = " + featuresToGpxConverter);
     Gpx gpx = featuresToGpxConverter.convert(
         featureCollection.getFeatures(),
         new GpxExportSettings());
