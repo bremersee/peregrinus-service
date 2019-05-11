@@ -99,7 +99,6 @@ public class SecurityConfiguration {
     http
         //.securityMatcher(new NegatedServerWebExchangeMatcher(EndpointRequest.toAnyEndpoint()))
         .securityMatcher(ServerWebExchangeMatchers.pathMatchers("/api/**"))
-        .cors().disable()
         .csrf().disable()
         .oauth2ResourceServer()
         .jwt()
