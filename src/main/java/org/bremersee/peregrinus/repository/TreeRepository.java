@@ -69,6 +69,9 @@ public interface TreeRepository {
   }
 
   Flux<NodeEntity> findNodesByParentId(
+      @NotNull String parentId);
+
+  Flux<NodeEntity> findNodesByParentId(
       @NotNull String parentId,
       @NotNull String permission,
       boolean includePublic,

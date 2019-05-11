@@ -43,6 +43,7 @@ import org.bremersee.xml.ConverterUtils;
 import org.bremersee.xml.JaxbContextBuilder;
 import org.locationtech.jts.geom.Coordinate;
 import org.springframework.stereotype.Component;
+import org.springframework.util.Assert;
 import reactor.util.function.Tuple2;
 
 /**
@@ -80,6 +81,8 @@ public class FeaturesToGpxConverter {
       final JaxbContextBuilder jaxbContextBuilder,
       final GpxProperties gpxProperties) {
 
+    Assert.notNull(jaxbContextBuilder, "JAXB context builder must be present.");
+    Assert.notNull(gpxProperties, "GPX properties must be present.");
     final String[] gpxNameSpaces = gpxProperties.getNameSpaces();
     this.rteConverter = new RteToRteTypeConverter(jaxbContextBuilder, gpxNameSpaces);
     this.trkConverter = new TrkToTrkTypeConverter(jaxbContextBuilder, gpxNameSpaces);

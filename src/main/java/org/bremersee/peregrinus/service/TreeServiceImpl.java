@@ -16,6 +16,7 @@
 
 package org.bremersee.peregrinus.service;
 
+import static org.bremersee.security.access.PermissionConstants.DELETE;
 import static org.bremersee.security.access.PermissionConstants.READ;
 import static org.bremersee.security.access.PermissionConstants.WRITE;
 
@@ -405,6 +406,67 @@ public class TreeServiceImpl extends AbstractServiceImpl implements TreeService 
             return Mono.error(ServiceException.internalServerError("Node is not branch or leaf."));
           }
         });
+  }
+
+  private Mono<Boolean> isNodeChildOf(final String nodeId, final String parentId) {
+    return treeRepository.findNodesByParentId(parentId)
+        .collectList()
+        .flatMap(nodeEntities -> {
+          for (NodeEntity nodeEntity : nodeEntities) {
+            if (nodeEntity.getId().equals(nodeId)) {
+              return Mono.just(true);
+            } else if (nodeEntity instanceof BranchEntity) {
+              return isNodeChildOf(nodeId, nodeEntity.getId());
+            }
+          }
+          return Mono.just(false);
+        });
+
+  }
+
+  public Mono<Branch> moveNode(
+      final String nodeId,
+      final String targetBranchId,
+      final String userId,
+      final Set<String> roles,
+      final Set<String> groups) {
+
+    if (nodeId.equals(targetBranchId)) {
+      return treeRepository
+          .findBranchById(targetBranchId, READ, true, userId, roles, groups)
+          .switchIfEmpty(Mono.error(ServiceException.forbidden("Branch", targetBranchId)))
+          .flatMap(branchEntity -> processBranchEntity(
+              branchEntity, OpenBranchCommand.RETAIN, userId, roles, groups));
+    }
+
+    return isNodeChildOf(targetBranchId, nodeId)
+        .flatMap(isChild -> {
+          if (isChild) {
+            return Mono.error(ServiceException.badRequest("Target is child of source.")); // TODO
+          }
+          return treeRepository
+              .findNodeById(nodeId, DELETE, true, userId, roles, groups)
+              .switchIfEmpty(Mono.error(ServiceException.forbidden("Node", nodeId)))
+              .flatMap(nodeEntity -> moveNode(nodeEntity, targetBranchId, userId, roles, groups));
+        });
+
+  }
+
+  private Mono<Branch> moveNode(
+      final NodeEntity nodeEntity,
+      final String targetBranchId,
+      final String userId,
+      final Set<String> roles,
+      final Set<String> groups) {
+
+    return treeRepository.findBranchById(targetBranchId, WRITE, true, userId, roles, groups)
+        .switchIfEmpty(Mono.error(ServiceException.forbidden("Branch", targetBranchId)))
+        .zipWhen(branchEntity -> {
+          nodeEntity.setParentId(branchEntity.getId());
+          return treeRepository.persistNode(nodeEntity);
+        })
+        .flatMap(tuple -> processBranchEntity(
+            tuple.getT1(), OpenBranchCommand.RETAIN, userId, roles, groups));
   }
 
 }

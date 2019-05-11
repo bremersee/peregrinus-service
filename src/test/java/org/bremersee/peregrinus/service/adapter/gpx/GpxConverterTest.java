@@ -13,7 +13,6 @@ import org.bremersee.xml.JaxbContextBuilder;
 import org.bremersee.xml.JaxbContextDataProvider;
 import org.junit.Assert;
 import org.junit.BeforeClass;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.springframework.core.io.DefaultResourceLoader;
 import org.springframework.core.io.ResourceLoader;
@@ -100,7 +99,6 @@ public class GpxConverterTest {
     System.out.println("------------------------");
   }
 
-  @Ignore // Doesn't work on jenkins
   @Test
   public void rteFeaturesToGpx() throws Exception {
     FeatureCollection featureCollection = loadFeatureCollection("route.json");

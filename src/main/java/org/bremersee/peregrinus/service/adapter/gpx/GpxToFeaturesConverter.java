@@ -28,6 +28,7 @@ import org.bremersee.peregrinus.model.FeatureCollection;
 import org.bremersee.peregrinus.model.gpx.GpxImportSettings;
 import org.bremersee.xml.JaxbContextBuilder;
 import org.springframework.stereotype.Component;
+import org.springframework.util.Assert;
 
 /**
  * The gpx to features converter.
@@ -49,6 +50,7 @@ public class GpxToFeaturesConverter {
    * @param jaxbContextBuilder the jaxb context builder
    */
   public GpxToFeaturesConverter(final JaxbContextBuilder jaxbContextBuilder) {
+    Assert.notNull(jaxbContextBuilder, "JAXB context builder must be present.");
     wptTypeConverter = new WptTypeToWptConverter(jaxbContextBuilder);
     trkTypeConverter = new TrkTypeToTrkConverter(jaxbContextBuilder);
     rteTypeConverter = new RteTypeToRteConverter(jaxbContextBuilder);

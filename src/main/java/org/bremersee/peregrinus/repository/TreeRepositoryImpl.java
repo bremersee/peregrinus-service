@@ -75,6 +75,14 @@ public class TreeRepositoryImpl extends AbstractMongoRepository implements TreeR
 
   @Override
   public Flux<NodeEntity> findNodesByParentId(
+      @NotNull String parentId) {
+
+    return getMongoTemplate()
+        .find(Query.query(where(NodeEntity.PARENT_ID_PATH).is(parentId)), NodeEntity.class);
+  }
+
+  @Override
+  public Flux<NodeEntity> findNodesByParentId(
       @NotNull String parentId,
       @NotNull String permission,
       boolean includePublic,
