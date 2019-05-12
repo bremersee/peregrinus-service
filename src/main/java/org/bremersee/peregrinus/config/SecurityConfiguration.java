@@ -72,7 +72,6 @@ public class SecurityConfiguration {
 
     http
         .securityMatcher(EndpointRequest.toAnyEndpoint())
-        .cors().disable()
         .csrf().disable()
         .httpBasic()
         .authenticationManager(passwordFlowReactiveAuthenticationManager);

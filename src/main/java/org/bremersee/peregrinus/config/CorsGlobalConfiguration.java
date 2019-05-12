@@ -16,22 +16,41 @@
 
 package org.bremersee.peregrinus.config;
 
+import org.bremersee.security.CorsProperties;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.reactive.config.CorsRegistry;
 import org.springframework.web.reactive.config.WebFluxConfigurer;
 
 /**
+ * The global CORS configuration.
+ *
  * @author Christian Bremer
  */
+@EnableConfigurationProperties(CorsProperties.class)
 @Configuration
 public class CorsGlobalConfiguration implements WebFluxConfigurer {
 
+  private CorsProperties corsProperties;
+
+  /**
+   * Instantiates a new global CORS configuration.
+   *
+   * @param corsProperties the cors properties
+   */
+  public CorsGlobalConfiguration(CorsProperties corsProperties) {
+    this.corsProperties = corsProperties;
+  }
+
   @Override
   public void addCorsMappings(CorsRegistry corsRegistry) {
-    corsRegistry.addMapping("/**")
-        .allowedOrigins("*")
-        .allowedMethods("*")
-        .allowedHeaders("*")
-        .maxAge(3600);
+    for (CorsProperties.CorsConfiguration config : corsProperties.getConfigs()) {
+      corsRegistry.addMapping(config.getPathPattern())
+          .allowedOrigins(config.getAllowedOrigins().toArray(new String[0]))
+          .allowedMethods(config.getAllowedMethods().toArray(new String[0]))
+          .allowedHeaders(config.getAllowedHeaders().toArray(new String[0]))
+          .maxAge(config.getMaxAge())
+          .allowCredentials(config.isAllowCredentials());
+    }
   }
 }

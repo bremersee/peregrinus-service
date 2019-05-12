@@ -78,6 +78,7 @@ public class FeatureLeafAdapter extends AbstractAdapter implements LeafAdapter {
     final FeatureLeafEntity featureLeafEntity = (FeatureLeafEntity) leafEntity;
     final FeatureLeafEntitySettings featureLeafEntitySettings
         = (FeatureLeafEntitySettings) leafEntitySettings;
+    // TODO load feature only if it is displayed on map?
     final String userId = leafEntitySettings.getUserId();
     return featureService.findFeatureById(featureLeafEntity.getFeatureId(), userId)
         .map(feature -> FeatureLeaf.builder()
