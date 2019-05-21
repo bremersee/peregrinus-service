@@ -104,6 +104,15 @@ public class TreeController extends AbstractController {
     return oneWithUserId(userId -> treeService.closeBranch(branchId, userId));
   }
 
+  @PutMapping(path = "/{nodeId}/display-on-map/{displayedOnMap}")
+  public Mono<Void> displayNodeOnMap(
+      @PathVariable("nodeId") String nodeId,
+      @PathVariable("displayedOnMap") boolean displayedOnMap) {
+    return oneWithAuth(auth -> treeService
+        .displayNodeOnMap(
+            nodeId, displayedOnMap, auth.getUserId(), auth.getRoles(), auth.getGroups()));
+  }
+
   @PostMapping(
       path = "/{branchId}/feature",
       consumes = {MediaType.APPLICATION_JSON_UTF8_VALUE},

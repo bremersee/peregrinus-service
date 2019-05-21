@@ -408,6 +408,39 @@ public class TreeServiceImpl extends AbstractServiceImpl implements TreeService 
         });
   }
 
+  @Override
+  public Mono<Void> displayNodeOnMap(
+      final String nodeId,
+      final Boolean displayedOnMap,
+      final String userId,
+      final Set<String> roles,
+      final Set<String> groups) {
+
+    return treeRepository
+        .findNodeById(nodeId, READ, true, userId, roles, groups)
+        .flatMap(nodeEntity -> displayNodeOnMap(nodeEntity, displayedOnMap, userId, roles, groups));
+  }
+
+  private Mono<Void> displayNodeOnMap(
+      final NodeEntity nodeEntity,
+      final Boolean displayedOnMap,
+      final String userId,
+      final Set<String> roles,
+      final Set<String> groups) {
+
+    if (nodeEntity instanceof BranchEntity) {
+      return treeRepository
+          .findNodesByParentId(nodeEntity.getId(), READ, true, userId, roles, groups)
+          .flatMap(nodeChild -> displayNodeOnMap(nodeChild, displayedOnMap, userId, roles, groups))
+          .count()
+          .flatMap(value -> Mono.empty());
+    } else if (nodeEntity instanceof FeatureLeafEntity) {
+      return treeRepository.updateFeatureLeafSettings(nodeEntity.getId(), userId, displayedOnMap)
+          .flatMap(result -> Mono.empty());
+    }
+    return Mono.empty();
+  }
+
   private Mono<Boolean> isNodeChildOf(final String nodeId, final String parentId) {
     return treeRepository.findNodesByParentId(parentId)
         .collectList()

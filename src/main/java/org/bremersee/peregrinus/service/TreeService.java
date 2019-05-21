@@ -98,4 +98,11 @@ public interface TreeService {
       @NotNull Set<String> roles,
       @NotNull Set<String> groups);
 
+  Mono<Void> displayNodeOnMap(
+      @NotNull String nodeId,
+      @NotNull Boolean displayedOnMap,
+      @NotNull String userId,
+      @NotNull Set<String> roles,
+      @NotNull Set<String> groups);
+
 }

@@ -16,6 +16,9 @@
 
 package org.bremersee.peregrinus.repository;
 
+import static org.bremersee.peregrinus.entity.FeatureLeafEntitySettings.DISPLAYED_ON_MAP_PATH;
+import static org.bremersee.peregrinus.entity.NodeEntitySettings.NODE_ID_PATH;
+import static org.bremersee.peregrinus.entity.NodeEntitySettings.USER_ID_PATH;
 import static org.springframework.data.mongodb.core.query.Criteria.where;
 import static org.springframework.data.mongodb.core.query.Query.query;
 
@@ -23,6 +26,7 @@ import java.util.Collection;
 import javax.validation.constraints.NotNull;
 import org.bremersee.peregrinus.entity.AclEntity;
 import org.bremersee.peregrinus.entity.BranchEntitySettings;
+import org.bremersee.peregrinus.entity.FeatureLeafEntitySettings;
 import org.bremersee.peregrinus.entity.NodeEntity;
 import org.bremersee.peregrinus.entity.NodeEntitySettings;
 import org.bremersee.security.access.AclMapper;
@@ -112,6 +116,20 @@ public class TreeRepositoryImpl extends AbstractMongoRepository implements TreeR
   }
 
   @Override
+  public Mono<Boolean> updateFeatureLeafSettings(
+      final String featureLeafId,
+      final String userId,
+      final Boolean displayedOnMap) {
+
+    final Query query = query(nodeSettingsCriteria(featureLeafId, userId));
+    final Update update = Update.update(DISPLAYED_ON_MAP_PATH, Boolean.TRUE.equals(displayedOnMap));
+    return getMongoTemplate()
+        .findAndModify(query, update, FeatureLeafEntitySettings.class)
+        .flatMap(result -> Mono.just(true))
+        .switchIfEmpty(Mono.just(false));
+  }
+
+  @Override
   public Mono<Boolean> openBranch(@NotNull String settingsId) {
     final Update update = Update.update(BranchEntitySettings.OPEN_PATH, true);
     return getMongoTemplate()
@@ -131,8 +149,8 @@ public class TreeRepositoryImpl extends AbstractMongoRepository implements TreeR
 
   private Criteria nodeSettingsCriteria(final String nodeId, final String userId) {
     return new Criteria().andOperator(
-        where(NodeEntitySettings.NODE_ID_PATH).is(nodeId),
-        where(NodeEntitySettings.USER_ID_PATH).is(userId));
+        where(NODE_ID_PATH).is(nodeId),
+        where(USER_ID_PATH).is(userId));
   }
 
 }

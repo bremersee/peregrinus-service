@@ -36,6 +36,11 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @NoArgsConstructor
 public class FeatureLeafEntitySettings extends LeafEntitySettings {
 
+  /**
+   * The constant DISPLAYED_ON_MAP_PATH.
+   */
+  public static final String DISPLAYED_ON_MAP_PATH = "displayedOnMap";
+
   @Getter
   private Boolean displayedOnMap = false;
 

@@ -87,6 +87,11 @@ public interface TreeRepository {
       @NotNull String nodeId,
       @NotNull String userId);
 
+  Mono<Boolean> updateFeatureLeafSettings(
+      @NotNull String featureLeafId,
+      @NotNull String userId,
+      @NotNull Boolean displayedOnMap);
+
   Mono<Boolean> openBranch(@NotNull String settingsId);
 
   Mono<Void> closeBranch(@NotNull String branchId, @NotNull String userId);
