@@ -44,7 +44,8 @@ public interface FeatureAdapter {
 
   Mono<Feature> buildFeature(
       @NotNull FeatureEntity featureEntity,
-      @NotNull FeatureEntitySettings featureEntitySettings);
+      @NotNull FeatureEntitySettings featureEntitySettings,
+      boolean omitGeometry);
 
  FeatureEntity buildFeatureEntity(
       @NotNull Feature feature,

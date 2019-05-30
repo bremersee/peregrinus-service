@@ -59,7 +59,8 @@ public interface FeatureService {
 
   Mono<Feature> findFeatureById(
       @NotNull String id,
-      @NotNull String userId);
+      @NotNull String userId,
+      boolean omitGeometry);
 
   Flux<Feature> findFeaturesById(
       @NotNull Set<String> featureIds,

@@ -16,13 +16,13 @@
 
 package org.bremersee.peregrinus.service;
 
-import org.bremersee.peregrinus.model.Branch;
 import org.bremersee.peregrinus.entity.BranchEntitySettings;
+import org.bremersee.peregrinus.model.Branch;
 
 /**
  * @author Christian Bremer
  */
-enum OpenBranchCommand {
+public enum OpenBranchCommand {
 
   ALL, CURRENT, RETAIN;
 
@@ -44,4 +44,14 @@ enum OpenBranchCommand {
         && branch.getSettings().getOpen() != null
         && branch.getSettings().getOpen());
   }
+
+  public static OpenBranchCommand fromValue(String value) {
+    for (OpenBranchCommand cmd : OpenBranchCommand.values()) {
+      if (cmd.name().equalsIgnoreCase(value)) {
+        return cmd;
+      }
+    }
+    return RETAIN;
+  }
+
 }

@@ -25,11 +25,11 @@ import org.bremersee.peregrinus.entity.LeafEntitySettings;
 import org.bremersee.peregrinus.model.FeatureLeaf;
 import org.bremersee.peregrinus.model.FeatureLeafSettings;
 import org.bremersee.peregrinus.model.Leaf;
+import org.bremersee.peregrinus.repository.TreeRepository;
 import org.bremersee.peregrinus.service.FeatureService;
 import org.bremersee.security.access.AclMapper;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Component;
-import org.springframework.util.Assert;
 import reactor.core.publisher.Mono;
 
 /**
@@ -38,14 +38,17 @@ import reactor.core.publisher.Mono;
 @Component
 public class FeatureLeafAdapter extends AbstractAdapter implements LeafAdapter {
 
+  private final TreeRepository treeRepository;
+
   private final FeatureService featureService;
 
   public FeatureLeafAdapter(
       AclMapper<AclEntity> aclMapper,
       ModelMapper modelMapper,
+      TreeRepository treeRepository,
       FeatureService featureService) {
     super(aclMapper, modelMapper);
-    Assert.notNull(featureService, "Feature service must not be null.");
+    this.treeRepository = treeRepository;
     this.featureService = featureService;
   }
 
@@ -62,9 +65,11 @@ public class FeatureLeafAdapter extends AbstractAdapter implements LeafAdapter {
   @Override
   public LeafEntitySettings buildLeafEntitySettings(
       @NotNull LeafEntity leafEntity,
-      @NotNull String userId) {
+      @NotNull String userId,
+      boolean displayedOnMap) {
+
     return FeatureLeafEntitySettings.builder()
-        .displayedOnMap(false)
+        .displayedOnMap(displayedOnMap)
         .nodeId(leafEntity.getId())
         .userId(userId)
         .build();
@@ -73,16 +78,17 @@ public class FeatureLeafAdapter extends AbstractAdapter implements LeafAdapter {
   @Override
   public Mono<Leaf> buildLeaf(
       @NotNull LeafEntity leafEntity,
-      @NotNull LeafEntitySettings leafEntitySettings) {
+      @NotNull LeafEntitySettings leafEntitySettings,
+      boolean omitGeometries) {
 
     final FeatureLeafEntity featureLeafEntity = (FeatureLeafEntity) leafEntity;
     final FeatureLeafEntitySettings featureLeafEntitySettings
         = (FeatureLeafEntitySettings) leafEntitySettings;
-    // TODO load feature only if it is displayed on map?
-    // maybe it's better to keep the feature but set geometry to null
-    // because we may need the feature type for preview in tree etc.
+    final boolean omitGeometry = omitGeometries
+        && Boolean.FALSE.equals(featureLeafEntitySettings.getDisplayedOnMap());
     final String userId = leafEntitySettings.getUserId();
-    return featureService.findFeatureById(featureLeafEntity.getFeatureId(), userId)
+    return featureService
+        .findFeatureById(featureLeafEntity.getFeatureId(), userId, omitGeometry)
         .map(feature -> FeatureLeaf.builder()
             .acl(getAclMapper().map(featureLeafEntity.getAcl()))
             .created(featureLeafEntity.getCreated())
@@ -110,5 +116,24 @@ public class FeatureLeafAdapter extends AbstractAdapter implements LeafAdapter {
     final FeatureLeafEntity featureLeafEntity = (FeatureLeafEntity) leafEntity;
     return featureService.renameFeature(featureLeafEntity.getFeatureId(), name, userId)
         .switchIfEmpty(Mono.just(false));
+  }
+
+  @Override
+  public boolean isDisplayedOnMap(LeafEntitySettings settings) {
+    if (settings instanceof FeatureLeafEntitySettings) {
+      return Boolean.TRUE.equals(((FeatureLeafEntitySettings) settings).getDisplayedOnMap());
+    }
+    return false;
+  }
+
+  @Override
+  public Mono<LeafEntitySettings> setDisplayedOnMap(
+      LeafEntitySettings settings,
+      boolean displayedOnMap) {
+
+    if (settings instanceof FeatureLeafEntitySettings) {
+      return treeRepository.persistNodeSettings(settings);
+    }
+    return Mono.just(settings);
   }
 }

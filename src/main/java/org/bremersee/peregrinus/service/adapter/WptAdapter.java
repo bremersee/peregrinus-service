@@ -88,7 +88,8 @@ public class WptAdapter extends AbstractAdapter implements FeatureAdapter {
   @Override
   public Mono<Feature> buildFeature(
       final FeatureEntity featureEntity,
-      final FeatureEntitySettings featureEntitySettings) {
+      final FeatureEntitySettings featureEntitySettings,
+      boolean omitGeometry) {
 
     final WptEntity wptEntity = (WptEntity) featureEntity;
     final WptEntitySettings wptEntitySettings = (WptEntitySettings) featureEntitySettings;

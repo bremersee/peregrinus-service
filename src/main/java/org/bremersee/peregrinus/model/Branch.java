@@ -91,4 +91,5 @@ public final class Branch extends Node<BranchSettings> {
     }
     return children;
   }
+
 }

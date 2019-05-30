@@ -16,6 +16,10 @@
 
 package org.bremersee.peregrinus.controller;
 
+import java.nio.charset.StandardCharsets;
+import org.bremersee.comparator.ComparatorItemTransformer;
+import org.bremersee.comparator.ComparatorItemTransformerImpl;
+import org.bremersee.comparator.model.ComparatorItem;
 import org.bremersee.gpx.model.Gpx;
 import org.bremersee.groupman.api.GroupControllerApi;
 import org.bremersee.peregrinus.model.Branch;
@@ -23,6 +27,8 @@ import org.bremersee.peregrinus.model.Feature;
 import org.bremersee.peregrinus.model.FeatureCollection;
 import org.bremersee.peregrinus.model.FeatureLeaf;
 import org.bremersee.peregrinus.model.gpx.GpxImportSettings;
+import org.bremersee.peregrinus.service.GeometryCommand;
+import org.bremersee.peregrinus.service.OpenBranchCommand;
 import org.bremersee.peregrinus.service.TreeService;
 import org.hibernate.validator.constraints.Length;
 import org.springframework.http.MediaType;
@@ -47,6 +53,8 @@ import reactor.core.publisher.Mono;
 @Validated
 public class TreeController extends AbstractController {
 
+  private final ComparatorItemTransformer sortTransformer = new ComparatorItemTransformerImpl();
+
   private final TreeService treeService;
 
   public TreeController(
@@ -54,6 +62,19 @@ public class TreeController extends AbstractController {
       TreeService treeService) {
     super(groupService);
     this.treeService = treeService;
+  }
+
+  private ComparatorItem buildComparatorItem(final String sort) {
+    final ComparatorItem item = new ComparatorItem();
+    if (StringUtils.hasText(sort)) {
+      item.setNextComparatorItem(
+          sortTransformer.fromString(sort, false, StandardCharsets.UTF_8.name()));
+    } else {
+      item.setNextComparatorItem(
+          sortTransformer.fromString(
+              "name,asc|modified,desc", false, StandardCharsets.UTF_8.name()));
+    }
+    return item;
   }
 
   @PostMapping(
@@ -73,9 +94,18 @@ public class TreeController extends AbstractController {
   @GetMapping(produces = {MediaType.APPLICATION_JSON_UTF8_VALUE})
   public Flux<Branch> loadBranches(
       @RequestParam(value = "openAll", defaultValue = "false") Boolean openAll,
-      @RequestParam(value = "pub", defaultValue = "false") Boolean includePublic) {
+      @RequestParam(value = "omitGeometries", defaultValue = "false") Boolean omitGeometries,
+      @RequestParam(value = "pub", defaultValue = "false") Boolean includePublic,
+      @RequestParam(value = "sort", defaultValue = "name,asc|modified,desc") String sort) {
     return manyWithAuth(auth -> treeService
-        .loadBranches(openAll, includePublic, auth.getUserId(), auth.getRoles(), auth.getGroups()));
+        .loadBranches(
+            openAll,
+            omitGeometries,
+            includePublic,
+            buildComparatorItem(sort),
+            auth.getUserId(),
+            auth.getRoles(),
+            auth.getGroups()));
   }
 
   @PutMapping(
@@ -93,9 +123,18 @@ public class TreeController extends AbstractController {
   @GetMapping(path = "/{branchId}/open", produces = {MediaType.APPLICATION_JSON_UTF8_VALUE})
   public Mono<Branch> openBranch(
       @PathVariable("branchId") String branchId,
-      @RequestParam(value = "open-all", defaultValue = "false") Boolean openAll) {
+      @RequestParam(value = "open", defaultValue = "current") String openCommand,
+      @RequestParam(value = "geometry", defaultValue = "retain") String geometryCommand,
+      @RequestParam(value = "sort", defaultValue = "name,asc|modified,desc") String sort) {
     return oneWithAuth(auth -> treeService
-        .openBranch(branchId, openAll, auth.getUserId(), auth.getRoles(), auth.getGroups()));
+        .openBranch(
+            branchId,
+            OpenBranchCommand.fromValue(openCommand),
+            GeometryCommand.fromValue(geometryCommand),
+            buildComparatorItem(sort),
+            auth.getUserId(),
+            auth.getRoles(),
+            auth.getGroups()));
   }
 
   @PutMapping(path = "/{branchId}/close")
@@ -105,6 +144,7 @@ public class TreeController extends AbstractController {
   }
 
   @PutMapping(path = "/{nodeId}/display-on-map/{displayedOnMap}")
+  // TODO only leaf, return leaf (optional)
   public Mono<Void> displayNodeOnMap(
       @PathVariable("nodeId") String nodeId,
       @PathVariable("displayedOnMap") boolean displayedOnMap) {

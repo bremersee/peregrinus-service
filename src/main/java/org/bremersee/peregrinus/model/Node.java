@@ -16,6 +16,7 @@
 
 package org.bremersee.peregrinus.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -39,6 +40,7 @@ import org.bremersee.common.model.AccessControlList;
  * @author Christian Bremer
  */
 @ApiModel(description = "The tree node.", discriminator = "_type")
+@JsonIgnoreProperties(ignoreUnknown = true)
 @JsonInclude(Include.NON_EMPTY)
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, property = "_type", visible = true)
 @JsonSubTypes({
@@ -49,7 +51,7 @@ import org.bremersee.common.model.AccessControlList;
 @Setter
 @EqualsAndHashCode
 @ToString
-public abstract class Node<S extends NodeSettings> {
+public abstract class Node<S extends NodeSettings> implements Comparable<Node> {
 
   @ApiModelProperty("The node ID.")
   private String id;
@@ -169,5 +171,16 @@ public abstract class Node<S extends NodeSettings> {
     if (settings != null) {
       this.settings = settings;
     }
+  }
+
+  @Override
+  public int compareTo(Node other) {
+    if (this instanceof Branch && !(other instanceof Branch)) {
+      return -1;
+    }
+    if (other instanceof Branch && !(this instanceof Branch)) {
+      return 1;
+    }
+    return 0;
   }
 }

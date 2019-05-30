@@ -35,15 +35,23 @@ public interface LeafAdapter {
   @NotNull
   LeafEntitySettings buildLeafEntitySettings(
       @NotNull LeafEntity leafEntity,
-      @NotNull String userId);
+      @NotNull String userId,
+      boolean displayedOnMap);
 
   Mono<Leaf> buildLeaf(
       @NotNull LeafEntity leafEntity,
-      @NotNull LeafEntitySettings leafEntitySettings);
+      @NotNull LeafEntitySettings leafEntitySettings,
+      boolean omitGeometries);
 
   Mono<Boolean> renameLeaf(
       @NotNull LeafEntity leafEntity,
       @NotNull String name,
       @NotNull String userId);
+
+  boolean isDisplayedOnMap(@NotNull LeafEntitySettings settings);
+
+  Mono<LeafEntitySettings> setDisplayedOnMap(
+      @NotNull LeafEntitySettings settings,
+      boolean displayedOnMap);
 
 }

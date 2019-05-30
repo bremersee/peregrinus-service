@@ -91,19 +91,20 @@ public class TrkAdapter extends AbstractAdapter implements FeatureAdapter {
   @Override
   public Mono<Feature> buildFeature(
       @NotNull FeatureEntity featureEntity,
-      @NotNull FeatureEntitySettings featureEntitySettings) {
+      @NotNull FeatureEntitySettings featureEntitySettings,
+      boolean omitGeometry) {
 
     final TrkEntity trkEntity = (TrkEntity) featureEntity;
     final TrkEntitySettings trkEntitySettings = (TrkEntitySettings) featureEntitySettings;
     return Mono.just(Trk.builder()
         .bbox(trkEntity.getBbox())
-        .geometry(trkEntity.getGeometry())
+        .geometry(omitGeometry ? null : trkEntity.getGeometry())
         .id(trkEntity.getId())
         .properties(TrkProperties.builder()
             .acl(getAclMapper().map(trkEntity.getProperties().getAcl()))
             .created(trkEntity.getProperties().getCreated())
             .createdBy(trkEntity.getProperties().getCreatedBy())
-            .eleLines(trkEntity.getProperties().getEleLines())
+            .eleLines(omitGeometry ? null : trkEntity.getProperties().getEleLines())
             .links(trkEntity.getProperties().getLinks())
             .markdownDescription(trkEntity.getProperties().getMarkdownDescription())
             .modified(trkEntity.getProperties().getModified())
@@ -118,7 +119,7 @@ public class TrkAdapter extends AbstractAdapter implements FeatureAdapter {
                 .build())
             .departureTime(trkEntity.getProperties().getDepartureTime())
             .arrivalTime(trkEntity.getProperties().getArrivalTime())
-            .timeLines(trkEntity.getProperties().getTimeLines())
+            .timeLines(omitGeometry ? null : trkEntity.getProperties().getTimeLines())
             .build())
         .build());
   }

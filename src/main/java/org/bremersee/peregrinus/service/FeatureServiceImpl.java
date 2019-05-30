@@ -105,7 +105,7 @@ public class FeatureServiceImpl extends AbstractServiceImpl implements FeatureSe
         .persistFeature(newFeatureEntity)
         .zipWhen(persistedFeatureEntity -> persistFeatureSettings(
             feature.getProperties().getSettings(), userId, persistedFeatureEntity))
-        .flatMap(tuple -> adapter.buildFeature(tuple.getT1(), tuple.getT2()));
+        .flatMap(tuple -> adapter.buildFeature(tuple.getT1(), tuple.getT2(), false));
   }
 
   private Mono<FeatureEntitySettings> persistFeatureSettings(
@@ -123,7 +123,7 @@ public class FeatureServiceImpl extends AbstractServiceImpl implements FeatureSe
   }
 
   @Override
-  public Mono<Feature> findFeatureById(String id, String userId) {
+  public Mono<Feature> findFeatureById(String id, String userId, boolean omitGeometry) {
 
     return featureRepository.findFeatureById(id)
         .zipWhen(featureEntity -> featureRepository
@@ -132,7 +132,7 @@ public class FeatureServiceImpl extends AbstractServiceImpl implements FeatureSe
                 .persistFeatureSettings(getFeatureAdapter(featureEntity)
                     .buildFeatureEntitySettings(featureEntity, userId))))
         .flatMap(tuple -> getFeatureAdapter(tuple.getT1())
-            .buildFeature(tuple.getT1(), tuple.getT2()));
+            .buildFeature(tuple.getT1(), tuple.getT2(), omitGeometry));
   }
 
   @Override
@@ -189,7 +189,7 @@ public class FeatureServiceImpl extends AbstractServiceImpl implements FeatureSe
                 .buildFeatureEntitySettings(featureEntity, userId)))
         .map(featureEntitySettings -> Tuples.of(featureEntity, featureEntitySettings))
         .flatMap(tuple -> getFeatureAdapter(tuple.getT1())
-            .buildFeature(tuple.getT1(), tuple.getT2()));
+            .buildFeature(tuple.getT1(), tuple.getT2(), false));
   }
 
 }

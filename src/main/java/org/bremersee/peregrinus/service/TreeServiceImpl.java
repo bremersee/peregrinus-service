@@ -16,7 +16,6 @@
 
 package org.bremersee.peregrinus.service;
 
-import static org.bremersee.security.access.PermissionConstants.DELETE;
 import static org.bremersee.security.access.PermissionConstants.READ;
 import static org.bremersee.security.access.PermissionConstants.WRITE;
 
@@ -29,6 +28,8 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import lombok.extern.slf4j.Slf4j;
 import org.bremersee.common.model.AccessControlList;
+import org.bremersee.comparator.ObjectComparatorFactory;
+import org.bremersee.comparator.model.ComparatorItem;
 import org.bremersee.exception.ServiceException;
 import org.bremersee.gpx.model.Gpx;
 import org.bremersee.peregrinus.entity.AclEntity;
@@ -62,6 +63,8 @@ import reactor.core.publisher.Mono;
 @Slf4j
 public class TreeServiceImpl extends AbstractServiceImpl implements TreeService {
 
+  private final ObjectComparatorFactory comparatorFactory = ObjectComparatorFactory.newInstance();
+
   private final Map<String, LeafAdapter> leafAdapterMap = new HashMap<>();
 
   private TreeRepository treeRepository;
@@ -85,6 +88,15 @@ public class TreeServiceImpl extends AbstractServiceImpl implements TreeService 
         leafAdapterMap.put(key, leafAdapter);
       }
     }
+  }
+
+  private ComparatorItem comparatorItem(ComparatorItem comparatorItem) {
+    if (comparatorItem != null) {
+      return comparatorItem;
+    }
+    return new ComparatorItem()
+        .next("name", true)
+        .next("modified", false);
   }
 
   private LeafAdapter getLeafAdapter(final Object obj) {
@@ -228,11 +240,11 @@ public class TreeServiceImpl extends AbstractServiceImpl implements TreeService 
         .flatMap(treeRepository::persistNode)
         .zipWhen(featureLeafEntity -> {
           final FeatureLeafEntitySettings settings = (FeatureLeafEntitySettings) adapter
-              .buildLeafEntitySettings(featureLeafEntity, userId);
-          settings.setDisplayedOnMap(true);
+              .buildLeafEntitySettings(featureLeafEntity, userId, true);
           return treeRepository.persistNodeSettings(settings);
         })
-        .flatMap(tuple -> getLeafAdapter(tuple.getT1()).buildLeaf(tuple.getT1(), tuple.getT2()))
+        .flatMap(tuple -> getLeafAdapter(
+            tuple.getT1()).buildLeaf(tuple.getT1(), tuple.getT2(), false))
         .cast(FeatureLeaf.class);
   }
 
@@ -256,7 +268,9 @@ public class TreeServiceImpl extends AbstractServiceImpl implements TreeService 
   @Override
   public Flux<Branch> loadBranches(
       boolean openAll,
+      boolean omitGeometries,
       boolean includePublic,
+      ComparatorItem comparatorItem,
       String userId,
       Set<String> roles,
       Set<String> groups) {
@@ -266,13 +280,21 @@ public class TreeServiceImpl extends AbstractServiceImpl implements TreeService 
         : OpenBranchCommand.RETAIN;
     return treeRepository.findRootBranches(READ, includePublic, userId, roles, groups)
         .flatMap(branchEntity -> processBranchEntity(
-            branchEntity, openBranchCommand, userId, roles, groups));
+            branchEntity,
+            openBranchCommand,
+            omitGeometries ? GeometryCommand.OMIT : GeometryCommand.RETAIN,
+            comparatorItem(comparatorItem),
+            userId,
+            roles,
+            groups));
   }
 
   @Override
   public Mono<Branch> openBranch(
       String branchId,
-      boolean openAll,
+      OpenBranchCommand openBranchCommand,
+      GeometryCommand geometryCommand,
+      ComparatorItem comparatorItem,
       String userId,
       Set<String> roles,
       Set<String> groups) {
@@ -280,7 +302,13 @@ public class TreeServiceImpl extends AbstractServiceImpl implements TreeService 
     return treeRepository.findBranchById(branchId, READ, true, userId, roles, groups)
         .switchIfEmpty(Mono.error(ServiceException.forbidden()))
         .flatMap(branchEntity -> processBranchEntity(
-            branchEntity, OpenBranchCommand.CURRENT, userId, roles, groups));
+            branchEntity,
+            openBranchCommand,
+            geometryCommand,
+            comparatorItem(comparatorItem),
+            userId,
+            roles,
+            groups));
   }
 
   @Override
@@ -294,6 +322,8 @@ public class TreeServiceImpl extends AbstractServiceImpl implements TreeService 
   private Mono<Branch> processBranchEntity(
       final BranchEntity branchEntity,
       final OpenBranchCommand openBranchCommand,
+      final GeometryCommand geometryCommand,
+      final ComparatorItem comparatorItem,
       final String userId,
       final Set<String> roles,
       final Set<String> groups) {
@@ -303,7 +333,7 @@ public class TreeServiceImpl extends AbstractServiceImpl implements TreeService 
         .switchIfEmpty(treeRepository.persistNodeSettings(
             BranchEntitySettings.builder()
                 .nodeId(branchEntity.getId())
-                .open(true)
+                .open(openBranchCommand != OpenBranchCommand.RETAIN)
                 .userId(userId)
                 .build()))
         .flatMap(branchEntitySettings -> {
@@ -333,6 +363,8 @@ public class TreeServiceImpl extends AbstractServiceImpl implements TreeService 
         .flatMap(branch -> processBranch(
             branch,
             openBranchCommand.getCommandForChildren(),
+            geometryCommand,
+            comparatorItem,
             userId,
             roles, groups));
   }
@@ -340,14 +372,24 @@ public class TreeServiceImpl extends AbstractServiceImpl implements TreeService 
   private Mono<Branch> processBranch(
       final Branch branch,
       final OpenBranchCommand openBranchCommand,
+      final GeometryCommand geometryCommand,
+      final ComparatorItem comparatorItem,
       final String userId,
       final Set<String> roles,
       final Set<String> groups) {
 
-    if (openBranchCommand.openBranch(branch)) {
-      return treeRepository.findNodesByParentId(branch.getId(), READ, true, userId, roles, groups)
-          .flatMap(nodeEntity -> processChild(nodeEntity, openBranchCommand, userId, roles, groups))
-          .collectList()
+    if (GeometryCommand.DISPLAY == geometryCommand || openBranchCommand.openBranch(branch)) {
+      return treeRepository
+          .findNodesByParentId(branch.getId(), READ, true, userId, roles, groups)
+          .flatMap(nodeEntity -> processChild(
+              nodeEntity,
+              openBranchCommand,
+              geometryCommand,
+              comparatorItem,
+              userId,
+              roles,
+              groups))
+          .collectSortedList(comparatorFactory.newObjectComparator(comparatorItem))
           .flatMap(children -> {
             branch.setChildren(children);
             return Mono.just(branch);
@@ -360,24 +402,35 @@ public class TreeServiceImpl extends AbstractServiceImpl implements TreeService 
   private Mono<Node> processChild(
       final NodeEntity nodeEntity,
       final OpenBranchCommand openBranchCommand,
+      final GeometryCommand geometryCommand,
+      final ComparatorItem comparatorItem,
       final String userId,
       final Set<String> roles,
       final Set<String> groups) {
 
     if (nodeEntity instanceof BranchEntity) {
       final BranchEntity branchEntity = (BranchEntity) nodeEntity;
-      return processBranchEntity(branchEntity, openBranchCommand, userId, roles, groups)
+      return processBranchEntity(
+          branchEntity, openBranchCommand, geometryCommand, comparatorItem, userId, roles, groups)
           .cast(Node.class);
     }
     if (nodeEntity instanceof LeafEntity) {
+      final boolean omitGeometry = GeometryCommand.OMIT == geometryCommand;
+      final boolean displayedOnMap = GeometryCommand.DISPLAY == geometryCommand;
       final LeafEntity leafEntity = (LeafEntity) nodeEntity;
       return treeRepository.findNodeSettings(leafEntity.getId(), userId)
           .switchIfEmpty(treeRepository.persistNodeSettings(getLeafAdapter(leafEntity)
-              .buildLeafEntitySettings(leafEntity, userId)))
+              .buildLeafEntitySettings(leafEntity, userId, displayedOnMap)))
           .cast(LeafEntitySettings.class)
-          .flatMap(leafEntitySettings -> getLeafAdapter(leafEntity)
-              .buildLeaf(leafEntity, leafEntitySettings));
-
+          .flatMap(leafEntitySettings -> {
+            if (displayedOnMap
+                && !getLeafAdapter(leafEntity).isDisplayedOnMap(leafEntitySettings)) {
+              return getLeafAdapter(leafEntity).setDisplayedOnMap(leafEntitySettings, true);
+            }
+            return Mono.just(leafEntitySettings);
+          })
+          .flatMap(leafEntitySettings -> getLeafAdapter(leafEntity).buildLeaf(
+              leafEntity, leafEntitySettings, omitGeometry));
     }
     return Mono.error(ServiceException.internalServerError("Node is not branch or leaf."));
   }
@@ -457,6 +510,7 @@ public class TreeServiceImpl extends AbstractServiceImpl implements TreeService 
 
   }
 
+  /*
   public Mono<Branch> moveNode(
       final String nodeId,
       final String targetBranchId,
@@ -501,5 +555,6 @@ public class TreeServiceImpl extends AbstractServiceImpl implements TreeService 
         .flatMap(tuple -> processBranchEntity(
             tuple.getT1(), OpenBranchCommand.RETAIN, userId, roles, groups));
   }
+  */
 
 }

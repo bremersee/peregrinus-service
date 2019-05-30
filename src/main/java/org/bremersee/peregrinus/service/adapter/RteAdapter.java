@@ -91,13 +91,14 @@ public class RteAdapter extends AbstractAdapter implements FeatureAdapter {
   @Override
   public Mono<Feature> buildFeature(
       @NotNull FeatureEntity featureEntity,
-      @NotNull FeatureEntitySettings featureEntitySettings) {
+      @NotNull FeatureEntitySettings featureEntitySettings,
+      boolean omitGeometry) {
 
     final RteEntity rteEntity = (RteEntity) featureEntity;
     final RteEntitySettings rteEntitySettings = (RteEntitySettings) featureEntitySettings;
     return Mono.just(Rte.builder()
         .bbox(rteEntity.getBbox())
-        .geometry(rteEntity.getGeometry())
+        .geometry(omitGeometry ? null : rteEntity.getGeometry())
         .id(rteEntity.getId())
         .properties(RteProperties.builder()
             .acl(getAclMapper().map(rteEntity.getProperties().getAcl()))
@@ -109,7 +110,7 @@ public class RteAdapter extends AbstractAdapter implements FeatureAdapter {
             .modifiedBy(rteEntity.getProperties().getModifiedBy())
             .name(rteEntity.getProperties().getName())
             .plainTextDescription(rteEntity.getProperties().getPlainTextDescription())
-            .rteSegments(rteEntity.getProperties().getRteSegments())
+            .rteSegments(omitGeometry ? null : rteEntity.getProperties().getRteSegments())
             .settings(RteSettings.builder()
                 .displayColor(rteEntitySettings.getDisplayColor())
                 .featureId(rteEntitySettings.getFeatureId())
