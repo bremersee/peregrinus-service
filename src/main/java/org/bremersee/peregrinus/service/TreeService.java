@@ -19,7 +19,6 @@ package org.bremersee.peregrinus.service;
 import java.util.Collections;
 import java.util.Set;
 import javax.validation.constraints.NotNull;
-import org.bremersee.comparator.model.ComparatorItem;
 import org.bremersee.gpx.model.Gpx;
 import org.bremersee.peregrinus.model.Branch;
 import org.bremersee.peregrinus.model.Feature;
@@ -27,6 +26,8 @@ import org.bremersee.peregrinus.model.FeatureCollection;
 import org.bremersee.peregrinus.model.FeatureLeaf;
 import org.bremersee.peregrinus.model.gpx.GpxImportSettings;
 import org.hibernate.validator.constraints.Length;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Sort.Order;
 import org.springframework.lang.Nullable;
 import org.springframework.validation.annotation.Validated;
 import reactor.core.publisher.Flux;
@@ -37,6 +38,10 @@ import reactor.core.publisher.Mono;
  */
 @Validated
 public interface TreeService {
+
+  String DEFAULT_SORT_ORDER = "type|name|modified,desc";
+
+  Sort DEFAULT_SORT = Sort.by(Order.asc("type"), Order.asc("name"), Order.desc("modified"));
 
   Mono<Branch> createBranch(
       @NotNull @Length(min = 1) String name,
@@ -79,7 +84,7 @@ public interface TreeService {
       boolean openAll,
       boolean omitGeometries,
       boolean includePublic,
-      @Nullable ComparatorItem comparatorItem,
+      @Nullable Sort sort,
       @NotNull String userId,
       @NotNull Set<String> roles,
       @NotNull Set<String> groups);
@@ -88,7 +93,7 @@ public interface TreeService {
       @NotNull String branchId,
       @NotNull OpenBranchCommand openBranchCommand,
       @NotNull GeometryCommand geometryCommand,
-      @Nullable ComparatorItem comparatorItem,
+      @Nullable Sort sort,
       @NotNull String userId,
       @NotNull Set<String> roles,
       @NotNull Set<String> groups);

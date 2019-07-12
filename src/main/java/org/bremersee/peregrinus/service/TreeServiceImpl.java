@@ -21,6 +21,7 @@ import static org.bremersee.security.access.PermissionConstants.WRITE;
 
 import java.time.Clock;
 import java.time.OffsetDateTime;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -28,8 +29,10 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import lombok.extern.slf4j.Slf4j;
 import org.bremersee.common.model.AccessControlList;
-import org.bremersee.comparator.ObjectComparatorFactory;
-import org.bremersee.comparator.model.ComparatorItem;
+import org.bremersee.comparator.ComparatorBuilder;
+import org.bremersee.comparator.ValueComparator;
+import org.bremersee.comparator.model.ComparatorField;
+import org.bremersee.comparator.spring.ComparatorSpringUtils;
 import org.bremersee.exception.ServiceException;
 import org.bremersee.gpx.model.Gpx;
 import org.bremersee.peregrinus.entity.AclEntity;
@@ -52,6 +55,7 @@ import org.bremersee.peregrinus.service.adapter.LeafAdapter;
 import org.bremersee.security.access.AclBuilder;
 import org.bremersee.security.access.AclMapper;
 import org.bremersee.security.access.PermissionConstants;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Component;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -62,8 +66,6 @@ import reactor.core.publisher.Mono;
 @Component
 @Slf4j
 public class TreeServiceImpl extends AbstractServiceImpl implements TreeService {
-
-  private final ObjectComparatorFactory comparatorFactory = ObjectComparatorFactory.newInstance();
 
   private final Map<String, LeafAdapter> leafAdapterMap = new HashMap<>();
 
@@ -90,13 +92,17 @@ public class TreeServiceImpl extends AbstractServiceImpl implements TreeService 
     }
   }
 
-  private ComparatorItem comparatorItem(ComparatorItem comparatorItem) {
-    if (comparatorItem != null) {
-      return comparatorItem;
+  private Comparator<Object> treeComparator(Sort sort) {
+    Sort sortOrder = sort != null ? sort : DEFAULT_SORT;
+    ComparatorBuilder comparatorBuilder = ComparatorBuilder.builder();
+    for (ComparatorField comparatorField : ComparatorSpringUtils.fromSort(sortOrder)) {
+      if ("type".equalsIgnoreCase(comparatorField.getField())) {
+        comparatorBuilder.add(new TreeComparator(comparatorField.isAsc()));
+      } else {
+        comparatorBuilder.add(new ValueComparator(comparatorField));
+      }
     }
-    return new ComparatorItem()
-        .next("name", true)
-        .next("modified", false);
+    return comparatorBuilder.build();
   }
 
   private LeafAdapter getLeafAdapter(final Object obj) {
@@ -270,7 +276,7 @@ public class TreeServiceImpl extends AbstractServiceImpl implements TreeService 
       boolean openAll,
       boolean omitGeometries,
       boolean includePublic,
-      ComparatorItem comparatorItem,
+      Sort sort,
       String userId,
       Set<String> roles,
       Set<String> groups) {
@@ -283,10 +289,11 @@ public class TreeServiceImpl extends AbstractServiceImpl implements TreeService 
             branchEntity,
             openBranchCommand,
             omitGeometries ? GeometryCommand.OMIT : GeometryCommand.RETAIN,
-            comparatorItem(comparatorItem),
+            sort,
             userId,
             roles,
-            groups));
+            groups))
+        .sort(treeComparator(sort));
   }
 
   @Override
@@ -294,7 +301,7 @@ public class TreeServiceImpl extends AbstractServiceImpl implements TreeService 
       String branchId,
       OpenBranchCommand openBranchCommand,
       GeometryCommand geometryCommand,
-      ComparatorItem comparatorItem,
+      Sort sort,
       String userId,
       Set<String> roles,
       Set<String> groups) {
@@ -305,7 +312,7 @@ public class TreeServiceImpl extends AbstractServiceImpl implements TreeService 
             branchEntity,
             openBranchCommand,
             geometryCommand,
-            comparatorItem(comparatorItem),
+            sort,
             userId,
             roles,
             groups));
@@ -323,7 +330,7 @@ public class TreeServiceImpl extends AbstractServiceImpl implements TreeService 
       final BranchEntity branchEntity,
       final OpenBranchCommand openBranchCommand,
       final GeometryCommand geometryCommand,
-      final ComparatorItem comparatorItem,
+      final Sort sort,
       final String userId,
       final Set<String> roles,
       final Set<String> groups) {
@@ -364,7 +371,7 @@ public class TreeServiceImpl extends AbstractServiceImpl implements TreeService 
             branch,
             openBranchCommand.getCommandForChildren(),
             geometryCommand,
-            comparatorItem,
+            sort,
             userId,
             roles, groups));
   }
@@ -373,7 +380,7 @@ public class TreeServiceImpl extends AbstractServiceImpl implements TreeService 
       final Branch branch,
       final OpenBranchCommand openBranchCommand,
       final GeometryCommand geometryCommand,
-      final ComparatorItem comparatorItem,
+      final Sort sort,
       final String userId,
       final Set<String> roles,
       final Set<String> groups) {
@@ -385,11 +392,11 @@ public class TreeServiceImpl extends AbstractServiceImpl implements TreeService 
               nodeEntity,
               openBranchCommand,
               geometryCommand,
-              comparatorItem,
+              sort,
               userId,
               roles,
               groups))
-          .collectSortedList(comparatorFactory.newObjectComparator(comparatorItem))
+          .collectSortedList(treeComparator(sort))
           .flatMap(children -> {
             branch.setChildren(children);
             return Mono.just(branch);
@@ -403,7 +410,7 @@ public class TreeServiceImpl extends AbstractServiceImpl implements TreeService 
       final NodeEntity nodeEntity,
       final OpenBranchCommand openBranchCommand,
       final GeometryCommand geometryCommand,
-      final ComparatorItem comparatorItem,
+      final Sort sort,
       final String userId,
       final Set<String> roles,
       final Set<String> groups) {
@@ -411,7 +418,7 @@ public class TreeServiceImpl extends AbstractServiceImpl implements TreeService 
     if (nodeEntity instanceof BranchEntity) {
       final BranchEntity branchEntity = (BranchEntity) nodeEntity;
       return processBranchEntity(
-          branchEntity, openBranchCommand, geometryCommand, comparatorItem, userId, roles, groups)
+          branchEntity, openBranchCommand, geometryCommand, sort, userId, roles, groups)
           .cast(Node.class);
     }
     if (nodeEntity instanceof LeafEntity) {

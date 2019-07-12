@@ -16,10 +16,11 @@
 
 package org.bremersee.peregrinus.controller;
 
-import java.nio.charset.StandardCharsets;
-import org.bremersee.comparator.ComparatorItemTransformer;
-import org.bremersee.comparator.ComparatorItemTransformerImpl;
-import org.bremersee.comparator.model.ComparatorItem;
+import static org.bremersee.peregrinus.service.TreeService.DEFAULT_SORT_ORDER;
+
+import org.bremersee.comparator.ValueComparator;
+import org.bremersee.comparator.WellKnownTextParser;
+import org.bremersee.comparator.spring.ComparatorSpringUtils;
 import org.bremersee.gpx.model.Gpx;
 import org.bremersee.groupman.api.GroupControllerApi;
 import org.bremersee.peregrinus.model.Branch;
@@ -31,6 +32,7 @@ import org.bremersee.peregrinus.service.GeometryCommand;
 import org.bremersee.peregrinus.service.OpenBranchCommand;
 import org.bremersee.peregrinus.service.TreeService;
 import org.hibernate.validator.constraints.Length;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.MediaType;
 import org.springframework.util.StringUtils;
 import org.springframework.validation.annotation.Validated;
@@ -53,7 +55,7 @@ import reactor.core.publisher.Mono;
 @Validated
 public class TreeController extends AbstractController {
 
-  private final ComparatorItemTransformer sortTransformer = new ComparatorItemTransformerImpl();
+  private static final WellKnownTextParser WKT_PARSER = ValueComparator::new;
 
   private final TreeService treeService;
 
@@ -64,17 +66,9 @@ public class TreeController extends AbstractController {
     this.treeService = treeService;
   }
 
-  private ComparatorItem buildComparatorItem(final String sort) {
-    final ComparatorItem item = new ComparatorItem();
-    if (StringUtils.hasText(sort)) {
-      item.setNextComparatorItem(
-          sortTransformer.fromString(sort, false, StandardCharsets.UTF_8.name()));
-    } else {
-      item.setNextComparatorItem(
-          sortTransformer.fromString(
-              "name,asc|modified,desc", false, StandardCharsets.UTF_8.name()));
-    }
-    return item;
+  private static Sort createSort(final String sortOrder) {
+    final String wkt = StringUtils.hasText(sortOrder) ? sortOrder : DEFAULT_SORT_ORDER;
+    return ComparatorSpringUtils.toSort(WKT_PARSER.buildComparatorFields(wkt));
   }
 
   @PostMapping(
@@ -96,13 +90,13 @@ public class TreeController extends AbstractController {
       @RequestParam(value = "openAll", defaultValue = "false") Boolean openAll,
       @RequestParam(value = "omitGeometries", defaultValue = "false") Boolean omitGeometries,
       @RequestParam(value = "pub", defaultValue = "false") Boolean includePublic,
-      @RequestParam(value = "sort", defaultValue = "name,asc|modified,desc") String sort) {
+      @RequestParam(value = "sort", defaultValue = DEFAULT_SORT_ORDER) String sort) {
     return manyWithAuth(auth -> treeService
         .loadBranches(
             openAll,
             omitGeometries,
             includePublic,
-            buildComparatorItem(sort),
+            createSort(sort),
             auth.getUserId(),
             auth.getRoles(),
             auth.getGroups()));
@@ -125,13 +119,13 @@ public class TreeController extends AbstractController {
       @PathVariable("branchId") String branchId,
       @RequestParam(value = "open", defaultValue = "current") String openCommand,
       @RequestParam(value = "geometry", defaultValue = "retain") String geometryCommand,
-      @RequestParam(value = "sort", defaultValue = "name,asc|modified,desc") String sort) {
+      @RequestParam(value = "sort", defaultValue = DEFAULT_SORT_ORDER) String sort) {
     return oneWithAuth(auth -> treeService
         .openBranch(
             branchId,
             OpenBranchCommand.fromValue(openCommand),
             GeometryCommand.fromValue(geometryCommand),
-            buildComparatorItem(sort),
+            createSort(sort),
             auth.getUserId(),
             auth.getRoles(),
             auth.getGroups()));
