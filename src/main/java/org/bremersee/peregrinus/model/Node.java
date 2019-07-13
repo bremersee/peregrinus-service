@@ -51,7 +51,7 @@ import org.bremersee.common.model.AccessControlList;
 @Setter
 @EqualsAndHashCode
 @ToString
-public abstract class Node<S extends NodeSettings> implements Comparable<Node> {
+public abstract class Node<S extends NodeSettings> {
 
   @ApiModelProperty("The node ID.")
   private String id;
@@ -173,14 +173,4 @@ public abstract class Node<S extends NodeSettings> implements Comparable<Node> {
     }
   }
 
-  @Override
-  public int compareTo(Node other) {
-    if (this instanceof Branch && !(other instanceof Branch)) {
-      return -1;
-    }
-    if (other instanceof Branch && !(this instanceof Branch)) {
-      return 1;
-    }
-    return 0;
-  }
 }

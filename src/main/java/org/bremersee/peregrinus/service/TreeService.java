@@ -64,10 +64,14 @@ public interface TreeService {
     });
     for (ComparatorField comparatorField : ComparatorSpringUtils.fromSort(sortOrder)) {
       if ("type".equalsIgnoreCase(comparatorField.getField())) {
-        comparatorBuilder.add((Comparator<Node>) (o1, o2) -> {
-          int result = o1.compareTo(o2);
-          return comparatorField.isAsc() ? result : result * -1;
-        });
+        comparatorBuilder.add(
+            new ValueComparator(
+                new ComparatorField(
+                    "feature.properties",
+                    comparatorField.isAsc(),
+                    comparatorField.isIgnoreCase(),
+                    comparatorField.isNullIsFirst()),
+                new DefaultValueExtractor(false)));
       } else {
         comparatorBuilder.add(
             new ValueComparator(comparatorField,
