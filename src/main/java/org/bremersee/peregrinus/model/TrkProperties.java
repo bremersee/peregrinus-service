@@ -132,4 +132,12 @@ public class TrkProperties extends FeatureProperties<TrkSettings> {
       this.timeLines = timeLines;
     }
   }
+
+  @Override
+  public int compareTo(FeatureProperties other) {
+    if (other instanceof TrkProperties) {
+      return 0;
+    }
+    return 1;
+  }
 }

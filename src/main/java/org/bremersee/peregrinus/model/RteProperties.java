@@ -135,4 +135,14 @@ public class RteProperties extends FeatureProperties<RteSettings> {
     return sum;
   }
 
+  @Override
+  public int compareTo(FeatureProperties other) {
+    if (other instanceof WptProperties) {
+      return 1;
+    }
+    if (other instanceof TrkProperties) {
+      return -1;
+    }
+    return 0;
+  }
 }

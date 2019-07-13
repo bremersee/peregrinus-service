@@ -54,7 +54,8 @@ import org.bremersee.common.model.Link;
 @Setter
 @EqualsAndHashCode
 @ToString
-public abstract class FeatureProperties<S extends FeatureSettings> {
+public abstract class FeatureProperties<S extends FeatureSettings>
+    implements Comparable<FeatureProperties> {
 
   @ApiModelProperty("The access control list.")
   private AccessControlList acl;
@@ -210,4 +211,5 @@ public abstract class FeatureProperties<S extends FeatureSettings> {
   protected void noSettings() {
     this.settings = null;
   }
+
 }

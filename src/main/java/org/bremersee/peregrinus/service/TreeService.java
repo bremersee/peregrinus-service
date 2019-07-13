@@ -17,13 +17,20 @@
 package org.bremersee.peregrinus.service;
 
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.Set;
 import javax.validation.constraints.NotNull;
+import org.bremersee.comparator.ComparatorBuilder;
+import org.bremersee.comparator.DefaultValueExtractor;
+import org.bremersee.comparator.ValueComparator;
+import org.bremersee.comparator.model.ComparatorField;
+import org.bremersee.comparator.spring.ComparatorSpringUtils;
 import org.bremersee.gpx.model.Gpx;
 import org.bremersee.peregrinus.model.Branch;
 import org.bremersee.peregrinus.model.Feature;
 import org.bremersee.peregrinus.model.FeatureCollection;
 import org.bremersee.peregrinus.model.FeatureLeaf;
+import org.bremersee.peregrinus.model.Node;
 import org.bremersee.peregrinus.model.gpx.GpxImportSettings;
 import org.hibernate.validator.constraints.Length;
 import org.springframework.data.domain.Sort;
@@ -42,6 +49,33 @@ public interface TreeService {
   String DEFAULT_SORT_ORDER = "type|name|modified,desc";
 
   Sort DEFAULT_SORT = Sort.by(Order.asc("type"), Order.asc("name"), Order.desc("modified"));
+
+  default Comparator<Object> newTreeComparator(Sort sort) {
+    Sort sortOrder = sort != null ? sort : DEFAULT_SORT;
+    ComparatorBuilder comparatorBuilder = ComparatorBuilder.builder();
+    comparatorBuilder.add((Comparator<Node>) (node1, node2) -> {
+      if (node1 instanceof Branch && !(node2 instanceof Branch)) {
+        return -1;
+      }
+      if (!(node1 instanceof Branch) && node2 instanceof Branch) {
+        return 1;
+      }
+      return 0;
+    });
+    for (ComparatorField comparatorField : ComparatorSpringUtils.fromSort(sortOrder)) {
+      if ("type".equalsIgnoreCase(comparatorField.getField())) {
+        comparatorBuilder.add((Comparator<Node>) (o1, o2) -> {
+          int result = o1.compareTo(o2);
+          return comparatorField.isAsc() ? result : result * -1;
+        });
+      } else {
+        comparatorBuilder.add(
+            new ValueComparator(comparatorField,
+                new DefaultValueExtractor(false)));
+      }
+    }
+    return comparatorBuilder.build();
+  }
 
   Mono<Branch> createBranch(
       @NotNull @Length(min = 1) String name,

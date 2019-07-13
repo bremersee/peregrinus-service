@@ -21,7 +21,6 @@ import static org.bremersee.security.access.PermissionConstants.WRITE;
 
 import java.time.Clock;
 import java.time.OffsetDateTime;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -29,10 +28,6 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import lombok.extern.slf4j.Slf4j;
 import org.bremersee.common.model.AccessControlList;
-import org.bremersee.comparator.ComparatorBuilder;
-import org.bremersee.comparator.ValueComparator;
-import org.bremersee.comparator.model.ComparatorField;
-import org.bremersee.comparator.spring.ComparatorSpringUtils;
 import org.bremersee.exception.ServiceException;
 import org.bremersee.gpx.model.Gpx;
 import org.bremersee.peregrinus.entity.AclEntity;
@@ -90,19 +85,6 @@ public class TreeServiceImpl extends AbstractServiceImpl implements TreeService 
         leafAdapterMap.put(key, leafAdapter);
       }
     }
-  }
-
-  private Comparator<Object> treeComparator(Sort sort) {
-    Sort sortOrder = sort != null ? sort : DEFAULT_SORT;
-    ComparatorBuilder comparatorBuilder = ComparatorBuilder.builder();
-    for (ComparatorField comparatorField : ComparatorSpringUtils.fromSort(sortOrder)) {
-      if ("type".equalsIgnoreCase(comparatorField.getField())) {
-        comparatorBuilder.add(new TreeComparator(comparatorField.isAsc()));
-      } else {
-        comparatorBuilder.add(new ValueComparator(comparatorField));
-      }
-    }
-    return comparatorBuilder.build();
   }
 
   private LeafAdapter getLeafAdapter(final Object obj) {
@@ -293,7 +275,7 @@ public class TreeServiceImpl extends AbstractServiceImpl implements TreeService 
             userId,
             roles,
             groups))
-        .sort(treeComparator(sort));
+        .sort(newTreeComparator(sort));
   }
 
   @Override
@@ -396,7 +378,7 @@ public class TreeServiceImpl extends AbstractServiceImpl implements TreeService 
               userId,
               roles,
               groups))
-          .collectSortedList(treeComparator(sort))
+          .collectSortedList(newTreeComparator(sort))
           .flatMap(children -> {
             branch.setChildren(children);
             return Mono.just(branch);

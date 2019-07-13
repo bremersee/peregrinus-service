@@ -75,4 +75,20 @@ public class FeatureLeaf extends Leaf<FeatureLeafSettings> {
     super(id, created, createdBy, modified, modifiedBy, acl, settings, parentId, name);
     this.feature = feature;
   }
+
+  @Override
+  public int compareTo(Node other) {
+    if (other instanceof Branch) {
+      return 1;
+    }
+    if (other instanceof FeatureLeaf) {
+      FeatureLeaf otherLeaf = (FeatureLeaf)other;
+      if (getFeature() == null || getFeature().getProperties() == null
+          || otherLeaf.getFeature() == null || otherLeaf.getFeature().getProperties() == null) {
+        return 0;
+      }
+      return getFeature().getProperties().compareTo(otherLeaf.getFeature().getProperties());
+    }
+    return -1;
+  }
 }

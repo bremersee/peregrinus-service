@@ -155,4 +155,12 @@ public class WptProperties extends FeatureProperties<WptSettings> {
       this.phoneNumbers = phoneNumbers;
     }
   }
+
+  @Override
+  public int compareTo(FeatureProperties other) {
+    if (other instanceof WptProperties) {
+      return 0;
+    }
+    return -1;
+  }
 }
