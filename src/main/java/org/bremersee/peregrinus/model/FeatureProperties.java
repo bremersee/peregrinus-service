@@ -23,8 +23,7 @@ import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonSubTypes.Type;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.fasterxml.jackson.annotation.JsonTypeInfo.Id;
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 import java.time.Clock;
 import java.time.OffsetDateTime;
 import java.util.ArrayList;
@@ -42,7 +41,7 @@ import org.bremersee.common.model.Link;
  * @param <S> the settings type parameter
  * @author Christian Bremer
  */
-@ApiModel(description = "Common properties of a GeoJSON feature.", discriminator = "_type")
+@Schema(description = "Common properties of a GeoJSON feature.")
 @JsonTypeInfo(use = Id.NAME, property = "_type")
 @JsonSubTypes({
     @Type(value = WptProperties.class, name = Feature.WPT_TYPE),
@@ -57,37 +56,37 @@ import org.bremersee.common.model.Link;
 public abstract class FeatureProperties<S extends FeatureSettings>
     implements Comparable<FeatureProperties> {
 
-  @ApiModelProperty("The access control list.")
+  @Schema(description = "The access control list.")
   private AccessControlList acl;
 
-  @ApiModelProperty("The date of creation.")
+  @Schema(description = "The date of creation.")
   private OffsetDateTime created;
 
-  @ApiModelProperty("The user ID of the creator.")
+  @Schema(description = "The user ID of the creator.")
   private String createdBy;
 
-  @ApiModelProperty("The date of last modification.")
+  @Schema(description = "The date of last modification.")
   private OffsetDateTime modified;
 
-  @ApiModelProperty("The ID of the user who made the last modification.")
+  @Schema(description = "The ID of the user who made the last modification.")
   private String modifiedBy;
 
-  @ApiModelProperty(value = "The name of the feature.", required = true)
+  @Schema(description = "The name of the feature.", required = true)
   @JsonProperty(value = "name", required = true)
   private String name;
 
-  @ApiModelProperty("The plain text description.")
+  @Schema(description = "The plain text description.")
   private String plainTextDescription;
 
-  @ApiModelProperty("The markdown description.")
+  @Schema(description = "The markdown description.")
   private String markdownDescription;
 
-  @ApiModelProperty("Links to other resources.")
+  @Schema(description = "Links to other resources.")
   private List<Link> links;
 
-  @ApiModelProperty(
-      value = "The private settings.",
-      dataType = "org.bremersee.peregrinus.model.FeatureLeafSettings")
+  @Schema(
+      description = "The private settings.",
+      implementation = org.bremersee.peregrinus.model.FeatureLeafSettings.class)
   private S settings;
 
   /**
@@ -104,16 +103,16 @@ public abstract class FeatureProperties<S extends FeatureSettings>
   /**
    * Instantiates new GeoJSON feature properties.
    *
-   * @param acl                  the acl
-   * @param created              the created
-   * @param createdBy            the created by
-   * @param modified             the modified
-   * @param modifiedBy           the modified by
-   * @param name                 the name
+   * @param acl the acl
+   * @param created the created
+   * @param createdBy the created by
+   * @param modified the modified
+   * @param modifiedBy the modified by
+   * @param name the name
    * @param plainTextDescription the plain text description
-   * @param markdownDescription  the markdown description
-   * @param links                the links
-   * @param settings             the settings
+   * @param markdownDescription the markdown description
+   * @param links the links
+   * @param settings the settings
    */
   public FeatureProperties(
       AccessControlList acl,

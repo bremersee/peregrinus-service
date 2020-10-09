@@ -33,7 +33,7 @@ abstract class AbstractEntityReadConverter<T> implements Converter<Document, T> 
 
   private final OffsetDateTimeReadConverter dateConverter = new OffsetDateTimeReadConverter();
 
-  private ApplicationContext applicationContext;
+  private final ApplicationContext applicationContext;
 
   /**
    * Instantiates a new abstract entity read converter.

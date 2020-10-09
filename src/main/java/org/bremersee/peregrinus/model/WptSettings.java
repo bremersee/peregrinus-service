@@ -16,7 +16,7 @@
 
 package org.bremersee.peregrinus.model;
 
-import io.swagger.annotations.ApiModel;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -29,7 +29,7 @@ import lombok.ToString;
  *
  * @author Christian Bremer
  */
-@ApiModel(description = "The waypoint settings.")
+@Schema(description = "The waypoint settings.")
 @Getter
 @Setter
 @ToString(callSuper = true)

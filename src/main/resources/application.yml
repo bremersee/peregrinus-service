@@ -1,59 +1,16 @@
-spring:
-  jackson:
-    date-format: com.fasterxml.jackson.databind.util.ISO8601DateFormat
-    default-property-inclusion: non_null
-    property-naming-strategy: LOWER_CAMEL_CASE
-    locale: de_DE
-    serialization:
-      WRITE_DATES_AS_TIMESTAMPS: false
-    time-zone: GMT
-  sleuth:
-    enabled: ${SLEUTH_ENABLED:false}
-    sampler:
-      probability: ${SLEUTH_PROBABILITY:1.0}
-  zipkin:
-    enabled: ${ZIPKIN_ENABLED:false}
-    base-url: ${ZIPKIN_BASE_URL:http://localhost:9411/}
-  security:
-    oauth2:
-      resourceserver:
-        jwt:
-          jwk-set-uri: ${OPENID_KEYS_URI:https://openid.dev.bremersee.org/auth/realms/omnia/protocol/openid-connect/certs}
-
-management:
-  endpoints:
-    web:
-      exposure:
-        include: "*"
-      cors:
-        allowed-headers: "*"
-        allowed-methods: "*"
-        allowed-origins: "*"
-
-server:
-  port: ${SERVER_PORT:8080}
-
-logging:
-  level:
-    ROOT: info
-    org.bremersee: debug
-    reactor: info
-    org.springframework: info
-
 bremersee:
-  security:
-    cors:
-      allow-all: true
-    oauth2:
-      password-flow:
-        client-id: ${OPENID_CLIENT_ID:omnia}
-        client-secret: ${OPENID_CLIENT_SECRET:changeit}
-        token-endpoint: ${OPENID_TOKEN_ENDPOINT:https://openid.dev.bremersee.org/auth/realms/omnia/protocol/openid-connect/token}
+  peregrinus:
+    groupman-base-uri: ${GROUPMAN_BASE_URI:false}
   exception-mapping:
     api-paths:
       - /api/**
     default-exception-mapping-config:
       include-stack-trace: true
+      include-cause: true
+      include-application-name: true
+      include-exception-class-name: true
+      include-handler: true
+      include-path: true
     exception-mappings:
       - exception-class-name: org.springframework.dao.DuplicateKeyException
         status: 409
@@ -63,14 +20,128 @@ bremersee:
         status: 409
         message: "Version is not up to date."
         code: "PER:1001"
-  peregrinus:
-    groupman-base-uri: ${GROUPMAN_URI:}
+  actuator:
+    auth:
+      enable: auto
+      enable-cors: true
+  cors:
+    enable: true
+    allow-all: true
+  auth:
+    role-definitions:
+      admin: &adminRoles
+        - "ROLE_ADMIN"
+        - "ROLE_PEREGRINUS_ADMIN"
+    resource-server: auto
+    path-matchers:
+      - ant-pattern: "/v3/**"
+        access-mode: permit_all
+      - ant-pattern: "/webjars/**"
+        access-mode: permit_all
+      - ant-pattern: "/swagger-ui.html"
+        access-mode: permit_all
+      - ant-pattern: "/api/public/**"
+        access-mode: permit_all
+      - ant-pattern: "/api/**"
+        access-mode: authenticated
+    jwt-cache:
+      key-prefix: "jwt_${spring.application.name}_"
+  redis:
+    embedded: true
+  acl:
+    switch-admin-access: true
+    default-permissions:
+      - "administration"
+      - "create"
+      - "delete"
+      - "read"
+      - "write"
+    admin-roles: *adminRoles
+  minio:
+    url: "https://play.min.io"
+    access-key: "Q3AM3UQ867SPQQA43P2F"
+    secret-key: "zuf+tfteSlswRu7BJ86wekitnifILbZam1KYY3TG"
+
+eureka:
+  client:
+    enabled: false
+
+spring:
+  #  codec:
+  #    max-in-memory-size: 8MB
+  data:
+    mongodb:
+      uri: ${MONGODB_URI:mongodb://localhost:27017/test}
+      auto-index-creation: true
+    redis:
+      repositories:
+        enabled: false
+  sleuth:
+    enabled: ${SLEUTH_ENABLED:false}
+    sampler:
+      probability: ${SLEUTH_PROBABILITY:1.0}
+  zipkin:
+    enabled: ${ZIPKIN_ENABLED:false}
+    base-url: ${ZIPKIN_BASE_URL:http://localhost:9411/}
+  cloud:
+    loadbalancer:
+      ribbon:
+        enabled: false
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+      cors:
+        allowed-headers: "*"
+        allowed-methods: "*"
+        allowed-origins: "*"
+        allow-credentials: true
+  endpoint:
+    health:
+      show-details: when_authorized
+  # Redis health check is broken: https://github.com/spring-projects/spring-boot/issues/22061 (will be fixed in 2.4.0)
+  health:
+    redis:
+      enabled: false
+
+server:
+  port: ${SERVER_PORT:8080}
+
+logging:
+  level:
+    ROOT: info
+    com.netflix.eureka.registry: warn
+    com.netflix.discovery.shared.resolver: warn
+    org.springframework.cloud.config.client: warn
+
+---
+
+spring:
+  profiles: in-memory
+
+bremersee:
+  auth:
+    in-memory-users:
+      - name: "admin"
+        password: "admin"
+        authorities:
+          - "ROLE_USER"
+          - "ROLE_ADMIN"
+      - name: "actuator"
+        password: "actuator"
+        authorities:
+          - "ROLE_ACTUATOR"
+          - "ROLE_ACTUATOR_ADMIN"
+      - name: "user"
+        password: "user"
+        authorities:
+          - "ROLE_USER"
 
 ---
 
 spring:
   profiles: mongodb
-
-  data:
-    mongodb:
-      uri: ${MONGODB_URI:mongodb://user:secret@192.168.1.40:27017,192.168.1.40:27018,192.168.1.40:27019/peregrinus?connect=direct}
+  autoconfigure:
+    exclude:
+      - org.springframework.boot.autoconfigure.mongo.embedded.EmbeddedMongoAutoConfiguration

@@ -23,8 +23,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonSubTypes.Type;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 import java.time.Clock;
 import java.time.OffsetDateTime;
 import lombok.EqualsAndHashCode;
@@ -39,7 +38,7 @@ import org.bremersee.common.model.AccessControlList;
  * @param <S> the node settings type parameter
  * @author Christian Bremer
  */
-@ApiModel(description = "The tree node.", discriminator = "_type")
+@Schema(description = "The tree node.")
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonInclude(Include.NON_EMPTY)
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, property = "_type", visible = true)
@@ -53,31 +52,31 @@ import org.bremersee.common.model.AccessControlList;
 @ToString
 public abstract class Node<S extends NodeSettings> {
 
-  @ApiModelProperty("The node ID.")
+  @Schema(description = "The node ID.")
   private String id;
 
-  @ApiModelProperty("The date of creation.")
+  @Schema(description = "The date of creation.")
   private OffsetDateTime created;
 
-  @ApiModelProperty("The user ID of the creator.")
+  @Schema(description = "The user ID of the creator.")
   private String createdBy;
 
-  @ApiModelProperty("The date of last modification.")
+  @Schema(description = "The date of last modification.")
   private OffsetDateTime modified;
 
-  @ApiModelProperty("The ID of the user who made the last modification.")
+  @Schema(description = "The ID of the user who made the last modification.")
   private String modifiedBy;
 
-  @ApiModelProperty("The access control list.")
+  @Schema(description = "The access control list.")
   private AccessControlList acl;
 
-  @ApiModelProperty("The node settings.")
+  @Schema(description = "The node settings.")
   private S settings;
 
-  @ApiModelProperty("The parent ID.")
+  @Schema(description = "The parent ID.")
   private String parentId;
 
-  @ApiModelProperty(value = "The name.", required = true)
+  @Schema(description = "The name.", required = true)
   @JsonProperty(value = "name", required = true)
   private String name;
 

@@ -18,13 +18,12 @@ package org.bremersee.peregrinus.model.tomtom;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
-import org.bremersee.common.model.HttpLanguageTag;
 import org.bremersee.common.model.TwoLetterCountryCodes;
 import org.bremersee.peregrinus.model.GeocodeQueryRequest;
 import org.locationtech.jts.geom.Point;
@@ -44,7 +43,7 @@ public class TomTomGeocodeQueryRequest extends GeocodeQueryRequest {
 
   @Builder
   public TomTomGeocodeQueryRequest(
-      HttpLanguageTag language,
+      String language,
       double[] boundingBox,
       TwoLetterCountryCodes countryCodes,
       Integer limit,
@@ -99,7 +98,7 @@ public class TomTomGeocodeQueryRequest extends GeocodeQueryRequest {
    *
    * @return the center
    */
-  @ApiModelProperty(hidden = true)
+  @Schema(hidden = true)
   @JsonIgnore
   public Point getCenter() {
     // TODO
@@ -112,7 +111,7 @@ public class TomTomGeocodeQueryRequest extends GeocodeQueryRequest {
    *
    * @return the radius in meters
    */
-  @ApiModelProperty(hidden = true)
+  @Schema(hidden = true)
   @JsonIgnore
   public Integer getRadius() {
     // TODO

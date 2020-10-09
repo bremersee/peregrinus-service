@@ -22,7 +22,7 @@ import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonSubTypes.Type;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.fasterxml.jackson.annotation.JsonTypeInfo.Id;
-import io.swagger.annotations.ApiModel;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
@@ -34,7 +34,7 @@ import org.bremersee.peregrinus.model.tomtom.TomTomRteSegCalcSettings;
  *
  * @author Christian Bremer
  */
-@ApiModel(description = "Calculation settings of a route segment.", discriminator = "provider")
+@Schema(description = "Calculation settings of a route segment.")
 @JsonTypeInfo(use = Id.NAME, property = "provider")
 @JsonSubTypes({
     @Type(value = TomTomRteSegCalcSettings.class, name = "TomTom")

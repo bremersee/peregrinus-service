@@ -16,8 +16,7 @@
 
 package org.bremersee.peregrinus.model;
 
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 import java.math.BigDecimal;
 import java.time.OffsetDateTime;
 import java.util.ArrayList;
@@ -38,35 +37,35 @@ import org.locationtech.jts.geom.Polygon;
  *
  * @author Christian Bremer
  */
-@ApiModel(description = "The waypoint properties.")
+@Schema(description = "The waypoint properties.")
 @Getter
 @Setter
 @ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
 public class WptProperties extends FeatureProperties<WptSettings> {
 
-  @ApiModelProperty("The elevation in meters.")
+  @Schema(description = "The elevation in meters.")
   private BigDecimal ele;
 
-  @ApiModelProperty("The address of this waypoint.")
+  @Schema(description = "The address of this waypoint.")
   private Address address;
 
-  @ApiModelProperty("The phone numbers")
+  @Schema(description = "The phone numbers")
   private List<PhoneNumber> phoneNumbers;
 
-  @ApiModelProperty("The polygon of the building.")
+  @Schema(description = "The polygon of the building.")
   private Polygon area;
 
-  @ApiModelProperty("The OSM ID.")
+  @Schema(description = "The OSM ID.")
   private String osmId;
 
-  @ApiModelProperty("The OSM type.")
+  @Schema(description = "The OSM type.")
   private String osmType;
 
-  @ApiModelProperty("The OSM place ID.")
+  @Schema(description = "The OSM place ID.")
   private String osmPlaceId;
 
-  @ApiModelProperty("The OSM category.")
+  @Schema(description = "The OSM category.")
   private String osmCategory;
 
   /**

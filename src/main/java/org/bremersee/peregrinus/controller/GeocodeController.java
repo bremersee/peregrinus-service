@@ -16,7 +16,7 @@
 
 package org.bremersee.peregrinus.controller;
 
-import org.bremersee.groupman.api.GroupControllerApi;
+import org.bremersee.groupman.api.GroupWebfluxControllerApi;
 import org.bremersee.peregrinus.model.FeatureCollection;
 import org.bremersee.peregrinus.model.GeocodeQueryRequest;
 import org.bremersee.peregrinus.service.GeocodeService;
@@ -39,7 +39,7 @@ public class GeocodeController extends AbstractController {
   private GeocodeService geocodeService;
 
   public GeocodeController(
-      GroupControllerApi groupService,
+      @SuppressWarnings("SpringJavaInjectionPointsAutowiringInspection") GroupWebfluxControllerApi groupService,
       GeocodeService geocodeService) {
     super(groupService);
     this.geocodeService = geocodeService;

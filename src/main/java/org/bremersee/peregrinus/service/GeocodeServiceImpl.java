@@ -18,12 +18,14 @@ package org.bremersee.peregrinus.service;
 
 import static org.bremersee.peregrinus.service.AdapterHelper.getAdapter;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 import org.bremersee.geojson.utils.GeometryUtils;
+import org.bremersee.peregrinus.model.Feature;
 import org.bremersee.peregrinus.model.FeatureCollection;
 import org.bremersee.peregrinus.model.GeocodeQueryRequest;
 import org.bremersee.peregrinus.model.Wpt;
@@ -68,10 +70,13 @@ public class GeocodeServiceImpl implements GeocodeService {
     final Flux<Wpt> localWpts = featureService.queryGeocode(request, userId, roles, groups);
     return Flux.concat(webWpts, localWpts)
         .collectList()
-        .map(wpts -> new FeatureCollection(
-            wpts,
-            GeometryUtils.getBoundingBox(
-                wpts.stream().map(Wpt::getGeometry).collect(Collectors.toList()))));
+        .map(wpts -> {
+          FeatureCollection fc = new FeatureCollection();
+          List<Feature> features = new ArrayList<>(wpts); // TODO
+          fc.setFeatures(features);
+          fc.setBbox(GeometryUtils.getBoundingBox(wpts.stream().map(Wpt::getGeometry).collect(Collectors.toList())));
+          return fc;
+        });
   }
 
 }

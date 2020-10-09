@@ -23,7 +23,6 @@ import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
-import org.bremersee.common.model.HttpLanguageTag;
 import org.bremersee.common.model.TwoLetterCountryCodes;
 import org.bremersee.peregrinus.model.GeocodeQueryRequest;
 
@@ -35,7 +34,6 @@ import org.bremersee.peregrinus.model.GeocodeQueryRequest;
 @EqualsAndHashCode(callSuper = true)
 @ToString(callSuper = true)
 @NoArgsConstructor
-@SuppressWarnings({"WeakerAccess", "unused"})
 public class NominatimGeocodeQueryRequest extends GeocodeQueryRequest {
 
   @JsonIgnore
@@ -81,7 +79,7 @@ public class NominatimGeocodeQueryRequest extends GeocodeQueryRequest {
    */
   @Builder
   public NominatimGeocodeQueryRequest(
-      HttpLanguageTag language,
+      String language,
       double[] boundingBox,
       TwoLetterCountryCodes countryCodes,
       Integer limit,
@@ -110,7 +108,7 @@ public class NominatimGeocodeQueryRequest extends GeocodeQueryRequest {
    * @return the language
    */
   @Override
-  public HttpLanguageTag getLanguage() {
+  public String getLanguage() {
     return super.getLanguage();
   }
 

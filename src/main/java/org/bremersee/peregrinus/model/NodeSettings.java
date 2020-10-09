@@ -21,8 +21,7 @@ import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonSubTypes.Type;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AccessLevel;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -33,7 +32,7 @@ import lombok.ToString;
 /**
  * @author Christian Bremer
  */
-@ApiModel(description = "The node settings.", discriminator = "_type")
+@Schema(description = "The node settings.")
 @JsonInclude(Include.NON_EMPTY)
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, property = "_type", visible = true)
 @JsonSubTypes({
@@ -47,13 +46,13 @@ import lombok.ToString;
 @NoArgsConstructor(access = AccessLevel.PACKAGE)
 public class NodeSettings {
 
-  @ApiModelProperty("The settings ID.")
+  @Schema(description = "The settings ID.")
   private String id;
 
-  @ApiModelProperty("The node ID.")
+  @Schema(description = "The node ID.")
   private String nodeId;
 
-  @ApiModelProperty("The user ID.")
+  @Schema(description = "The user ID.")
   private String userId;
 
   public NodeSettings(String id, String nodeId, String userId) {

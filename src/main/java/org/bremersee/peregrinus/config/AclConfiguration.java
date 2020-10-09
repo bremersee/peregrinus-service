@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 the original author or authors.
+ * Copyright 2020 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,28 +14,29 @@
  * limitations under the License.
  */
 
-package org.bremersee.peregrinus.model;
+package org.bremersee.peregrinus.config;
 
-import io.swagger.v3.oas.annotations.media.Schema;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
+import org.bremersee.peregrinus.entity.AclEntity;
+import org.bremersee.security.access.AclFactory;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 
 /**
+ * The acl configuration.
+ *
  * @author Christian Bremer
  */
-@Schema(description = "The tree leaf settings.")
-@Getter
-@Setter
-@EqualsAndHashCode(callSuper = true)
-@ToString(callSuper = true)
-@NoArgsConstructor
-public abstract class LeafSettings extends NodeSettings {
+@Configuration
+public class AclConfiguration {
 
-  public LeafSettings(String id, String nodeId, String userId) {
-    super(id, nodeId, userId);
+  /**
+   * Creates an acl factory bean.
+   *
+   * @return the acl factory
+   */
+  @Bean
+  public AclFactory<AclEntity> aclFactory() {
+    return AclEntity::new;
   }
 
 }

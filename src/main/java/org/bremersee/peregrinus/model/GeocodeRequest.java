@@ -17,20 +17,18 @@
 package org.bremersee.peregrinus.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
-import org.bremersee.common.model.HttpLanguageTag;
 import org.bremersee.common.model.TwoLetterCountryCodes;
 
 /**
  * @author Christian Bremer
  */
-@ApiModel(description = "Base geocoding request.")
+@Schema(description = "Base geocoding request.")
 @Getter
 @EqualsAndHashCode
 @ToString
@@ -40,20 +38,20 @@ public abstract class GeocodeRequest {
   private static final int DEFAULT_LIMIT = 8;
 
   @Setter
-  @ApiModelProperty("The requested language.")
-  private HttpLanguageTag language;
+  @Schema(description = "The requested language.")
+  private String language;
 
-  @ApiModelProperty("The requested bounding box.")
+  @Schema(description = "The requested bounding box.")
   private double[] boundingBox;
 
-  @ApiModelProperty("The requested countries.")
+  @Schema(description = "The requested countries.")
   private TwoLetterCountryCodes countryCodes;
 
-  @ApiModelProperty("The maximum size of response entries.")
+  @Schema(description = "The maximum size of response entries.")
   private Integer limit = DEFAULT_LIMIT;
 
   public GeocodeRequest(
-      HttpLanguageTag language,
+      String language,
       double[] boundingBox,
       TwoLetterCountryCodes countryCodes,
       Integer limit) {

@@ -39,7 +39,7 @@ import org.springframework.data.mongodb.repository.config.EnableReactiveMongoRep
 @Slf4j
 public class PersistenceConfiguration {
 
-  private ApplicationContext applicationContext;
+  private final ApplicationContext applicationContext;
 
   /**
    * Instantiates a new persistence configuration.

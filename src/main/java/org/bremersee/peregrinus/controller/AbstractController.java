@@ -22,7 +22,7 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 import lombok.extern.slf4j.Slf4j;
 import org.bremersee.exception.ServiceException;
-import org.bremersee.groupman.api.GroupControllerApi;
+import org.bremersee.groupman.api.GroupWebfluxControllerApi;
 import org.reactivestreams.Publisher;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
@@ -38,9 +38,9 @@ import reactor.core.publisher.Mono;
 @Slf4j
 public abstract class AbstractController {
 
-  private final GroupControllerApi groupService;
+  private final GroupWebfluxControllerApi groupService;
 
-  public AbstractController(GroupControllerApi groupService) {
+  public AbstractController(GroupWebfluxControllerApi groupService) {
     Assert.notNull(groupService, "Group service must be present.");
     this.groupService = groupService;
     log.info("Using group service {}", groupService.getClass().getName());

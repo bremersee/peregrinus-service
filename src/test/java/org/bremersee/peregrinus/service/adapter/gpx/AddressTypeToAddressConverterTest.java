@@ -3,8 +3,8 @@ package org.bremersee.peregrinus.service.adapter.gpx;
 import java.util.Locale;
 import org.bremersee.common.model.Address;
 import org.bremersee.garmin.waypoint.v1.model.ext.AddressT;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 /**
  * The address type to address converter test.
@@ -21,7 +21,7 @@ public class AddressTypeToAddressConverterTest {
   @Test
   public void convert() {
     Address actual = converter.convert(null);
-    Assert.assertNull(actual);
+    Assertions.assertNull(actual);
 
     AddressT address = new AddressT();
     address.setCity("Lübeck");
@@ -36,7 +36,7 @@ public class AddressTypeToAddressConverterTest {
     expected.setStreet("Mengstraße 4");
 
     actual = converter.convert(address);
-    Assert.assertNotNull(actual);
-    Assert.assertEquals(expected, actual);
+    Assertions.assertNotNull(actual);
+    Assertions.assertEquals(expected, actual);
   }
 }

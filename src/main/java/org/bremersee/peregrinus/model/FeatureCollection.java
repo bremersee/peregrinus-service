@@ -18,8 +18,7 @@ package org.bremersee.peregrinus.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import io.swagger.annotations.ApiModel;
-import java.util.Collection;
+import io.swagger.v3.oas.annotations.media.Schema;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -30,7 +29,7 @@ import org.bremersee.geojson.AbstractGeoJsonFeatureCollection;
  *
  * @author Christian Bremer
  */
-@ApiModel(description = "A GeoJSON feature collection.")
+@Schema(description = "A GeoJSON feature collection.")
 public class FeatureCollection
     extends AbstractGeoJsonFeatureCollection<Feature> {
 
@@ -38,16 +37,6 @@ public class FeatureCollection
    * Instantiates a new feature collection.
    */
   public FeatureCollection() {
-  }
-
-  /**
-   * Instantiates a new feature collection.
-   *
-   * @param features the features
-   * @param bbox     the bbox
-   */
-  public FeatureCollection(Collection<? extends Feature> features, double[] bbox) {
-    super(features, bbox);
   }
 
   @JsonProperty("features")

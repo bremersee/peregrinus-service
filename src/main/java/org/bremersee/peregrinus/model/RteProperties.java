@@ -16,8 +16,7 @@
 
 package org.bremersee.peregrinus.model;
 
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 import java.math.BigInteger;
 import java.time.OffsetDateTime;
 import java.util.ArrayList;
@@ -35,14 +34,14 @@ import org.bremersee.common.model.Link;
  *
  * @author Christian Bremer
  */
-@ApiModel(description = "Route properties.")
+@Schema(description = "Route properties.")
 @Getter
 @Setter
 @ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
 public class RteProperties extends FeatureProperties<RteSettings> {
 
-  @ApiModelProperty("The route segments.")
+  @Schema(description = "The route segments.")
   private List<RteSeg> rteSegments;
 
   /**

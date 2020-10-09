@@ -16,8 +16,7 @@
 
 package org.bremersee.peregrinus.model;
 
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 import java.math.BigDecimal;
 import java.time.OffsetDateTime;
 import java.util.ArrayList;
@@ -35,23 +34,23 @@ import org.bremersee.common.model.Link;
  *
  * @author Christian Bremer
  */
-@ApiModel(description = "The track properties.")
+@Schema(description = "The track properties.")
 @Getter
 @Setter
 @ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
 public class TrkProperties extends FeatureProperties<TrkSettings> {
 
-  @ApiModelProperty("The departure time of a track.")
+  @Schema(description = "The departure time of a track.")
   private OffsetDateTime departureTime;
 
-  @ApiModelProperty("The arrival time of a track.")
+  @Schema(description = "The arrival time of a track.")
   private OffsetDateTime arrivalTime;
 
-  @ApiModelProperty("The elevation values of each point in the geometry object.")
+  @Schema(description = "The elevation values of each point in the geometry object.")
   private List<List<BigDecimal>> eleLines;
 
-  @ApiModelProperty("The time stamp of each point in the geometry object.")
+  @Schema(description = "The time stamp of each point in the geometry object.")
   private List<List<OffsetDateTime>> timeLines;
 
   /**

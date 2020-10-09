@@ -18,8 +18,7 @@ package org.bremersee.peregrinus.model;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
@@ -35,7 +34,7 @@ import lombok.ToString;
  *
  * @author Christian Bremer
  */
-@ApiModel(description = "Route segment.")
+@Schema(description = "Route segment.")
 @JsonInclude(Include.NON_EMPTY)
 @Getter
 @Setter
@@ -44,16 +43,16 @@ import lombok.ToString;
 @NoArgsConstructor
 public class RteSeg {
 
-  @ApiModelProperty("The route points.")
+  @Schema(description = "The route points.")
   private List<RtePt> rtePts;
 
-  @ApiModelProperty("The calculation settings of this route segment.")
+  @Schema(description = "The calculation settings of this route segment.")
   private RteSegCalcSettings calculationSettings;
 
-  @ApiModelProperty("Travel time in seconds.")
+  @Schema(description = "Travel time in seconds.")
   private BigInteger travelTimeInSeconds;
 
-  @ApiModelProperty("Length in meters.")
+  @Schema(description = "Length in meters.")
   private BigInteger lengthInMeters;
 
   /**

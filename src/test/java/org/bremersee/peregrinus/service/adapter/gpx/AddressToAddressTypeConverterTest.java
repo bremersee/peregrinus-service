@@ -4,8 +4,8 @@ import java.util.Locale;
 import org.bremersee.common.model.Address;
 import org.bremersee.common.model.TwoLetterCountryCode;
 import org.bremersee.garmin.gpx.v3.model.ext.AddressT;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 /**
  * The address to address type converter test.
@@ -22,7 +22,7 @@ public class AddressToAddressTypeConverterTest {
   @Test
   public void convert() {
     AddressT actual = converter.convert(null, AddressT::new);
-    Assert.assertNull(actual);
+    Assertions.assertNull(actual);
 
     Address address = new Address();
     address.setCity("Lübeck");
@@ -40,9 +40,9 @@ public class AddressToAddressTypeConverterTest {
     expected.getStreetAddresses().add("Mengstraße 4");
 
     actual = converter.convert(address, AddressT::new);
-    Assert.assertEquals(expected.getCity(), actual.getCity());
-    Assert.assertEquals(expected.getCountry(), actual.getCountry());
-    Assert.assertEquals(expected.getPostalCode(), actual.getPostalCode());
-    Assert.assertEquals(expected.getStreetAddresses(), actual.getStreetAddresses());
+    Assertions.assertEquals(expected.getCity(), actual.getCity());
+    Assertions.assertEquals(expected.getCountry(), actual.getCountry());
+    Assertions.assertEquals(expected.getPostalCode(), actual.getPostalCode());
+    Assertions.assertEquals(expected.getStreetAddresses(), actual.getStreetAddresses());
   }
 }

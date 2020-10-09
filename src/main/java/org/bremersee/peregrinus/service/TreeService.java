@@ -98,7 +98,8 @@ public interface TreeService {
       @NotNull String userId,
       @NotNull Set<String> roles,
       @NotNull Set<String> groups) {
-    final FeatureCollection col = new FeatureCollection(Collections.singletonList(feature), null);
+    final FeatureCollection col = new FeatureCollection();
+    col.setFeatures(Collections.singletonList(feature));
     return createFeatureLeafs(parentId, col, userId, roles, groups)
         .single();
   }

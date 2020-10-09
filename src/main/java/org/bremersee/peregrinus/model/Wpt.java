@@ -16,7 +16,7 @@
 
 package org.bremersee.peregrinus.model;
 
-import io.swagger.annotations.ApiModel;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Builder;
 import org.locationtech.jts.geom.Geometry;
 import org.locationtech.jts.geom.Point;
@@ -26,7 +26,7 @@ import org.locationtech.jts.geom.Point;
  *
  * @author Christian Bremer
  */
-@ApiModel(description = "The waypoint (a GeoJSON feature with well known properties).")
+@Schema(description = "The waypoint (a GeoJSON feature with well known properties).")
 public class Wpt extends Feature {
 
   /**

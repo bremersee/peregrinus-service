@@ -18,7 +18,6 @@ package org.bremersee.peregrinus.model.google;
 
 import lombok.Builder;
 import lombok.NoArgsConstructor;
-import org.bremersee.common.model.HttpLanguageTag;
 import org.bremersee.common.model.TwoLetterCountryCodes;
 import org.bremersee.peregrinus.model.GeocodeQueryRequest;
 
@@ -31,7 +30,7 @@ public class GoogleGeocodeQueryRequest extends GeocodeQueryRequest {
   @Builder
   @SuppressWarnings("unused")
   public GoogleGeocodeQueryRequest(
-      HttpLanguageTag language,
+      String language,
       double[] boundingBox,
       TwoLetterCountryCodes countryCodes,
       Integer limit,

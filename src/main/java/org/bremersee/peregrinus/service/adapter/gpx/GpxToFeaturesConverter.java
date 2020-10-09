@@ -96,7 +96,10 @@ public class GpxToFeaturesConverter {
             .map(Feature::getGeometry)
             .collect(Collectors.toList()));
 
-    return new FeatureCollection(features, boundingBox);
+    FeatureCollection fc = new FeatureCollection();
+    fc.setFeatures(features);
+    fc.setBbox(boundingBox);
+    return fc;
   }
 
   private boolean importWpt(

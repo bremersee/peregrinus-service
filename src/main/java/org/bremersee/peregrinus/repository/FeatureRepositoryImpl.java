@@ -177,7 +177,7 @@ public class FeatureRepositoryImpl extends AbstractMongoRepository implements Fe
       return MongoSearchLanguage.NONE.toString();
     }
     return MongoSearchLanguage
-        .fromLocale(geocodeRequest.getLanguage().toLocale(), MongoSearchLanguage.NONE)
+        .fromValue(geocodeRequest.getLanguage(), MongoSearchLanguage.NONE)
         .toString();
   }
 }

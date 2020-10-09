@@ -16,7 +16,7 @@
 
 package org.bremersee.peregrinus.model.tomtom;
 
-import io.swagger.annotations.ApiModel;
+import io.swagger.v3.oas.annotations.media.Schema;
 import java.util.List;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -32,7 +32,7 @@ import org.locationtech.jts.geom.MultiPolygon;
  *
  * @author Christian Bremer
  */
-@ApiModel(description = "TomTom calculation settings of a route segment.")
+@Schema(description = "TomTom calculation settings of a route segment.")
 @Getter
 @Setter
 @ToString(callSuper = true)

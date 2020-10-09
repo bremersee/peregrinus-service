@@ -16,8 +16,7 @@
 
 package org.bremersee.peregrinus.model;
 
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -27,14 +26,14 @@ import lombok.ToString;
 /**
  * @author Christian Bremer
  */
-@ApiModel(description = "The feature leaf settings.")
+@Schema(description = "The feature leaf settings.")
 @EqualsAndHashCode(callSuper = true)
 @ToString(callSuper = true)
 @NoArgsConstructor
 public class FeatureLeafSettings extends LeafSettings {
 
   @Getter
-  @ApiModelProperty("Specifies whether the feature is displayed on map or not.")
+  @Schema(description = "Specifies whether the feature is displayed on map or not.")
   private Boolean displayedOnMap = false;
 
   @Builder

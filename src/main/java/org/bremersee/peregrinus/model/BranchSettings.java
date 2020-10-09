@@ -16,8 +16,7 @@
 
 package org.bremersee.peregrinus.model;
 
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -29,14 +28,14 @@ import lombok.ToString;
  *
  * @author Christian Bremer
  */
-@ApiModel(description = "The branch settings.")
+@Schema(description = "The branch settings.")
 @EqualsAndHashCode(callSuper = true)
 @ToString(callSuper = true)
 @NoArgsConstructor
 public final class BranchSettings extends NodeSettings {
 
   @Getter
-  @ApiModelProperty("Specifies whether the branch is open or not.")
+  @Schema(description = "Specifies whether the branch is open or not.")
   private Boolean open = true;
 
   /**

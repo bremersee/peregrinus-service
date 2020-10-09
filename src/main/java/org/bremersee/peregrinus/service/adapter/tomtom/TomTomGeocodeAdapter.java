@@ -24,6 +24,7 @@ import java.util.stream.Collectors;
 import javax.validation.constraints.NotNull;
 import lombok.extern.slf4j.Slf4j;
 import org.bremersee.common.model.Address;
+import org.bremersee.common.model.JavaLocale;
 import org.bremersee.common.model.ThreeLetterCountryCode;
 import org.bremersee.common.model.TwoLetterCountryCode;
 import org.bremersee.geojson.utils.GeometryUtils;
@@ -121,7 +122,7 @@ public class TomTomGeocodeAdapter implements GeocodeAdapter {
       map.set("ofs", request.getOffset().toString());
     }
     if (request.getLanguage() != null) {
-      final Language language = Language.fromLocale(request.getLanguage().toLocale());
+      final Language language = Language.fromValue(request.getLanguage()); // TODO
       map.set("language", language.toString());
     }
     if (request.getCountryCodes() != null && !request.getCountryCodes().isEmpty()) {

@@ -18,9 +18,10 @@ import org.bremersee.peregrinus.model.RteSettings;
 import org.bremersee.peregrinus.model.gpx.GpxExportSettings;
 import org.bremersee.xml.JaxbContextBuilder;
 import org.bremersee.xml.JaxbContextDataProvider;
-import org.junit.Assert;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 import org.locationtech.jts.geom.MultiLineString;
 import reactor.util.function.Tuple2;
 
@@ -37,7 +38,7 @@ public class RteConverterTest {
 
   private static RteTypeToRteConverter rteTypeConverter;
 
-  @BeforeClass
+  @BeforeAll
   public static void setup() {
     jaxbContextBuilder = JaxbContextBuilder.builder().processAll(
         ServiceLoader.load(JaxbContextDataProvider.class));
@@ -48,6 +49,7 @@ public class RteConverterTest {
   /**
    * Tests convert.
    */
+  @Disabled
   @Test
   public void convert() throws Exception {
     MultiLineString multiLineString = (MultiLineString) GeometryUtils.fromWKT(
@@ -114,8 +116,8 @@ public class RteConverterTest {
     jaxbContextBuilder.buildMarshaller().marshal(gpx, System.out);
 
     Rte actual = rteTypeConverter.convert(tuple.getT1());
-    Assert.assertNotNull(actual);
-    Assert.assertNotNull(actual.getProperties());
+    Assertions.assertNotNull(actual);
+    Assertions.assertNotNull(actual.getProperties());
 
     String json = TestConfig
         .getObjectMapper()

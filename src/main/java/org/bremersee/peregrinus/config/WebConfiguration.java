@@ -17,16 +17,10 @@
 package org.bremersee.peregrinus.config;
 
 import lombok.extern.slf4j.Slf4j;
-import org.bremersee.garmin.GarminJaxbContextDataProvider;
 import org.bremersee.http.codec.xml.ReactiveJaxbDecoder;
-import org.bremersee.http.codec.xml.ReactiveJaxbEncoder;
 import org.bremersee.xml.JaxbContextBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.codec.DecoderHttpMessageReader;
-import org.springframework.http.codec.EncoderHttpMessageWriter;
-import org.springframework.http.codec.HttpMessageReader;
-import org.springframework.http.codec.HttpMessageWriter;
 import org.springframework.http.codec.ServerCodecConfigurer;
 import org.springframework.http.codec.json.Jackson2JsonDecoder;
 import org.springframework.http.codec.json.Jackson2JsonEncoder;
@@ -51,7 +45,7 @@ public class WebConfiguration implements WebFluxConfigurer {
   /**
    * Instantiates a new web configuration.
    *
-   * @param jaxbContextBuilder  the jaxb context builder
+   * @param jaxbContextBuilder the jaxb context builder
    * @param objectMapperBuilder the object mapper builder
    */
   @Autowired
@@ -70,29 +64,9 @@ public class WebConfiguration implements WebFluxConfigurer {
     configurer
         .defaultCodecs()
         .jackson2JsonEncoder(new Jackson2JsonEncoder(objectMapperBuilder.build()));
-
     configurer
         .customCodecs()
-        .reader(new DecoderHttpMessageReader<>(new ReactiveJaxbDecoder(jaxbContextBuilder)));
-    configurer
-        .customCodecs()
-        .writer(new EncoderHttpMessageWriter<>(new ReactiveJaxbEncoder(
-            jaxbContextBuilder, GarminJaxbContextDataProvider.GPX_NAMESPACES)));
-
-    for (HttpMessageReader reader : configurer.getReaders()) {
-      log.info("Reader = {} : {}", reader.getClass().getName(), reader.getReadableMediaTypes());
-      if (reader instanceof DecoderHttpMessageReader) {
-        log.info("  - decoder = {}",
-            ((DecoderHttpMessageReader) reader).getDecoder().getClass().getName());
-      }
-    }
-    for (HttpMessageWriter writer : configurer.getWriters()) {
-      log.info("Writer = {} : {}", writer.getClass().getName(), writer.getWritableMediaTypes());
-      if (writer instanceof EncoderHttpMessageWriter) {
-        log.info("  - decoder = {}",
-            ((EncoderHttpMessageWriter) writer).getEncoder().getClass().getName());
-      }
-    }
+        .registerWithDefaultConfig(new ReactiveJaxbDecoder(jaxbContextBuilder));
   }
 
 //Reader = org.springframework.http.codec.DecoderHttpMessageReader : [*/*], decoder = org.springframework.core.codec.ByteArrayDecoder

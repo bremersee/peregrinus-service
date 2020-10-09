@@ -16,7 +16,7 @@
 
 package org.bremersee.peregrinus.model;
 
-import io.swagger.annotations.ApiModel;
+import io.swagger.v3.oas.annotations.media.Schema;
 import java.time.OffsetDateTime;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -31,7 +31,7 @@ import org.bremersee.common.model.AccessControlList;
  * @param <S> the leaf settings type parameter
  * @author Christian Bremer
  */
-@ApiModel(description = "The tree leaf.")
+@Schema(description = "The tree leaf.")
 @Getter
 @Setter
 @EqualsAndHashCode(callSuper = true)

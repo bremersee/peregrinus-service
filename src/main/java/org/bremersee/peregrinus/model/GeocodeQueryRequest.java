@@ -27,13 +27,12 @@ import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonSubTypes.Type;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.fasterxml.jackson.annotation.JsonTypeInfo.Id;
-import io.swagger.annotations.ApiModel;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
-import org.bremersee.common.model.HttpLanguageTag;
 import org.bremersee.common.model.TwoLetterCountryCodes;
 import org.bremersee.peregrinus.model.google.GoogleGeocodeQueryRequest;
 import org.bremersee.peregrinus.model.nominatim.NominatimGeocodeQueryRequest;
@@ -42,7 +41,7 @@ import org.bremersee.peregrinus.model.tomtom.TomTomGeocodeQueryRequest;
 /**
  * @author Christian Bremer
  */
-@ApiModel(description = "Geocoding request.", discriminator = "provider")
+@Schema(description = "Geocoding request.")
 @JsonTypeInfo(use = Id.NAME, property = "provider")
 @JsonSubTypes({
     @Type(value = GoogleGeocodeQueryRequest.class, name = GOOGLE),
@@ -61,7 +60,7 @@ public abstract class GeocodeQueryRequest extends GeocodeRequest {
   private String query;
 
   public GeocodeQueryRequest(
-      HttpLanguageTag language,
+      String language,
       double[] boundingBox,
       TwoLetterCountryCodes countryCodes,
       Integer limit,

@@ -20,8 +20,8 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.media.Schema.AccessMode;
 import lombok.NoArgsConstructor;
 import org.bremersee.geojson.AbstractGeoJsonFeature;
 import org.bremersee.geojson.GeometryDeserializer;
@@ -34,9 +34,8 @@ import org.locationtech.jts.geom.Geometry;
  *
  * @author Christian Bremer
  */
-@ApiModel(description = "A GeoJSON feature with well known properties.")
+@Schema(description = "A GeoJSON feature with well known properties.")
 @NoArgsConstructor
-@SuppressWarnings("WeakerAccess")
 public abstract class Feature
     extends AbstractGeoJsonFeature<Geometry, FeatureProperties<? extends FeatureSettings>> {
 
@@ -64,9 +63,9 @@ public abstract class Feature
   /**
    * Instantiates a new Feature.
    *
-   * @param id         the id
-   * @param geometry   the geometry
-   * @param bbox       the bbox
+   * @param id the id
+   * @param geometry the geometry
+   * @param bbox the bbox
    * @param properties the properties
    */
   public Feature(
@@ -80,7 +79,7 @@ public abstract class Feature
     setProperties(properties);
   }
 
-  @ApiModelProperty("The ID os the feature.")
+  @Schema(description = "Unique identifier of the feature.", accessMode = AccessMode.READ_ONLY)
   @JsonProperty("id")
   @Override
   public String getId() {
@@ -93,10 +92,10 @@ public abstract class Feature
     this.id = id;
   }
 
-  @ApiModelProperty(
-      value = "GeoJSON",
+  @Schema(
+      description = "The geometry of the feature.",
       required = true,
-      dataType = "org.bremersee.geojson.model.Geometry")
+      implementation = org.bremersee.geojson.model.Geometry.class)
   @JsonProperty(value = "geometry", required = true)
   @JsonSerialize(using = GeometrySerializer.class)
   @Override
@@ -104,10 +103,6 @@ public abstract class Feature
     return geometry;
   }
 
-  @ApiModelProperty(
-      value = "GeoJSON",
-      required = true,
-      dataType = "org.bremersee.geojson.model.Geometry")
   @JsonProperty(value = "geometry", required = true)
   @JsonDeserialize(using = GeometryDeserializer.class)
   @Override
@@ -115,14 +110,13 @@ public abstract class Feature
     this.geometry = geometry;
   }
 
-  @ApiModelProperty(value = "The feature properties.", required = true)
+  @Schema(description = "The feature properties.", required = true)
   @JsonProperty(value = "properties", required = true)
   @Override
   public FeatureProperties<? extends FeatureSettings> getProperties() {
     return super.getProperties();
   }
 
-  @ApiModelProperty(value = "The feature properties.", required = true)
   @JsonProperty(value = "properties", required = true)
   @Override
   public void setProperties(FeatureProperties<? extends FeatureSettings> properties) {

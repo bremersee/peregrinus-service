@@ -29,7 +29,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.http.converter.json.Jackson2ObjectMapperBuilder;
 
 /**
- * Thecodecs configuration.
+ * The codecs configuration.
  *
  * @author Christian Bremer
  */
@@ -39,7 +39,7 @@ public class CodecsConfiguration implements Jackson2ObjectMapperBuilderCustomize
   @Override
   public void customize(Jackson2ObjectMapperBuilder jacksonObjectMapperBuilder) {
     jacksonObjectMapperBuilder
-        .modules(
+        .modulesToInstall(
             new GeoJsonObjectMapperModule(),
             new PeregrinusObjectMapperModule(),
             new Jdk8Module(),

@@ -23,7 +23,7 @@ import org.bremersee.garmin.trip.v1.model.ext.TripTransportationMode;
 import org.bremersee.garmin.trip.v1.model.ext.ViaPointCalculationMode;
 import org.bremersee.garmin.trip.v1.model.ext.ViaPointElevationMode;
 import org.bremersee.gpx.model.Gpx;
-import org.bremersee.groupman.api.GroupControllerApi;
+import org.bremersee.groupman.api.GroupWebfluxControllerApi;
 import org.bremersee.peregrinus.model.StringList;
 import org.bremersee.peregrinus.model.gpx.GpxExportSettings;
 import org.bremersee.peregrinus.service.FeatureService;
@@ -45,7 +45,7 @@ public class FeatureController extends AbstractController {
   private FeatureService featureService;
 
   public FeatureController(
-      GroupControllerApi groupService,
+      @SuppressWarnings("SpringJavaInjectionPointsAutowiringInspection") GroupWebfluxControllerApi groupService,
       FeatureService featureService) {
     super(groupService);
     this.featureService = featureService;

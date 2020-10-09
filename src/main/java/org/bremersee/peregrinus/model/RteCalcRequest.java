@@ -25,8 +25,7 @@ import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonSubTypes.Type;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.fasterxml.jackson.annotation.JsonTypeInfo.Id;
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -35,7 +34,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
-import org.bremersee.common.model.HttpLanguageTag;
 import org.bremersee.peregrinus.model.tomtom.TomTomRteCalcRequest;
 import org.locationtech.jts.geom.Point;
 
@@ -44,7 +42,7 @@ import org.locationtech.jts.geom.Point;
  *
  * @author Christian Bremer
  */
-@ApiModel(description = "Route calculation request.", discriminator = "provider")
+@Schema(description = "Route calculation request.")
 @JsonTypeInfo(use = Id.NAME, property = "provider")
 @JsonSubTypes({
     @Type(value = TomTomRteCalcRequest.class, name = TOMTOM)
@@ -57,12 +55,12 @@ import org.locationtech.jts.geom.Point;
 @NoArgsConstructor
 public abstract class RteCalcRequest {
 
-  @ApiModelProperty(value = "The route points.", required = true)
+  @Schema(description = "The route points.", required = true)
   @JsonProperty(required = true)
   private List<Point> rtePts;
 
-  @ApiModelProperty("The requested language.")
-  private HttpLanguageTag language;
+  @Schema(description = "The requested language.")
+  private String language;
 
   /**
    * Instantiates a new route calculation request.
@@ -70,7 +68,7 @@ public abstract class RteCalcRequest {
    * @param rtePts   the route points
    * @param language the language
    */
-  public RteCalcRequest(Collection<? extends Point> rtePts, HttpLanguageTag language) {
+  public RteCalcRequest(Collection<? extends Point> rtePts, String language) {
     if (rtePts != null) {
       this.rtePts = new ArrayList<>(rtePts);
     }

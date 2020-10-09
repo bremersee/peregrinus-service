@@ -16,7 +16,6 @@
 
 package org.bremersee.peregrinus.model;
 
-import io.swagger.annotations.ApiModel;
 import lombok.Builder;
 import org.locationtech.jts.geom.Geometry;
 import org.locationtech.jts.geom.MultiLineString;
@@ -26,7 +25,7 @@ import org.locationtech.jts.geom.MultiLineString;
  *
  * @author Christian Bremer
  */
-@ApiModel(description = "The route (a GeoJSON feature with well known properties).")
+// @ApiModel(description = "The route (a GeoJSON feature with well known properties).")
 public class Rte extends Feature {
 
   /**

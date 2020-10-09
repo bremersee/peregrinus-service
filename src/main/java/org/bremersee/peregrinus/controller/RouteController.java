@@ -16,7 +16,7 @@
 
 package org.bremersee.peregrinus.controller;
 
-import org.bremersee.groupman.api.GroupControllerApi;
+import org.bremersee.groupman.api.GroupWebfluxControllerApi;
 import org.bremersee.peregrinus.model.Rte;
 import org.bremersee.peregrinus.model.RteCalcRequest;
 import org.bremersee.peregrinus.service.RouteService;
@@ -39,7 +39,7 @@ public class RouteController extends AbstractController {
   private RouteService routeService;
 
   public RouteController(
-      GroupControllerApi groupService,
+      @SuppressWarnings("SpringJavaInjectionPointsAutowiringInspection") GroupWebfluxControllerApi groupService,
       RouteService routeService) {
     super(groupService);
     this.routeService = routeService;

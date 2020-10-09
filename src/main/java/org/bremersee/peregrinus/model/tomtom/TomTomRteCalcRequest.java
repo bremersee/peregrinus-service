@@ -16,7 +16,7 @@
 
 package org.bremersee.peregrinus.model.tomtom;
 
-import io.swagger.annotations.ApiModel;
+import io.swagger.v3.oas.annotations.media.Schema;
 import java.util.Collection;
 import java.util.List;
 import lombok.Builder;
@@ -25,7 +25,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
-import org.bremersee.common.model.HttpLanguageTag;
 import org.bremersee.common.model.ThreeLetterCountryCode;
 import org.bremersee.peregrinus.model.RteCalcRequest;
 import org.locationtech.jts.geom.MultiPolygon;
@@ -34,7 +33,7 @@ import org.locationtech.jts.geom.Point;
 /**
  * @author Christian Bremer
  */
-@ApiModel(description = "TomTom route calculation request.")
+@Schema(description = "TomTom route calculation request.")
 @Getter
 @Setter
 @EqualsAndHashCode(callSuper = true)
@@ -59,7 +58,7 @@ public class TomTomRteCalcRequest extends RteCalcRequest {
   @Builder
   public TomTomRteCalcRequest(
       Collection<? extends Point> rtePts,
-      HttpLanguageTag language,
+      String language,
       TravelMode travelMode,
       RouteType routeType,
       Windingness windingness,

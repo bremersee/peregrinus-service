@@ -26,7 +26,6 @@ import java.util.ServiceLoader;
 import java.util.TimeZone;
 import lombok.Getter;
 import org.bremersee.geojson.GeoJsonObjectMapperModule;
-import org.bremersee.peregrinus.config.MapperConfiguration;
 import org.bremersee.peregrinus.entity.AclEntity;
 import org.bremersee.peregrinus.model.PeregrinusObjectMapperModule;
 import org.bremersee.security.access.AclMapper;
@@ -64,11 +63,11 @@ public abstract class TestConfig {
     objectMapper.setTimeZone(TimeZone.getTimeZone("GMT"));
     objectMapper.setLocale(Locale.GERMANY);
 
-    MapperConfiguration modelMapperConfiguration = new MapperConfiguration();
+    //MapperConfiguration modelMapperConfiguration = new MapperConfiguration();
     jaxbContextBuilder = JaxbContextBuilder.builder().processAll(
         ServiceLoader.load(JaxbContextDataProvider.class));
-    modelMapper = modelMapperConfiguration.modelMapper();
-    aclMapper = modelMapperConfiguration.aclMapper();
+    modelMapper = null; // TODO modelMapperConfiguration.modelMapper();
+    aclMapper = null; // TODO modelMapperConfiguration.aclMapper();
   }
 
   private TestConfig() {

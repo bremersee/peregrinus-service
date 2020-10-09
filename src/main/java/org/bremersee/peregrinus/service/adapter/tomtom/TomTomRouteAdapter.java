@@ -158,7 +158,7 @@ public class TomTomRouteAdapter implements RouteAdapter {
     map.set("routeRepresentation", "polyline");
     map.set("instructionsType", "text");
     if (request.getLanguage() != null) {
-      final Language language = Language.fromLocale(request.getLanguage().toLocale());
+      final Language language = Language.fromValue(request.getLanguage()); // TODO
       map.set("language", language.toString());
     }
     if (request.getTravelMode() != null) {

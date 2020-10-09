@@ -35,7 +35,7 @@ import org.springframework.data.convert.ReadingConverter;
 @ReadingConverter
 class NodeEntityReadConverter extends AbstractNodeEntityReadConverter<NodeEntity> {
 
-  private LeafEntityReadConverter leafConverter;
+  private final LeafEntityReadConverter leafConverter;
 
   /**
    * Instantiates a new node entity read converter.

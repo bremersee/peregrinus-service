@@ -19,8 +19,7 @@ package org.bremersee.peregrinus.model;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 import java.math.BigDecimal;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
@@ -36,7 +35,7 @@ import org.springframework.util.StringUtils;
  *
  * @author Christian Bremer
  */
-@ApiModel(description = "Route point.")
+@Schema(description = "Route point.")
 @JsonInclude(Include.NON_EMPTY)
 @Getter
 @Setter
@@ -45,11 +44,11 @@ import org.springframework.util.StringUtils;
 @NoArgsConstructor
 public class RtePt {
 
-  @ApiModelProperty("The position.")
+  @Schema(description = "The position.")
   @JsonProperty(value = "position", required = true)
   private Point position;
 
-  @ApiModelProperty("The name.")
+  @Schema(description = "The name.")
   private String name;
 
   /**

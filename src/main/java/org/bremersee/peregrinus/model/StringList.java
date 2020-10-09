@@ -16,7 +16,7 @@
 
 package org.bremersee.peregrinus.model;
 
-import io.swagger.annotations.ApiModel;
+import io.swagger.v3.oas.annotations.media.Schema;
 import java.util.ArrayList;
 import java.util.Collection;
 import lombok.EqualsAndHashCode;
@@ -27,7 +27,7 @@ import lombok.ToString;
  *
  * @author Christian Bremer
  */
-@ApiModel(description = "List of strings.")
+@Schema(description = "List of strings.")
 @ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
 @SuppressWarnings("unused")

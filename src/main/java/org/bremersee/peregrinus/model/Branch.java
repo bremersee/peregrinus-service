@@ -16,8 +16,7 @@
 
 package org.bremersee.peregrinus.model;
 
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -33,14 +32,14 @@ import org.bremersee.common.model.AccessControlList;
  *
  * @author Christian Bremer
  */
-@ApiModel(description = "The tree branch.")
+@Schema(description = "The tree branch.")
 @Getter
 @Setter
 @EqualsAndHashCode(callSuper = true)
 @ToString(callSuper = true)
 public final class Branch extends Node<BranchSettings> {
 
-  @ApiModelProperty("The children.")
+  @Schema(description = "The children.")
   private List<Node> children;
 
   /**

@@ -22,7 +22,7 @@ import org.bremersee.comparator.ValueComparator;
 import org.bremersee.comparator.WellKnownTextParser;
 import org.bremersee.comparator.spring.ComparatorSpringUtils;
 import org.bremersee.gpx.model.Gpx;
-import org.bremersee.groupman.api.GroupControllerApi;
+import org.bremersee.groupman.api.GroupWebfluxControllerApi;
 import org.bremersee.peregrinus.model.Branch;
 import org.bremersee.peregrinus.model.Feature;
 import org.bremersee.peregrinus.model.FeatureCollection;
@@ -60,7 +60,7 @@ public class TreeController extends AbstractController {
   private final TreeService treeService;
 
   public TreeController(
-      GroupControllerApi groupService,
+      @SuppressWarnings("SpringJavaInjectionPointsAutowiringInspection") GroupWebfluxControllerApi groupService,
       TreeService treeService) {
     super(groupService);
     this.treeService = treeService;

@@ -21,8 +21,7 @@ import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonSubTypes.Type;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -34,7 +33,7 @@ import lombok.ToString;
  *
  * @author Christian Bremer
  */
-@ApiModel(description = "Common settings of a GeoJSON feature.", discriminator = "_type")
+@Schema(description = "Common settings of a GeoJSON feature.")
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, property = "_type")
 @JsonSubTypes({
     @Type(value = WptSettings.class, name = Feature.WPT_TYPE),
@@ -49,13 +48,13 @@ import lombok.ToString;
 @NoArgsConstructor
 public abstract class FeatureSettings {
 
-  @ApiModelProperty("The settings ID.")
+  @Schema(description = "The settings ID.")
   private String id;
 
-  @ApiModelProperty("The feature ID.")
+  @Schema(description = "The feature ID.")
   private String featureId;
 
-  @ApiModelProperty("The user ID.")
+  @Schema(description = "The user ID.")
   private String userId;
 
   /**
